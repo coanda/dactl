@@ -1,6 +1,8 @@
 *.o
 *.swp
 
+data/dactl.desktop
+
 Makefile
 Makefile.in
 aclocal.m4
@@ -13,6 +15,13 @@ configure
 depcomp
 install-sh
 missing
+stamp-h1
+
 src/.deps/
 src/.dirstamp
-stamp-h1
+src/dactl
+src/*.c
+!src/callbacks.c
+!src/threads.c
+src/dactl_vala.stamp
+src/libdactl.h

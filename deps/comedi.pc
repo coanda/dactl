@@ -1,0 +1,12 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+datarootdir=${prefix}/share
+
+Name: comedi
+Description: Data acquisition device driver library.
+Version: 0.72
+Requires:
+Libs: -L${libdir} -lcomedi
+Cflags: -I${includedir}/

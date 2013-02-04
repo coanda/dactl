@@ -1,0 +1,20 @@
+/*
+GtkTreeView {
+  color: green;
+  background-color: black;
+}
+
+GtkTreeView:selected {
+  color: red;
+}
+*/
+
+ChannelTreeView row:nth-child(even),
+DeviceTreeView row:nth-child(even),
+LogTreeView row:nth-child(even),
+PIDControlTreeView row:nth-child(even),
+AIChannelTreeView row:nth-child(even),
+AOChannelTreeView row:nth-child(even) {
+  color: black;
+  background-color: #edeceb;
+}

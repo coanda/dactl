@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=0.1
+Name=@PACKAGE@
+GenericName=@PACKAGE@ Data Acquisition and Control
+Comment=Internal CRDC software to collect process data
+Exec=@PREFIX@/bin/@PACKAGE@
+Icon=@PACKAGE@.svg
+Categories=CRDC

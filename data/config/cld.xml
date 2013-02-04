@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Configuration file
+  Geoff Johnson <geoff.johnson@coanda.ca>
+  2013-02-07
+-->
+<cld xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="cld.xsd">
+
+    <!-- name of the application using this configuration -->
+    <property name="app">CRDC</property>
+
+    <!-- all of the objects should be loaded as a single treemap by the builder class -->
+    <objects>
+
+        <!-- daq hardware configuration -->
+        <object id="daq0" type="daq">
+            <!-- daq rate in hz -->
+            <property name="rate">10.0</property>
+            <object id="dev0" type="device" driver="comedi">
+                <property name="hardware">PCI-1723</property>
+                <property name="type">output</property>
+                <property name="file">/dev/comedi0</property>
+            </object>
+            <object id="dev1" type="device" driver="comedi">
+                <property name="hardware">PCI-1713</property>
+                <property name="type">input</property>
+                <property name="file">/dev/comedi1</property>
+            </object>
+        </object>
+
+        <!-- log files configuration -->
+        <object id="log0" type="log">
+            <!-- path should end in / for now -->
+            <property name="title">Data Log</property>
+            <property name="path">./</property>
+            <property name="file">log.dat</property>
+            <property name="format">%F-%T</property>
+            <!-- log rate in hz -->
+            <property name="rate">10.000</property>
+            <object id="col0" type="column" chref="ai00"/>
+            <object id="col1" type="column" chref="ai01"/>
+            <object id="col2" type="column" chref="ao00"/>
+            <object id="col3" type="column" chref="ao01"/>
+        </object>
+
+        <!-- pid control loop configuration -->
+        <object id="ctl0" type="control">
+            <object id="pid0" type="pid">
+                <property name="desc">Control 1</property>
+                <property name="dt">10</property>
+                <property name="sp">0.000000</property>
+                <property name="kp">0.100000</property>
+                <property name="ki">0.100000</property>
+                <property name="kd">0.100000</property>
+                <object id="pv0" type="process_value" chref="ai00"/>
+                <object id="pv1" type="process_value" chref="ao00"/>
+            </object>
+            <object id="pid1" type="pid">
+                <property name="desc">Control 2</property>
+                <property name="dt">10</property>
+                <property name="sp">0.000000</property>
+                <property name="kp">0.100000</property>
+                <property name="ki">0.100000</property>
+                <property name="kd">0.100000</property>
+                <object id="pv0" type="process_value" chref="ai01"/>
+                <object id="pv1" type="process_value" chref="ao01"/>
+            </object>
+            <object id="pid2" type="pid">
+                <property name="desc">Control 3</property>
+                <property name="dt">10</property>
+                <property name="sp">0.000000</property>
+                <property name="kp">0.100000</property>
+                <property name="ki">0.100000</property>
+                <property name="kd">0.100000</property>
+                <object id="pv0" type="process_value" chref="ai02"/>
+                <object id="pv1" type="process_value" chref="ao02"/>
+            </object>
+        </object>
+
+        <!--
+         ! Channel calibrations for scaling process values.
+         ! XXX Input channels should be given their own cal, outputs can share.
+         !-->
+        <object id="cal0" type="calibration">
+            <!-- number of coefficients determines the order -->
+            <property name="units">Volts</property>
+            <!-- n determines the exponent - y = a[1]*x^1 + a[0]*x^0 -->
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal1" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal2" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal3" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal4" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal5" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal6" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1</property>
+            </object>
+        </object>
+        <object id="cal7" type="calibration">
+            <property name="units">kg/m^3</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">774.515</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">62.555</property>
+            </object>
+        </object>
+        <object id="cal8" type="calibration">
+            <property name="units">kg/m^3</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">774.437</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">62.563</property>
+            </object>
+        </object>
+        <object id="cal9" type="calibration">
+            <property name="units">mS/cm</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-1.2578</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">0.62579</property>
+            </object>
+        </object>
+        <object id="cal10" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal11" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal12" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal13" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal14" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-26.646</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">12.531</property>
+            </object>
+        </object>
+        <object id="cal15" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-25.838</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">12.458</property>
+            </object>
+        </object>
+        <object id="cal16" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-26.349</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">12.576</property>
+            </object>
+        </object>
+        <object id="cal17" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-13.863</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">6.2684</property>
+            </object>
+        </object>
+        <object id="cal18" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-11.954</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">5.9805</property>
+            </object>
+        </object>
+        <object id="cal19" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-13.413</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">6.3294</property>
+            </object>
+        </object>
+        <object id="cal20" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-5.1733</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">2.4757</property>
+            </object>
+        </object>
+        <object id="cal21" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-5.5153</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">2.4916</property>
+            </object>
+        </object>
+        <object id="cal22" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-25.007</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">12.499</property>
+            </object>
+        </object>
+        <object id="cal23" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal24" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal25" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal26" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-0.629</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">0.3129</property>
+            </object>
+        </object>
+        <object id="cal27" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-0.629</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">0.3129</property>
+            </object>
+        </object>
+        <object id="cal28" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-0.629</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">0.3129</property>
+            </object>
+        </object>
+        <object id="cal29" type="calibration">
+            <property name="units">psi</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">-2.2644</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.12644</property>
+            </object>
+        </object>
+        <object id="cal30" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="cal31" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+        <object id="ao_cal0" type="calibration">
+            <property name="units">Volts</property>
+            <object id="cft0" type="coefficient">
+                <property name="n">0</property>
+                <property name="value">0.000</property>
+            </object>
+            <object id="cft1" type="coefficient">
+                <property name="n">1</property>
+                <property name="value">1.000</property>
+            </object>
+        </object>
+
+        <!-- analog output channels -->
+        <object id="ao00" type="channel" ref="dev1" ctype="analog" direction="output">
+            <property name="tag">OUT0</property>
+            <property name="desc">Sample Output</property>
+            <property name="num">0</property>
+            <property name="calref">ao_cal0</property>
+        </object>
+        <object id="ao01" type="channel" ref="dev1" ctype="analog" direction="output">
+            <property name="tag">OUT1</property>
+            <property name="desc">Sample Output</property>
+            <property name="num">1</property>
+            <property name="calref">ao_cal0</property>
+        </object>
+        <object id="ao02" type="channel" ref="dev1" ctype="analog" direction="output">
+            <property name="tag">OUT2</property>
+            <property name="desc">Sample Output</property>
+            <property name="num">2</property>
+            <property name="calref">ao_cal0</property>
+        </object>
+        <object id="ao03" type="channel" ref="dev0" ctype="analog" direction="output">
+            <property name="tag">OUT3</property>
+            <property name="desc">Sample Output</property>
+            <property name="num">3</property>
+            <property name="calref">ao_cal0</property>
+        </object>
+        <object id="ao04" type="channel" ref="dev0" ctype="analog" direction="output">
+            <property name="tag">OUT4</property>
+            <property name="desc">Sample Output</property>
+            <property name="num">4</property>
+            <property name="calref">ao_cal0</property>
+        </object>
+        <object id="ao05" type="channel" ref="dev0" ctype="analog" direction="output">
+            <property name="tag">OUT5</property>
+            <property name="desc">Sample Output</property>
+            <property name="num">5</property>
+            <property name="calref">ao_cal0</property>
+        </object>
+        <object id="ao06" type="channel" ref="dev0" ctype="analog" direction="output">
+            <property name="tag">OUT6</property>
+            <property name="desc">Sample Output</property>
+            <property name="num">6</property>
+            <property name="calref">ao_cal0</property>
+        </object>
+        <object id="ao07" type="channel" ref="dev0" ctype="analog" direction="output">
+            <property name="tag">OUT7</property>
+            <property name="desc">Sample Output</property>
+            <property name="num">7</property>
+            <property name="calref">ao_cal0</property>
+        </object>
+        <!-- analog input channels -->
+        <object id="ai00" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">IN0</property>
+            <property name="desc">Sample Input</property>
+            <property name="num">0</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal0</property>
+        </object>
+        <object id="ai01" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">IN1</property>
+            <property name="desc">Sample Input</property>
+            <property name="num">1</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal1</property>
+        </object>
+        <object id="ai02" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">IN2</property>
+            <property name="desc">Sample Input</property>
+            <property name="num">2</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal2</property>
+        </object>
+        <object id="ai03" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">IN3</property>
+            <property name="desc">Sample Input</property>
+            <property name="num">3</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal3</property>
+        </object>
+        <object id="ai04" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">IN4</property>
+            <property name="desc">Sample Input</property>
+            <property name="num">4</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal4</property>
+        </object>
+        <object id="ai05" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">IN5</property>
+            <property name="desc">Sample Input</property>
+            <property name="num">5</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal5</property>
+        </object>
+        <object id="ai06" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">FT07</property>
+            <property name="desc">Diversion Meter</property>
+            <property name="num">6</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal6</property>
+        </object>
+        <object id="ai07" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">RT02</property>
+            <property name="desc">MFT High Flow Den</property>
+            <property name="num">7</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal7</property>
+        </object>
+        <object id="ai08" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">RT03</property>
+            <property name="desc">MFT Low Flow Den</property>
+            <property name="num">8</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal8</property>
+        </object>
+        <object id="ai09" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">CT01</property>
+            <property name="desc">Conductivitty 1</property>
+            <property name="num">9</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal9</property>
+        </object>
+        <object id="ai10" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">CT02</property>
+            <property name="desc">Conductivity 2</property>
+            <property name="num">10</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal10</property>
+        </object>
+        <object id="ai11" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">CT03</property>
+            <property name="desc">Conductivity 3</property>
+            <property name="num">11</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal11</property>
+        </object>
+        <object id="ai12" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">CT04</property>
+            <property name="desc">Conductivity 4</property>
+            <property name="num">12</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal12</property>
+        </object>
+        <object id="ai13" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">CT05</property>
+            <property name="desc">Flow Thru Cond</property>
+            <property name="num">13</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal13</property>
+        </object>
+        <object id="ai14" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT01</property>
+            <property name="desc">P1</property>
+            <property name="num">14</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal14</property>
+        </object>
+        <object id="ai15" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT02</property>
+            <property name="desc">P2</property>
+            <property name="num">15</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal15</property>
+        </object>
+        <object id="ai16" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT03</property>
+            <property name="desc">P3</property>
+            <property name="num">16</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal16</property>
+        </object>
+        <object id="ai17" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT04</property>
+            <property name="desc">P4</property>
+            <property name="num">17</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal17</property>
+        </object>
+        <object id="ai18" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT05</property>
+            <property name="desc">P5</property>
+            <property name="num">18</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal18</property>
+        </object>
+        <object id="ai19" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT06</property>
+            <property name="desc">P6</property>
+            <property name="num">19</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal19</property>
+        </object>
+        <object id="ai20" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT07</property>
+            <property name="desc">P7</property>
+            <property name="num">20</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal20</property>
+        </object>
+        <object id="ai21" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT08</property>
+            <property name="desc">P8</property>
+            <property name="num">21</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal21</property>
+        </object>
+        <object id="ai22" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT09</property>
+            <property name="desc">P CSTR</property>
+            <property name="num">22</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal22</property>
+        </object>
+        <object id="ai23" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT10</property>
+            <property name="desc">P MFT</property>
+            <property name="num">23</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal23</property>
+        </object>
+        <object id="ai24" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT11</property>
+            <property name="desc">P MSTR Small</property>
+            <property name="num">24</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal24</property>
+        </object>
+        <object id="ai25" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT12</property>
+            <property name="desc">P MSTR Big</property>
+            <property name="num">25</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal25</property>
+        </object>
+        <object id="ai26" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT13</property>
+            <property name="desc">DP1</property>
+            <property name="num">26</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal26</property>
+        </object>
+        <object id="ai27" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT14</property>
+            <property name="desc">DP2</property>
+            <property name="num">27</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal27</property>
+        </object>
+        <object id="ai28" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT15</property>
+            <property name="desc">DP3</property>
+            <property name="num">28</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal28</property>
+        </object>
+        <object id="ai29" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">PT16</property>
+            <property name="desc">DP4</property>
+            <property name="num">29</property>
+            <property name="naverage">10</property>
+            <property name="calref">cal29</property>
+        </object>
+        <object id="ai30" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">IN30</property>
+            <property name="desc">Sample Input</property>
+            <property name="num">30</property>
+            <property name="naverage">100</property>
+            <property name="calref">cal30</property>
+        </object>
+        <object id="ai31" type="channel" ref="dev1" ctype="analog" direction="input">
+            <property name="tag">IN31</property>
+            <property name="desc">Sample Input</property>
+            <property name="num">31</property>
+            <property name="naverage">100</property>
+            <property name="calref">cal31</property>
+        </object>
+    </objects>
+</cld>
