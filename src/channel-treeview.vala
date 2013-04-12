@@ -52,6 +52,15 @@ public class ChannelTreeView : TreeView {
                                      Columns.UNITS, (cal as Calibration).units,
                                      Columns.DESCRIPTION, (channel as Channel).desc,
                                      Columns.HIDDEN_ID, (channel as Cld.Object).id);
+            } else if (channel is VChannel) {
+                var cal = (channel as VChannel).calibration;
+                listmodel.append (out iter);
+                listmodel.set (iter, Columns.NUM, (channel as Channel).num,
+                                     Columns.TAG, (channel as Channel).tag,
+                                     Columns.VALUE, (channel as VChannel).scaled_value,
+                                     Columns.UNITS, (cal as Calibration).units,
+                                     Columns.DESCRIPTION, (channel as Channel).desc,
+                                     Columns.HIDDEN_ID, (channel as Cld.Object).id);
             }
         }
 
@@ -66,12 +75,18 @@ public class ChannelTreeView : TreeView {
 
     private bool update_row (TreeModel model, TreePath path, TreeIter iter) {
         string id;
-        double value;
+        double value = 0.0;
+        Cld.Object? cal = null;
 
         model.get (iter, Columns.HIDDEN_ID, out id);
         var channel = channels.get (id);
-        value = (channel as AChannel).scaled_value;
-        var cal = (channel as AChannel).calibration;
+        if (channel is AChannel) {
+            value = (channel as AChannel).scaled_value;
+            cal = (channel as AChannel).calibration;
+        } else if (channel is VChannel) {
+            value = (channel as VChannel).scaled_value;
+            cal = (channel as VChannel).calibration;
+        }
 
         (model as ListStore).set (iter, Columns.VALUE, value,
                                         Columns.UNITS, (cal as Calibration).units,

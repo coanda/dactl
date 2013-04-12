@@ -6,8 +6,8 @@
 
 #define MAX_SAMPLES 128
 #define NSAMPLES    10
-#define NDEV        2
-#define NCHAN       32
+#define NDEV        1
+#define NCHAN       16
 
 void
 threads_acq_func (GObject *data)
@@ -32,6 +32,8 @@ threads_acq_func (GObject *data)
     comedi_insnlist insn_lists[NDEV];
     lsampl_t cdata[NDEV][NDEV*NCHAN][MAX_SAMPLES];
     lsampl_t maxdata;
+    #else
+    /*GTimeVal sample_time;*/
     #endif
 
     /* thread data */
@@ -47,7 +49,7 @@ threads_acq_func (GObject *data)
     for (i = 0; i < NDEV; i++)
     {
         /* open comedi devices */
-        devstr = g_strdup_printf ("/dev/comedi%d", i+1);
+        devstr = g_strdup_printf ("/dev/comedi%d", i);
         dev[i] = comedi_open (devstr);
         if (!dev[i])
         {
@@ -69,7 +71,7 @@ threads_acq_func (GObject *data)
             insns[i][j].n = NSAMPLES;
             insns[i][j].data = cdata[i][j + (i * NCHAN)];
             insns[i][j].subdev = subdev[i];
-            insns[i][j].chanspec = CR_PACK (j, 5, AREF_GROUND);
+            insns[i][j].chanspec = CR_PACK (j, 0, AREF_DIFF);
         }
     }
     #endif
@@ -99,21 +101,22 @@ threads_acq_func (GObject *data)
         for (has_next = gee_iterator_first (it); has_next; has_next = gee_iterator_next (it))
         {
             value = gee_iterator_get (it);
-            //g_debug ("Setting data for channel: %s",
-            //         cld_object_get_id (CLD_OBJECT (value)));
 
             #ifdef USE_COMEDI
             /* read new measurement from comedi compatible hardware */
             num = cld_channel_get_num (CLD_CHANNEL (value));
-            n = (num < NCHAN) ? 0 : 1;
-            cr = comedi_get_range (dev[n], 0, num % NCHAN, 5);
+            /*n = (num < NCHAN) ? 0 : 1;*/
+            n = 0;
+            cr = comedi_get_range (dev[n], 0, num % NCHAN, 0);
             maxdata = comedi_get_maxdata (dev[n], 0, num % NCHAN);
 
-            /* compute the average of our samples */
+            /* compute the average of our samples
+             * XXX for the silly MCC PCI card this needs to start at 1 because
+             *     the first scan is always wrong. */
             meas = 0.0;
-            for (i = 0; i < NSAMPLES; i++)
+            for (i = 1; i < NSAMPLES; i++)
                 meas += comedi_to_phys (cdata[n][(num % NCHAN) + (n * NCHAN)][i], cr, maxdata);
-            meas /= NSAMPLES;
+            meas /= (NSAMPLES - 1);
 
             if (isnan (meas))
             {
@@ -124,17 +127,16 @@ threads_acq_func (GObject *data)
             }
             #else
             /* fill with meaningless data for testing purposes */
+            /*
+             *g_get_current_time (&sample_time);
+             *double degs = (((double)sample_time.tv_sec / 60.0) * 360.0);
+             *double rads = degs * 180.0 / 3.14159265359;
+             *meas = sin (rads);
+             */
             meas = (meas >= 10.0) ? 0 : meas + 0.01;
             #endif
 
-//            if (g_strcmp0 (cld_object_get_id (value), "ai00") == 0) {
-//                /* XXX just for testing - remove */
-//                CldObject *ochannel = cld_builder_get_object (builder, "ao00");
-//                cld_ai_channel_add_raw_value (CLD_AI_CHANNEL (value),
-//                                              cld_achannel_get_scaled_value (CLD_ACHANNEL (ochannel)));
-//            }
-//            else
-                cld_ai_channel_add_raw_value (CLD_AI_CHANNEL (value), meas);
+            cld_ai_channel_add_raw_value (CLD_AI_CHANNEL (value), meas);
         }
 
 
@@ -154,7 +156,7 @@ threads_acq_func (GObject *data)
     #ifdef USE_COMEDI
     for (i = 0; i < NDEV; i++)
     {
-        devstr = g_strdup_printf ("/dev/comedi%d", i+1);
+        devstr = g_strdup_printf ("/dev/comedi%d", i);
         if (!dev[i])
         {
             if (comedi_close (dev[i]) < 0)

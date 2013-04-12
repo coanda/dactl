@@ -186,10 +186,13 @@ public class StripChartWidget : ChartWidget {
 
     private bool update () {
         foreach (var data in series_data) {
-            //debug ("Channel %s: %f", data.id, (data as Cld.AChannel).scaled_value);
-            add_point_to_series (data.id, x_axis_max, (data as Cld.AChannel).scaled_value);
+            if (data is Cld.AChannel)
+                add_point_to_series (data.id, x_axis_max, (data as Cld.AChannel).scaled_value);
+            else if (data is Cld.VChannel)
+                add_point_to_series (data.id, x_axis_max, (data as Cld.VChannel).scaled_value);
         }
-        redraw_canvas ();
+        //redraw_canvas ();
+        queue_draw ();
         return true;
     }
 
@@ -264,8 +267,6 @@ public class XAxisArea : Gtk.DrawingArea {
     private int major_tick_height = 8;
     private int minor_tick_height = 5;
 
-    private GLib.List<Pango.Layout> tick_layout_list;
-
     public override bool draw (Cairo.Context cr) {
         var w = get_allocated_width ();
         var h = get_allocated_height ();
@@ -273,6 +274,8 @@ public class XAxisArea : Gtk.DrawingArea {
         /* ticks */
         var x = 0;
         var y = 0;
+
+        GLib.List<Pango.Layout> tick_layout_list = new GLib.List<Pango.Layout> ();
 
         for (var i = 0; i <= n_divisions_major; i++) {
             string tick_label = "%.1f".printf (axis_min);
@@ -335,8 +338,6 @@ public class YAxisArea : Gtk.DrawingArea {
     private int major_tick_height = 8;
     private int minor_tick_height = 5;
 
-    private GLib.List<Pango.Layout> tick_layout_list;
-
     public override bool draw (Cairo.Context cr) {
         var w = get_allocated_width ();
         var h = get_allocated_height ();
@@ -344,6 +345,8 @@ public class YAxisArea : Gtk.DrawingArea {
         /* ticks */
         var x = 0;
         var y = 0;
+
+        GLib.List<Pango.Layout> tick_layout_list = new GLib.List<Pango.Layout> ();
 
         for (var i = 0; i <= n_divisions_major; i++) {
             string tick_label = "%.1f".printf (axis_max);

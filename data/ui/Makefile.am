@@ -6,4 +6,7 @@ ui_DATA = \
 	settings_dialog.ui \
 	pid_dialog.ui \
 	chart_widget.ui \
+	licor_control.ui \
+	velmex_control.ui \
+	velmex_settings_box.ui \
 	style.css

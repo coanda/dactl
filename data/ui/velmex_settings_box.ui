@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- interface-requires gtk+ 3.0 -->
+  <object class="GtkImage" id="img_traverse_execute">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-execute</property>
+  </object>
+  <object class="GtkTextBuffer" id="textbuffer_traverse">
+    <property name="text" translatable="yes">E
+PMO,
+C,
+SA1M4000,
+A1M50,
+I1M300,
+A1M20,
+I1M-300</property>
+  </object>
+  <object class="GtkBox" id="velmex_settings_box">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkFrame" id="frame_program">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label_xalign">0</property>
+        <property name="shadow_type">none</property>
+        <child>
+          <object class="GtkAlignment" id="alignment13">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="left_padding">12</property>
+            <property name="right_padding">6</property>
+            <child>
+              <object class="GtkBox" id="box26">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkAlignment" id="alignment15">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="top_padding">5</property>
+                    <property name="bottom_padding">5</property>
+                    <child>
+                      <object class="GtkScrolledWindow" id="scrolledwindow_traverse">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkTextView" id="textview_traverse">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="left_margin">5</property>
+                            <property name="right_margin">5</property>
+                            <property name="indent">-7</property>
+                            <property name="buffer">textbuffer_traverse</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButtonBox" id="buttonbox1">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">5</property>
+                    <property name="layout_style">end</property>
+                    <child>
+                      <object class="GtkButton" id="btn_store_prog">
+                        <property name="label" translatable="yes">Store Program</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_action_appearance">False</property>
+                        <property name="image">img_traverse_execute</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child type="label">
+          <object class="GtkLabel" id="label44">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="xpad">5</property>
+            <property name="ypad">5</property>
+            <property name="label" translatable="yes">&lt;b&gt;Program&lt;/b&gt;</property>
+            <property name="use_markup">True</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+  </object>
+</interface>

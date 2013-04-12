@@ -52,10 +52,11 @@ public class Application : Object {
             return 0;
         } else {
             data = new ApplicationData.with_xml_file (path);
+            data.admin = admin;
 
             /* start data acquisition */
             data.run_acquisition ();
-            data.run_device_output ();
+            //data.run_device_output ();
 
             if (gui) {
                 Gdk.threads_init ();
@@ -83,7 +84,7 @@ public class Application : Object {
             }
 
             /* stop data acquisition */
-            data.stop_device_output ();
+            //data.stop_device_output ();
             data.stop_acquisition ();
         }
 

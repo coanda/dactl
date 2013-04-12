@@ -1,0 +1,29 @@
+{
+    "gtk-theme" : "dark",
+    "chart" : {
+        "canvas" : "light gray",
+        "grid" : {
+            "x-axis" : {
+                "major" : "black",
+                "minor" : "dark gray"
+            },
+            "y-axis" : {
+                "major" : "black",
+                "minor" : "dark gray"
+            }
+        },
+        "traces" : {
+            "default" : "red",
+            "color0" : "919C86",
+            "color1" : "9E373E",
+            "color2" : "2B2E36",
+            "color3" : "D1B993",
+            "color4" : "C45A3B",
+            "color5" : "F0E6B1",
+            "color6" : "B5D6AA",
+            "color7" : "99A37A",
+            "color8" : "70584B",
+            "color9" : "3D3536"
+        }
+    }
+}

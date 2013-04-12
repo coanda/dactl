@@ -272,6 +272,61 @@ update_control_config (CldXmlConfig *xml, GeeMap *controls)
     }
 }
 
+static void
+update_log_config (CldXmlConfig *xml, GeeMap *logs)
+{
+    gchar *value, *xpath;
+    gboolean has_next;
+    CldObject *log;
+    GeeMapIterator *it = gee_map_map_iterator (logs);
+
+    for (has_next = gee_map_iterator_first (it); has_next; has_next = gee_map_iterator_next (it))
+    {
+        log = gee_map_iterator_get_value (it);
+
+        /* update the log information of the xml data in memory */
+        value = g_strdup_printf ("%s", cld_log_get_name (CLD_LOG (log)));
+        xpath = g_strdup_printf (
+                    "//cld/objects/object[@type=\"log\" and @id=\"%s\"]/property[@name=\"title\"]",
+                    cld_object_get_id (log));
+        cld_xml_config_edit_node_content (xml, xpath, value);
+        g_free (value);
+        g_free (xpath);
+
+        value = g_strdup_printf ("%s", cld_log_get_path (CLD_LOG (log)));
+        xpath = g_strdup_printf (
+                    "//cld/objects/object[@type=\"log\" and @id=\"%s\"]/property[@name=\"path\"]",
+                    cld_object_get_id (log));
+        cld_xml_config_edit_node_content (xml, xpath, value);
+        g_free (value);
+        g_free (xpath);
+
+        value = g_strdup_printf ("%s", cld_log_get_file (CLD_LOG (log)));
+        xpath = g_strdup_printf (
+                    "//cld/objects/object[@type=\"log\" and @id=\"%s\"]/property[@name=\"file\"]",
+                    cld_object_get_id (log));
+        cld_xml_config_edit_node_content (xml, xpath, value);
+        g_free (value);
+        g_free (xpath);
+
+        value = g_strdup_printf ("%s", cld_log_get_date_format (CLD_LOG (log)));
+        xpath = g_strdup_printf (
+                    "//cld/objects/object[@type=\"log\" and @id=\"%s\"]/property[@name=\"format\"]",
+                    cld_object_get_id (log));
+        cld_xml_config_edit_node_content (xml, xpath, value);
+        g_free (value);
+        g_free (xpath);
+
+        value = g_strdup_printf ("%.3f", cld_log_get_rate (CLD_LOG (log)));
+        xpath = g_strdup_printf (
+                    "//cld/objects/object[@type=\"log\" and @id=\"%s\"]/property[@name=\"rate\"]",
+                    cld_object_get_id (log));
+        cld_xml_config_edit_node_content (xml, xpath, value);
+        g_free (value);
+        g_free (xpath);
+    }
+}
+
 gboolean
 cb_btn_save_clicked (GtkWidget *widget, gpointer data)
 {
@@ -280,9 +335,11 @@ cb_btn_save_clicked (GtkWidget *widget, gpointer data)
     gchar *file;
     GtkWidget *dialog;
     CldXmlConfig *xml = application_data_get_xml (app_data);
+    CldBuilder *builder = application_data_get_builder (app_data);
     GeeMap *aichannels = application_data_get_ai_channels (app_data);
     GeeMap *calibrations = application_data_get_calibrations (app_data);
     GeeMap *controls = application_data_get_control_loops (app_data);
+    GeeMap *logs = cld_builder_get_logs (builder);
 
     /* message box for confirmation */
     file = g_strdup (cld_xml_config_get_file_name (xml));
@@ -303,6 +360,7 @@ cb_btn_save_clicked (GtkWidget *widget, gpointer data)
             update_aichannel_config (xml, aichannels);
             update_calibration_config (xml, calibrations);
             update_control_config (xml, controls);
+            update_log_config (xml, logs);
             /* write the configuration to disc */
             cld_xml_config_save (xml);
             break;

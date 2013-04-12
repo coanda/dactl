@@ -49,11 +49,14 @@ dactl_SOURCES = \
 	coefficient-treeview.vala \
 	device-treeview.vala \
 	driver-data.vala \
+	licor-module-box.vala \
 	log-treeview.vala \
 	pid-box.vala \
 	pid-control-treeview.vala \
 	pid-settings-dialog.vala \
 	user-interface-data.vala \
+	velmex-module-box.vala \
+	velmex-settings-box.vala \
 	main.vala \
 	callbacks.c \
 	threads.c

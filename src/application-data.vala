@@ -10,12 +10,25 @@ public class ApplicationData : GLib.Object {
     public string xml_file { get; set; default = "cld.xml"; }
     public bool active { get; set; default = false; }
 
+    /* Control administrative functionality */
+    public bool _admin = false;
+    public bool admin {
+        get { return _admin; }
+        set{
+            _admin = value;
+            if (ui_enabled)
+                ui.admin = value;
+        }
+    }
+
     /* CLD data */
-    public Cld.Builder builder { get; set; }
-    public Cld.XmlConfig xml { get; set; }
+    public Cld.Builder builder { get; private set; }
+    public Cld.XmlConfig xml { get; private set; }
+    public Cld.Module licor { get; private set; }
+    public Cld.Module velmex { get; private set; }
 
     /* GSettings data */
-    public Settings settings { get; set; }
+    public Settings settings { get; private set; }
 
     /* Flag to set if user requested a graphical interface. */
     private bool _ui_enabled = false;
@@ -23,11 +36,13 @@ public class ApplicationData : GLib.Object {
         get { return _ui_enabled; }
         set {
             _ui_enabled = value;
-            if (_ui_enabled)
+            if (_ui_enabled) {
                 _ui = new UserInterfaceData (this);
-            /* XXX should perform a clean shutdown of the interface - fix */
-            else
+                _ui.admin = admin;
+            } else {
+                /* XXX should perform a clean shutdown of the interface - fix */
                 _ui = null;
+            }
         }
     }
 
@@ -100,6 +115,26 @@ public class ApplicationData : GLib.Object {
             return _ao_channels;
         }
         set { _ao_channels = value; }
+    }
+
+    /* Virtual channel data
+     * XXX also only needed because it hasn't been implemented in CLD yet.
+     */
+    private Gee.Map<string, Cld.Object>? _vchannels = null;
+    public Gee.Map<string, Cld.Object>? vchannels {
+        get {
+            lock (builder) {
+                if (_vchannels == null) {
+                    _vchannels = new Gee.TreeMap<string, Cld.Object> ();
+                    foreach (var channel in builder.channels.values) {
+                        if (channel is VChannel)
+                            _vchannels.set (channel.id, channel);
+                    }
+                }
+            }
+            return _vchannels;
+        }
+        set { _vchannels = value; }
     }
 
     /* Control loop data
@@ -182,6 +217,13 @@ public class ApplicationData : GLib.Object {
     public ApplicationData () {
         xml = new Cld.XmlConfig.with_file_name (xml_file);
         builder = new Cld.Builder.from_xml_config (xml);
+
+        /* This is very application specific, I hate doing this. */
+        var port = builder.get_object ("ser0");
+        licor = new Cld.LicorModule.full ("lm0", port as Cld.Port, vchannels);
+        if (!licor.load ())
+            message ("Failed to load the Licor module.");
+
 //        create_log_threads ();
         /* XXX change for multiple log files */
         log = builder.get_object ("log0") as Cld.Log;
@@ -191,6 +233,32 @@ public class ApplicationData : GLib.Object {
         this.xml_file = xml_file;
         xml = new Cld.XmlConfig.with_file_name (this.xml_file);
         builder = new Cld.Builder.from_xml_config (xml);
+
+        /* XXX this is very application specific, I hate doing this. */
+//        var port = builder.get_object ("ser0");
+        var licor_port = new Cld.SerialPort ();
+        licor_port.id = "ser0";
+        licor_port.device = "/dev/ttyS1";
+        licor_port.baud_rate = 115200;
+        licor_port.handshake = Cld.SerialPort.Handshake.HARDWARE;
+
+//        licor = new Cld.LicorModule.full ("lm0", port as Cld.Port, vchannels);
+        licor = new Cld.LicorModule ();
+        licor.id = "lm0";
+        (licor as LicorModule).port = licor_port;
+        (licor as LicorModule).channels = vchannels;
+
+//        var port = builder.get_object ("ser1");
+        var velmex_port = new Cld.SerialPort ();
+        velmex_port.id = "ser1";
+        velmex_port.device = "/dev/ttyS2";
+        velmex_port.baud_rate = 9600;
+        velmex_port.handshake = Cld.SerialPort.Handshake.HARDWARE;
+
+        velmex = new Cld.VelmexModule ();
+        velmex.id = "vm0";
+        (velmex as VelmexModule).port = velmex_port;
+
 //        create_log_threads ();
         /* XXX change for multiple log files */
         log = builder.get_object ("log0") as Cld.Log;

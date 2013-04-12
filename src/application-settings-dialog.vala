@@ -59,15 +59,19 @@ public class ApplicationSettingsDialog : Dialog {
     private Gtk.Widget scrolledwindow_vchannel;
 
     /* Traverse */
-    private Gtk.Widget btn_traverse_execute_prog;
-    private Gtk.Widget btn_traverse_open_prog;
-    private Gtk.Widget textview_traverse;           /* XXX may not need */
-    private Gtk.Widget textbuffer_traverse;
-    private Gtk.Widget entry_traverse_port;
-    private Gtk.Widget cmb_traverse_baudrate;
-    private Gtk.Widget cmb_traverse_parity;
-    private Gtk.Widget cmb_traverse_stopbits;
-    private Gtk.Widget cmb_traverse_bytesize;
+    private Gtk.Widget scrolledwindow_traverse;
+    private Gtk.Widget velmex_settings_box;
+    /*
+     *private Gtk.Widget btn_traverse_execute_prog;
+     *private Gtk.Widget btn_traverse_open_prog;
+     *private Gtk.Widget textview_traverse;           [> XXX may not need <]
+     *private Gtk.Widget textbuffer_traverse;
+     *private Gtk.Widget entry_traverse_port;
+     *private Gtk.Widget cmb_traverse_baudrate;
+     *private Gtk.Widget cmb_traverse_parity;
+     *private Gtk.Widget cmb_traverse_stopbits;
+     *private Gtk.Widget cmb_traverse_bytesize;
+     */
 
     construct {
         string path = GLib.Path.build_filename (Config.DATADIR,
@@ -201,15 +205,34 @@ public class ApplicationSettingsDialog : Dialog {
 
     private void populate_traverse_page () {
         /* XXX This will be implemented later on, just a placeholder for now */
-        btn_traverse_execute_prog = builder.get_object ("btn_traverse_execute_prog") as Gtk.Widget;
-        btn_traverse_open_prog = builder.get_object ("btn_traverse_open_prog") as Gtk.Widget;
-        textview_traverse = builder.get_object ("textview_traverse") as Gtk.Widget;
-        textbuffer_traverse = builder.get_object ("textbuffer_traverse") as Gtk.Widget;
-        entry_traverse_port = builder.get_object ("entry_traverse_port") as Gtk.Widget;
-        cmb_traverse_baudrate = builder.get_object ("cmb_traverse_baudrate") as Gtk.Widget;
-        cmb_traverse_parity = builder.get_object ("cmb_traverse_parity") as Gtk.Widget;
-        cmb_traverse_stopbits = builder.get_object ("cmb_traverse_stopbits") as Gtk.Widget;
-        cmb_traverse_bytesize = builder.get_object ("cmb_traverse_bytesize") as Gtk.Widget;
+        /*
+         *btn_traverse_execute_prog = builder.get_object ("btn_traverse_execute_prog") as Gtk.Widget;
+         *btn_traverse_open_prog = builder.get_object ("btn_traverse_open_prog") as Gtk.Widget;
+         *textview_traverse = builder.get_object ("textview_traverse") as Gtk.Widget;
+         *textbuffer_traverse = builder.get_object ("textbuffer_traverse") as Gtk.Widget;
+         *entry_traverse_port = builder.get_object ("entry_traverse_port") as Gtk.Widget;
+         *cmb_traverse_baudrate = builder.get_object ("cmb_traverse_baudrate") as Gtk.Widget;
+         *cmb_traverse_parity = builder.get_object ("cmb_traverse_parity") as Gtk.Widget;
+         *cmb_traverse_stopbits = builder.get_object ("cmb_traverse_stopbits") as Gtk.Widget;
+         *cmb_traverse_bytesize = builder.get_object ("cmb_traverse_bytesize") as Gtk.Widget;
+         */
+
+        scrolledwindow_traverse = builder.get_object ("scrolledwindow_traverse") as Gtk.Widget;
+
+        var alignment = new Alignment (0.50f, 0.50f, 1.0f, 1.0f);
+        alignment.top_padding = 5;
+        alignment.right_padding = 5;
+        alignment.bottom_padding = 5;
+        alignment.left_padding = 5;
+
+        var traverse_box = new Box (Orientation.VERTICAL, 10);
+
+        /* pack module content */
+        velmex_settings_box = new VelmexSettingsBox (data.velmex);
+        traverse_box.pack_start (velmex_settings_box, true, true, 0);
+
+        alignment.add (traverse_box);
+        (scrolledwindow_traverse as Gtk.ScrolledWindow).add_with_viewport (alignment);
     }
 
     private void connect_signals () {
@@ -378,6 +401,14 @@ public class ApplicationSettingsDialog : Dialog {
     }
 
     private void update_log_config () {
+        Cld.Builder cld_builder = data.builder;
+
+        var log = cld_builder.get_object ((entry_log_id as Gtk.Entry).text);
+        (log as Cld.Log).name = (entry_log_title as Gtk.Entry).text;
+        (log as Cld.Log).date_format = (entry_log_format as Gtk.Entry).text;
+        (log as Cld.Log).rate = double.parse ((entry_log_rate as Gtk.Entry).text);
+        (log as Cld.Log).path = (entry_log_path as Gtk.Entry).text;
+        (log as Cld.Log).file = (entry_log_file as Gtk.Entry).text;
     }
 
     private void update_aichannel_config () {

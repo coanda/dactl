@@ -38,6 +38,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <time.h>
+#include <math.h>
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>

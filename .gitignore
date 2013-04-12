@@ -1,8 +1,6 @@
 *.o
 *.swp
 
-data/dactl.desktop
-
 Makefile
 Makefile.in
 aclocal.m4
@@ -16,6 +14,10 @@ depcomp
 install-sh
 missing
 stamp-h1
+mkinstalldirs
+
+data/dactl.desktop
+data/schemas/org.coanda.dactl.gschema.valid
 
 src/.deps/
 src/.dirstamp
