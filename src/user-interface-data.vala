@@ -48,36 +48,16 @@ public class UserInterfaceData : GLib.Object {
         set { _main_window = value; }
     }
 
-    private Gtk.Widget _about_dialog;
-    public Gtk.Widget about_dialog {
-        get {
-            string path = GLib.Path.build_filename (Config.DATADIR,
-                                                    "about_dialog.ui");
-            Gtk.Builder dlg_builder = new Gtk.Builder ();
-            GLib.debug ("Loaded interface file: %s", path);
-
-            try {
-                dlg_builder.add_from_file (path);
-            } catch (Error e) {
-                var msg = new MessageDialog (null, DialogFlags.MODAL,
-                                             MessageType.ERROR,
-                                             ButtonsType.CANCEL,
-                                             "Failed to load UI\n%s",
-                                             e.message);
-                msg.run ();
-            }
-
-            _about_dialog = dlg_builder.get_object ("about_dialog") as Gtk.Widget;
-            return _about_dialog;
-        }
-        set { _about_dialog = value; }
-    }
-
+    private GLib.Settings settings;
     private Gtk.Widget frame_channels;
     private Gtk.Widget frame_charts;
     private Gtk.Widget frame_controls;
     private Gtk.Widget frame_modules;
     private Gtk.Widget btn_def;
+    private Gtk.Widget mnu_item_edit_chan;
+    private Gtk.Widget mnu_item_edit_pref;
+    private Gtk.Widget mnu_item_file_quit;
+    private Gtk.Widget mnu_item_help_about;
     private ChannelTreeView channel_treeview;
     private Gee.List<ChartWidget> charts = new Gee.ArrayList<ChartWidget> ();
     private Gee.List<PIDBox> pid_box_list = new Gee.ArrayList<PIDBox> ();
@@ -103,6 +83,10 @@ public class UserInterfaceData : GLib.Object {
             frame_controls = builder.get_object ("frame_controls") as Widget;
             frame_modules = builder.get_object ("frame_modules") as Widget;
             btn_def = builder.get_object ("btn_def") as Widget;
+            mnu_item_edit_chan = builder.get_object ("mnu_item_edit_chan") as Widget;
+            mnu_item_edit_pref = builder.get_object ("mnu_item_edit_pref") as Widget;
+            mnu_item_file_quit = builder.get_object ("mnu_item_file_quit") as Widget;
+            mnu_item_help_about = builder.get_object ("mnu_item_help_about") as Widget;
         } catch (Error e) {
             var msg = new MessageDialog (null, DialogFlags.MODAL,
                                          MessageType.ERROR,
@@ -137,8 +121,9 @@ public class UserInterfaceData : GLib.Object {
         add_module_content ();
 
         /* Setup the interface based on GSettings */
-        var settings = new GLib.Settings ("org.coanda.dactl");
+        settings = new GLib.Settings ("org.coanda.dactl");
         frame_channels.visible = settings.get_boolean ("display-channel-frame");
+        frame_channels.width_request = 300;
         frame_charts.visible = settings.get_boolean ("display-chart-frame");
         frame_controls.visible = settings.get_boolean ("display-control-frame");
         frame_modules.visible = settings.get_boolean ("display-module-frame");
@@ -154,22 +139,6 @@ public class UserInterfaceData : GLib.Object {
 
         if (frame_modules.visible)
             frame_modules.show_all ();
-
-        settings.changed["display-channel-frame"].connect (() => {
-            frame_channels.visible = settings.get_boolean ("display-channel-frame");
-        });
-
-        settings.changed["display-chart-frame"].connect (() => {
-            frame_charts.visible = settings.get_boolean ("display-chart-frame");
-        });
-
-        settings.changed["display-control-frame"].connect (() => {
-            frame_controls.visible = settings.get_boolean ("display-control-frame");
-        });
-
-        settings.changed["display-module-frame"].connect (() => {
-            frame_modules.visible = settings.get_boolean ("display-module-frame");
-        });
 
         /* Connect interface callbacks */
         connect_signals ();
@@ -198,8 +167,28 @@ public class UserInterfaceData : GLib.Object {
             }
         });
 
+        settings.changed["display-channel-frame"].connect (() => {
+            frame_channels.visible = settings.get_boolean ("display-channel-frame");
+        });
+
+        settings.changed["display-chart-frame"].connect (() => {
+            frame_charts.visible = settings.get_boolean ("display-chart-frame");
+        });
+
+        settings.changed["display-control-frame"].connect (() => {
+            frame_controls.visible = settings.get_boolean ("display-control-frame");
+        });
+
+        settings.changed["display-module-frame"].connect (() => {
+            frame_modules.visible = settings.get_boolean ("display-module-frame");
+        });
+
         /* Callbacks with functions */
         channel_treeview.cursor_changed.connect (channel_cursor_changed_cb);
+        (mnu_item_edit_chan as Gtk.MenuItem).activate.connect (mnu_item_edit_chan_activate_cb);
+        (mnu_item_edit_pref as Gtk.MenuItem).activate.connect (mnu_item_edit_pref_activate_cb);
+        (mnu_item_file_quit as Gtk.MenuItem).activate.connect (mnu_item_file_quit_activate_cb);
+        (mnu_item_help_about as Gtk.MenuItem).activate.connect (mnu_item_help_about_activate_cb);
     }
 
     /* XXX These would probably be just as suitable placed in objects
@@ -361,5 +350,70 @@ public class UserInterfaceData : GLib.Object {
         foreach (var chart in charts) {
             chart.select_series (id);
         }
+    }
+
+    private void mnu_item_edit_chan_activate_cb () {
+        var dialog = new ApplicationSettingsDialog.with_startup_tab_id (cb_data, 2);
+
+        (dialog as Gtk.Dialog).run ();
+        (dialog as Gtk.Dialog).destroy ();
+    }
+
+    private void mnu_item_edit_pref_activate_cb () {
+        var dialog = new ApplicationSettingsDialog.with_startup_tab_id (cb_data, 0);
+
+        (dialog as Gtk.Dialog).run ();
+        (dialog as Gtk.Dialog).destroy ();
+    }
+
+    private void mnu_item_file_quit_activate_cb () {
+        var dialog = new Gtk.MessageDialog ((main_window as Gtk.Window),
+                                            Gtk.DialogFlags.MODAL,
+                                            Gtk.MessageType.QUESTION,
+                                            Gtk.ButtonsType.YES_NO,
+                                            "Are you sure you want to quit?");
+
+        (dialog as Gtk.Dialog).response.connect ((response_id) => {
+            switch (response_id) {
+                case ResponseType.NO:
+                    (dialog as Gtk.Dialog).destroy ();
+                    break;
+                case ResponseType.YES:
+                    (dialog as Gtk.Dialog).destroy ();
+                    Gtk.main_quit ();
+                    break;
+            }
+        });
+
+        (dialog as Gtk.Dialog).run ();
+    }
+
+    private void mnu_item_help_about_activate_cb () {
+        string path = GLib.Path.build_filename (Config.DATADIR,
+                                                "about_dialog.ui");
+        Gtk.Builder dlg_builder = new Gtk.Builder ();
+
+        try {
+            dlg_builder.add_from_file (path);
+        } catch (Error e) {
+            var msg = new MessageDialog (null, DialogFlags.MODAL,
+                                            MessageType.ERROR,
+                                            ButtonsType.CANCEL,
+                                            "Failed to load UI\n%s",
+                                            e.message);
+            msg.run ();
+        }
+
+        var about_dialog = dlg_builder.get_object ("about_dialog");
+        (about_dialog as Gtk.Dialog).response.connect ((response_id) => {
+            switch (response_id) {
+                case ResponseType.CANCEL:
+                case ResponseType.DELETE_EVENT:
+                    (about_dialog as Gtk.Dialog).destroy ();
+                    break;
+            }
+        });
+
+        (about_dialog as Gtk.Dialog).run ();
     }
 }

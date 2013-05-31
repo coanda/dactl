@@ -131,6 +131,7 @@ public class ApplicationSettingsDialog : Dialog {
         _content.reparent (content);
 
         title = "Application Settings";
+
         add_button (Stock.APPLY, ResponseType.APPLY);
         add_button (Stock.OK, ResponseType.OK);
         add_button (Stock.CANCEL, ResponseType.CANCEL);
@@ -255,13 +256,12 @@ public class ApplicationSettingsDialog : Dialog {
                 break;
             case ResponseType.OK:
                 update_config ();
-                hide ();
                 break;
             case ResponseType.CANCEL:
             case ResponseType.DELETE_EVENT:
                 /* Probably want to track changes and inform user they may
                  * be lost if any were made */
-                hide ();
+                destroy ();
                 break;
         }
     }
@@ -283,7 +283,6 @@ public class ApplicationSettingsDialog : Dialog {
         selection.get_selected (out model, out iter);
         model.get (iter, DeviceTreeView.Columns.ID, out id);
 
-        debug ("Selected: %s", id);
         device = cld_builder.get_object (id);
 
         (entry_dev_id as Gtk.Entry).set_text (id);
@@ -303,7 +302,6 @@ public class ApplicationSettingsDialog : Dialog {
         selection.get_selected (out model, out iter);
         model.get (iter, LogTreeView.Columns.ID, out id);
 
-        debug ("Selected: %s", id);
         log = cld_builder.get_object (id);
 
         (entry_log_id as Gtk.Entry).set_text (id);
@@ -326,7 +324,6 @@ public class ApplicationSettingsDialog : Dialog {
         selection.get_selected (out model, out iter);
         model.get (iter, AIChannelTreeView.Columns.ID, out id);
 
-        debug ("Selected: %s", id);
         channel = cld_builder.get_object (id);
 
         (entry_aichannel_id as Gtk.Entry).set_text (id);
@@ -359,7 +356,6 @@ public class ApplicationSettingsDialog : Dialog {
         selection.get_selected (out model, out iter);
         model.get (iter, AOChannelTreeView.Columns.ID, out id);
 
-        debug ("Selected: %s", id);
         channel = cld_builder.get_object (id);
     }
 

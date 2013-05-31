@@ -1,6 +1,7 @@
 SUBDIRS = \
 	config \
 	icons \
+	mime \
 	schemas \
 	ui
 
@@ -18,6 +19,6 @@ EXTRA_DIST = \
 # when ./configure is run, perhaps --with-conf-user and --with-conf-group
 
 install-data-hook:
-	chown -R gjohn.$(id -gn gjohn) $(sysconfdir)/@PACKAGE@ && \
+	chown -R captainron.$(id -gn captainron) $(sysconfdir)/@PACKAGE@ && \
 	chmod -R g+w $(sysconfdir)/@PACKAGE@ && \
 	chmod +x $(desktopdir)/@PACKAGE@.desktop

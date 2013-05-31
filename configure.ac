@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([dactl], [0.1])
+AC_INIT([dactl], [0.2])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/main.vala])
 
@@ -13,7 +13,7 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 dnl Support GSettings
 GLIB_GSETTINGS
 
-AC_DEFINE(VERSION, "0.1", "dactl")
+AC_DEFINE(VERSION, "0.2", "dactl")
 
 dnl Programs
 AC_PROG_CC
@@ -152,6 +152,7 @@ AC_CONFIG_FILES([
 	data/icons/32x32/Makefile
 	data/icons/48x48/Makefile
 	data/icons/scalable/Makefile
+	data/mime/Makefile
 	data/schemas/Makefile
 	data/ui/Makefile
 	src/Makefile

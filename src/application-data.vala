@@ -3,11 +3,12 @@ using Gee;
 using Threads;
 
 /**
- * This is all very plain for now just to get things going.
+ * Main application class responsible for interfacing with data and different
+ * interface types.
  */
 public class ApplicationData : GLib.Object {
 
-    public string xml_file { get; set; default = "cld.xml"; }
+    public string xml_file { get; set; default = "dactl.xml"; }
     public bool active { get; set; default = false; }
 
     /* Control administrative functionality */
@@ -20,6 +21,9 @@ public class ApplicationData : GLib.Object {
                 ui.admin = value;
         }
     }
+
+    /* Configuration data */
+    public ApplicationConfig config { get; private set; }
 
     /* CLD data */
     public Cld.Builder builder { get; private set; }
@@ -39,6 +43,7 @@ public class ApplicationData : GLib.Object {
             if (_ui_enabled) {
                 _ui = new UserInterfaceData (this);
                 _ui.admin = admin;
+                //_ui.closed.connect ();
             } else {
                 /* XXX should perform a clean shutdown of the interface - fix */
                 _ui = null;
@@ -46,11 +51,41 @@ public class ApplicationData : GLib.Object {
         }
     }
 
+    /* Flag to set if user requested a command line interface. */
+    private bool _cli_enabled = false;
+    public bool cli_enabled {
+        get { return _cli_enabled; }
+        set {
+            _cli_enabled = value;
+            if (_cli_enabled) {
+                _cli = new CommandLineInterface ();
+                _cli.admin = admin;
+                _cli.cld_request.connect (cli_cld_request_cb);
+                _cli.config_event.connect (cli_config_event_cb);
+                _cli.control_event.connect (cli_control_event_cb);
+                _cli.log_event.connect (cli_log_event_cb);
+                _cli.read_channel.connect (cli_read_channel_cb);
+                _cli.read_channels.connect (cli_read_channels_cb);
+                _cli.write_channel.connect (cli_write_channel_cb);
+                _cli.write_channels.connect (cli_write_channels_cb);
+            } else {
+                _cli = null;
+            }
+        }
+    }
+
     /* Application specific classes. */
+
     private UserInterfaceData _ui;
     public UserInterfaceData ui {
         get { return _ui; }
-        set { _ui = value; }
+        private set { _ui = value; }
+    }
+
+    private CommandLineInterface _cli;
+    public CommandLineInterface cli {
+        get { return _cli; }
+        private set { _cli = value; }
     }
 
     private Gee.Map<string, Cld.Object> _channels;
@@ -212,11 +247,22 @@ public class ApplicationData : GLib.Object {
     private unowned Thread<void *> write_thread;
     //private Mutex write_mutex = new Mutex ();
 
-    /* lists and maps of CLD data - ? still req'd ? */
-
+    /**
+     * Default construction.
+     */
     public ApplicationData () {
-        xml = new Cld.XmlConfig.with_file_name (xml_file);
+        config = new ApplicationConfig (xml_file);
+        xml = new Cld.XmlConfig.from_node (config.get_xml_node ("//dactl/cld:objects"));
         builder = new Cld.Builder.from_xml_config (xml);
+
+        config.property_changed.connect (config_property_changed_cb);
+
+        /* Read configuration settings to control application execution. */
+        if (config.get_boolean_property ("launch-input-on-startup"))
+            run_acquisition ();
+
+        if (config.get_boolean_property ("launch-output-on-startup"))
+            run_device_output ();
 
         /* This is very application specific, I hate doing this. */
         var port = builder.get_object ("ser0");
@@ -229,10 +275,31 @@ public class ApplicationData : GLib.Object {
         log = builder.get_object ("log0") as Cld.Log;
     }
 
+    /**
+     * Construction that loads configuration using the file name provided.
+     */
     public ApplicationData.with_xml_file (string xml_file) {
         this.xml_file = xml_file;
-        xml = new Cld.XmlConfig.with_file_name (this.xml_file);
+
+        if (!FileUtils.test (xml_file, FileTest.EXISTS)) {
+            /* XXX might be better if somehow done after gui was launched
+             *     so that a dialog could be given, or use conditional
+             *     ApplicationData construction */
+            critical ("Configuration selection '%s' does not exist.", xml_file);
+        }
+
+        config = new ApplicationConfig (this.xml_file);
+        xml = new Cld.XmlConfig.from_node (config.get_xml_node ("//dactl/cld:objects"));
         builder = new Cld.Builder.from_xml_config (xml);
+
+        config.property_changed.connect (config_property_changed_cb);
+
+        /* Read configuration settings to control application execution. */
+        if (config.get_boolean_property ("launch-input-on-startup"))
+            run_acquisition ();
+
+        if (config.get_boolean_property ("launch-output-on-startup"))
+            run_device_output ();
 
         /* XXX this is very application specific, I hate doing this. */
 //        var port = builder.get_object ("ser0");
@@ -264,6 +331,15 @@ public class ApplicationData : GLib.Object {
         log = builder.get_object ("log0") as Cld.Log;
     }
 
+    /**
+     * Destruction occurs when object goes out of scope.
+     */
+    ~ApplicationData () {
+        /* Stop hardware threads. */
+        stop_acquisition ();
+        stop_device_output ();
+    }
+
 /*
     private void create_log_threads () {
         foreach (var log in builder.logs.values) {
@@ -273,6 +349,17 @@ public class ApplicationData : GLib.Object {
     }
 */
 
+    /**
+     * Callback to handle configuration changes that could be done in different
+     * pieces of the application.
+     */
+    private void config_property_changed_cb (string property) {
+        message ("Property '%s' was changed.", property);
+    }
+
+    /**
+     * Start the thread that handles data acquisition.
+     */
     public void run_acquisition () {
         if (!Thread.supported ()) {
             stderr.printf ("Cannot run acquisition without thread support.\n");
@@ -295,6 +382,9 @@ public class ApplicationData : GLib.Object {
         }
     }
 
+    /**
+     * Stops the thread that handles data acquisition.
+     */
     public void stop_acquisition () {
         if (_acq_active) {
             _acq_active = false;
@@ -302,6 +392,9 @@ public class ApplicationData : GLib.Object {
         }
     }
 
+    /**
+     * Starts the thread that handles output channels.
+     */
     public void run_device_output () {
         if (!Thread.supported ()) {
             stderr.printf ("Cannot run device output without thread support.\n");
@@ -324,6 +417,9 @@ public class ApplicationData : GLib.Object {
         }
     }
 
+    /**
+     * Stops the thread that handles output channels.
+     */
     public void stop_device_output () {
         if (_write_active) {
             _write_active = false;
@@ -331,26 +427,96 @@ public class ApplicationData : GLib.Object {
         }
     }
 
+    /**
+     * CommandLineInterface callbacks.
+     */
+
+    public void cli_cld_request_cb (string request) {
+    }
+
+    public void cli_config_event_cb (string event) {
+    }
+
+    public void cli_control_event_cb (string event, string id) {
+    }
+
+    public void cli_log_event_cb (string event, string id) {
+        var log = builder.get_object (id);
+        if (event == "start") {
+            if (!(log as Cld.Log).active) {
+                (log as Cld.Log).file_open ();
+                (log as Cld.Log).run ();
+            }
+        } else if (event == "stop") {
+            if ((log as Cld.Log).active) {
+                (log as Cld.Log).stop ();
+                (log as Cld.Log).file_mv_and_date (false);
+            }
+        }
+    }
+
+    public void cli_read_channel_cb (string id) {
+        var channel = builder.get_object (id);
+        cli.queue_result ("%s: %f".printf (id, (channel as Cld.AIChannel).scaled_value));
+    }
+
+    public void cli_read_channels_cb (string[] ids) {
+        var channels = new Gee.TreeMap<string, Cld.Object> ();
+
+        foreach (var id in ids) {
+            var channel = builder.get_object (id);
+            channels.set (channel.id, channel);
+        }
+
+        foreach (var channel in channels.values) {
+            cli.queue_result ("%s: %f".printf (channel.id, (channel as Cld.AIChannel).scaled_value));
+        }
+    }
+
+    public void cli_write_channel_cb (string id, double value) {
+    }
+
+    public void cli_write_channels_cb (string[] ids, double[] values) {
+    }
+
+    /**
+     * Internal thread classes for hardware access.
+     */
     public class AcquisitionThread {
         unowned ApplicationData data;
 
+        /**
+         * Construction
+         */
         public AcquisitionThread (ApplicationData data) {
             this.data = data;
         }
 
+        /**
+         * Hands over control to the function that does the actual work.
+         */
         public void * run () {
             acq_func (data);
             return null;
         }
     }
 
+    /**
+     * Simple thread class that contains data to use with the output device.
+     */
     public class DeviceOutputThread {
         unowned ApplicationData data;
 
+        /**
+         * Construction
+         */
         public DeviceOutputThread (ApplicationData data) {
             this.data = data;
         }
 
+        /**
+         * Hands over control to the function that does the actual work.
+         */
         public void * run () {
             write_func (data);
             return null;

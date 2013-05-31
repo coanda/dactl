@@ -5,12 +5,6 @@
 
 BEGIN_C_DECLS
 
-/* menubar */
-gboolean cb_mnu_item_help_about_activate (GtkWidget *widget, gpointer data);
-gboolean cb_mnu_item_edit_pref_activate (GtkWidget *widget, gpointer data);
-gboolean cb_mnu_item_edit_chan_activate (GtkWidget *widget, gpointer data);
-gboolean cb_mnu_item_file_quit_activate (GtkWidget *widget, gpointer data);
-
 /* toolbar */
 gboolean cb_btn_quit_clicked (GtkWidget *widget, gpointer data);
 gboolean cb_btn_pref_clicked (GtkWidget *widget, gpointer data);

@@ -11,10 +11,14 @@ public class Application : Object {
     private static bool test = false;
     private static bool verbose = false;
     private static bool version = false;
+    private static string cfgfile = null;
 
     private const GLib.OptionEntry[] options = {{
         "admin", 'a', 0, OptionArg.NONE, ref admin,
         "Allow administrative functionality.", null
+    },{
+        "config", 'c', 0, OptionArg.STRING, ref cfgfile,
+        "Use the given configuration file.", null
     },{
         "gui", 'g', 0, OptionArg.NONE, ref gui,
         "Start the application with a user interface", null
@@ -33,9 +37,6 @@ public class Application : Object {
 
     public static int main (string[] args) {
 
-        /* XXX allow options to select the config file? */
-        string path = Path.build_filename (DATADIR, "cld.xml");
-
         try {
             var opt_context = new OptionContext (PACKAGE_NAME);
             opt_context.set_help_enabled (true);
@@ -49,76 +50,59 @@ public class Application : Object {
 
         if (version) {
             stdout.printf ("%s\n", PACKAGE_VERSION);
-            return 0;
         } else {
-            data = new ApplicationData.with_xml_file (path);
-            data.admin = admin;
+            if (test) {
+                var title = """
+    .___              __  .__
+  __| _/____    _____/  |_|  |
+ / __ |\__  \ _/ ___\   __\  |
+/ /_/ | / __ \\  \___|  | |  |__
+\____ |(____  /\___  >__| |____/
+     \/     \/     \/
+                """;
+                stdout.printf ("%s\n%s - version %s\n", title, args[0], PACKAGE_VERSION);
+            } else {
+                if (cfgfile == null) {
+                    cfgfile = Path.build_filename (DATADIR, "dactl.xml");
+                }
 
-            /* start data acquisition */
-            data.run_acquisition ();
-            //data.run_device_output ();
+                data = new ApplicationData.with_xml_file (cfgfile);
+                data.admin = admin;
 
-            if (gui) {
-                Gdk.threads_init ();
-                Gdk.threads_enter ();
-                Gtk.init (ref args);
+                if (gui) {
+                    Gdk.threads_init ();
+                    Gdk.threads_enter ();
+                    Gtk.init (ref args);
 
-                string css_path = GLib.Path.build_filename (Config.DATADIR,
-                                                            "style.css");
-                CssProvider provider = new CssProvider ();
-                provider.load_from_path (css_path);
-                Gdk.Display display = Gdk.Display.get_default ();
-                Gdk.Screen screen = display.get_default_screen ();
-                Gtk.StyleContext.add_provider_for_screen (screen,
-                    provider as Gtk.StyleProvider,
-                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-                provider.unref ();
+                    string css_path = GLib.Path.build_filename (Config.DATADIR,
+                                                                "style.css");
+                    CssProvider provider = new CssProvider ();
+                    provider.load_from_path (css_path);
+                    Gdk.Display display = Gdk.Display.get_default ();
+                    Gdk.Screen screen = display.get_default_screen ();
+                    Gtk.StyleContext.add_provider_for_screen (screen,
+                        provider as Gtk.StyleProvider,
+                        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+                    provider.unref ();
 
-                //var ui = new UserInterfaceData (data);
-                data.ui_enabled = true;
+                    data.ui_enabled = true;
+                    //data.closed.connect (() = { Gtk.main_quit (); });
 
-                Gtk.main ();
-                Gdk.threads_leave ();
-            } else if (test) {
-                debug ("Moo!");
+                    Gtk.main ();
+                    Gdk.threads_leave ();
+                } else {
+                    loop = new MainLoop ();
+
+                    data.cli_enabled = true;
+                    var cli = data.cli;
+                    cli.run ();
+                    cli.closed.connect (() => { loop.quit (); });
+
+                    loop.run ();
+                }
             }
-
-            /* stop data acquisition */
-            //data.stop_device_output ();
-            data.stop_acquisition ();
         }
 
         return 0;
-    }
-
-    private static void * cli_thread () {
-        string? cmd = "dummy";
-        var builder = data.builder;
-        var log = builder.get_object ("log0");
-
-        do {
-            stdout.printf (">>> ");
-            cmd = stdin.read_line ();
-            if (cmd != null) {
-                if (cmd == "start-log") {
-                    if (!(log as Cld.Log).is_open) {
-                        stdout.printf ("starting logging...\n");
-                        stdout.printf ("temporarily disabled\n");
-                        //(log as Cld.Log).file_open ();
-                        //(log as Cld.Log).run ();
-                    }
-                } else if (cmd == "stop-log") {
-                    if ((log as Cld.Log).is_open) {
-                        stdout.printf ("stopping logging...\n");
-                        //(log as Cld.Log).stop ();
-                        //(log as Cld.Log).file_mv_and_date (false);
-                    }
-                }
-            }
-        } while (cmd != "quit");
-
-        loop.quit ();
-
-        return null;
     }
 }

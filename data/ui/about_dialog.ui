@@ -6,7 +6,7 @@
     <property name="border_width">5</property>
     <property name="type_hint">dialog</property>
     <property name="program_name">DACTL</property>
-    <property name="version">v0.1</property>
+    <property name="version">v0.2</property>
     <property name="copyright" translatable="yes">© 2013 Coanda Research &amp; Development Corporation
 401 - 6741 Cariboo Rd, Burnaby, BC V3N 4A3 Canada. All rights reserved.</property>
     <property name="comments" translatable="yes">Data Acquisition and Control Software</property>

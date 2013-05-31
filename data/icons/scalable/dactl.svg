@@ -14,13 +14,25 @@
    height="256"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
-   sodipodi:docname="new icon4.svg"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="dactl.svg"
    inkscape:export-filename="Y:\Infrastructure\Computer System\Documents\Website\Icon\icon-256x256.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
      id="defs4">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3062">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop3064" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop3066" />
+    </linearGradient>
     <linearGradient
        inkscape:collect="always"
        id="linearGradient4192">
@@ -231,14 +243,6 @@
        y1="83.962387"
        x2="182.74861"
        y2="239.85001" />
-    <filter
-       inkscape:collect="always"
-       id="filter4274">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.67521093"
-         id="feGaussianBlur4276" />
-    </filter>
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3978"
@@ -343,6 +347,15 @@
        r="128.09375"
        gradientTransform="matrix(2.8021572,-0.00631316,0.002309,1.0248833,-29.261936,-35.573328)"
        gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3062"
+       id="linearGradient3068"
+       x1="99.061729"
+       y1="817.27576"
+       x2="213.72839"
+       y2="1053.2758"
+       gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -355,7 +368,7 @@
      inkscape:cx="509.21257"
      inkscape:cy="84.448763"
      inkscape:document-units="px"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="g4226"
      showgrid="false"
      width="256px"
      inkscape:snap-global="false"
@@ -363,7 +376,7 @@
      inkscape:guide-bbox="true"
      inkscape:window-width="1628"
      inkscape:window-height="955"
-     inkscape:window-x="1696"
+     inkscape:window-x="1920"
      inkscape:window-y="28"
      inkscape:window-maximized="0">
     <sodipodi:guide
@@ -406,7 +419,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -433,6 +446,16 @@
       <g
          id="g3208"
          transform="translate(0,-796.3622)">
+        <rect
+           style="opacity:0;fill:#000000;fill-opacity:0;stroke:#cccccc;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect4009"
+           width="214.66667"
+           height="198"
+           x="17.333334"
+           y="12"
+           transform="translate(0,796.3622)"
+           rx="15.000001"
+           ry="14.999999" />
         <g
            id="g4226"
            transform="translate(4.9382735,3.0864238)"
@@ -444,19 +467,9 @@
           <path
              id="path3861"
              d="m 150.26956,889.0628 c -14.82599,-8.18039 -24.06159,-23.81759 -24.06159,-40.66878 0,0 0,0 0,0 l 0,-47.23318 -33.216826,0.0804 0,51.52637 c 0,12.23641 -5.103998,24.4688 -13.691754,32.8944 -12.233475,12.07159 -19.524952,29.40919 -19.524952,47.07239 0,32.16278 23.33271,59.95197 55.009932,65.45916 11.9908,2.02604 23.252,9.31804 30.13839,19.28324 l 14.9068,21.3051 40.50838,0 -25.76319,-36.8619 c -8.4256,-12.23243 -23.00879,-19.93044 -38.07758,-19.93044 -1.6204,0 -3.4028,0.24521 -4.9424,0.32561 -1.62,0.0804 -3.5644,0.24119 -5.3468,0.24119 -27.464789,0 -49.825179,-22.35838 -49.825179,-49.82196 0,-27.46761 22.36039,-49.82599 49.825179,-49.82599 8.4256,0 16.93239,2.2672 24.06159,6.15439 z"
-             style="fill:#faf6f6;fill-opacity:1;stroke:none;filter:url(#filter4178)"
+             style="fill:url(#linearGradient3068);fill-opacity:1;stroke:none;filter:url(#filter4178)"
              inkscape:connector-curvature="0" />
         </g>
-        <rect
-           style="opacity:0;fill:#000000;fill-opacity:0;stroke:#cccccc;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-           id="rect4009"
-           width="214.66667"
-           height="198"
-           x="17.333334"
-           y="12"
-           transform="translate(0,796.3622)"
-           rx="15.000001"
-           ry="14.999999" />
       </g>
     </g>
   </g>

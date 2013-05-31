@@ -40,6 +40,7 @@ dactl_headers = \
 dactl_SOURCES = \
 	aichannel-treeview.vala \
 	aochannel-treeview.vala \
+	application-config.vala \
 	application-controller.vala \
 	application-data.vala \
 	application-settings-dialog.vala \
@@ -47,6 +48,7 @@ dactl_SOURCES = \
 	channel-treeview.vala \
 	chart-widget.vala \
 	coefficient-treeview.vala \
+	command-line-interface.vala \
 	device-treeview.vala \
 	driver-data.vala \
 	licor-module-box.vala \
