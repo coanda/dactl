@@ -19,6 +19,8 @@ public class ApplicationData : GLib.Object {
             _admin = value;
             if (ui_enabled)
                 ui.admin = value;
+            if (cli.enabled)
+                cli.admin = value;
         }
     }
 
@@ -28,8 +30,9 @@ public class ApplicationData : GLib.Object {
     /* CLD data */
     public Cld.Builder builder { get; private set; }
     public Cld.XmlConfig xml { get; private set; }
-    public Cld.Module licor { get; private set; }
-    public Cld.Module velmex { get; private set; }
+//    public Cld.Module licor { get; private set; }
+//    public Cld.Module velmex { get; private set; }
+    public Cld.Module brabender { get; private set; }
 
     /* GSettings data */
     public Settings settings { get; private set; }
@@ -265,10 +268,10 @@ public class ApplicationData : GLib.Object {
             run_device_output ();
 
         /* This is very application specific, I hate doing this. */
-        var port = builder.get_object ("ser0");
-        licor = new Cld.LicorModule.full ("lm0", port as Cld.Port, vchannels);
-        if (!licor.load ())
-            message ("Failed to load the Licor module.");
+//        var port = builder.get_object ("ser0");
+//        licor = new Cld.LicorModule.full ("lm0", port as Cld.Port, vchannels);
+//        if (!licor.load ())
+//            message ("Failed to load the Licor module.");
 
 //        create_log_threads ();
         /* XXX change for multiple log files */
@@ -303,32 +306,42 @@ public class ApplicationData : GLib.Object {
 
         /* XXX this is very application specific, I hate doing this. */
 //        var port = builder.get_object ("ser0");
-        var licor_port = new Cld.SerialPort ();
-        licor_port.id = "ser0";
-        licor_port.device = "/dev/ttyS1";
-        licor_port.baud_rate = 115200;
-        licor_port.handshake = Cld.SerialPort.Handshake.HARDWARE;
-
+//        var licor_port = new Cld.SerialPort ();
+//        licor_port.id = "ser0";
+//        licor_port.device = "/dev/ttyS1";
+//        licor_port.baud_rate = 115200;
+//        licor_port.handshake = Cld.SerialPort.Handshake.HARDWARE;
 //        licor = new Cld.LicorModule.full ("lm0", port as Cld.Port, vchannels);
-        licor = new Cld.LicorModule ();
-        licor.id = "lm0";
-        (licor as LicorModule).port = licor_port;
-        (licor as LicorModule).channels = vchannels;
+//        licor = new Cld.LicorModule ();
+//        licor.id = "lm0";
+//        (licor as LicorModule).port = licor_port;
+
+//        (licor as LicorModule).channels = vchannels;
 
 //        var port = builder.get_object ("ser1");
-        var velmex_port = new Cld.SerialPort ();
-        velmex_port.id = "ser1";
-        velmex_port.device = "/dev/ttyS2";
-        velmex_port.baud_rate = 9600;
-        velmex_port.handshake = Cld.SerialPort.Handshake.HARDWARE;
+//        var velmex_port = new Cld.SerialPort ();
+//        velmex_port.id = "ser1";
+//        velmex_port.device = "/dev/ttyS2";
+//        velmex_port.baud_rate = 9600;
+//        velmex_port.handshake = Cld.SerialPort.Handshake.HARDWARE;
 
-        velmex = new Cld.VelmexModule ();
-        velmex.id = "vm0";
-        (velmex as VelmexModule).port = velmex_port;
+//        velmex = new Cld.VelmexModule ();
+//        velmex.id = "vm0";
+//        (velmex as VelmexModule).port = velmex_port;
 
+//        var brabender_port = new Cld.ModbusPort ();
+//        brabender_port.id = "mod0";
+//        brabender_port.ip_address = "10.0.1.77";
+//        brabender = new Cld.BrabenderModule();
+        brabender = builder.get_object ("bm0") as Cld.BrabenderModule;
+        message ("Brabender IP Address is: %s\n", ((brabender as Cld.BrabenderModule).port as Cld.ModbusPort).ip_address);
+//        brabender.id = "bm0";
+//        (brabender as BrabenderModule).port = brabender_port;
+        (brabender as BrabenderModule).channels = vchannels;
 //        create_log_threads ();
         /* XXX change for multiple log files */
         log = builder.get_object ("log0") as Cld.Log;
+        message ("got log");
     }
 
     /**
@@ -425,6 +438,9 @@ public class ApplicationData : GLib.Object {
             _write_active = false;
             write_thread.join ();
         }
+    }
+    public void stop_brabender () {
+        brabender.unload();
     }
 
     /**

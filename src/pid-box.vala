@@ -64,15 +64,16 @@ public class PIDBox : Gtk.Box {
         var r1hbox = new Box (Orientation.HORIZONTAL, 5);
         var desc = new Label (pid.desc);
         desc.justify = Justification.LEFT;
+        string units = pid.pv.calibration.units;
         r1hbox.pack_start (desc, false, false, 0);
         r1hbox.pack_start (manual_scale, true, true, 0);
         r1hbox.pack_start (pid_enable, false, false, 0);
         r1hbox.pack_start (pid_settings, false, false, 0);
 
         var r2hbox = new Box (Orientation.HORIZONTAL, 10);
-        r2hbox.pack_start (new Gtk.Label ("Output"), true, false, 0);
+        r2hbox.pack_start (new Gtk.Label ("Output\n[% of max.]"), true, false, 0);
         r2hbox.pack_start (manual_spin_button, false, false, 0);
-        r2hbox.pack_start (new Gtk.Label ("PID Setpoint"), true, false, 0);
+        r2hbox.pack_start (new Gtk.Label ("PID Setpoint\n[" + units + "]"), true, false, 0);
         r2hbox.pack_start (sp_spin_button, false, false, 0);
 
         var vbox = new Box (Orientation.VERTICAL, 10);

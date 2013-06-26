@@ -44,6 +44,7 @@ dactl_SOURCES = \
 	application-controller.vala \
 	application-data.vala \
 	application-settings-dialog.vala \
+	brabender-module-box.vala\
 	calibration-treeview.vala \
 	channel-treeview.vala \
 	chart-widget.vala \
@@ -57,6 +58,7 @@ dactl_SOURCES = \
 	pid-control-treeview.vala \
 	pid-settings-dialog.vala \
 	user-interface-data.vala \
+	utility.vala \
 	velmex-module-box.vala \
 	velmex-settings-box.vala \
 	main.vala \

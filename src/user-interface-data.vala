@@ -3,27 +3,18 @@ using Gee;
 using Gtk;
 using Callbacks;
 
-public class Utility {
-
-    public static Gee.List<double?> hex_to_rgb (string hex) {
-        Gee.ArrayList<double?> rgb = new Gee.ArrayList<double?> ();
-
-        Gdk.Color color = Gdk.Color ();
-        Gdk.Color.parse (hex, out color);
-        rgb.add (color.red / 65535.0);
-        rgb.add (color.green / 65535.0);
-        rgb.add (color.blue / 65535.0);
-
-        return rgb;
-    }
-}
-
 /**
  * This is all very plain for now just to get things going.
  */
 public class UserInterfaceData : GLib.Object {
 
     public Gtk.Builder builder;         /* change to private ??? */
+
+    private int _chan_scroll_min_width = 400;
+    public int chan_scroll_min_width {
+        get { return _chan_scroll_min_width; }
+        set { _chan_scroll_min_width = value; }
+    }
 
     public bool _admin = false;
     public bool admin {
@@ -64,8 +55,9 @@ public class UserInterfaceData : GLib.Object {
     //private Gee.List<ModuleBox> module_box_list = new Gee.ArrayList<ModuleBox> ();
 
     /* XXX these need to be hardcoded to speed up delivery, change later */
-    private Gtk.Widget licor_box;
-    private Gtk.Widget velmex_box;
+//    private Gtk.Widget licor_box;
+//    private Gtk.Widget velmex_box;
+    private Gtk.Widget brabender_box;
 
     /* Thread for control loop execution */
     private unowned GLib.Thread<void *> log_thread;
@@ -202,6 +194,7 @@ public class UserInterfaceData : GLib.Object {
         channels.set_all (cb_data.vchannels);
 
         channel_treeview = new ChannelTreeView (channels);
+        (channel_scroll as Gtk.ScrolledWindow).set_min_content_width (_chan_scroll_min_width);
 
         /* XXX row_activated/cursor_changed(?) goes here */
         (channel_scroll as Gtk.ScrolledWindow).add (channel_treeview);
@@ -234,6 +227,7 @@ public class UserInterfaceData : GLib.Object {
             chart.x_axis_max = chart_settings.get_double ("x-axis-max");
             chart.y_axis_min = chart_settings.get_double ("y-axis-min");
             chart.y_axis_max = chart_settings.get_double ("y-axis-max");
+            chart.height_min = chart_settings.get_int ("height-min");
 
             /* Add data */
             Gee.List<Cld.Object> data = new Gee.ArrayList<Cld.Object> ();
@@ -273,8 +267,11 @@ public class UserInterfaceData : GLib.Object {
                     chart.y_axis_min = chart_settings.get_double ("y-axis-min");
                 else if (key == "y-axis-max")
                     chart.y_axis_max = chart_settings.get_double ("y-axis-max");
+                else if (key == "height-min")
+                    chart.height_min = chart_settings.get_int ("height-min");
             });
 
+            (chart as Widget).height_request = chart.height_min;
             charts.add (chart);
         }
 
@@ -320,12 +317,16 @@ public class UserInterfaceData : GLib.Object {
         var module_box = new Box (Orientation.VERTICAL, 10);
 
         /* pack module content */
-        licor_box = new LicorModuleBox (cb_data.licor);
-        module_box.pack_start (licor_box, false, false, 0);
-        module_box.pack_start (new Gtk.Separator (Orientation.HORIZONTAL), false, false, 0);
+//        licor_box = new LicorModuleBox (cb_data.licor);
+//        module_box.pack_start (licor_box, false, false, 0);
+//        module_box.pack_start (new Gtk.Separator (Orientation.HORIZONTAL), false, false, 0);
 
-        velmex_box = new VelmexModuleBox (cb_data.velmex);
-        module_box.pack_start (velmex_box, false, false, 0);
+//        velmex_box = new VelmexModuleBox (cb_data.velmex);
+//        module_box.pack_start (velmex_box, false, false, 0);
+//        module_box.pack_start (new Gtk.Separator (Orientation.HORIZONTAL), false, false, 0);
+
+        brabender_box = new BrabenderModuleBox (cb_data.brabender);
+        module_box.pack_start (brabender_box, false, false, 0);
 
         alignment.add (module_box);
         (module_scroll as Gtk.ScrolledWindow).add_with_viewport (alignment);

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
+  <object class="GtkAdjustment" id="adj_log_rate">
+    <property name="upper">100</property>
+    <property name="value">10</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkDialog" id="settings_dialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
@@ -747,12 +753,12 @@
                                                       </packing>
                                                     </child>
                                                     <child>
-                                                      <object class="GtkEntry" id="entry_log_rate">
+                                                      <object class="GtkSpinButton" id="btn_log_rate">
                                                         <property name="visible">True</property>
                                                         <property name="can_focus">True</property>
                                                         <property name="invisible_char">●</property>
-                                                        <property name="text" translatable="yes">(null)</property>
-                                                        <property name="invisible_char_set">True</property>
+                                                        <property name="adjustment">adj_log_rate</property>
+                                                        <property name="numeric">True</property>
                                                       </object>
                                                       <packing>
                                                         <property name="expand">False</property>
@@ -1505,7 +1511,7 @@
                 </child>
                 <child>
                   <object class="GtkFrame" id="frame7">
-                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">none</property>
@@ -1545,12 +1551,12 @@
                 </child>
                 <child type="tab">
                   <object class="GtkBox" id="box11">
-                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkImage" id="image4">
-                        <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
                         <property name="stock">gtk-harddisk</property>
                         <property name="icon-size">5</property>
@@ -1563,7 +1569,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="label12">
-                        <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Traverse</property>
                       </object>

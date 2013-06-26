@@ -72,6 +72,8 @@ public class ChartWidget : Gtk.Box {
         }
     }
 
+    public int height_min {get; set; default = 100;}
+
     public double x_axis_max {
         get { return (x_axis_area as XAxisArea).axis_max; }
         set {

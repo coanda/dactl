@@ -1,0 +1,10 @@
+Data Acquisition and Control Application (dactl)
+
+Version 0.1
+
+================================================================================
+
+Dependencies:
+
+libcld - dc5c110
+  - brabender code implemented by above git ref

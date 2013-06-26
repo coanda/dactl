@@ -26,7 +26,7 @@ threads_acq_func (GObject *data)
     gchar *devstr;
     gint ret, i, j, n, num;
     guint subdev[NDEV];
-    comedi_t *dev[NDEV];
+    //comedi_t *dev[NDEV];
     comedi_range *cr;
     comedi_insn insns[NDEV][NCHAN];
     comedi_insnlist insn_lists[NDEV];
@@ -49,7 +49,7 @@ threads_acq_func (GObject *data)
     for (i = 0; i < NDEV; i++)
     {
         /* open comedi devices */
-        devstr = g_strdup_printf ("/dev/comedi%d", i);
+        devstr = g_strdup_printf ("/dev/comedi%d", i+1);
         dev[i] = comedi_open (devstr);
         if (!dev[i])
         {
@@ -107,7 +107,7 @@ threads_acq_func (GObject *data)
             num = cld_channel_get_num (CLD_CHANNEL (value));
             /*n = (num < NCHAN) ? 0 : 1;*/
             n = 0;
-            cr = comedi_get_range (dev[n], 0, num % NCHAN, 0);
+            cr = comedi_get_range (dev[n], 0, num % NCHAN, 5);
             maxdata = comedi_get_maxdata (dev[n], 0, num % NCHAN);
 
             /* compute the average of our samples
@@ -156,7 +156,7 @@ threads_acq_func (GObject *data)
     #ifdef USE_COMEDI
     for (i = 0; i < NDEV; i++)
     {
-        devstr = g_strdup_printf ("/dev/comedi%d", i);
+        devstr = g_strdup_printf ("/dev/comedi%d", i );
         if (!dev[i])
         {
             if (comedi_close (dev[i]) < 0)
@@ -190,6 +190,8 @@ threads_write_func (GObject *data)
                 application_data_get_ao_channels (app_data));
 
     /* comedi data */
+    /* output */
+/*
     #ifdef USE_COMEDI
     comedi_t *dev;
 
@@ -200,6 +202,7 @@ threads_write_func (GObject *data)
     }
     g_debug ("Opened device: %s", "/dev/comedi0");
     #endif
+*/
 
     delay = 1e6 / 100;       /* static 100 Hz for now */
     g_get_current_time (&next_time);
@@ -215,12 +218,13 @@ threads_write_func (GObject *data)
             value = gee_iterator_get (it);
             gdouble val = cld_achannel_get_scaled_value (CLD_ACHANNEL (value));
             gint num = cld_channel_get_num (CLD_CHANNEL (value));
+            // g_debug ("num = %d, val = %.2f", num, val);
             guint16 out;
             val = (val < 0.0) ? 0.0 : val;
             val = (val > 100.0) ? 100.0 : val;
             #ifdef USE_COMEDI
-            out = (val / 100.0) * 32767 + 32768;
-            comedi_data_write (dev, 0, num, 0, 0, out);
+            out = (val / 100.0) * 4095;
+            comedi_data_write (dev[0], 1, num, 1, 0, out);
             #endif
         }
 
@@ -237,6 +241,7 @@ threads_write_func (GObject *data)
         g_static_mutex_unlock (&mutex);
     }
 
+/*
     #ifdef USE_COMEDI
     if (!dev)
     {
@@ -245,4 +250,5 @@ threads_write_func (GObject *data)
     }
     g_debug ("Closed device: %s", "/dev/comedi0");
     #endif
+*/
 }

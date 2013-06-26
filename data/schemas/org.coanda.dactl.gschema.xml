@@ -28,7 +28,7 @@
   </schema>
   <schema id="org.coanda.dactl.charts.chart1" path="/org/coanda/dactl/charts/chart1/">
     <key name="title" type="s">
-      <default>'Chart 1'</default>
+      <default>'Speed'</default>
       <summary>Chart title.</summary>
       <description>The title of the chart to be used.</description>
     </key>
@@ -38,7 +38,7 @@
       <description>The label to be used for the X axis.</description>
     </key>
     <key name="y-axis-label" type="s">
-      <default>'Voltage [V]'</default>
+      <default>'[RPM]'</default>
       <summary>Y Axis label.</summary>
       <description>The label to be used for the Y axis.</description>
     </key>
@@ -62,8 +62,13 @@
       <summary>Maximum Y axis value.</summary>
       <description>The maximum value to use for the Y axis.</description>
     </key>
+    <key name="height-min" type="i">
+      <default>100</default>
+      <summary>Minimum height.</summary>
+      <description>The minimum height for the chart.</description>
+    </key>
     <key name="series-list" type="as">
-      <default>['ai00','ai01','ai02','ai03','ai04','ai05']</default>
+      <default>['ai01']</default>
       <summary>The list of of chart data series to create.</summary>
       <description>This is the list of data series that will be added to the chart, each should have a corresponding entry in the CLD configuration.</description>
     </key>
@@ -75,7 +80,7 @@
   </schema>
   <schema id="org.coanda.dactl.charts.chart2" path="/org/coanda/dactl/charts/chart2/">
     <key name="title" type="s">
-      <default>'Chart 2'</default>
+      <default>'Torque'</default>
       <summary>Chart title.</summary>
       <description>The title of the chart to be used.</description>
     </key>
@@ -85,7 +90,7 @@
       <description>The label to be used for the X axis.</description>
     </key>
     <key name="y-axis-label" type="s">
-      <default>'Voltage [V]'</default>
+      <default>'[lbf-in]'</default>
       <summary>Y Axis label.</summary>
       <description>The label to be used for the Y axis.</description>
     </key>
@@ -109,8 +114,13 @@
       <summary>Maximum Y axis value.</summary>
       <description>The maximum value to use for the Y axis.</description>
     </key>
+    <key name="height-min" type="i">
+      <default>100</default>
+      <summary>Minimum height.</summary>
+      <description>The minimum height for the chart.</description>
+    </key>
     <key name="series-list" type="as">
-      <default>['ai14','ai15','ai16','ai17','ai18','ai19','ai20','ai21','ai22','ai23','ai24','ai25']</default>
+      <default>['ai02']</default>
       <summary>The list of of chart data series to create.</summary>
       <description>This is the list of data series that will be added to the chart, each should have a corresponding entry in the CLD configuration.</description>
     </key>
