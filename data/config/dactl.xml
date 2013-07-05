@@ -18,66 +18,10 @@
     <property name="app">DACTL</property>
     <property name="display-channel-frame">true</property>
     <property name="display-chart-frame">true</property>
-    <property name="display-control-frame">true</property>
-    <property name="display-module-frame">false</property>
-    <property name="launch-input-on-startup">true</property>
-    <property name="launch-output-on-startup">false</property>
-
-    <objects>
-        <!-- channel tree example showing categories -->
-        <object id="tree0" type="tree">
-            <object id="cat0" type="category">
-                <property name="heading">Category 1</property>
-                <property name="channel-list">
-                    ai00,ai01
-                </property>
-            </object>
-            <object id="cat1" type="category">
-                <property name="heading">Category 2</property>
-                <property name="channel-list">
-                    ai02,ai03,ai04,ai05,ai06,ai07
-                </property>
-            </object>
-        </object>
-
-        <!-- example showing four charts in 2x2 grid -->
-        <object id="chart0" type="chart" xpos="0" ypos="0">
-            <property name="title">Sample Chart</property>
-            <property name="x-axis-label">Time [s]</property>
-            <property name="x-axis-min">0.0</property>
-            <property name="x-axis-max">60.0</property>
-            <property name="y-axis-label">Voltage [V]</property>
-            <property name="y-axis-min">-100.0</property>
-            <property name="y-axis-max">100.0</property>
-        </object>
-        <object id="chart1" type="chart" xpos="1" ypos="0">
-            <property name="title">Sample Chart</property>
-            <property name="x-axis-label">Time [s]</property>
-            <property name="x-axis-min">0.0</property>
-            <property name="x-axis-max">60.0</property>
-            <property name="y-axis-label">Voltage [V]</property>
-            <property name="y-axis-min">-100.0</property>
-            <property name="y-axis-max">100.0</property>
-        </object>
-        <object id="chart2" type="chart" xpos="0" ypos="1">
-            <property name="title">Sample Chart</property>
-            <property name="x-axis-label">Time [s]</property>
-            <property name="x-axis-min">0.0</property>
-            <property name="x-axis-max">60.0</property>
-            <property name="y-axis-label">Voltage [V]</property>
-            <property name="y-axis-min">-100.0</property>
-            <property name="y-axis-max">100.0</property>
-        </object>
-        <object id="chart3" type="chart" xpos="1" ypos="1">
-            <property name="title">Sample Chart</property>
-            <property name="x-axis-label">Time [s]</property>
-            <property name="x-axis-min">0.0</property>
-            <property name="x-axis-max">60.0</property>
-            <property name="y-axis-label">Voltage [V]</property>
-            <property name="y-axis-min">-100.0</property>
-            <property name="y-axis-max">100.0</property>
-        </object>
-    </objects>
+    <property name="display-control-frame">false</property>
+    <property name="display-module-frame">true</property>
+    <property name="launch-input-on-startup">false</property>
+    <property name="launch-output-on-startup">true</property>
 
     <!-- all of the cld:objects should be loaded as a single treemap by the builder class -->
     <cld:objects>
@@ -91,8 +35,19 @@
                 <cld:property name="type">output</cld:property>
                 <cld:property name="file">/dev/comedi0</cld:property>
             </cld:object>
-            <cld:object id="vdev0" type="device" driver="virtual">
-                <cld:property name="file">/dev/null</cld:property>
+        </cld:object>
+
+        <!--
+        Tasks
+        -->
+        <cld:object id="tk0" type="task" ttype="comedi">
+            <cld:property name="devref">dev0</cld:property>
+            <cld:property name="exec-type">polling</cld:property>
+            <cld:property name="subdevice">0</cld:property>
+            <cld:property name="poll-type">read</cld:property>
+            <cld:property name="poll-interval-ms">20</cld:property>
+        </cld:object>
+
             </cld:object>
         </cld:object>
 
@@ -115,18 +70,18 @@
             <cld:object id="col07" type="column" chref="ai07"/>
         </cld:object>
 
-        <!-- Channel calibrations for scaling process values -->
-        <cld:object id="cal00" type="calibration">
-            <!-- number of coefficients determines the order -->
-            <cld:property name="units">Volts</cld:property>
-            <!-- n determines the exponent - y = a[1]*x^1 + a[0]*x^0 -->
+
+         <!-- Channel calibrations for scaling process values -->
+        <cld:object id="ao_cal0" type="calibration">
+            <cld:property name="units">% of max.</cld:property>
+>>>>>>> 68781d4... Add interface elements for additional CLD support
             <cld:object id="cft0" type="coefficient">
                 <cld:property name="n">0</cld:property>
-                <cld:property name="value">0.000</cld:property>
+                <cld:property name="value">0.0000</cld:property>
             </cld:object>
             <cld:object id="cft1" type="coefficient">
                 <cld:property name="n">1</cld:property>
-                <cld:property name="value">1.000</cld:property>
+                <cld:property name="value">1.0000</cld:property>
             </cld:object>
         </cld:object>
         <cld:object id="cal01" type="calibration">
@@ -207,10 +162,10 @@
             </cld:object>
         </cld:object>
 
-        <!-- analog input channels -->
-        <cld:object id="ai00" type="channel" ref="dev0" ctype="analog" direction="input">
-            <cld:property name="tag">IN0</cld:property>
-            <cld:property name="desc">Sample Input</cld:property>
+        <!-- analog output channels -->
+        <cld:object id="ao00" type="channel" ref="dev0" ctype="analog" direction="output">
+            <cld:property name="tag">OUT_0</cld:property>
+            <cld:property name="desc">Output 0</cld:property>
             <cld:property name="num">0</cld:property>
             <cld:property name="naverage">1</cld:property>
             <cld:property name="calref">cal00</cld:property>

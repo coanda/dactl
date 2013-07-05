@@ -10,7 +10,7 @@ public class UserInterfaceData : GLib.Object {
 
     public Gtk.Builder builder;         /* change to private ??? */
 
-    private int _chan_scroll_min_width = 400;
+    private int _chan_scroll_min_width = 800;
     public int chan_scroll_min_width {
         get { return _chan_scroll_min_width; }
         set { _chan_scroll_min_width = value; }
@@ -48,16 +48,28 @@ public class UserInterfaceData : GLib.Object {
     private Gtk.Widget mnu_item_edit_chan;
     private Gtk.Widget mnu_item_edit_pref;
     private Gtk.Widget mnu_item_file_quit;
+    private Gtk.Widget mnu_item_view_data;
+    private Gtk.Widget data_recent_chooser;
+    private Gtk.RecentManager recentmanager1;
+    private Gtk.Widget dlg_data_file_chooser;
+    private Gtk.Widget btn_view_file;
+    private Gtk.Widget mnu_item_view_config;
+    private Gtk.Widget mnu_item_view_dig;
+    private Gtk.Widget dlg_textview;
+    private Gtk.Widget textview;
+    private GLib.Object textbuffer;
     private Gtk.Widget mnu_item_help_about;
     private ChannelTreeView channel_treeview;
     private Gee.List<ChartWidget> charts = new Gee.ArrayList<ChartWidget> ();
     private Gee.List<PIDBox> pid_box_list = new Gee.ArrayList<PIDBox> ();
     //private Gee.List<ModuleBox> module_box_list = new Gee.ArrayList<ModuleBox> ();
+    private Gee.List<ChartWidget> charts = new Gee.ArrayList<ChartWidget> ();
+    private Gee.List<PIDBox> pid_box_list = new Gee.ArrayList<PIDBox> ();
+    private Gee.List<ModuleBox> module_box_list = new Gee.ArrayList<ModuleBox> ();
 
     /* XXX these need to be hardcoded to speed up delivery, change later */
-//    private Gtk.Widget licor_box;
-//    private Gtk.Widget velmex_box;
-    private Gtk.Widget brabender_box;
+    //private Gtk.Widget licor_box;
+    //private Gtk.Widget velmex_box;
 
     /* Thread for control loop execution */
     private unowned GLib.Thread<void *> log_thread;
@@ -75,11 +87,29 @@ public class UserInterfaceData : GLib.Object {
             frame_controls = builder.get_object ("frame_controls") as Widget;
             frame_modules = builder.get_object ("frame_modules") as Widget;
             btn_def = builder.get_object ("btn_def") as Widget;
+            /* Edit menu ------------------------------------------------------- */
             mnu_item_edit_chan = builder.get_object ("mnu_item_edit_chan") as Widget;
             mnu_item_edit_pref = builder.get_object ("mnu_item_edit_pref") as Widget;
+            /* File menu ------------------------------------------------------- */
             mnu_item_file_quit = builder.get_object ("mnu_item_file_quit") as Widget;
+            /* View menu ------------------------------------------------------- */
+            mnu_item_view_data = builder.get_object ("mnu_item_view_data") as Widget;
+
+            data_recent_chooser = builder.get_object ("data_recent_chooser") as Widget;
+            recentmanager1 = builder.get_object ("recentmanager1") as RecentManager;
+            //(data_recent_chooser as Gtk.RecentChooser).recent_manager = recentmanager1;
+
+            mnu_item_view_config = builder.get_object ("mnu_item_view_config") as Widget;
+            dlg_data_file_chooser = builder.get_object ("dlg_data_file_chooser") as Widget;
+            mnu_item_view_config = builder.get_object ("mnu_item_view_config") as Widget;
+            dlg_textview = builder.get_object ("dlg_textview") as Widget;
+            textview = builder.get_object ("textview") as Widget;
+            textbuffer = builder.get_object ("textbuffer");
+            btn_view_file = builder.get_object ("btn_view_file") as Widget;
+            mnu_item_view_dig = builder.get_object ("mnu_item_view_dig") as Widget;
+            /* Help menu ------------------------------------------------------- */
             mnu_item_help_about = builder.get_object ("mnu_item_help_about") as Widget;
-        } catch (Error e) {
+        } catch (GLib.Error e) {
             var msg = new MessageDialog (null, DialogFlags.MODAL,
                                          MessageType.ERROR,
                                          ButtonsType.CANCEL,
@@ -132,6 +162,14 @@ public class UserInterfaceData : GLib.Object {
         if (frame_modules.visible)
             frame_modules.show_all ();
 
+        settings.changed["display-module-frame"].connect (() => {
+            frame_modules.visible = settings.get_boolean ("display-module-frame");
+        });
+
+        settings.changed["display-module-frame"].connect (() => {
+            frame_modules.visible = settings.get_boolean ("display-module-frame");
+        });
+
         /* Connect interface callbacks */
         connect_signals ();
     }
@@ -145,16 +183,32 @@ public class UserInterfaceData : GLib.Object {
         (btn_log as Gtk.ToggleToolButton).toggled.connect (() => {
             var log = cb_data.builder.get_object ("log0");
             if ((btn_log as Gtk.ToggleToolButton).active) {
-                if (!(log as Cld.Log).active) {
-                    (log as Cld.Log).file_open ();
-                    (log as Cld.Log).run ();
-                    if ((log as Cld.Log).active)
-                        message ("Started log %s", log.id);
-                }
+                (btn_log as Gtk.ToolButton).set_icon_name ("media-playback-stop");
+                (log as Cld.Log).file_open ();
+                (log as Cld.Log).run ();
+                if ((log as Cld.Log).active)
+                    message ("Started log %s", log.id);
             } else {
+                (btn_log as Gtk.ToolButton).set_icon_name ("media-record");
                 if ((log as Cld.Log).active) {
                     (log as Cld.Log).stop ();
                     (log as Cld.Log).file_mv_and_date (false);
+                }
+            }
+        });
+
+        var btn_acq = builder.get_object ("btn_acq");
+        (btn_acq as Gtk.ToggleToolButton).toggled.connect (() => {
+            if ((btn_acq as Gtk.ToggleToolButton).active) {
+                (btn_acq as Gtk.ToolButton).set_icon_name ("media-playback-stop");
+                lock (cb_data) {
+                    cb_data.run_acquisition ();
+                }
+            }
+            else {
+                (btn_acq as Gtk.ToolButton).set_icon_name ("media-playback-start");
+                lock (cb_data) {
+                    cb_data.stop_acquisition ();
                 }
             }
         });
@@ -177,9 +231,18 @@ public class UserInterfaceData : GLib.Object {
 
         /* Callbacks with functions */
         channel_treeview.cursor_changed.connect (channel_cursor_changed_cb);
+        /* Edit */
         (mnu_item_edit_chan as Gtk.MenuItem).activate.connect (mnu_item_edit_chan_activate_cb);
         (mnu_item_edit_pref as Gtk.MenuItem).activate.connect (mnu_item_edit_pref_activate_cb);
+        /* File */
         (mnu_item_file_quit as Gtk.MenuItem).activate.connect (mnu_item_file_quit_activate_cb);
+        /* View */
+        (mnu_item_view_data as Gtk.MenuItem).activate.connect (mnu_item_view_data_activate_cb);
+        (dlg_data_file_chooser as Gtk.FileChooserDialog).file_activated.connect (dlg_data_file_chooser_file_activated_cb);
+        (data_recent_chooser as Gtk.RecentChooser).item_activated.connect (data_recent_chooser_item_activated_cb);
+        (mnu_item_view_config as Gtk.MenuItem).activate.connect (mnu_item_view_config_activate_cb);
+        (mnu_item_view_dig as Gtk.MenuItem).activate.connect (mnu_item_view_dig_cb);
+        /* Help */
         (mnu_item_help_about as Gtk.MenuItem).activate.connect (mnu_item_help_about_activate_cb);
     }
 
@@ -192,6 +255,7 @@ public class UserInterfaceData : GLib.Object {
         Gee.Map<string, Cld.Object> channels = new Gee.TreeMap<string, Cld.Object> ();
         channels.set_all (cb_data.ai_channels);
         channels.set_all (cb_data.vchannels);
+        channels.set_all (cb_data.ao_channels);
 
         channel_treeview = new ChannelTreeView (channels);
         (channel_scroll as Gtk.ScrolledWindow).set_min_content_width (_chan_scroll_min_width);
@@ -217,9 +281,10 @@ public class UserInterfaceData : GLib.Object {
         var schema = "org.coanda.dactl.charts";
         var settings = new GLib.Settings (schema);
         foreach (var child in settings.list_children ()) {
-            debug ("Found chart schema: %s", child);
+           GLib.debug ("Found chart schema: %s", child);
             var chart_settings = new GLib.Settings (schema + "." + child);
             var chart = new StripChartWidget ();
+            chart.schema = schema + "." + child;
             chart.title = chart_settings.get_string ("title");
             chart.x_axis_label = chart_settings.get_string ("x-axis-label");
             chart.y_axis_label = chart_settings.get_string ("y-axis-label");
@@ -228,13 +293,17 @@ public class UserInterfaceData : GLib.Object {
             chart.y_axis_min = chart_settings.get_double ("y-axis-min");
             chart.y_axis_max = chart_settings.get_double ("y-axis-max");
             chart.height_min = chart_settings.get_int ("height-min");
-
+            /* Attach the setting dialog */
+            chart.settings_dialog  = new ChartSettingsDialog (chart as ChartWidget);
+            /* Set the height and width */
+            (chart as Widget).height_request = chart.height_min;
+            (chart as Widget).width_request = chart.width_min;
             /* Add data */
             Gee.List<Cld.Object> data = new Gee.ArrayList<Cld.Object> ();
             foreach (var series in chart_settings.get_strv ("series-list")) {
                 Cld.Builder cld_builder = cb_data.builder;
                 data.add (cld_builder.get_object (series));
-                debug ("Adding data series %s to chart %s", series, child);
+               GLib.debug ("Adding data series %s to chart %s", series, child);
                 chart.add_series (series);
                 /* Add two points at least */
                 chart.add_point_to_series (series, chart.x_axis_min, 0.0);
@@ -315,18 +384,27 @@ public class UserInterfaceData : GLib.Object {
         alignment.left_padding = 5;
 
         var module_box = new Box (Orientation.VERTICAL, 10);
+        foreach (var module in cb_data.modules.values) {
+            if (module is LicorModule) {
+                var licor_box = new LicorModuleBox ((module as Module), cb_data.vchannels);
+                module_box.pack_start (licor_box, false, false, 0);
+                module_box.pack_start (new Gtk.Separator (Orientation.HORIZONTAL), false, false, 0);
+            } else if (module is VelmexModule) {
+                var velmex_box = new VelmexModuleBox ((module as Module));
+                module_box.pack_start (velmex_box, false, false, 0);
+            } else if (module is BrabenderModule) {
+                var brabender_box = new BrabenderModuleBox ((module as Module));
+                module_box.pack_start (brabender_box, false, false, 0);
+            }
+        }
 
         /* pack module content */
-//        licor_box = new LicorModuleBox (cb_data.licor);
-//        module_box.pack_start (licor_box, false, false, 0);
-//        module_box.pack_start (new Gtk.Separator (Orientation.HORIZONTAL), false, false, 0);
+        //licor_box = new LicorModuleBox (cb_data.licor, cb_data.vchannels);
+        //module_box.pack_start (licor_box, false, false, 0);
+        //module_box.pack_start (new Gtk.Separator (Orientation.HORIZONTAL), false, false, 0);
 
-//        velmex_box = new VelmexModuleBox (cb_data.velmex);
-//        module_box.pack_start (velmex_box, false, false, 0);
-//        module_box.pack_start (new Gtk.Separator (Orientation.HORIZONTAL), false, false, 0);
-
-        brabender_box = new BrabenderModuleBox (cb_data.brabender);
-        module_box.pack_start (brabender_box, false, false, 0);
+        //velmex_box = new VelmexModuleBox (cb_data.velmex);
+        //module_box.pack_start (velmex_box, false, false, 0);
 
         alignment.add (module_box);
         (module_scroll as Gtk.ScrolledWindow).add_with_viewport (alignment);
@@ -344,7 +422,7 @@ public class UserInterfaceData : GLib.Object {
         selection.get_selected (out model, out iter);
         model.get (iter, ChannelTreeView.Columns.HIDDEN_ID, out id);
 
-        debug ("Selected: %s", id);
+       GLib.debug ("Selected: %s", id);
         channel = cld_builder.get_object (id);
 
         /* This is an ugly way of doing this but it shouldn't matter */
@@ -389,6 +467,89 @@ public class UserInterfaceData : GLib.Object {
         (dialog as Gtk.Dialog).run ();
     }
 
+    /**
+     * RUn the data file chooser dialog.
+     **/
+    private void mnu_item_view_data_activate_cb () {
+        Cld.debug ("Menu item view data activate callback.\n");
+        (dlg_data_file_chooser as Gtk.Dialog).response.connect ((response_id) => {
+            switch (response_id) {
+                case ResponseType.CANCEL:
+                    break;
+                case ResponseType.ACCEPT:
+                    string filename = (dlg_data_file_chooser as Gtk.FileChooserDialog).get_filename ();
+                    Cld.debug ("FileChooser :: filename is: %s\n", filename);
+                    show_file (filename);
+                    break;
+            }
+        });
+
+        int result = (dlg_data_file_chooser as Gtk.Dialog).run ();
+        (dlg_data_file_chooser as Gtk.Dialog).hide ();
+    }
+    /**
+     * Get the filename string of the xml configuration file.
+     **/
+    private void mnu_item_view_config_activate_cb () {
+        Cld.debug ("Configuration file is: %s.\n", cb_data.xml_file);
+        show_file (cb_data.xml_file);
+
+    }
+
+    /**
+     * Launch the digital I/O viewer.
+     **/
+    private void mnu_item_view_dig_cb () {
+        Cld.debug ("Starting digital I/O viewer.\n");
+        var viewer = new DIOViewer (cb_data);
+    }
+
+
+    /**
+     * Get the filename of the double clicked selection in the file chooser.
+     **/
+    private void  dlg_data_file_chooser_file_activated_cb () {
+        string  filename = (dlg_data_file_chooser as Gtk.FileChooserDialog).get_filename ();
+        Cld.debug ("FileChooser :: filename is: %s\n", filename);
+        recentmanager1.add_item ("file://" + filename);
+        show_file (filename);
+    }
+
+    /**
+     * Get the filename of the selection from the recent file chooser.
+     **/
+    private void data_recent_chooser_item_activated_cb () {
+        string uri = (data_recent_chooser as Gtk.RecentChooser).get_current_uri ();
+        string filename = uri.substring (7, -1);
+        //Cld.debug ("RecentChooser :: uri is: %s\n\tfilename is: %s\n", uri, filename);
+
+        show_file (filename);
+    }
+
+    /**
+     * Display the contents of the selected text file.
+     **/
+    private void show_file (string filename) {
+
+        try {
+            string text;
+            FileUtils.get_contents (filename, out text);
+            ((this.textbuffer) as TextBuffer).text = text;
+        } catch (Error e) {
+            stderr.printf ("Error: %s\n", e.message);
+        }
+
+        (dlg_textview as Gtk.Dialog).response.connect ((response_id) => {
+            switch (response_id) {
+                case ResponseType.ACCEPT:
+                break;
+            }
+        });
+        (dlg_textview as Gtk.Window).set_decorated (true);
+        (dlg_textview as Gtk.Dialog).run ();
+        (dlg_textview as Gtk.Dialog).hide ();
+    }
+
     private void mnu_item_help_about_activate_cb () {
         string path = GLib.Path.build_filename (Config.DATADIR,
                                                 "about_dialog.ui");
@@ -396,7 +557,7 @@ public class UserInterfaceData : GLib.Object {
 
         try {
             dlg_builder.add_from_file (path);
-        } catch (Error e) {
+        } catch (GLib.Error e) {
             var msg = new MessageDialog (null, DialogFlags.MODAL,
                                             MessageType.ERROR,
                                             ButtonsType.CANCEL,

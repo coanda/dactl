@@ -18,7 +18,7 @@ public class ApplicationSettingsDialog : Dialog {
     private Gtk.Widget lbl_daq_rate;
     private Gtk.Widget scrolledwindow_devices;
     private Gtk.Widget entry_dev_id;
-    private Gtk.Widget entry_dev_name;
+    private Gtk.Widget entry_dev_desc;
     private Gtk.Widget entry_dev_file;
 
     /* Logging */
@@ -59,8 +59,8 @@ public class ApplicationSettingsDialog : Dialog {
     private Gtk.Widget scrolledwindow_vchannel;
 
     /* Traverse */
-//    private Gtk.Widget scrolledwindow_traverse;
-//    private Gtk.Widget velmex_settings_box;
+    private Gtk.Widget scrolledwindow_traverse;
+    private Gtk.Widget velmex_settings_box;
     /*
      *private Gtk.Widget btn_traverse_execute_prog;
      *private Gtk.Widget btn_traverse_open_prog;
@@ -81,7 +81,7 @@ public class ApplicationSettingsDialog : Dialog {
 
         try {
             builder.add_from_file (path);
-        } catch (Error e) {
+        } catch (GLib.Error e) {
             var msg = new MessageDialog (null, DialogFlags.MODAL,
                                          MessageType.ERROR,
                                          ButtonsType.CANCEL,
@@ -99,7 +99,7 @@ public class ApplicationSettingsDialog : Dialog {
         populate_application_page ();
         populate_logging_page ();
         populate_channel_page ();
-//        populate_traverse_page ();
+        populate_traverse_page ();
         show_all ();
         connect_signals ();
     }
@@ -113,7 +113,7 @@ public class ApplicationSettingsDialog : Dialog {
         populate_application_page ();
         populate_logging_page ();
         populate_channel_page ();
-//        populate_traverse_page ();
+        populate_traverse_page ();
         show_all ();
         connect_signals ();
 
@@ -123,6 +123,7 @@ public class ApplicationSettingsDialog : Dialog {
 
     private void create_dialog () {
         var content = get_content_area ();
+        var action = get_action_area ();
         var dialog = builder.get_object ("settings_dialog") as Gtk.Widget;
 
         /* Load everything */
@@ -135,6 +136,8 @@ public class ApplicationSettingsDialog : Dialog {
         add_button (Stock.APPLY, ResponseType.APPLY);
         add_button (Stock.OK, ResponseType.OK);
         add_button (Stock.CANCEL, ResponseType.CANCEL);
+        action.show_all ();
+        content.show_all ();
     }
 
     private void populate_application_page () {
@@ -151,7 +154,7 @@ public class ApplicationSettingsDialog : Dialog {
 
         /* These get updated in a callback */
         entry_dev_id = builder.get_object ("entry_dev_id") as Gtk.Widget;
-        entry_dev_name = builder.get_object ("entry_dev_name") as Gtk.Widget;
+        entry_dev_desc = builder.get_object ("entry_dev_desc") as Gtk.Widget;
         entry_dev_file = builder.get_object ("entry_dev_file") as Gtk.Widget;
 
         (lbl_app_name as Gtk.Label).label = app_name;
@@ -204,7 +207,7 @@ public class ApplicationSettingsDialog : Dialog {
 
     }
 
-//    private void populate_traverse_page () {
+    private void populate_traverse_page () {
         /* XXX This will be implemented later on, just a placeholder for now */
         /*
          *btn_traverse_execute_prog = builder.get_object ("btn_traverse_execute_prog") as Gtk.Widget;
@@ -218,23 +221,27 @@ public class ApplicationSettingsDialog : Dialog {
          *cmb_traverse_bytesize = builder.get_object ("cmb_traverse_bytesize") as Gtk.Widget;
          */
 
-//        scrolledwindow_traverse = builder.get_object ("scrolledwindow_traverse") as Gtk.Widget;
+        scrolledwindow_traverse = builder.get_object ("scrolledwindow_traverse") as Gtk.Widget;
 
-//        var alignment = new Alignment (0.50f, 0.50f, 1.0f, 1.0f);
-//        alignment.top_padding = 5;
-//        alignment.right_padding = 5;
-//        alignment.bottom_padding = 5;
-//        alignment.left_padding = 5;
+        var alignment = new Alignment (0.50f, 0.50f, 1.0f, 1.0f);
+        alignment.top_padding = 5;
+        alignment.right_padding = 5;
+        alignment.bottom_padding = 5;
+        alignment.left_padding = 5;
 
-//        var traverse_box = new Box (Orientation.VERTICAL, 10);
+        var traverse_box = new Box (Orientation.VERTICAL, 10);
 
-        /* pack module content */
-//        velmex_settings_box = new VelmexSettingsBox (data.velmex);
-//        traverse_box.pack_start (velmex_settings_box, true, true, 0);
+        foreach (var module in data.modules.values) {
+            if (module is VelmexModule) {
+                /* pack module content */
+                velmex_settings_box = new VelmexSettingsBox (module as Cld.Module);
+                traverse_box.pack_start (velmex_settings_box, true, true, 0);
+            }
+        }
 
-//        alignment.add (traverse_box);
-//        (scrolledwindow_traverse as Gtk.ScrolledWindow).add_with_viewport (alignment);
-//    }
+        alignment.add (traverse_box);
+        (scrolledwindow_traverse as Gtk.ScrolledWindow).add_with_viewport (alignment);
+    }
 
     private void connect_signals () {
         this.response.connect (response_cb);
@@ -250,15 +257,18 @@ public class ApplicationSettingsDialog : Dialog {
     }
 
     private void response_cb (Dialog source, int response_id) {
+        Cld.debug ("Response ID: %d\n", response_id);
         switch (response_id) {
-            case ResponseType.APPLY:
-                update_config ();
-                break;
             case ResponseType.OK:
                 update_config ();
                 break;
             case ResponseType.CANCEL:
-            case ResponseType.DELETE_EVENT:
+                hide ();
+                break;
+            case ResponseType.APPLY:
+                update_config ();
+                break;
+           case ResponseType.DELETE_EVENT:
                 /* Probably want to track changes and inform user they may
                  * be lost if any were made */
                 destroy ();
@@ -286,8 +296,8 @@ public class ApplicationSettingsDialog : Dialog {
         device = cld_builder.get_object (id);
 
         (entry_dev_id as Gtk.Entry).set_text (id);
-        (entry_dev_name as Gtk.Entry).set_text ((device as Cld.Device).name);
-        (entry_dev_file as Gtk.Entry).set_text ((device as Cld.Device).file);
+        (entry_dev_desc as Gtk.Entry).set_text ((device as Cld.Device).description);
+        (entry_dev_file as Gtk.Entry).set_text ((device as Cld.Device).filename);
     }
 
     private void log_cursor_changed_cb () {
@@ -333,7 +343,7 @@ public class ApplicationSettingsDialog : Dialog {
         (entry_aichannel_num as Gtk.Entry).set_text ("%d".printf ((channel as Cld.Channel).num));
 
         /* Populate coefficient list */
-        var calibration = (channel as AIChannel).calibration;
+        var calibration = (channel as ScalableChannel).calibration;
         if (coefficient_treeview != null) {
             (scrolledwindow_aichannel_coefficients as Gtk.Container).remove (coefficient_treeview);
             coefficient_treeview = null;
@@ -372,9 +382,9 @@ public class ApplicationSettingsDialog : Dialog {
         selection.get_selected (out model, out iter);
         model.get (iter, AIChannelTreeView.Columns.ID, out id);
 
-        message ("Coefficient %s was changed to %f for channel %s", coefficient_id, value, id);
+        Cld.debug ("Coefficient %s was changed to %f for channel %s\n", coefficient_id, value, id);
         channel = cld_builder.get_object (id);
-        var calibration = (channel as AChannel).calibration;
+        var calibration = (channel as ScalableChannel).calibration;
         var coefficient = calibration.get_object (coefficient_id);
         (coefficient as Cld.Coefficient).value = value;
     }
@@ -403,7 +413,7 @@ public class ApplicationSettingsDialog : Dialog {
         (log as Cld.Log).name = (entry_log_title as Gtk.Entry).text;
         (log as Cld.Log).date_format = (entry_log_format as Gtk.Entry).text;
         (log as Cld.Log).rate = (btn_log_rate as Gtk.SpinButton).get_value ();
-        message ("log_rate: %.3f  get_value: %.3f", (log as Cld.Log).rate, (btn_log_rate as Gtk.SpinButton).get_value ());
+        Cld.debug ("log_rate: %.3f  get_value: %.3f\n", (log as Cld.Log).rate, (btn_log_rate as Gtk.SpinButton).get_value ());
 
         (log as Cld.Log).path = (entry_log_path as Gtk.Entry).text;
         (log as Cld.Log).file = (entry_log_file as Gtk.Entry).text;

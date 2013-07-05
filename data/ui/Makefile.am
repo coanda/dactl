@@ -5,9 +5,11 @@ ui_DATA = \
 	about_dialog.ui \
 	settings_dialog.ui \
 	pid_dialog.ui \
+	chart_dialog.ui \
 	chart_widget.ui \
 	licor_control.ui \
 	velmex_control.ui \
+	view_dio.ui \
 	brabender_control.ui\
 	velmex_settings_box.ui \
 	style.css

@@ -1,6 +1,5 @@
 using Cld;
 using Gee;
-using Threads;
 
 /**
  * Main application class responsible for interfacing with data and different
@@ -19,7 +18,7 @@ public class ApplicationData : GLib.Object {
             _admin = value;
             if (ui_enabled)
                 ui.admin = value;
-            if (cli.enabled)
+            if (cli_enabled)
                 cli.admin = value;
         }
     }
@@ -30,9 +29,7 @@ public class ApplicationData : GLib.Object {
     /* CLD data */
     public Cld.Builder builder { get; private set; }
     public Cld.XmlConfig xml { get; private set; }
-//    public Cld.Module licor { get; private set; }
-//    public Cld.Module velmex { get; private set; }
-    public Cld.Module brabender { get; private set; }
+    public Cld.Task task { get; private set; }
 
     /* GSettings data */
     public Settings settings { get; private set; }
@@ -100,8 +97,8 @@ public class ApplicationData : GLib.Object {
     private Gee.Map<string, Cld.Object> _devices;
     public Gee.Map<string, Cld.Object> devices {
         get {
-            lock (builder) {
-                if (_devices == null) {
+            if (_devices == null) {
+                lock (builder) {
                     var daq = builder.default_daq;
                     _devices = new Gee.TreeMap<string, Cld.Object> ();
                     foreach (var object in daq.objects.values) {
@@ -121,8 +118,8 @@ public class ApplicationData : GLib.Object {
     private Gee.Map<string, Cld.Object>? _ai_channels = null;
     public Gee.Map<string, Cld.Object>? ai_channels {
         get {
-            lock (builder) {
-                if (_ai_channels == null) {
+            if (_ai_channels == null) {
+                lock (builder) {
                     _ai_channels = new Gee.TreeMap<string, Cld.Object> ();
                     foreach (var channel in builder.channels.values) {
                         if (channel is AIChannel)
@@ -141,8 +138,8 @@ public class ApplicationData : GLib.Object {
     private Gee.Map<string, Cld.Object>? _ao_channels = null;
     public Gee.Map<string, Cld.Object>? ao_channels {
         get {
-            lock (builder) {
-                if (_ao_channels == null) {
+            if (_ao_channels == null) {
+                lock (builder) {
                     _ao_channels = new Gee.TreeMap<string, Cld.Object> ();
                     foreach (var channel in builder.channels.values) {
                         if (channel is AOChannel)
@@ -161,8 +158,8 @@ public class ApplicationData : GLib.Object {
     private Gee.Map<string, Cld.Object>? _vchannels = null;
     public Gee.Map<string, Cld.Object>? vchannels {
         get {
-            lock (builder) {
-                if (_vchannels == null) {
+            if (_vchannels == null) {
+                lock (builder) {
                     _vchannels = new Gee.TreeMap<string, Cld.Object> ();
                     foreach (var channel in builder.channels.values) {
                         if (channel is VChannel)
@@ -181,8 +178,8 @@ public class ApplicationData : GLib.Object {
     private Gee.Map<string, Cld.Object>? _control_loops = null;
     public Gee.Map<string, Cld.Object>? control_loops {
         get {
-            lock (builder) {
-                if (_control_loops == null) {
+            if (_control_loops == null) {
+                lock (builder) {
                     _control_loops = new Gee.TreeMap<string, Cld.Object> ();
                     foreach (var object in builder.objects.values) {
                         if (object is Cld.Control) {
@@ -205,8 +202,8 @@ public class ApplicationData : GLib.Object {
     private Gee.Map<string, Cld.Object>? _calibrations = null;
     public Gee.Map<string, Cld.Object>? calibrations {
         get {
-            lock (builder) {
-                if (_calibrations == null) {
+            if (_calibrations == null) {
+                lock (builder) {
                     _calibrations = new Gee.TreeMap<string, Cld.Object> ();
                     foreach (var calibration in builder.objects.values) {
                         if (calibration is Cld.Calibration) {
@@ -218,6 +215,27 @@ public class ApplicationData : GLib.Object {
             return _calibrations;
         }
         set { _calibrations = value; }
+    }
+
+    /* Module data
+     * XXX should be in CLD.
+     */
+    private Gee.Map<string, Cld.Object>? _modules = null;
+    public Gee.Map<string, Cld.Object> modules {
+        get {
+            if (_modules == null) {
+                lock (builder) {
+                    _modules = new Gee.TreeMap<string, Cld.Object> ();
+                    foreach (var module in builder.objects.values) {
+                        if (module is Cld.Module) {
+                            _modules.set (module.id, module);
+                        }
+                    }
+                }
+            }
+            return _modules;
+        }
+        set { _modules = value; }
     }
 
 //    public Gee.Map<string, Cld.Log.Thread> log_threads = new Gee.TreeMap<string, Cld.Log.Thread> ();
@@ -260,18 +278,13 @@ public class ApplicationData : GLib.Object {
 
         config.property_changed.connect (config_property_changed_cb);
 
+
         /* Read configuration settings to control application execution. */
         if (config.get_boolean_property ("launch-input-on-startup"))
             run_acquisition ();
 
         if (config.get_boolean_property ("launch-output-on-startup"))
             run_device_output ();
-
-        /* This is very application specific, I hate doing this. */
-//        var port = builder.get_object ("ser0");
-//        licor = new Cld.LicorModule.full ("lm0", port as Cld.Port, vchannels);
-//        if (!licor.load ())
-//            message ("Failed to load the Licor module.");
 
 //        create_log_threads ();
         /* XXX change for multiple log files */
@@ -297,51 +310,27 @@ public class ApplicationData : GLib.Object {
 
         config.property_changed.connect (config_property_changed_cb);
 
+        //message ("%s", builder.to_string ());
+
         /* Read configuration settings to control application execution. */
         if (config.get_boolean_property ("launch-input-on-startup"))
             run_acquisition ();
 
         if (config.get_boolean_property ("launch-output-on-startup"))
             run_device_output ();
+        /**
+         * The velmex property needs to be set as it is referenced by the VelmexSettingsBox.
+         * XXX It would be better if this was done automatically and only as required.
+         */
 
-        /* XXX this is very application specific, I hate doing this. */
-//        var port = builder.get_object ("ser0");
-//        var licor_port = new Cld.SerialPort ();
-//        licor_port.id = "ser0";
-//        licor_port.device = "/dev/ttyS1";
-//        licor_port.baud_rate = 115200;
-//        licor_port.handshake = Cld.SerialPort.Handshake.HARDWARE;
-//        licor = new Cld.LicorModule.full ("lm0", port as Cld.Port, vchannels);
-//        licor = new Cld.LicorModule ();
-//        licor.id = "lm0";
-//        (licor as LicorModule).port = licor_port;
+        /** The licor property simailarily needs to be set and the channels assigned.
+         * XXX This also should be done automatically as required by the particular configuration.
+         **/
 
-//        (licor as LicorModule).channels = vchannels;
-
-//        var port = builder.get_object ("ser1");
-//        var velmex_port = new Cld.SerialPort ();
-//        velmex_port.id = "ser1";
-//        velmex_port.device = "/dev/ttyS2";
-//        velmex_port.baud_rate = 9600;
-//        velmex_port.handshake = Cld.SerialPort.Handshake.HARDWARE;
-
-//        velmex = new Cld.VelmexModule ();
-//        velmex.id = "vm0";
-//        (velmex as VelmexModule).port = velmex_port;
-
-//        var brabender_port = new Cld.ModbusPort ();
-//        brabender_port.id = "mod0";
-//        brabender_port.ip_address = "10.0.1.77";
-//        brabender = new Cld.BrabenderModule();
-        brabender = builder.get_object ("bm0") as Cld.BrabenderModule;
-        message ("Brabender IP Address is: %s\n", ((brabender as Cld.BrabenderModule).port as Cld.ModbusPort).ip_address);
-//        brabender.id = "bm0";
-//        (brabender as BrabenderModule).port = brabender_port;
-        (brabender as BrabenderModule).channels = vchannels;
-//        create_log_threads ();
         /* XXX change for multiple log files */
         log = builder.get_object ("log0") as Cld.Log;
-        message ("got log");
+        /* XXX Setting the logging task here. Should be done in CldBuilder. */
+        task = (builder.get_object ("tk0") as Task);
     }
 
     /**
@@ -353,44 +342,32 @@ public class ApplicationData : GLib.Object {
         stop_device_output ();
     }
 
-/*
-    private void create_log_threads () {
-        foreach (var log in builder.logs.values) {
-            Cld.Log.Thread log_thread = new Cld.Log.Thread (log);
-            log_threads.set (log.id, log_thread);
-        }
-    }
-*/
-
     /**
      * Callback to handle configuration changes that could be done in different
      * pieces of the application.
      */
     private void config_property_changed_cb (string property) {
-        message ("Property '%s' was changed.", property);
+        Cld.debug ("Property '%s' was changed.\n", property);
     }
 
     /**
      * Start the thread that handles data acquisition.
      */
     public void run_acquisition () {
-        if (!Thread.supported ()) {
-            stderr.printf ("Cannot run acquisition without thread support.\n");
-            _acq_active = false;
-            return;
-        }
+        foreach (var device in devices.values) {
+            if (!(device as ComediDevice).is_open) {
+                Cld.debug ("Opening Comedi Device: %s\n", device.id);
+                (device as ComediDevice).open ();
+            }
 
-        if (!_acq_active) {
-            var acq_thread_data = new AcquisitionThread (this);
+            if (!(device as ComediDevice).is_open)
+                error ("Failed to open Comedi device: %s\n", device.id);
 
-            try {
-                _acq_active = true;
-                /* TODO create is deprecated, check compiler warnings */
-                acq_thread = Thread.create<void *> (acq_thread_data.run, true);
-            } catch (ThreadError e) {
-                stderr.printf ("%s\n", e.message);
-                _acq_active = false;
-                return;
+            foreach (var task in (device as Container).objects.values) {
+                if (task is ComediTask) {
+                    if ((task as ComediTask).direction == "read")
+                        (task as ComediTask).run ();
+                }
             }
         }
     }
@@ -399,9 +376,26 @@ public class ApplicationData : GLib.Object {
      * Stops the thread that handles data acquisition.
      */
     public void stop_acquisition () {
-        if (_acq_active) {
-            _acq_active = false;
-            acq_thread.join ();
+
+        foreach (var device in devices.values) {
+            Cld.debug ("Stopping tasks for: %s\n", device.id);
+            foreach (var task in (device as Container).objects.values) {
+                if (task is ComediTask) {
+                    if ((task as ComediTask).direction == "read") {
+                        Cld.debug ("    Stopping task: %s\n ", task.id);
+                        (task as ComediTask).stop ();
+                    }
+                }
+            }
+            /*
+            if ((device as ComediDevice).is_open) {
+                Cld.debug ("Closing Comedi Device: %s\n", device.id);
+                (device as ComediDevice).close ();
+            }
+
+            if ((device as ComediDevice).is_open)
+                error ("Failed to close Comedi device: %s\n", device.id);
+            */
         }
     }
 
@@ -409,23 +403,20 @@ public class ApplicationData : GLib.Object {
      * Starts the thread that handles output channels.
      */
     public void run_device_output () {
-        if (!Thread.supported ()) {
-            stderr.printf ("Cannot run device output without thread support.\n");
-            _write_active = false;
-            return;
-        }
+        foreach (var device in devices.values) {
+            if (!(device as ComediDevice).is_open) {
+                Cld.debug ("Opening Comedi Device: %s\n", device.id);
+                (device as ComediDevice).open ();
+            }
 
-        if (!_write_active) {
-            var write_thread_data = new DeviceOutputThread (this);
+            if (!(device as ComediDevice).is_open)
+                error ("Failed to open Comedi device: %s\n", device.id);
 
-            try {
-                _write_active = true;
-                /* TODO create is deprecated, check compiler warnings */
-                write_thread = Thread.create<void *> (write_thread_data.run, true);
-            } catch (ThreadError e) {
-                stderr.printf ("%s\n", e.message);
-                _write_active = false;
-                return;
+            foreach (var task in (device as Container).objects.values) {
+                if (task is ComediTask) {
+                    if ((task as ComediTask).direction == "write")
+                        (task as ComediTask).run ();
+                }
             }
         }
     }
@@ -434,13 +425,24 @@ public class ApplicationData : GLib.Object {
      * Stops the thread that handles output channels.
      */
     public void stop_device_output () {
-        if (_write_active) {
-            _write_active = false;
-            write_thread.join ();
+        foreach (var device in devices.values) {
+            Cld.debug ("Stopping tasks for: %s\n", device.id);
+            foreach (var task in (device as Container).objects.values) {
+                if (task is ComediTask) {
+                    if ((task as ComediTask).direction == "write") {
+                        Cld.debug ("    Stopping task: %s\n", task.id);
+                        (task as ComediTask).stop ();
+                    }
+                }
+            }
+            /*
+            (device as ComediDevice).close ();
+
+            if ((device as ComediDevice).is_open) {
+                message ("Failed to close Comedi device: %s\n", device.id);
+            }
+            */
         }
-    }
-    public void stop_brabender () {
-        brabender.unload();
     }
 
     /**
@@ -466,7 +468,7 @@ public class ApplicationData : GLib.Object {
         } else if (event == "stop") {
             if ((log as Cld.Log).active) {
                 (log as Cld.Log).stop ();
-                (log as Cld.Log).file_mv_and_date (false);
+                (log as Cld.Log).file_close ();
             }
         }
     }
@@ -500,6 +502,7 @@ public class ApplicationData : GLib.Object {
      */
     public class AcquisitionThread {
         unowned ApplicationData data;
+        //private ApplicationData data;
 
         /**
          * Construction
@@ -534,7 +537,7 @@ public class ApplicationData : GLib.Object {
          * Hands over control to the function that does the actual work.
          */
         public void * run () {
-            write_func (data);
+            //write_func (data);
             return null;
         }
     }

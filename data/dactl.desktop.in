@@ -1,13 +1,14 @@
 [Desktop Entry]
-Name=dactl
-Comment=Collect, display, and log data from measurement hardware
-Version=0.1
-GenericName=Data Acquisition and Control Application
-TryExec=dactl
-Exec=dactl %U
-Icon=dactl
 Type=Application
 Categories=Utility;
 MimeType=application/x-dactl;
 
 _Keywords=Acquisition;Control;Logging
+=======
+Name=@PACKAGE@
+GenericName=@PACKAGE@ Data Acquisition and Control
+Comment=Internal CRDC software to collect process data
+Exec=@PREFIX@/bin/@PACKAGE@ -g
+Icon=@PACKAGE@.svg
+Categories=CRDC
+>>>>>>> 633470a... Mostly configuration changes for project.

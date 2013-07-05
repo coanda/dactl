@@ -26,7 +26,7 @@ public class PIDSettingsDialog : Dialog {
 
         try {
             builder.add_from_file (path);
-        } catch (Error e) {
+        } catch (GLib.Error e) {
             var msg = new MessageDialog (null, DialogFlags.MODAL,
                                          MessageType.ERROR,
                                          ButtonsType.CANCEL,
@@ -77,7 +77,6 @@ public class PIDSettingsDialog : Dialog {
         input_combo.add_attribute (input_renderer, "text", 0);
         input_combo.id_column = 0;
         input_combo.active_id = pid.pv_id;
-        debug ("Input:  %s", pid.pv_id);
 
         output_combo = new ComboBox.with_model (output_store);
         Gtk.CellRendererText output_renderer = new Gtk.CellRendererText ();
@@ -85,7 +84,7 @@ public class PIDSettingsDialog : Dialog {
         output_combo.add_attribute (output_renderer, "text", 0);
         output_combo.id_column = 0;
         output_combo.active_id = pid.mv_id;
-        debug ("Output: %s", pid.mv_id);
+       GLib.debug ("Output: %s", pid.mv_id);
 
         (pv_box as Gtk.Box).pack_start (new Gtk.Label ("Input:"), true, false, 0);
         (pv_box as Gtk.Box).pack_start (input_combo, true, true, 0);
@@ -110,9 +109,9 @@ public class PIDSettingsDialog : Dialog {
             case ResponseType.OK:
                 /* Update PID object */
                 string pv_id = input_combo.active_id;
-                debug ("Input selected:  %s", input_combo.active_id);
+               GLib.debug ("Input selected:  %s", input_combo.active_id);
                 string mv_id = output_combo.active_id;
-                debug ("Output selected: %s", output_combo.active_id);
+               GLib.debug ("Output selected: %s", output_combo.active_id);
                 Cld.Object pv_ch = channels.get (pv_id);
                 Cld.Object mv_ch = channels.get (mv_id);
                 Gee.Map<string, Cld.Object> process_values = new Gee.TreeMap<string, Cld.Object> ();

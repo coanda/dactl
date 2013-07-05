@@ -12,6 +12,7 @@
 void
 threads_acq_func (GObject *data)
 {
+g_debug ("2");
     ApplicationData *app_data = (ApplicationData *)data;
     CldBuilder *builder = application_data_get_builder (app_data);
     gint delay;
@@ -53,7 +54,7 @@ threads_acq_func (GObject *data)
         dev[i] = comedi_open (devstr);
         if (!dev[i])
         {
-            application_data_set_acq_active (APPLICATION_DATA (app_data), false);
+            application_data_stop_acquisition (APPLICATION_DATA (app_data));
             g_warning ("Failed to open comedi device: %s", dev);
         }
         g_debug ("Opened device: %s", devstr);
@@ -116,7 +117,8 @@ threads_acq_func (GObject *data)
             meas = 0.0;
             for (i = 1; i < NSAMPLES; i++)
                 meas += comedi_to_phys (cdata[n][(num % NCHAN) + (n * NCHAN)][i], cr, maxdata);
-            meas /= (NSAMPLES - 1);
+            meas /= NSAMPLES;
+            //g_debug ("dev: %d, chan: %d: chanmod: %d, meas: %f", n, num, num % NCHAN, meas);
 
             if (isnan (meas))
             {
@@ -156,7 +158,7 @@ threads_acq_func (GObject *data)
     #ifdef USE_COMEDI
     for (i = 0; i < NDEV; i++)
     {
-        devstr = g_strdup_printf ("/dev/comedi%d", i );
+        devstr = g_strdup_printf ("/dev/comedi%d", i);
         if (!dev[i])
         {
             if (comedi_close (dev[i]) < 0)
@@ -168,6 +170,7 @@ threads_acq_func (GObject *data)
     #endif
 
     g_cond_free (cond);
+g_debug ("3");
 }
 
 void
@@ -195,12 +198,12 @@ threads_write_func (GObject *data)
     #ifdef USE_COMEDI
     comedi_t *dev;
 
-    if (!(dev = comedi_open ("/dev/comedi0")))
+    if (!(dev = comedi_open ("/dev/comedi2")))
     {
         application_data_set_write_active (APPLICATION_DATA (app_data), false);
-        g_warning ("Failed to open comedi device: %s", "/dev/comedi0");
+        g_warning ("Failed to open comedi device: %s", "/dev/comedi2");
     }
-    g_debug ("Opened device: %s", "/dev/comedi0");
+    g_debug ("Opened device: %s", "/dev/comedi2");
     #endif
 */
 
@@ -216,7 +219,7 @@ threads_write_func (GObject *data)
         for (has_next = gee_iterator_first (it); has_next; has_next = gee_iterator_next (it))
         {
             value = gee_iterator_get (it);
-            gdouble val = cld_achannel_get_scaled_value (CLD_ACHANNEL (value));
+            gdouble val = cld_scalable_channel_get_scaled_value (CLD_ACHANNEL (value));
             gint num = cld_channel_get_num (CLD_CHANNEL (value));
             // g_debug ("num = %d, val = %.2f", num, val);
             guint16 out;
@@ -246,9 +249,9 @@ threads_write_func (GObject *data)
     if (!dev)
     {
         if (comedi_close (dev) < 0)
-            g_warning ("Failed to close comedi device: %s", "/dev/comedi0");
+            g_warning ("Failed to close comedi device: %s", "/dev/comedi2");
     }
-    g_debug ("Closed device: %s", "/dev/comedi0");
+    g_debug ("Closed device: %s", "/dev/comedi2");
     #endif
 */
 }

@@ -47,7 +47,7 @@ public class AIChannelTreeView : TreeView {
                                  Columns.NUM, (channel as Channel).num,
                                  Columns.TAG, (channel as Channel).tag,
                                  Columns.DESCRIPTION, (channel as Channel).desc,
-                                 Columns.CALIBRATION, (channel as AChannel).calref,
+                                 Columns.CALIBRATION, (channel as ScalableChannel).calref,
                                  Columns.AVERAGE, (channel as AIChannel).raw_value_list_size);
         }
 

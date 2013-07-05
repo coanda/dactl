@@ -97,7 +97,7 @@ public class PIDBox : Gtk.Box {
                 manual_scale.sensitive = false;
                 manual_spin_button.sensitive = false;
                 sp_spin_button.sensitive = true;
-                sp_adjustment.value = (pv as Cld.AChannel).scaled_value;
+                sp_adjustment.value = (pv as Cld.ScalableChannel).scaled_value;
                 if (!pid.running) {
                     pid.calculate_preload_bias ();
                     try {
@@ -114,7 +114,7 @@ public class PIDBox : Gtk.Box {
                 manual_scale.sensitive = true;
                 manual_spin_button.sensitive = true;
                 sp_spin_button.sensitive = false;
-                manual_adjustment.value = (mv as Cld.AChannel).scaled_value;
+                manual_adjustment.value = (mv as Cld.ScalableChannel).scaled_value;
                 if (pid.running) {
                     pid.running = false;
                     thread.join ();

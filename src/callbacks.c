@@ -43,7 +43,7 @@ update_coefficient_config (CldXmlConfig *xml, gchar *calibration_id, GeeMap *coe
         coefficient = gee_map_iterator_get_value (it);
 
         /* update the coefficient values of the xml data in memory */
-        value = g_strdup_printf ("%.3f", cld_coefficient_get_value (CLD_COEFFICIENT (coefficient)));
+        value = g_strdup_printf ("%.4f", cld_coefficient_get_value (CLD_COEFFICIENT (coefficient)));
         xpath = g_strdup_printf (
                     "//cld/cld:objects/cld:object[@type=\"calibration\" and @id=\"%s\"]/cld:object[@type=\"coefficient\" and @id=\"%s\"]/cld:property[@name=\"value\"]",
                     calibration_id, cld_object_get_id (coefficient));
@@ -159,6 +159,34 @@ update_control_config (CldXmlConfig *xml, GeeMap *controls)
 }
 
 static void
+update_module_config (CldXmlConfig *xml, GeeMap *modules)
+{
+    gchar *value, *xpath;
+    gboolean has_next;
+    CldObject *module;
+    GeeMapIterator *it = gee_map_map_iterator (modules);
+
+    for (has_next = gee_map_iterator_first (it); has_next; has_next = gee_map_iterator_next (it))
+    {
+        module = gee_map_iterator_get_value (it);
+
+        /* XXX this should be fixed - should use type check instead */
+        if (g_strcmp0 (cld_object_get_id (CLD_OBJECT (module)), "vm0") == 0)
+        {
+            /* update the pid values of the xml data in memory */
+            value = g_strdup_printf ("%s", cld_velmex_module_get_program (CLD_VELMEX_MODULE (module)));
+            xpath = g_strdup_printf (
+                        "//cld/cld:objects/cld:object[@type=\"module\" and @id=\"%s\"]/cld:property[@name=\"program\"]",
+                        cld_object_get_id (module));
+            g_message ("%s \n %s", value, xpath);
+            cld_xml_config_edit_node_content (xml, xpath, value);
+            g_free (value);
+            g_free (xpath);
+        }
+    }
+}
+
+static void
 update_log_config (CldXmlConfig *xml, GeeMap *logs)
 {
     gchar *value, *xpath;
@@ -226,6 +254,7 @@ cb_btn_save_clicked (GtkWidget *widget, gpointer data)
     GeeMap *aichannels = application_data_get_ai_channels (app_data);
     GeeMap *calibrations = application_data_get_calibrations (app_data);
     GeeMap *controls = application_data_get_control_loops (app_data);
+    GeeMap *modules = application_data_get_modules (app_data);
     GeeMap *logs = cld_builder_get_logs (builder);
 
     /* message box for confirmation */
@@ -247,6 +276,7 @@ cb_btn_save_clicked (GtkWidget *widget, gpointer data)
             update_aichannel_config (xml, aichannels);
             update_calibration_config (xml, calibrations);
             update_control_config (xml, controls);
+            update_module_config (xml, modules);
             update_log_config (xml, logs);
             /* write the configuration to disc */
             application_config_set_xml_node (config, "//dactl/cld:objects",
@@ -269,7 +299,7 @@ cb_btn_chan_clicked (GtkWidget *widget, gpointer data)
     GtkWidget *dialog = application_settings_dialog_new_with_startup_tab_id (app_data, 2);
 
     gtk_dialog_run (GTK_DIALOG (dialog));
-    gtk_widget_destroy (dialog);
+//    gtk_widget_destroy (dialog);
 
     return false;
 }
@@ -337,8 +367,8 @@ cb_btn_def_toggled (GtkWidget *widget, gpointer data)
             channel = gee_map_iterator_get_value (it);
             printf ("Found channel: %s reading %f\n",
                     cld_object_get_id (CLD_OBJECT (channel)),
-                    cld_ai_channel_get_scaled_value (channel));
-            cal = cld_ai_channel_get_calibration (channel);
+                    cld_scalable_channel_get_scaled_value (channel));
+            cal = cld_scalable_channel_get_calibration (channel);
             printf ("Found calibration: %s units %s\n",
                     cld_object_get_id (CLD_OBJECT (cal)),
                     cld_calibration_get_units (cal));
@@ -371,8 +401,8 @@ cb_btn_def_toggled (GtkWidget *widget, gpointer data)
             channel = gee_map_iterator_get_value (it);
             printf ("Found channel: %s reading %f\n",
                     cld_object_get_id (CLD_OBJECT (channel)),
-                    cld_ai_channel_get_scaled_value (channel));
-            cal = cld_ai_channel_get_calibration (channel);
+                    cld_scalable_channel_get_scaled_value (channel));
+            cal = cld_scalable_channel_get_calibration (channel);
             printf ("Found calibration: %s units %s\n",
                     cld_object_get_id (CLD_OBJECT (cal)),
                     cld_calibration_get_units (cal));

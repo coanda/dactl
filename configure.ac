@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([dactl], [0.2])
+AC_INIT([dactl], [0.3])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/main.vala])
 
@@ -13,7 +13,7 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 dnl Support GSettings
 GLIB_GSETTINGS
 
-AC_DEFINE(VERSION, "0.2", "dactl")
+AC_DEFINE(VERSION, "0.3", "dactl")
 
 dnl Programs
 AC_PROG_CC
@@ -110,7 +110,8 @@ AC_ARG_WITH(comedi,
 AC_MSG_RESULT(checking whether Comedi drivers were selected... $use_comedi)
 
 if test "x$use_comedi" != "xno" ; then
-	PKG_CHECK_MODULES([COMEDI], [comedi],,
+	PKG_CHECK_MODULES([COMEDI], [comedi],
+		[VALA_PACKAGES="$VALA_PACKAGES --pkg comedi"],
 		[AC_MSG_ERROR([Comedi is required])])
 	AC_DEFINE(USE_COMEDI, [1], ["Comedi Drivers"])
 fi

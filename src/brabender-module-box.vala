@@ -20,7 +20,7 @@ public class BrabenderModuleBox : Gtk.Box {
         try {
             builder.add_from_file (path);
             brabender_control_box = builder.get_object ("brabender_control_box") as Gtk.Widget;
-        } catch (Error e) {
+        } catch (GLib.Error e) {
             var msg = new MessageDialog (null, DialogFlags.MODAL,
                                          MessageType.ERROR,
                                          ButtonsType.CANCEL,
@@ -49,7 +49,7 @@ public class BrabenderModuleBox : Gtk.Box {
         var entry_ip_address = builder.get_object ("entry_ip_address");
         /* Get the ip address and set entry text value. */
         (entry_ip_address as Gtk.Entry).set_text
-                ((((module as BrabenderModule).port) as ModbusPort).ip_address);
+                (((module.port) as ModbusPort).ip_address);
         (btn_flow_control as Gtk.RadioButton).get_group ();
         (btn_speed_control as Gtk.RadioButton).join_group (btn_flow_control as Gtk.RadioButton);
         (btn_flow_control as Gtk.RadioButton).set_active (true);
@@ -86,7 +86,7 @@ public class BrabenderModuleBox : Gtk.Box {
                 if (!(module as BrabenderModule).running) {
                     var res = (module as BrabenderModule).run ();
                     if (!res) {
-                        message ("Failed to run the Brabender module.");
+                        Cld.debug ("Failed to run the Brabender module.\n");
                         (btn_run as Gtk.ToggleButton).set_active (false);
                     } else {
                         var img_run = builder.get_object ("img_run");
@@ -109,7 +109,7 @@ public class BrabenderModuleBox : Gtk.Box {
 
         (btn_flow_control as Gtk.RadioButton).toggled.connect (() => {
             if ((btn_flow_control as Gtk.RadioButton).active) {
-                message ("Gravimetric feed control selected");
+                Cld.debug ("Gravimetric feed control selected\n");
                 if (!(module as BrabenderModule).set_mode("GF")) {
                     critical ("Unable to set Brabender operating mode GF.");
                 }
@@ -118,7 +118,7 @@ public class BrabenderModuleBox : Gtk.Box {
 
         (btn_speed_control as Gtk.RadioButton).toggled.connect (() => {
             if ((btn_speed_control as Gtk.RadioButton).active) {
-                message ("Discharge (speed) control selected");
+                Cld.debug ("Discharge (speed) control selected\n");
                 if (!(module as BrabenderModule).set_mode("DI")) {
                     critical ("Unable to set Brabender operating mode DI");
                 }
@@ -127,19 +127,18 @@ public class BrabenderModuleBox : Gtk.Box {
 
         (adj_flow as Gtk.Adjustment).value_changed.connect (() => {
             var flow = (adj_flow as Gtk.Adjustment).get_value ();
-            message ("flow value: %.3f", flow);
+            Cld.debug ("flow value: %.3f\n", flow);
             (module as BrabenderModule).set_mass_flow (flow);
             });
 
         (adj_speed as Gtk.Adjustment).value_changed.connect (() => {
             var speed = (adj_speed as Gtk.Adjustment).get_value ();
-            message ("speed value: %.3f", speed);
+            Cld.debug ("speed value: %.3f\n", speed);
             (module as BrabenderModule).set_discharge (speed);
         });
 
         (entry_ip_address as Gtk.Entry).activate.connect (() => {
-            message ("huh ?");
-            (((module as BrabenderModule).port) as ModbusPort).ip_address
+            ((module.port) as ModbusPort).ip_address
                 = (entry_ip_address as Gtk.Entry).text;
         });
     }

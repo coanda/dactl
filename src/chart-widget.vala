@@ -11,24 +11,29 @@ public class ChartWidget : Gtk.Box {
     private Gtk.Widget alignment_x_axis;
     private Gtk.Widget alignment_y_axis;
     private Gtk.Widget alignment_chart;
-
+    private Dialog _settings_dialog;
+    public Dialog settings_dialog {
+        get { return _settings_dialog; }
+        set { _settings_dialog = value; }
+    }
+    public string schema;
     /* XXX could consider using an adjustment in each to sync */
     protected Gtk.Widget chart_area;
     protected Gtk.Widget x_axis_area;
     protected Gtk.Widget y_axis_area;
 
     public string title {
-        private get { return (lbl_title as Gtk.Label).label; }
+        get { return (lbl_title as Gtk.Label).label; }
         set { (lbl_title as Gtk.Label).label = value; }
     }
 
     public string x_axis_label {
-        private get { return (lbl_x_axis as Gtk.Label).label; }
+        get { return (lbl_x_axis as Gtk.Label).label; }
         set { (lbl_x_axis as Gtk.Label).label = value; }
     }
 
     public string y_axis_label {
-        private get { return (lbl_y_axis as Gtk.Label).label; }
+        get { return (lbl_y_axis as Gtk.Label).label; }
         set { (lbl_y_axis as Gtk.Label).label = value; }
     }
 
@@ -73,6 +78,8 @@ public class ChartWidget : Gtk.Box {
     }
 
     public int height_min {get; set; default = 100;}
+
+    public int width_min {get; set; default = 100;}
 
     public double x_axis_max {
         get { return (x_axis_area as XAxisArea).axis_max; }
@@ -130,6 +137,7 @@ public class ChartWidget : Gtk.Box {
             alignment_x_axis = builder.get_object ("alignment_x_axis") as Gtk.Widget;
             alignment_y_axis = builder.get_object ("alignment_y_axis") as Gtk.Widget;
             alignment_chart = builder.get_object ("alignment_chart") as Gtk.Widget;
+            connect_signals ();
         } catch (Error e) {
             var msg = new MessageDialog (null, DialogFlags.MODAL,
                                          MessageType.ERROR,
@@ -141,15 +149,34 @@ public class ChartWidget : Gtk.Box {
     }
 
     public ChartWidget () {
+
         chart_area = new ChartArea ();
         x_axis_area = new XAxisArea ();
         y_axis_area = new YAxisArea ();
-
         (alignment_chart as Gtk.Alignment).add (chart_area);
         (alignment_x_axis as Gtk.Alignment).add (x_axis_area);
         (alignment_y_axis as Gtk.Alignment).add (y_axis_area);
         pack_start (chart_box);
         show_all ();
+
+    }
+
+    private void connect_signals () {
+        (btn_settings as Gtk.Button).clicked.connect (() => {
+            settings_dialog.run ();
+        });
+    }
+
+    public void update_settings () {
+        var settings = new GLib.Settings (schema);
+        settings.set_string ("title", title);
+        settings.set_string ("x-axis-label", x_axis_label);
+        settings.set_string ("y-axis-label", y_axis_label);
+        settings.set_int ("height-min", height_min);
+        settings.set_double ("x-axis-min", x_axis_min);
+        settings.set_double ("x-axis-max", x_axis_max);
+        settings.set_double ("y-axis-min", y_axis_min);
+        settings.set_double ("y-axis-max", y_axis_max);
     }
 
     public virtual void add_series (string id) {
@@ -176,6 +203,8 @@ public class ChartWidget : Gtk.Box {
 
 public class StripChartWidget : ChartWidget {
 
+
+
     public double time_step { get; set; default = 0.1; }
     public Gee.List<Cld.Object> series_data { private get; set; }
 
@@ -188,13 +217,11 @@ public class StripChartWidget : ChartWidget {
 
     private bool update () {
         foreach (var data in series_data) {
-            if (data is Cld.AChannel)
-                add_point_to_series (data.id, x_axis_max, (data as Cld.AChannel).scaled_value);
-            else if (data is Cld.VChannel)
-                add_point_to_series (data.id, x_axis_max, (data as Cld.VChannel).scaled_value);
+            if (data is Cld.ScalableChannel)
+                add_point_to_series (data.id, x_axis_max, (data as Cld.ScalableChannel).scaled_value);
         }
         //redraw_canvas ();
-        queue_draw ();
+        chart_area.queue_draw ();
         return true;
     }
 
@@ -278,11 +305,10 @@ public class XAxisArea : Gtk.DrawingArea {
         var y = 0;
 
         GLib.List<Pango.Layout> tick_layout_list = new GLib.List<Pango.Layout> ();
-
         for (var i = 0; i <= n_divisions_major; i++) {
             string tick_label = "%.1f".printf (axis_min);
             if (i > 0)
-                tick_label = "%.1f".printf (axis_min + (axis_max / n_divisions_major) * i);
+                tick_label = "%.1f".printf (axis_min + (((axis_max - axis_min) / n_divisions_major) * i));
             var layout = create_pango_layout (tick_label);
             var desc = Pango.FontDescription.from_string ("Normal 100");
             layout.set_font_description (desc);

@@ -6,7 +6,7 @@ public class DeviceTreeView : TreeView {
 
     public enum Columns {
         ID,
-        NAME,
+        DESC,
         FILE
     }
 
@@ -30,7 +30,7 @@ public class DeviceTreeView : TreeView {
 
         set_model (listmodel);
         insert_column_with_attributes (-1, "ID", new CellRendererText (), "text", Columns.ID);
-        insert_column_with_attributes (-1, "Name", new CellRendererText (), "text", Columns.NAME);
+        insert_column_with_attributes (-1, "Name", new CellRendererText (), "text", Columns.DESC);
         //insert_column_with_attributes (-1, "Driver", new CellRendererText (), "text", Columns.DRIVER);
         //insert_column_with_attributes (-1, "Hardware", new CellRendererText (), "text", Columns.HARDWARE);
         insert_column_with_attributes (-1, "File", new CellRendererText (), "text", Columns.FILE);
@@ -41,10 +41,10 @@ public class DeviceTreeView : TreeView {
             //HardwareType hw_type = ((device as Device).hw_type as HardwareType);
             listmodel.append (out iter);
             listmodel.set (iter, Columns.ID, device.id,
-                                 Columns.NAME, (device as Device).name,
+                                 Columns.DESC, (device as Device).description,
                                  //Columns.DRIVER, dev_type.to_string (),
                                  //Columns.HARDWARE, hw_type.to_string (),
-                                 Columns.FILE, (device as Device).file);
+                                 Columns.FILE, (device as Device).filename);
         }
 
         set_rules_hint (true);

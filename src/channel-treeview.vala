@@ -41,11 +41,10 @@ public class ChannelTreeView : TreeView {
         foreach (var channel in channels.values) {
             char[] buf = new char[double.DTOSTR_BUF_SIZE];
             string scaled_as_string;
-            /* Just AI channels for now */
-            if (channel is AIChannel) {
-                var cal = (channel as AChannel).calibration;
-                scaled_as_string = ((channel as AChannel).scaled_value).format (buf, "%.3f");
-                message ("scaled_as_string: %s", scaled_as_string);
+            if (channel is AChannel) {
+                var cal = (channel as ScalableChannel).calibration;
+                scaled_as_string = ((channel as ScalableChannel).scaled_value).format (buf, "%.3f");
+                Cld.debug ("scaled_as_string: %s\n", scaled_as_string);
                 listmodel.append (out iter);
                 listmodel.set (iter, Columns.TAG, (channel as Channel).tag,
                                      Columns.VALUE, scaled_as_string, //(channel as AChannel).scaled_value,
@@ -53,12 +52,30 @@ public class ChannelTreeView : TreeView {
                                      Columns.DESCRIPTION, (channel as Channel).desc,
                                      Columns.HIDDEN_ID, (channel as Cld.Object).id);
             } else if (channel is VChannel) {
-                var cal = (channel as VChannel).calibration;
-                scaled_as_string = ((channel as VChannel).scaled_value).format (buf, "%.3f");
-                message ("scaled_as_string: %s", scaled_as_string);
+                var cal = (channel as ScalableChannel).calibration;
+                scaled_as_string = ((channel as ScalableChannel).scaled_value).format (buf, "%.3f");
+                Cld.debug ("scaled_as_string: %s\n", scaled_as_string);
                 listmodel.append (out iter);
                 listmodel.set (iter, Columns.TAG, (channel as Channel).tag,
                                      Columns.VALUE, scaled_as_string, //(channel as VChannel).scaled_value,
+                                     Columns.UNITS, (cal as Calibration).units,
+                                     Columns.DESCRIPTION, (channel as Channel).desc,
+                                     Columns.HIDDEN_ID, (channel as Cld.Object).id);
+            } else if (channel is VChannel) {
+                var cal = (channel as VChannel).calibration;
+                listmodel.append (out iter);
+                listmodel.set (iter, Columns.NUM, (channel as Channel).num,
+                                     Columns.TAG, (channel as Channel).tag,
+                                     Columns.VALUE, (channel as VChannel).scaled_value,
+                                     Columns.UNITS, (cal as Calibration).units,
+                                     Columns.DESCRIPTION, (channel as Channel).desc,
+                                     Columns.HIDDEN_ID, (channel as Cld.Object).id);
+            } else if (channel is VChannel) {
+                var cal = (channel as VChannel).calibration;
+                listmodel.append (out iter);
+                listmodel.set (iter, Columns.NUM, (channel as Channel).num,
+                                     Columns.TAG, (channel as Channel).tag,
+                                     Columns.VALUE, (channel as VChannel).scaled_value,
                                      Columns.UNITS, (cal as Calibration).units,
                                      Columns.DESCRIPTION, (channel as Channel).desc,
                                      Columns.HIDDEN_ID, (channel as Cld.Object).id);
@@ -82,12 +99,9 @@ public class ChannelTreeView : TreeView {
 
         model.get (iter, Columns.HIDDEN_ID, out id);
         var channel = channels.get (id);
-        if (channel is AChannel) {
-            value = ((channel as AChannel).scaled_value).format (buf, "%.3f");
-            cal = (channel as AChannel).calibration;
-        } else if (channel is VChannel) {
-            value = ((channel as VChannel).scaled_value).format (buf, "%.3f");
-            cal = (channel as VChannel).calibration;
+        if (channel is ScalableChannel) {
+            value = ((channel as ScalableChannel).scaled_value).format (buf, "%.3f");
+            cal = (channel as ScalableChannel).calibration;
         }
 
         (model as ListStore).set (iter, Columns.VALUE, value,

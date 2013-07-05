@@ -15,12 +15,12 @@ public class VelmexModuleBox : Gtk.Box {
         string path = GLib.Path.build_filename (Config.DATADIR,
                                                 "velmex_control.ui");
         builder = new Gtk.Builder ();
-        debug ("Loaded interface file: %s", path);
+       GLib.debug ("Loaded interface file: %s", path);
 
         try {
             builder.add_from_file (path);
             velmex_control_box = builder.get_object ("velmex_control_box") as Gtk.Widget;
-        } catch (Error e) {
+        } catch (GLib.Error e) {
             var msg = new MessageDialog (null, DialogFlags.MODAL,
                                          MessageType.ERROR,
                                          ButtonsType.CANCEL,
@@ -67,6 +67,30 @@ public class VelmexModuleBox : Gtk.Box {
         var btn_run_prog = builder.get_object ("btn_run_prog");
         (btn_run_prog as Gtk.Button).clicked.connect (() => {
             (module as VelmexModule).run_stored_program ();
+        });
+
+        var btn_jog_plus = builder.get_object ("btn_jog_plus");
+        (btn_jog_plus as Gtk.Button).clicked.connect (() => {
+            (module as VelmexModule).jog (1);
+        });
+
+        var btn_jog_minus = builder.get_object ("btn_jog_minus");
+        (btn_jog_minus as Gtk.Button).clicked.connect (() => {
+            (module as VelmexModule).jog (-1);
+        });
+
+        var btn_step = builder.get_object ("btn_step");
+        var btn_spinstep = builder.get_object ("btn_spinstep");
+        var btn_fwd = builder.get_object ("btn_fwd");
+        (btn_step as Gtk.Button).clicked.connect (() => {
+            int step_size;
+            int direction;
+            step_size = (int)(btn_spinstep as Gtk.SpinButton).value;
+            if ((btn_fwd as Gtk.ToggleButton).active)
+                direction = 1;
+            else
+                direction = -1;
+            (module as VelmexModule).jog (step_size * direction);
         });
     }
 }

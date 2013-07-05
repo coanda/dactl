@@ -4,8 +4,8 @@ bin_PROGRAMS = dactl
 
 VALAFLAGS = \
 	-H $(srcdir)/libdactl.h -C -c --thread \
-	--vapidir=$(srcdir)/../vapi -X -g \
-	@VALA_PACKAGES@ --pkg callbacks --pkg config --pkg threads
+	--vapidir=$(srcdir)/../vapi -X -g -X -pg\
+	@VALA_PACKAGES@ --pkg callbacks --pkg config --pkg posix
 
 dactl_CFLAGS = \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
@@ -34,8 +34,7 @@ dactl_headers = \
 	common.h \
 	dactl.h \
 	libdactl.h \
-	callbacks.h \
-	threads.h
+	callbacks.h
 
 dactl_SOURCES = \
 	aichannel-treeview.vala \
@@ -48,9 +47,11 @@ dactl_SOURCES = \
 	calibration-treeview.vala \
 	channel-treeview.vala \
 	chart-widget.vala \
+	chart-settings-dialog.vala \
 	coefficient-treeview.vala \
 	command-line-interface.vala \
 	device-treeview.vala \
+	dio-viewer.vala \
 	driver-data.vala \
 	licor-module-box.vala \
 	log-treeview.vala \
@@ -62,8 +63,7 @@ dactl_SOURCES = \
 	velmex-module-box.vala \
 	velmex-settings-box.vala \
 	main.vala \
-	callbacks.c \
-	threads.c
+	callbacks.c
 
 CLEANFILES = \
 	*.stamp \

@@ -62,6 +62,8 @@ public class Application : Object {
                 """;
                 stdout.printf ("%s\n%s - version %s\n", title, args[0], PACKAGE_VERSION);
             } else {
+                Cld.init (args);
+
                 if (cfgfile == null) {
                     cfgfile = Path.build_filename (DATADIR, "dactl.xml");
                 }

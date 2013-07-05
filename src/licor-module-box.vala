@@ -10,17 +10,19 @@ public class LicorModuleBox : Gtk.Box {
     private Gtk.Builder builder;
     private Gtk.Widget licor_control_box;
     private Cld.Module module;
+    private Gee.Map<string, Cld.Object> vchannels;
+
 
     construct {
         string path = GLib.Path.build_filename (Config.DATADIR,
                                                 "licor_control.ui");
         builder = new Gtk.Builder ();
-        debug ("Loaded interface file: %s", path);
+       GLib.debug ("Loaded interface file: %s", path);
 
         try {
             builder.add_from_file (path);
             licor_control_box = builder.get_object ("licor_control_box") as Gtk.Widget;
-        } catch (Error e) {
+        } catch (GLib.Error e) {
             var msg = new MessageDialog (null, DialogFlags.MODAL,
                                          MessageType.ERROR,
                                          ButtonsType.CANCEL,
@@ -30,8 +32,9 @@ public class LicorModuleBox : Gtk.Box {
         }
     }
 
-    public LicorModuleBox (Cld.Module module) {
+    public LicorModuleBox (Cld.Module module,  Gee.Map<string, Cld.Object> vchannels) {
         this.module = module;
+        this.vchannels = vchannels;
         connect_signals ();
         pack_start (licor_control_box);
         show_all ();
@@ -45,7 +48,7 @@ public class LicorModuleBox : Gtk.Box {
                 if (!module.loaded) {
                     var res = module.load ();
                     if (!res) {
-                        message ("Failed to load the Licor module.");
+                        Cld.debug ("Failed to load the Licor module.\n");
                         (btn_connect as Gtk.ToggleButton).set_active (false);
                     } else {
                         var img_status = builder.get_object ("img_status");
@@ -63,6 +66,42 @@ public class LicorModuleBox : Gtk.Box {
                     (lbl_status as Gtk.Label).label = "Connect";
                 }
             }
+        });
+
+                        case "lc1":
+                        message("normalizing id:%s scaled value:%.3f",
+                        vchannel.id, (vchannel as Cld.VChannel).raw_value);
+                        var calibration = (vchannel as Cld.VChannel).calibration;
+                        var c0 = (calibration as Cld.Calibration).get_coefficient(0);
+                        message ("value of c[0]: %.3f", c0.value);
+                        c0.value = -1 *  (vchannel as Cld.VChannel).raw_value;
+                        message ("new value of c[0]: %.3f", c0.value);
+                        break;
+
+                        case "lc2":
+                        message("normalizing id:%s scaled value:%.3f",
+                        vchannel.id, (vchannel as Cld.VChannel).raw_value);
+                        var calibration = (vchannel as Cld.VChannel).calibration;
+                        var c0 = (calibration as Cld.Calibration).get_coefficient(0);
+                        message ("value of c[0]: %.3f", c0.value);
+                        c0.value = -1 *  (vchannel as Cld.VChannel).raw_value;
+                        message ("new value of c[0]: %.3f", c0.value);
+                        break;
+
+                        case "lc3":
+                        message("normalizing id:%s scaled value:%.3f",
+                        vchannel.id, (vchannel as Cld.VChannel).raw_value);
+                        var calibration = (vchannel as Cld.VChannel).calibration;
+                        var c0 = (calibration as Cld.Calibration).get_coefficient(0);
+                        message ("value of c[0]: %.3f", c0.value);
+                        c0.value = -1 *  (vchannel as Cld.VChannel).raw_value;
+                        message ("new value of c[0]: %.3f", c0.value);
+                        break;
+                    }
+                }
+        });
+
+                message ("normalize this!");
         });
 
         (module as LicorModule).diagnostic_event.connect (() => {

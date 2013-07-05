@@ -44,7 +44,7 @@ public class AOChannelTreeView : TreeView {
                                  Columns.NUM, (channel as Channel).num,
                                  Columns.TAG, (channel as Channel).tag,
                                  Columns.DESCRIPTION, (channel as Channel).desc,
-                                 Columns.CALIBRATION, (channel as AChannel).calref);
+                                 Columns.CALIBRATION, (channel as ScalableChannel).calref);
         }
 
         set_rules_hint (true);

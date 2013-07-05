@@ -49,7 +49,9 @@
             <child>
               <object class="GtkNotebook" id="notebook">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_left">2</property>
+                <property name="margin_bottom">1</property>
                 <property name="tab_pos">left</property>
                 <child>
                   <object class="GtkFrame" id="frame1">
@@ -1511,7 +1513,7 @@
                 </child>
                 <child>
                   <object class="GtkFrame" id="frame7">
-                    <property name="sensitive">False</property>
+                    <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">none</property>
@@ -1540,7 +1542,7 @@
                         <property name="can_focus">False</property>
                         <property name="xpad">5</property>
                         <property name="ypad">5</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Traverse Settings&lt;/b&gt;</property>
+                        <property name="label" translatable="yes">Traverse Settings</property>
                         <property name="use_markup">True</property>
                       </object>
                     </child>
@@ -1551,12 +1553,12 @@
                 </child>
                 <child type="tab">
                   <object class="GtkBox" id="box11">
-                    <property name="sensitive">False</property>
+                    <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkImage" id="image4">
-                        <property name="sensitive">False</property>
+                        <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="stock">gtk-harddisk</property>
                         <property name="icon-size">5</property>
@@ -1569,7 +1571,7 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="label12">
-                        <property name="sensitive">False</property>
+                        <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Traverse</property>
                       </object>
