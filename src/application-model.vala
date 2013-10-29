@@ -5,23 +5,16 @@ using Gee;
  * Main application class responsible for interfacing with data and different
  * interface types.
  */
-public class ApplicationData : GLib.Object {
+public class ApplicationModel : GLib.Object {
 
     public string xml_file { get; set; default = "dactl.xml"; }
     public bool active { get; set; default = false; }
 
-    /* Control administrative functionality */
-    public bool _admin = false;
-    public bool admin {
-        get { return _admin; }
-        set{
-            _admin = value;
-            if (ui_enabled)
-                ui.admin = value;
-            if (cli_enabled)
-                cli.admin = value;
-        }
-    }
+    /* Allow administrative functionality */
+    public bool admin { get; set; default = false; }
+
+    /* Basic output verbosity, should use an integer to allow for -vvv */
+    public bool verbose { get; set; default = false; }
 
     /* Configuration data */
     public ApplicationConfig config { get; private set; }
@@ -34,64 +27,24 @@ public class ApplicationData : GLib.Object {
     /* GSettings data */
     public Settings settings { get; private set; }
 
-    /* Flag to set if user requested a graphical interface. */
-    private bool _ui_enabled = false;
-    public bool ui_enabled {
-        get { return _ui_enabled; }
-        set {
-            _ui_enabled = value;
-            if (_ui_enabled) {
-                _ui = new UserInterfaceData (this);
-                _ui.admin = admin;
-                //_ui.closed.connect ();
-            } else {
-                /* XXX should perform a clean shutdown of the interface - fix */
-                _ui = null;
-            }
-        }
-    }
-
-    /* Flag to set if user requested a command line interface. */
-    private bool _cli_enabled = false;
-    public bool cli_enabled {
-        get { return _cli_enabled; }
-        set {
-            _cli_enabled = value;
-            if (_cli_enabled) {
-                _cli = new CommandLineInterface ();
-                _cli.admin = admin;
-                _cli.cld_request.connect (cli_cld_request_cb);
-                _cli.config_event.connect (cli_config_event_cb);
-                _cli.control_event.connect (cli_control_event_cb);
-                _cli.log_event.connect (cli_log_event_cb);
-                _cli.read_channel.connect (cli_read_channel_cb);
-                _cli.read_channels.connect (cli_read_channels_cb);
-                _cli.write_channel.connect (cli_write_channel_cb);
-                _cli.write_channels.connect (cli_write_channels_cb);
-            } else {
-                _cli = null;
-            }
-        }
+    /* Flag to set if user has set the calibrations to <default> */
+    private bool _def_enabled = false;
+    public bool def_enabled {
+        get { return _def_enabled; }
+        set { _def_enabled = value; }
     }
 
     /* Application specific classes. */
-
-    private UserInterfaceData _ui;
-    public UserInterfaceData ui {
-        get { return _ui; }
-        private set { _ui = value; }
-    }
-
-    private CommandLineInterface _cli;
-    public CommandLineInterface cli {
-        get { return _cli; }
-        private set { _cli = value; }
-    }
-
     private Gee.Map<string, Cld.Object> _channels;
     public Gee.Map<string, Cld.Object> channels {
         get { return builder.channels; }
         set { _channels = value; }
+    }
+
+    private Gee.Map<string, Cld.Object> _logs;
+    public Gee.Map<string, Cld.Object> logs {
+        get { return builder.logs; }
+        set { _logs = value; }
     }
 
     private Gee.Map<string, Cld.Object> _devices;
@@ -150,6 +103,46 @@ public class ApplicationData : GLib.Object {
             return _ao_channels;
         }
         set { _ao_channels = value; }
+    }
+
+    /* Digital Input channel data
+     * XXX also only needed because it hasn't been implemented in CLD yet.
+     */
+    private Gee.Map<string, Cld.Object>? _di_channels = null;
+    public Gee.Map<string, Cld.Object>? di_channels {
+        get {
+            if (_di_channels == null) {
+                lock (builder) {
+                    _di_channels = new Gee.TreeMap<string, Cld.Object> ();
+                    foreach (var channel in builder.channels.values) {
+                        if (channel is DIChannel)
+                            _di_channels.set (channel.id, channel);
+                    }
+                }
+            }
+            return _di_channels;
+        }
+        set { _di_channels = value; }
+    }
+
+    /* Digital Output channel data
+     * XXX also only needed because it hasn't been implemented in CLD yet.
+     */
+    private Gee.Map<string, Cld.Object>? _do_channels = null;
+    public Gee.Map<string, Cld.Object>? do_channels {
+        get {
+            if (_do_channels == null) {
+                lock (builder) {
+                    _do_channels = new Gee.TreeMap<string, Cld.Object> ();
+                    foreach (var channel in builder.channels.values) {
+                        if (channel is DOChannel)
+                            _do_channels.set (channel.id, channel);
+                    }
+                }
+            }
+            return _do_channels;
+        }
+        set { _do_channels = value; }
     }
 
     /* Virtual channel data
@@ -243,50 +236,30 @@ public class ApplicationData : GLib.Object {
     public Cld.Log log;
 
     /**
-     * Internal thread data for acquisition. Still considering doing this using
-     * a HashMap so that one thread per device could be done.
+     * Signals used primarily to inform the view that something in the
+     * model was changed.
      */
-    private bool _acq_active = false;
-    public bool acq_active {
-        get { return _acq_active; }
-        set { _acq_active = value; }
-    }
 
-    private unowned Thread<void *> acq_thread;
-    //private Mutex acq_mutex = new Mutex ();
-
-    /**
-     * Internal thread data for output on device. Again, one thread per device
-     * would be the ideal.
-     */
-    private bool _write_active = false;
-    public bool write_active {
-        get { return _write_active; }
-        set { _write_active = value; }
-    }
-
-    private unowned Thread<void *> write_thread;
-    //private Mutex write_mutex = new Mutex ();
+    public signal void acquisition_state_changed (bool state);
+    public signal void log_state_changed (string log, bool state);
 
     /**
      * Default construction.
      */
-    public ApplicationData () {
+    public ApplicationModel () {
         config = new ApplicationConfig (xml_file);
         xml = new Cld.XmlConfig.from_node (config.get_xml_node ("//dactl/cld:objects"));
         builder = new Cld.Builder.from_xml_config (xml);
 
         config.property_changed.connect (config_property_changed_cb);
 
-
         /* Read configuration settings to control application execution. */
         if (config.get_boolean_property ("launch-input-on-startup"))
-            run_acquisition ();
+            start_acquisition ();
 
         if (config.get_boolean_property ("launch-output-on-startup"))
             run_device_output ();
 
-//        create_log_threads ();
         /* XXX change for multiple log files */
         log = builder.get_object ("log0") as Cld.Log;
     }
@@ -294,13 +267,13 @@ public class ApplicationData : GLib.Object {
     /**
      * Construction that loads configuration using the file name provided.
      */
-    public ApplicationData.with_xml_file (string xml_file) {
+    public ApplicationModel.with_xml_file (string xml_file) {
         this.xml_file = xml_file;
 
         if (!FileUtils.test (xml_file, FileTest.EXISTS)) {
             /* XXX might be better if somehow done after gui was launched
              *     so that a dialog could be given, or use conditional
-             *     ApplicationData construction */
+             *     ApplicationModel construction */
             critical ("Configuration selection '%s' does not exist.", xml_file);
         }
 
@@ -314,7 +287,7 @@ public class ApplicationData : GLib.Object {
 
         /* Read configuration settings to control application execution. */
         if (config.get_boolean_property ("launch-input-on-startup"))
-            run_acquisition ();
+            start_acquisition ();
 
         if (config.get_boolean_property ("launch-output-on-startup"))
             run_device_output ();
@@ -329,14 +302,15 @@ public class ApplicationData : GLib.Object {
 
         /* XXX change for multiple log files */
         log = builder.get_object ("log0") as Cld.Log;
-        /* XXX Setting the logging task here. Should be done in CldBuilder. */
-        task = (builder.get_object ("tk0") as Task);
+
+        if (verbose)
+            Cld.debug ("%s\n", builder.to_string ());
     }
 
     /**
      * Destruction occurs when object goes out of scope.
      */
-    ~ApplicationData () {
+    ~ApplicationModel () {
         /* Stop hardware threads. */
         stop_acquisition ();
         stop_device_output ();
@@ -351,9 +325,42 @@ public class ApplicationData : GLib.Object {
     }
 
     /**
-     * Start the thread that handles data acquisition.
+     * Start the log file.
+     * XXX should really have id as parameter
      */
-    public void run_acquisition () {
+     public void start_log () {
+        if (!(log as Cld.Log).active) {
+            (log as Cld.Log).file_open ();
+            (log as Cld.Log).run ();
+
+            if ((log as Cld.Log).active) {
+                message ("Started log %s", log.id);
+                log_state_changed ((log as Cld.Log).id, true);
+            }
+        }
+    }
+
+    /**
+     * Stop the log file.
+     * XXX should really have id as parameter
+     */
+    public void stop_log () {
+        if ((log as Cld.Log).active) {
+            (log as Cld.Log).stop ();
+            (log as Cld.Log).file_mv_and_date (false);
+
+            if ((log as Cld.Log).active) {
+                message ("Stopped log %s", log.id);
+                log_state_changed ((log as Cld.Log).id, false);
+            }
+        }
+    }
+
+    /**
+     * Start the thread that handles data acquisition.
+     * XXX this is possibly more aptly placed in the controller
+     */
+    public void start_acquisition () {
         foreach (var device in devices.values) {
             if (!(device as ComediDevice).is_open) {
                 Cld.debug ("Opening Comedi Device: %s\n", device.id);
@@ -370,10 +377,14 @@ public class ApplicationData : GLib.Object {
                 }
             }
         }
+
+        /* XXX should check that the task started properly */
+        acquisition_state_changed (true);
     }
 
     /**
      * Stops the thread that handles data acquisition.
+     * XXX this is possibly more aptly placed in the controller
      */
     public void stop_acquisition () {
 
@@ -397,6 +408,9 @@ public class ApplicationData : GLib.Object {
                 error ("Failed to close Comedi device: %s\n", device.id);
             */
         }
+
+        /* XXX should check that the task stopped properly */
+        acquisition_state_changed (false);
     }
 
     /**

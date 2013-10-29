@@ -11,12 +11,15 @@ public class ChartWidget : Gtk.Box {
     private Gtk.Widget alignment_x_axis;
     private Gtk.Widget alignment_y_axis;
     private Gtk.Widget alignment_chart;
+
     private Dialog _settings_dialog;
     public Dialog settings_dialog {
         get { return _settings_dialog; }
         set { _settings_dialog = value; }
     }
+
     public string schema;
+
     /* XXX could consider using an adjustment in each to sync */
     protected Gtk.Widget chart_area;
     protected Gtk.Widget x_axis_area;
@@ -122,7 +125,7 @@ public class ChartWidget : Gtk.Box {
     }
 
     construct {
-        string path = GLib.Path.build_filename (Config.DATADIR,
+        string path = GLib.Path.build_filename (Config.UI_DIR,
                                                 "chart_widget.ui");
         Gtk.Builder builder = new Gtk.Builder ();
         GLib.debug ("Loaded interface file: %s", path);
@@ -153,6 +156,12 @@ public class ChartWidget : Gtk.Box {
         chart_area = new ChartArea ();
         x_axis_area = new XAxisArea ();
         y_axis_area = new YAxisArea ();
+
+        /* Set names for styling */
+        chart_area.set_name ("chart-area");
+        x_axis_area.set_name ("x-axis-area");
+        y_axis_area.set_name ("y-axis-area");
+
         (alignment_chart as Gtk.Alignment).add (chart_area);
         (alignment_x_axis as Gtk.Alignment).add (x_axis_area);
         (alignment_y_axis as Gtk.Alignment).add (y_axis_area);
@@ -202,8 +211,6 @@ public class ChartWidget : Gtk.Box {
 }
 
 public class StripChartWidget : ChartWidget {
-
-
 
     public double time_step { get; set; default = 0.1; }
     public Gee.List<Cld.Object> series_data { private get; set; }
@@ -460,9 +467,9 @@ public class ChartArea : Gtk.DrawingArea {
         Gee.List<double?> color = new Gee.ArrayList<double?> ();
 
         /* Chart back */
-        cr.rectangle (0, 0, w, h);
-        cr.set_source_rgb (1, 1, 1);
-        cr.fill_preserve ();
+        //cr.rectangle (0, 0, w, h);
+        //cr.set_source_rgb (1, 1, 1);
+        //cr.fill_preserve ();
 
         cr.set_antialias (Cairo.Antialias.SUBPIXEL);
         draw_grid (cr);

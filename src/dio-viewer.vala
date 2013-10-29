@@ -10,7 +10,7 @@ public class DIOViewer : Gtk.Window {
     private Gtk.Widget box_inputs;
     private Gtk.Widget box_outputs;
     private Gtk.Widget btn;
-    private ApplicationData data;
+    private ApplicationModel model;
     private Gee.Map <string, Gtk.Widget> di_buttons = new Gee.TreeMap<string, Gtk.Widget> ();
     private Gee.Map <string, Gtk.Widget> do_buttons = new Gee.TreeMap<string, Gtk.Widget> ();
     private Gee.Map <string, Cld.Object> di_channels = new Gee.TreeMap<string, Cld.Object> ();
@@ -22,7 +22,7 @@ public class DIOViewer : Gtk.Window {
 
 
     construct {
-        string path = GLib.Path.build_filename (Config.DATADIR,
+        string path = GLib.Path.build_filename (Config.UI_DIR,
                                                 "view_dio.ui");
         builder = new Gtk.Builder ();
         Cld.debug ("Loaded interface file: %s\n", path);
@@ -32,7 +32,7 @@ public class DIOViewer : Gtk.Window {
             dio_viewer = builder.get_object ("dio_viewer") as Gtk.Widget;
             box_inputs = builder.get_object ("box_inputs") as Gtk.Widget;
             box_outputs = builder.get_object ("box_outputs") as Gtk.Widget;
-        } catch (Error e) {
+        } catch (GLib.Error e) {
             var msg = new MessageDialog (null, DialogFlags.MODAL,
                                         MessageType.ERROR,
                                         ButtonsType.CANCEL,
@@ -42,10 +42,10 @@ public class DIOViewer : Gtk.Window {
         }
     }
 
-    public DIOViewer (ApplicationData data) {
-        this.data = data;
+    public DIOViewer (ApplicationModel model) {
+        this.model = model;
       /* Create seperate input and output channel lists. */
-        foreach (var channel in data.channels.values) {
+        foreach (var channel in model.channels.values) {
             if (channel is DIChannel) {
                 di_channels.set (channel.id, channel);
             } else if (channel is DOChannel)
@@ -134,11 +134,10 @@ public class DIOViewer : Gtk.Window {
             (channel as Cld.DChannel).new_value.connect ((id, value) => {
                 var chan = di_channels.get (id);
                 int num = (chan as DChannel).num;
-                //message ("id: %s num: %d", id,  num);
+                message ("id: %s num: %d", id,  num);
                 var button = di_buttons.get ("btn_" + num.to_string ());
                 (button as Gtk.ToggleButton).set_active (value);
             });
-
 
             count++;
         }

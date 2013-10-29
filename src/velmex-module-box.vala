@@ -12,10 +12,10 @@ public class VelmexModuleBox : Gtk.Box {
     private Cld.Module module;
 
     construct {
-        string path = GLib.Path.build_filename (Config.DATADIR,
+        string path = GLib.Path.build_filename (Config.UI_DIR,
                                                 "velmex_control.ui");
         builder = new Gtk.Builder ();
-       GLib.debug ("Loaded interface file: %s", path);
+        GLib.debug ("Loaded interface file: %s", path);
 
         try {
             builder.add_from_file (path);

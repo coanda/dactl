@@ -14,7 +14,7 @@ public class LicorModuleBox : Gtk.Box {
 
 
     construct {
-        string path = GLib.Path.build_filename (Config.DATADIR,
+        string path = GLib.Path.build_filename (Config.UI_DIR,
                                                 "licor_control.ui");
         builder = new Gtk.Builder ();
        GLib.debug ("Loaded interface file: %s", path);

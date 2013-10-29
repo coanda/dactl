@@ -6,8 +6,6 @@ mimexml_DATA = dactl.xml
 ## See tabler for original example that includes i18n
 ## @INTLTOOL_XML_RULE@
 
-CLEANFILES = $(mimexml_DATA)
-
 EXTRA_DIST = $(mimexml_DATA)
 
 ## Update mime only when system wide installation takes place

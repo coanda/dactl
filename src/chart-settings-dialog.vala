@@ -21,7 +21,7 @@ public class ChartSettingsDialog : Dialog {
     private Gtk.Widget entry_y_axis;
 
     construct {
-        string path = GLib.Path.build_filename (Config.DATADIR,
+        string path = GLib.Path.build_filename (Config.UI_DIR,
                                                 "chart_dialog.ui");
         builder = new Gtk.Builder ();
         GLib.debug ("Loaded interface file: %s", path);
@@ -36,7 +36,6 @@ public class ChartSettingsDialog : Dialog {
                                          e.message);
             msg.run ();
         }
-
     }
 
     public ChartSettingsDialog (ChartWidget chart) {

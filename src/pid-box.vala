@@ -4,7 +4,7 @@ using Gtk;
 
 public class PIDBox : Gtk.Box {
 
-    private ApplicationData data;
+    private ApplicationModel model;
 
     private Cld.Pid pid;
     private Cld.Pid.Thread pid_thread;
@@ -34,13 +34,13 @@ public class PIDBox : Gtk.Box {
     private unowned GLib.Thread<void *> thread;
 
     //public PIDBox (Cld.Pid pid) {
-    public PIDBox (string pid_id, ApplicationData data) {
+    public PIDBox (string pid_id, ApplicationModel model) {
         GLib.Object (orientation: Orientation.HORIZONTAL);
         spacing = 10;
         //this.pid = pid;
         this.pid_id = pid_id;
-        this.data = data;
-        Cld.Builder builder = data.builder;
+        this.model = model;
+        Cld.Builder builder = model.builder;
         pid = builder.get_object (this.pid_id) as Cld.Pid;
         create_widgets ();
         connect_signals ();
@@ -90,7 +90,7 @@ public class PIDBox : Gtk.Box {
         });
 
         (pid_enable as Gtk.ToggleButton).toggled.connect (() => {
-            var builder = data.builder;
+            var builder = model.builder;
             var mv = builder.get_object (pid.mv_id);
             var pv = builder.get_object (pid.pv_id);
             if ((pid_enable as Gtk.ToggleButton).active) {
@@ -125,7 +125,7 @@ public class PIDBox : Gtk.Box {
         /* for now the manual adjustment on the control is from 0 - 100 %,
          * hence the divide by 10 */
         manual_adjustment.value_changed.connect (() => {
-            Cld.Builder builder = data.builder;
+            Cld.Builder builder = model.builder;
             var channel = builder.get_object (pid.mv_id);
             (channel as Cld.AChannel).raw_value = manual_adjustment.value;
         });

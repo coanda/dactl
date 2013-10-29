@@ -29,38 +29,31 @@ AC_SUBST(PACKAGE_LIBS)
 PACKAGE_CFLAGS=""
 PACKAGE_LIBS=""
 
-dnl Set install paths
-if test "x$prefix" = "xNONE" ; then
-	prefix="/usr/local"
-fi
-
-if test "x$exec_prefix" = "xNONE" ; then
-	exec_prefix=$prefix
-fi
-
-if test "x$sysconfdir" = "xNONE" ; then
-	sysconfdir="$prefix/etc"
-fi
+AC_SET_DEFAULT_PATHS_SYSTEM
 
 PREFIX=$prefix
 AC_SUBST(PREFIX)
 
-SYSCONFDIR="$prefix/etc"
+SYSCONFDIR="$ac_default_prefix/etc"
 AC_SUBST(SYSCONFDIR)
 
 dnl Add setup for installation directories
-AC_DEFINE_UNQUOTED(DATADIR, "$SYSCONFDIR/$PACKAGE", [
-	Define the read-only architecture-independent data directory.
-	])
+AC_DEFINE_UNQUOTED(DATADIR, "$SYSCONFDIR/$PACKAGE",
+                   [Define the architecture-independent data directory.])
+
+#UI_DIR="$ac_default_prefix/share/$PACKAGE/ui"
+#AC_SUBST(UI_DIR)
+AC_DEFINE_UNQUOTED(UI_DIR, "$ac_default_prefix/share/$PACKAGE/ui",
+                   [Define the read-only user interface files directory.])
 
 dnl Library checks
 VALA_PACKAGES=""
 
-PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.6 gthread-2.0 gmodule-2.0 gobject-2.0],,
-	[AC_MSG_ERROR([glib-2.6 is required])])
+PKG_CHECK_MODULES([GLIB], [glib-2.0 gthread-2.0 gmodule-2.0 gobject-2.0],,
+	[AC_MSG_ERROR([glib2 is required])])
 
-PKG_CHECK_MODULES([GTK], [gtk+-3.0 clutter-1.0],
-	[VALA_PACKAGES="$VALA_PACKAGES --pkg gtk+-3.0 --pkg clutter-1.0"],
+PKG_CHECK_MODULES([GTK], [gtk+-3.0],
+	[VALA_PACKAGES="$VALA_PACKAGES --pkg gtk+-3.0"],
 	[AC_MSG_ERROR([gtk3 is required])])
 
 PKG_CHECK_MODULES([GEE], [gee-1.0],
@@ -87,49 +80,38 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS(stdlib.h)
 AC_CHECK_LIB(m, floor, PACKAGE_LIBS="$PACKAGE_LIBS -lm",)
 
-dnl Build flags
-if test x$GCC = xyes
-then
-	CRDC_CHECK_FLAG([-Wall])
-	CRDC_CHECK_FLAG([-Wextra])
-	CRDC_CHECK_FLAG([-Wno-deprecated-declarations])
-	CRDC_CHECK_FLAG([-Wmissing-prototypes])
-	CRDC_CHECK_FLAG([-Wshadow])
-	CRDC_CHECK_FLAG([-Wpointer-arith])
-	CRDC_CHECK_FLAG([-Wstrict-prototypes])
-	CRDC_CHECK_FLAG([-Wcast-qual])
-	CRDC_CHECK_FLAG([-Wwrite-strings])
-	CRDC_CHECK_FLAG([-pedantic])
-fi
-
 dnl Comedi
-AC_ARG_WITH(comedi,
-[  --with-comedi         Use Comedi drivers],
-	[use_comedi=$withval],
-	[use_comedi=no])
-AC_MSG_RESULT(checking whether Comedi drivers were selected... $use_comedi)
-
-if test "x$use_comedi" != "xno" ; then
-	PKG_CHECK_MODULES([COMEDI], [comedi],
-		[VALA_PACKAGES="$VALA_PACKAGES --pkg comedi"],
-		[AC_MSG_ERROR([Comedi is required])])
-	AC_DEFINE(USE_COMEDI, [1], ["Comedi Drivers"])
-fi
+AC_ARG_ENABLE(comedi, AS_HELP_STRING([--enable-comedi],
+                                     [Use Comedi drivers]),
+                [enable_comedi=yes], [enable_comedi=no])
+AS_IF([test "x$enable_comedi" != "xno"],
+      [AC_DEFINE(USE_COMEDI, [1], ["Comedi drivers"])]
+      [PKG_CHECK_MODULES([COMEDI], [comedi],
+	                     [VALA_PACKAGES="$VALA_PACKAGES --pkg comedi"],
+                         [AC_MSG_ERROR([Comedi is required])])])
 
 dnl Build Options
-AC_ARG_ENABLE(debug,
-	AS_HELP_STRING([--enable-debug],
-		[enable debugging (default: disabled)]),,
-	enable_debug=no)
+AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug],
+                                    [Enable debugging (default: disabled)]),,
+                [enable_debug=no])
+AS_IF([test "x$enable_debug" != "xno"],
+      [AC_DEFINE(DEBUG, [1], ["Enable debugging support"])]
+         [AM_CFLAGS="$AM_CFLAGS -DDEBUG"]
+         [AS_IF([test "x$GCC" = "xyes"],
+             [CC_CHECK_FLAG([-g])])])
 
-dnl TODO fix this, there's better ways of setting build flags
-if test "x$enable_debug" != "xno"; then
-	AM_CFLAGS="$AM_CFLAGS -DDEBUG"
-	if test x$GCC = xyes
-	then
-		CRDC_CHECK_FLAG([-g])
-	fi
-fi
+dnl Build flags
+AS_IF([test "x$GCC" != "xno"],
+      [CC_CHECK_FLAG([-Wall])]
+      [CC_CHECK_FLAG([-Wextra])]
+      [CC_CHECK_FLAG([-Wno-deprecated-declarations])]
+      [CC_CHECK_FLAG([-Wmissing-prototypes])]
+      [CC_CHECK_FLAG([-Wshadow])]
+      [CC_CHECK_FLAG([-Wpointer-arith])]
+      [CC_CHECK_FLAG([-Wstrict-prototypes])]
+      [CC_CHECK_FLAG([-Wcast-qual])]
+      [CC_CHECK_FLAG([-Wwrite-strings])]
+      [CC_CHECK_FLAG([-pedantic])])
 
 dnl GOptions requires gettext for i18n
 ALL_LINGUAS=""
@@ -167,21 +149,20 @@ echo "$PACKAGE ($VERSION)"
 echo
 echo "----------------------------------------------------------------"
 echo
-echo "Prefix....................... : $prefix"
+echo "Prefix....................... : $ac_default_prefix"
 echo "System configuration......... : $sysconfdir"
 echo "Data directory............... : $datadir"
-echo "Package configuration........ : $pkgconfigdir"
+echo "UI directory................. : $ui_dir"
+echo "Package directory............ : $pkgconfigdir"
 echo
 echo "----------------------------------------------------------------"
 echo
+echo "Comedi support............... : $enable_comedi"
 echo "Debugging enabled............ : $enable_debug"
 echo
 echo "----------------------------------------------------------------"
 echo
-echo "Comedi support............... : $use_comedi"
-echo "MCCUSB support............... : $use_mccusb"
-echo "TS4700 support............... : $use_ts4700"
-echo "TS4800 support............... : $use_ts4800"
+echo "// placeholder for --with-plugin"
 echo
 echo "----------------------------------------------------------------"
 echo

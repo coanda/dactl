@@ -4,8 +4,8 @@ namespace Callbacks {
     [CCode (cname = "btn_quit_clicked")]
     public bool btn_quit_clicked (Gtk.Widget widget, GLib.Object? data = null);
 
-    [CCode (cname = "btn_pref_clicked")]
-    public bool btn_pref_clicked (Gtk.Widget widget, GLib.Object? data = null);
+//    [CCode (cname = "btn_pref_clicked")]
+//    public bool btn_pref_clicked (Gtk.Widget widget, GLib.Object? data = null);
 
     [CCode (cname = "btn_save_clicked")]
     public bool btn_save_clicked (Gtk.Widget widget, GLib.Object? data = null);

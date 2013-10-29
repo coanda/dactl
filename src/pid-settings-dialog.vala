@@ -19,7 +19,7 @@ public class PIDSettingsDialog : Dialog {
     private Gee.Map<string, Cld.Object> channels;
 
     construct {
-        string path = GLib.Path.build_filename (Config.DATADIR,
+        string path = GLib.Path.build_filename (Config.UI_DIR,
                                                 "pid_dialog.ui");
         builder = new Gtk.Builder ();
         GLib.debug ("Loaded interface file: %s", path);

@@ -911,7 +911,7 @@
                                                         <property name="visible">True</property>
                                                         <property name="can_focus">True</property>
                                                         <child>
-                                                          <object class="GtkAlignment" id="alignment16">
+                                                          <object class="GtkAlignment" id="alignment_aichannel">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="top_padding">5</property>
@@ -942,7 +942,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkAlignment" id="alignment17">
+                                                          <object class="GtkAlignment" id="alignment_aochannel">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="top_padding">5</property>
@@ -977,7 +977,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkAlignment" id="alignment18">
+                                                          <object class="GtkAlignment" id="alignment_dichannel">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="top_padding">5</property>
@@ -1012,7 +1012,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkAlignment" id="alignment19">
+                                                          <object class="GtkAlignment" id="alignment_dochannel">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="top_padding">5</property>
@@ -1047,7 +1047,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkAlignment" id="alignment20">
+                                                          <object class="GtkAlignment" id="alignment_vchannel">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">False</property>
                                                             <property name="top_padding">5</property>
@@ -1155,7 +1155,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkEntry" id="entry_aichannel_id">
+                                                          <object class="GtkEntry" id="entry_channel_id">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="invisible_char">●</property>
@@ -1181,7 +1181,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkEntry" id="entry_aichannel_devref">
+                                                          <object class="GtkEntry" id="entry_channel_devref">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="invisible_char">●</property>
@@ -1207,7 +1207,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkEntry" id="entry_aichannel_tag">
+                                                          <object class="GtkEntry" id="entry_channel_tag">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="invisible_char">●</property>
@@ -1245,7 +1245,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkEntry" id="entry_aichannel_desc">
+                                                          <object class="GtkEntry" id="entry_channel_desc">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="invisible_char">●</property>
@@ -1271,7 +1271,7 @@
                                                           </packing>
                                                         </child>
                                                         <child>
-                                                          <object class="GtkEntry" id="entry_aichannel_num">
+                                                          <object class="GtkEntry" id="entry_channel_num">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="invisible_char">●</property>
@@ -1314,7 +1314,7 @@
                                                         <property name="left_padding">5</property>
                                                         <property name="right_padding">5</property>
                                                         <child>
-                                                          <object class="GtkScrolledWindow" id="scrolledwindow_aichannel_coefficients">
+                                                          <object class="GtkScrolledWindow" id="scrolledwindow_channel_coefficients">
                                                             <property name="visible">True</property>
                                                             <property name="can_focus">True</property>
                                                             <property name="shadow_type">in</property>
@@ -1512,37 +1512,88 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFrame" id="frame7">
+                  <object class="GtkFrame" id="frame_modules">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">none</property>
                     <child>
-                      <object class="GtkAlignment" id="alignment7">
+                      <object class="GtkAlignment" id="alignment_modules">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="bottom_padding">6</property>
                         <property name="left_padding">12</property>
-                        <property name="right_padding">6</property>
                         <child>
-                          <object class="GtkScrolledWindow" id="scrolledwindow_traverse">
+                          <object class="GtkScrolledWindow" id="scrolledwindow_modules">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="shadow_type">in</property>
                             <child>
-                              <placeholder/>
+                              <object class="GtkViewport" id="viewport4">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="GtkBox" id="box_modules">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkScrolledWindow" id="scrolledwindow_module_tv">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="shadow_type">in</property>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow" id="scrolledwindow_module_view1">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="shadow_type">in</property>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkScrolledWindow" id="scrolledwindow_module_view2">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="shadow_type">in</property>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">2</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
                             </child>
                           </object>
                         </child>
                       </object>
                     </child>
                     <child type="label">
-                      <object class="GtkLabel" id="label13">
+                      <object class="GtkLabel" id="label39">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="xpad">5</property>
-                        <property name="ypad">5</property>
-                        <property name="label" translatable="yes">Traverse Settings</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Modules&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
                     </child>
@@ -1552,16 +1603,15 @@
                   </packing>
                 </child>
                 <child type="tab">
-                  <object class="GtkBox" id="box11">
+                  <object class="GtkBox" id="box16">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkImage" id="image4">
+                      <object class="GtkImage" id="image5">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="stock">gtk-harddisk</property>
-                        <property name="icon-size">5</property>
+                        <property name="stock">gtk-page-setup</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -1570,10 +1620,10 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="label12">
+                      <object class="GtkLabel" id="label38">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Traverse</property>
+                        <property name="label" translatable="yes">Modules</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>

@@ -69,9 +69,32 @@
             <cld:object id="col06" type="column" chref="ai06"/>
             <cld:object id="col07" type="column" chref="ai07"/>
         </cld:object>
+        -->
 
 
          <!-- Channel calibrations for scaling process values -->
+        <cld:object id="ai_cal0" type="calibration">
+            <cld:property name="units">Volts</cld:property>
+            <cld:object id="cft0" type="coefficient">
+                <cld:property name="n">0</cld:property>
+                <cld:property name="value">5.0000</cld:property>
+            </cld:object>
+            <cld:object id="cft1" type="coefficient">
+                <cld:property name="n">1</cld:property>
+                <cld:property name="value">2.0000</cld:property>
+            </cld:object>
+        </cld:object>
+        <cld:object id="ai_cal1" type="calibration">
+            <cld:property name="units">Volts</cld:property>
+            <cld:object id="cft0" type="coefficient">
+                <cld:property name="n">0</cld:property>
+                <cld:property name="value">3.0000</cld:property>
+            </cld:object>
+            <cld:object id="cft1" type="coefficient">
+                <cld:property name="n">1</cld:property>
+                <cld:property name="value">5.0000</cld:property>
+            </cld:object>
+        </cld:object>
         <cld:object id="ao_cal0" type="calibration">
             <cld:property name="units">% of max.</cld:property>
 >>>>>>> 68781d4... Add interface elements for additional CLD support

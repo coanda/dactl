@@ -1,4 +1,4 @@
-AC_DEFUN([CRDC_AUTO_ENABLED], [
+AC_DEFUN([CC_AUTO_ENABLED], [
 	var="enable_$1"
 	feature="$2"
 
@@ -8,7 +8,7 @@ AC_DEFUN([CRDC_AUTO_ENABLED], [
 	fi
 ])
 
-AC_DEFUN([CRDC_AUTO_DISABLED], [
+AC_DEFUN([CC_AUTO_DISABLED], [
 	var="enable_$1"
 	feature="$2"
 	msg="$3"
@@ -22,9 +22,9 @@ AC_DEFUN([CRDC_AUTO_DISABLED], [
 ])
 
 dnl Check whether a prerequisite for a feature was found.  This is
-dnl very similar to CRDC_AUTO_RESULT, but does not finalize the
+dnl very similar to CC_AUTO_RESULT, but does not finalize the
 dnl detection; it assumes that more checks will follow.
-AC_DEFUN([CRDC_AUTO_PRE], [
+AC_DEFUN([CC_AUTO_PRE], [
 	name="$1"
 	var="enable_$1"
 	found="found_$name"
@@ -32,11 +32,11 @@ AC_DEFUN([CRDC_AUTO_PRE], [
 	msg="$3"
 
 	if eval "test x`echo '$'$var` != xno" && eval "test x`echo '$'$found` = xno"; then
-                CRDC_AUTO_DISABLED([$name], [$feature], [$msg])
+                CC_AUTO_DISABLED([$name], [$feature], [$msg])
 	fi
 ])
 
-AC_DEFUN([CRDC_AUTO_RESULT], [
+AC_DEFUN([CC_AUTO_RESULT], [
 	name="$1"
 	var="enable_$1"
 	found="found_$name"
@@ -48,18 +48,18 @@ AC_DEFUN([CRDC_AUTO_RESULT], [
 	fi
 
 	if eval "test x`echo '$'$found` = xyes"; then
-                CRDC_AUTO_ENABLED([$name], [$feature])
+                CC_AUTO_ENABLED([$name], [$feature])
 	else
-                CRDC_AUTO_DISABLED([$name], [$feature], [$msg])
+                CC_AUTO_DISABLED([$name], [$feature], [$msg])
 	fi
 ])
 
-AC_DEFUN([CRDC_AUTO_PKG], [
+AC_DEFUN([CC_AUTO_PKG], [
 	if eval "test x`echo '$'enable_$1` != xno"; then
 		PKG_CHECK_MODULES([$2], [$3],
 			[eval "found_$1=yes"],
 			[eval "found_$1=no"])
 	fi
 
-	CRDC_AUTO_RESULT([$1], [$4], [$5])
+	CC_AUTO_RESULT([$1], [$4], [$5])
 ])

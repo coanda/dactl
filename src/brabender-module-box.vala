@@ -12,7 +12,7 @@ public class BrabenderModuleBox : Gtk.Box {
     private Cld.Module module;
 
     construct {
-        string path = GLib.Path.build_filename (Config.DATADIR,
+        string path = GLib.Path.build_filename (Config.UI_DIR,
                                                 "brabender_control.ui");
         builder = new Gtk.Builder ();
         message ("Loaded interface file: %s", path);

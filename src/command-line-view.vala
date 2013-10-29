@@ -1,7 +1,14 @@
 using Cld;
 using Gee;
 
-public class CommandLineInterface : GLib.Object {
+/**
+ * The view class in an MVC design is responsible for updating the display based
+ * on the changes made to the model.
+ *
+ * XXX should consider adding signals where necessary in the model and only
+ *     update the view when it fires a signal to improve performance.
+ */
+public class CommandLineView : GLib.Application {
 
     /**
      * The commands that are recognized.
@@ -113,14 +120,8 @@ public class CommandLineInterface : GLib.Object {
         }
     }
 
-    /**
-     * Whether or not the user selected administrative features.
-     */
-    public bool _admin = false;
-    public bool admin {
-        get { return _admin; }
-        set { _admin = value; }
-    }
+    /* Allow administrative functionality */
+    public bool admin { get; set; default = false; }
 
     /**
      * Whether or not the cli is currently active.
@@ -191,17 +192,24 @@ public class CommandLineInterface : GLib.Object {
     /* Thread for command line loop execution */
     private unowned GLib.Thread<void *> thread;
 
+    /* A queued list of results to a read signal */
     private GLib.Queue<string> results_queue = new GLib.Queue<string> ();
 
-    public CommandLineInterface () { }
+    /**
+     * Default construction.
+     */
+    public CommandLineView () {
+        GLib.Object (application_id: "org.coanda.dactl", flags: ApplicationFlags.FLAGS_NONE);
 
-    public void run () {
         if (!GLib.Thread.supported ()) {
             critical ("Cannot run cli without thread support.");
             active = false;
             return;
         }
+    }
 
+    public override void activate () {
+        this.hold ();
         if (!active) {
             try {
                 active = true;
@@ -212,6 +220,7 @@ public class CommandLineInterface : GLib.Object {
                 return;
             }
         }
+        this.release ();
     }
 
     public void stop () {

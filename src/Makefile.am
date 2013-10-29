@@ -5,7 +5,7 @@ bin_PROGRAMS = dactl
 VALAFLAGS = \
 	-H $(srcdir)/libdactl.h -C -c --thread \
 	--vapidir=$(srcdir)/../vapi -X -g -X -pg\
-	@VALA_PACKAGES@ --pkg callbacks --pkg config --pkg posix
+	@VALA_PACKAGES@ --pkg callbacks --pkg config --pkg posix --pkg linux
 
 dactl_CFLAGS = \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
@@ -37,32 +37,37 @@ dactl_headers = \
 	callbacks.h
 
 dactl_SOURCES = \
+	main.vala \
+	application-model.vala \
+	application-config.vala \
+	graphical-view.vala \
+	command-line-view.vala \
+	application-controller.vala \
+	application-settings-dialog.vala \
 	aichannel-treeview.vala \
 	aochannel-treeview.vala \
-	application-config.vala \
-	application-controller.vala \
-	application-data.vala \
-	application-settings-dialog.vala \
 	brabender-module-box.vala\
 	calibration-treeview.vala \
 	channel-treeview.vala \
 	chart-widget.vala \
 	chart-settings-dialog.vala \
 	coefficient-treeview.vala \
-	command-line-interface.vala \
 	device-treeview.vala \
+	dichannel-treeview.vala \
 	dio-viewer.vala \
-	driver-data.vala \
+	dochannel-treeview.vala \
 	licor-module-box.vala \
 	log-treeview.vala \
+	log-settings-dialog.vala \
+	module-treeview.vala \
 	pid-box.vala \
 	pid-control-treeview.vala \
 	pid-settings-dialog.vala \
-	user-interface-data.vala \
+	serialport-settings-box.vala \
 	utility.vala \
+	vchannel-treeview.vala \
 	velmex-module-box.vala \
 	velmex-settings-box.vala \
-	main.vala \
 	callbacks.c
 
 CLEANFILES = \

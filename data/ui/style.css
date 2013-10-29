@@ -1,20 +1,29 @@
-/*
-GtkTreeView {
-  color: green;
-  background-color: black;
+/* Theme colors */
+@define-color row-bg-color #eee;
+@define-color row-fg-color black;
+
+/* TreeView styles */
+GtkTreeView row:nth-child(even) {
+  color: @row-fg-color;
+  background-color: @row-bg-color;
 }
 
-GtkTreeView:selected {
-  color: red;
+GtkTreeView:hover, GtkTreeView row:nth-child(even):hover {
+  transition: 250ms linear;
+  background-color: lightgray;
 }
-*/
 
-ChannelTreeView row:nth-child(even),
-DeviceTreeView row:nth-child(even),
-LogTreeView row:nth-child(even),
-PIDControlTreeView row:nth-child(even),
-AIChannelTreeView row:nth-child(even),
-AOChannelTreeView row:nth-child(even) {
-  color: black;
-  background-color: #edeceb;
+GtkTreeView:selected, GtkTreeView row:nth-child(even):selected {
+  color: white;
+  background-color: darkgray;
+}
+
+/* General widget styles */
+GtkButton:hover {
+  transition: 150ms linear;
+}
+
+/* Chart styles */
+ChartArea {
+  background-color: lightblue;
 }

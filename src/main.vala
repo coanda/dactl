@@ -1,13 +1,13 @@
-using Gtk;
 using Config;
 
 public class Application : Object {
 
-    private static MainLoop loop;
-    private static ApplicationData data;
+    private static ApplicationModel model;
+    private static GLib.Application view;               /* Seemed easiest */
+    private static ApplicationController controller;
 
     private static bool admin = false;
-    private static bool gui = false;
+    private static bool cli = false;
     private static bool test = false;
     private static bool verbose = false;
     private static bool version = false;
@@ -17,11 +17,11 @@ public class Application : Object {
         "admin", 'a', 0, OptionArg.NONE, ref admin,
         "Allow administrative functionality.", null
     },{
-        "config", 'c', 0, OptionArg.STRING, ref cfgfile,
-        "Use the given configuration file.", null
+        "cli", 'c', 0, OptionArg.NONE, ref cli,
+        "Start the application with a command line interface", null
     },{
-        "gui", 'g', 0, OptionArg.NONE, ref gui,
-        "Start the application with a user interface", null
+        "config", 'f', 0, OptionArg.STRING, ref cfgfile,
+        "Use the given configuration file.", null
     },{
         "test", 't', 0, OptionArg.NONE, ref test,
         "Perform a basic functionality test.", null
@@ -36,6 +36,8 @@ public class Application : Object {
     }};
 
     public static int main (string[] args) {
+
+        int status = 0;
 
         try {
             var opt_context = new OptionContext (PACKAGE_NAME);
@@ -64,47 +66,35 @@ public class Application : Object {
             } else {
                 Cld.init (args);
 
+                /* Setup the application model */
                 if (cfgfile == null) {
                     cfgfile = Path.build_filename (DATADIR, "dactl.xml");
                 }
 
-                data = new ApplicationData.with_xml_file (cfgfile);
-                data.admin = admin;
+                model = new ApplicationModel.with_xml_file (cfgfile);
+                model.verbose = verbose;
 
-                if (gui) {
-                    Gdk.threads_init ();
-                    Gdk.threads_enter ();
-                    Gtk.init (ref args);
-
-                    string css_path = GLib.Path.build_filename (Config.DATADIR,
-                                                                "style.css");
-                    CssProvider provider = new CssProvider ();
-                    provider.load_from_path (css_path);
-                    Gdk.Display display = Gdk.Display.get_default ();
-                    Gdk.Screen screen = display.get_default_screen ();
-                    Gtk.StyleContext.add_provider_for_screen (screen,
-                        provider as Gtk.StyleProvider,
-                        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-                    provider.unref ();
-
-                    data.ui_enabled = true;
-                    //data.closed.connect (() = { Gtk.main_quit (); });
-
-                    Gtk.main ();
-                    Gdk.threads_leave ();
+                /* Setup the application view */
+                if (cli) {
+                    view = new CommandLineView ();
                 } else {
-                    loop = new MainLoop ();
+                    view = new GraphicalView (model);
+                }
 
-                    data.cli_enabled = true;
-                    var cli = data.cli;
-                    cli.run ();
-                    cli.closed.connect (() => { loop.quit (); });
+                /* Setup the controller */
+                controller = new ApplicationController.with_data (model, view);
+                controller.admin = admin;
 
-                    loop.run ();
+                /* Launch the application */
+                try {
+                    status = view.run (args);
+                } catch (GLib.Error e) {
+                    stdout.printf ("Error: %s\n", e.message);
+                    return 0;
                 }
             }
         }
 
-        return 0;
+        return status;
     }
 }
