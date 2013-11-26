@@ -398,15 +398,15 @@ public class ApplicationSettingsDialog : Dialog {
 
     private void device_cursor_changed_cb () {
         string id;
-        TreeModel model;
+        TreeModel tree_model;
         TreeIter iter;
         TreeSelection selection;
         Cld.Builder cld_builder = this.model.builder;
         Cld.Object device;
 
         selection = (device_treeview as Gtk.TreeView).get_selection ();
-        selection.get_selected (out model, out iter);
-        model.get (iter, DeviceTreeView.Columns.ID, out id);
+        selection.get_selected (out tree_model, out iter);
+        tree_model.get (iter, DeviceTreeView.Columns.ID, out id);
 
         device = cld_builder.get_object (id);
 
@@ -417,15 +417,15 @@ public class ApplicationSettingsDialog : Dialog {
 
     private void log_cursor_changed_cb () {
         string id;
-        TreeModel model;
+        TreeModel tree_model;
         TreeIter iter;
         TreeSelection selection;
         Cld.Builder cld_builder = this.model.builder;
         Cld.Object log;
 
         selection = (log_treeview as Gtk.TreeView).get_selection ();
-        selection.get_selected (out model, out iter);
-        model.get (iter, LogTreeView.Columns.ID, out id);
+        selection.get_selected (out tree_model, out iter);
+        tree_model.get (iter, LogTreeView.Columns.ID, out id);
 
         log = cld_builder.get_object (id);
 
@@ -481,13 +481,13 @@ public class ApplicationSettingsDialog : Dialog {
         }
     }
 
-    private Channel get_selected_channel () {
+    private Channel? get_selected_channel () {
         string id;
         string text;
         int column = -1;
         Gtk.Widget current_page;
         TreeView view = new TreeView ();
-        TreeModel model;
+        TreeModel tree_model;
         TreeIter iter;
         TreeSelection selection;
         Cld.Object channel;
@@ -495,27 +495,43 @@ public class ApplicationSettingsDialog : Dialog {
         /* Find out which channel needs to be updated */
         current_page = (channel_settings_notebook as Notebook).get_nth_page (channel_settings_notebook_page_num);
         channel_settings_notebook_page_text = (channel_settings_notebook as Notebook).get_tab_label_text (current_page);
-        Cld.debug ("get_selected_channel (): %s page: channel_settings_notebook_page_num: %d\n", channel_settings_notebook_page_text,
-                                                                channel_settings_notebook_page_num);
+        Cld.debug ("get_selected_channel (): %s page: channel_settings_notebook_page_num: %d\n",
+                   channel_settings_notebook_page_text,
+                   channel_settings_notebook_page_num);
 
         switch (channel_settings_notebook_page_text) {
             case "Analog Input":
+                if (model.ai_channels.size == 0) {
+                    return null;
+                }
                 view = (aichannel_treeview as TreeView);
                 column = AIChannelTreeView.Columns.ID;
                 break;
             case "Analog Output":
+                if (model.ao_channels.size == 0) {
+                    return null;
+                }
                 view = (aochannel_treeview as TreeView);
                 column = AOChannelTreeView.Columns.ID;
                 break;
             case "Digital Input":
+                if (model.di_channels.size == 0) {
+                    return null;
+                }
                 view = (dichannel_treeview as TreeView);
                 column = DIChannelTreeView.Columns.ID;
                 break;
             case "Digital Output":
+                if (model.do_channels.size == 0) {
+                    return null;
+                }
                 view = (dochannel_treeview as TreeView);
                 column = DOChannelTreeView.Columns.ID;
                 break;
             case "Virtual":
+                if (model.vchannels.size == 0) {
+                    return null;
+                }
                 view = (vchannel_treeview as TreeView);
                 column = VChannelTreeView.Columns.ID;
                 break;
@@ -524,9 +540,9 @@ public class ApplicationSettingsDialog : Dialog {
         }
 
         selection = (view as Gtk.TreeView).get_selection ();
-        if (selection == null ) message ("selection is null");
-        selection.get_selected (out model, out iter);
-        model.get (iter, column, out id);
+        if (selection == null ) GLib.message ("selection is null");
+        selection.get_selected (out tree_model, out iter);
+        tree_model.get (iter, column, out id);
 
         channel = cld_builder.get_object (id);
         Cld.debug ("    channel.id: %s\n", channel.id);
@@ -544,7 +560,7 @@ public class ApplicationSettingsDialog : Dialog {
 
     private void module_cursor_changed_cb () {
         string id;
-        TreeModel model;
+        TreeModel tree_model;
         TreeIter iter;
         TreeSelection selection;
         Cld.Builder cld_builder = this.model.builder;
@@ -552,8 +568,8 @@ public class ApplicationSettingsDialog : Dialog {
         string type;
 
         selection = (module_treeview as Gtk.TreeView).get_selection ();
-        selection.get_selected (out model, out iter);
-        model.get (iter, ModuleTreeView.Columns.ID, out id);
+        selection.get_selected (out tree_model, out iter);
+        tree_model.get (iter, ModuleTreeView.Columns.ID, out id);
 
         module = cld_builder.get_object (id);
         type = (module as GLib.Object).get_type ().name ();
@@ -568,22 +584,32 @@ public class ApplicationSettingsDialog : Dialog {
 
         switch (type) {
             case ("CldLicorModule"):
-                do_serial_port_settings (module as Module);
+                add_serial_port_settings (module as Module);
                 break;
             case ("CldVelmexModule"):
-                do_serial_port_settings (module as Module);
+                add_serial_port_settings (module as Module);
                 VelmexSettingsBox velmex_settings_box = new VelmexSettingsBox (module as Module);
                 (scrolledwindow_module_view2 as Gtk.ScrolledWindow).add_with_viewport (velmex_settings_box);
+                break;
+            case ("CldParkerModule"):
+                add_serial_port_settings (module as Module);
+                ParkerSettingsBox parker_settings_box = new ParkerSettingsBox (module as Module);
+                (scrolledwindow_module_view2 as Gtk.ScrolledWindow).add_with_viewport (parker_settings_box);
+                break;
+            case ("CldHeidolphModule"):
+                add_serial_port_settings (module as Module);
+                break;
+            case ("CldHeidolphModule"):
+                add_serial_port_settings (module as Module);
                 break;
             default:
                 break;
         }
     }
 
-    private void do_serial_port_settings (Module module) {
+    private void add_serial_port_settings (Module module) {
         SerialPort port;
         SerialPortSettingsBox serial_port_settings_box;
-
         port = (module as Module).port as SerialPort;
         serial_port_settings_box = new SerialPortSettingsBox (port);
         (btn_apply as Button).clicked.connect (serial_port_settings_box.update);
@@ -628,8 +654,8 @@ public class ApplicationSettingsDialog : Dialog {
             update_dichannel_config ();
         if (channel is DOChannel)
             update_dochannel_config ();
-//        if (channel is VChannel)
-//            update_vchannel_config ();
+        if (channel is VChannel)
+            update_vchannel_config ();
     }
 
     private void update_aichannel_config () {

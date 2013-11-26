@@ -56,10 +56,13 @@ dactl_SOURCES = \
 	dichannel-treeview.vala \
 	dio-viewer.vala \
 	dochannel-treeview.vala \
+	heidolph-module-box.vala \
 	licor-module-box.vala \
 	log-treeview.vala \
 	log-settings-dialog.vala \
 	module-treeview.vala \
+	parker-module-box.vala \
+	parker-settings-box.vala \
 	pid-box.vala \
 	pid-control-treeview.vala \
 	pid-settings-dialog.vala \

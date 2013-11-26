@@ -291,6 +291,31 @@ public class ApplicationController : GLib.Object {
                 model.xml.edit_node_attribute (xpath, "chref", (pv as Cld.ProcessValue).chref);
                 xpath = "%s/cld:object[@id=\"%s\"]".printf (xpath_base, mv.id);
                 model.xml.edit_node_attribute (xpath, "chref", (mv as Cld.ProcessValue).chref);
+            } else if (control is Cld.Pid2) {
+                var process_values = (control as Cld.Pid2).process_values;
+                var pv = process_values.get ("pv0");
+                var mv = process_values.get ("pv1");
+                GLib.message ("Control - %s: (PV: %s) & (MV: %s)", control.id, pv.id, mv.id);
+
+                /* update the PID values of the XML data in memory */
+                var xpath_base = "//cld/cld:objects/cld:object[@type=\"control\"]/cld:object[@id=\"%s\"]".printf (control.id);
+                var xpath = "%s/cld:property[@name=\"kp\"]".printf (xpath_base);
+                var value = "%.6f".printf ((control as Cld.Pid2).kp);
+                model.xml.edit_node_content (xpath, value);
+                xpath = "%s/cld:property[@name=\"ki\"]".printf (xpath_base);
+                value = "%.6f".printf ((control as Cld.Pid2).ki);
+                model.xml.edit_node_content (xpath, value);
+                xpath = "%s/cld:property[@name=\"kd\"]".printf (xpath_base);
+                value = "%.6f".printf ((control as Cld.Pid2).kd);
+                model.xml.edit_node_content (xpath, value);
+                xpath = "%s/cld:property[@name=\"dt\"]".printf (xpath_base);
+                value = "%.6f".printf ((control as Cld.Pid2).dt);
+                model.xml.edit_node_content (xpath, value);
+                /* update the channel ID references for the process values */
+                xpath = "%s/cld:object[@id=\"%s\"]".printf (xpath_base, pv.id);
+                model.xml.edit_node_attribute (xpath, "chref", (pv as Cld.ProcessValue).chref);
+                xpath = "%s/cld:object[@id=\"%s\"]".printf (xpath_base, mv.id);
+                model.xml.edit_node_attribute (xpath, "chref", (mv as Cld.ProcessValue).chref);
             }
         }
     }

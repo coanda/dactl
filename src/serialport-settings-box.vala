@@ -23,7 +23,7 @@ public class SerialPortSettingsBox : Gtk.Box {
     private Cld.SerialPort.Parity parity;
     private Cld.SerialPort.Handshake handshake;
     private Cld.SerialPort.AccessMode access_mode;
-    private int baud_rate;
+    private uint baud_rate;
     private int data_bits;
     private int stop_bits;
     private bool echo;
@@ -57,7 +57,7 @@ public class SerialPortSettingsBox : Gtk.Box {
     private Gtk.ListStore echo_store = new Gtk.ListStore (1, typeof (bool));
 
     construct {
-        string path = GLib.Path.build_filename (Config.DATADIR,
+        string path = GLib.Path.build_filename (Config.UI_DIR,
                                                 "serial_port_settings_box.ui");
         builder = new Gtk.Builder ();
         Cld.debug ("Loaded interface file: %s\n", path);
@@ -88,10 +88,16 @@ public class SerialPortSettingsBox : Gtk.Box {
 
     public SerialPortSettingsBox (Cld.SerialPort port) {
         this.port = port;
-
         (lbl_id as Label).set_text (port.id);
         (lbl_connected as Label).set_text (port.connected.to_string ());
         (entry_device as Gtk.Entry).set_text (port.device);
+        parity = port.parity;
+        handshake = port.handshake;
+        access_mode = port.access_mode;
+        baud_rate = port.baud_rate;
+        data_bits = port.data_bits;
+        stop_bits = port.stop_bits;
+        echo = port.echo;
         populate_parity_box ();
         populate_handshake_box ();
         populate_access_mode_box ();

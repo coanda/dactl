@@ -15,7 +15,7 @@ public class BrabenderModuleBox : Gtk.Box {
         string path = GLib.Path.build_filename (Config.UI_DIR,
                                                 "brabender_control.ui");
         builder = new Gtk.Builder ();
-        message ("Loaded interface file: %s", path);
+        GLib.message ("Loaded interface file: %s", path);
 
         try {
             builder.add_from_file (path);
@@ -59,7 +59,7 @@ public class BrabenderModuleBox : Gtk.Box {
                 if (!module.loaded) {
                     var res = module.load ();
                     if (!res) {
-                        message ("Failed to load the Brabender module.");
+                        GLib.message ("Failed to load the Brabender module.");
                         (entry_ip_address as Gtk.Entry).set_text ("Invalid IP Address");
                         (btn_connect as Gtk.ToggleButton).set_active (false);
                     } else {

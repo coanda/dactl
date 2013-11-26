@@ -134,7 +134,7 @@ public class DIOViewer : Gtk.Window {
             (channel as Cld.DChannel).new_value.connect ((id, value) => {
                 var chan = di_channels.get (id);
                 int num = (chan as DChannel).num;
-                message ("id: %s num: %d", id,  num);
+                GLib.message ("id: %s num: %d", id,  num);
                 var button = di_buttons.get ("btn_" + num.to_string ());
                 (button as Gtk.ToggleButton).set_active (value);
             });
@@ -152,12 +152,12 @@ public class DIOViewer : Gtk.Window {
             label = (btn as Button).get_label ();
             labelary = label.split ("\n", 3);
             label = labelary [0];
-            //message ("btn_%s label: %s", count.to_string (), label);
+            //GLib.message ("btn_%s label: %s", count.to_string (), label);
 
             (channel as Cld.DChannel).new_value.connect ((id, value) => {
                 var chan = do_channels.get (id);
                 int num = (chan as DChannel).num;
-                //message ("id: %s num: %d", id,  num);
+                //GLib.message ("id: %s num: %d", id,  num);
                 var button = do_buttons.get ("btn_" + num.to_string ());
             });
 
@@ -165,7 +165,7 @@ public class DIOViewer : Gtk.Window {
                 foreach (var button in do_buttons.values) {
                     label = (button as Button).label;
                     labelary = label.split ("\n", 3);
-                    //message ("%s", labelary [0]);
+                    //GLib.message ("%s", labelary [0]);
                     var chan = do_channels.get (labelary [0]);
                     if ((button as ToggleButton).get_active ()) {
                         (chan as DOChannel).state = false;

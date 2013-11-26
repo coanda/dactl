@@ -22,6 +22,7 @@ public class ApplicationModel : GLib.Object {
     /* CLD data */
     public Cld.Builder builder { get; private set; }
     public Cld.XmlConfig xml { get; private set; }
+    public Cld.Context ctx { get; private set; }
     public Cld.Task task { get; private set; }
 
     /* GSettings data */
@@ -177,8 +178,11 @@ public class ApplicationModel : GLib.Object {
                     foreach (var object in builder.objects.values) {
                         if (object is Cld.Control) {
                             foreach (var ctl_object in (object as Cld.Container).objects.values) {
-                                if (ctl_object is Cld.Pid)
+                                if (ctl_object is Cld.Pid) {
                                     _control_loops.set (ctl_object.id, ctl_object);
+                                } else if (ctl_object is Cld.Pid2) {
+                                    _control_loops.set (ctl_object.id, ctl_object);
+                                }
                             }
                         }
                     }
@@ -231,8 +235,30 @@ public class ApplicationModel : GLib.Object {
         set { _modules = value; }
     }
 
+    /* DataSeries data
+     * XXX also only needed because it hasn't been implemented in CLD yet.
+     */
+    private Gee.Map<string, Cld.Object>? _dataseries = null;
+    public Gee.Map<string, Cld.Object>? dataseries {
+        get {
+            if (_dataseries == null) {
+                lock (builder) {
+                    _dataseries = new Gee.TreeMap<string, Cld.Object> ();
+                    foreach (var ds in builder.dataseries.values) {
+                        if (ds is DataSeries)
+                            _dataseries.set (ds.id, ds);
+                    }
+                }
+            }
+            return _dataseries;
+        }
+        set { _do_channels = value; }
+    }
+
+
+
 //    public Gee.Map<string, Cld.Log.Thread> log_threads = new Gee.TreeMap<string, Cld.Log.Thread> ();
-    public Cld.Log.Thread log_thread;
+//    public Cld.Log.Thread log_thread;
     public Cld.Log log;
 
     /**
@@ -280,10 +306,12 @@ public class ApplicationModel : GLib.Object {
         config = new ApplicationConfig (this.xml_file);
         xml = new Cld.XmlConfig.from_node (config.get_xml_node ("//dactl/cld:objects"));
         builder = new Cld.Builder.from_xml_config (xml);
+        ctx = new Cld.Context ();
+        ctx.objects = builder.objects;
 
         config.property_changed.connect (config_property_changed_cb);
 
-        //message ("%s", builder.to_string ());
+        //GLib.message ("%s", builder.to_string ());
 
         /* Read configuration settings to control application execution. */
         if (config.get_boolean_property ("launch-input-on-startup"))
@@ -334,7 +362,7 @@ public class ApplicationModel : GLib.Object {
             (log as Cld.Log).run ();
 
             if ((log as Cld.Log).active) {
-                message ("Started log %s", log.id);
+                GLib.message ("Started log %s", log.id);
                 log_state_changed ((log as Cld.Log).id, true);
             }
         }
@@ -350,7 +378,7 @@ public class ApplicationModel : GLib.Object {
             (log as Cld.Log).file_mv_and_date (false);
 
             if ((log as Cld.Log).active) {
-                message ("Stopped log %s", log.id);
+                GLib.message ("Stopped log %s", log.id);
                 log_state_changed ((log as Cld.Log).id, false);
             }
         }
@@ -368,7 +396,7 @@ public class ApplicationModel : GLib.Object {
             }
 
             if (!(device as ComediDevice).is_open)
-                error ("Failed to open Comedi device: %s\n", device.id);
+                GLib.error ("Failed to open Comedi device: %s\n", device.id);
 
             foreach (var task in (device as Container).objects.values) {
                 if (task is ComediTask) {
@@ -405,7 +433,7 @@ public class ApplicationModel : GLib.Object {
             }
 
             if ((device as ComediDevice).is_open)
-                error ("Failed to close Comedi device: %s\n", device.id);
+                GLib.error ("Failed to close Comedi device: %s\n", device.id);
             */
         }
 
@@ -424,7 +452,7 @@ public class ApplicationModel : GLib.Object {
             }
 
             if (!(device as ComediDevice).is_open)
-                error ("Failed to open Comedi device: %s\n", device.id);
+                GLib.error ("Failed to open Comedi device: %s\n", device.id);
 
             foreach (var task in (device as Container).objects.values) {
                 if (task is ComediTask) {
@@ -453,7 +481,7 @@ public class ApplicationModel : GLib.Object {
             (device as ComediDevice).close ();
 
             if ((device as ComediDevice).is_open) {
-                message ("Failed to close Comedi device: %s\n", device.id);
+                GLib.message ("Failed to close Comedi device: %s\n", device.id);
             }
             */
         }

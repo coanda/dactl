@@ -113,7 +113,7 @@ public class CommandLineView : GLib.Application {
                     return NONE;
                 }
             } catch (RegexError e) {
-                message ("Command regex error: %s", e.message);
+                GLib.message ("Command regex error: %s", e.message);
             }
 
             return NONE;
@@ -202,7 +202,7 @@ public class CommandLineView : GLib.Application {
         GLib.Object (application_id: "org.coanda.dactl", flags: ApplicationFlags.FLAGS_NONE);
 
         if (!GLib.Thread.supported ()) {
-            critical ("Cannot run cli without thread support.");
+            GLib.critical ("Cannot run cli without thread support.");
             active = false;
             return;
         }
@@ -215,7 +215,7 @@ public class CommandLineView : GLib.Application {
                 active = true;
                 thread = GLib.Thread.create<void *> (cli_thread, false);
             } catch (ThreadError e) {
-                critical ("Thread error: %s", e.message);
+                GLib.critical ("Thread error: %s", e.message);
                 active = false;
                 return;
             }

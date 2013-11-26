@@ -40,6 +40,7 @@ public class GraphicalWindow : Gtk.ApplicationWindow {
     private ChannelTreeView channel_treeview;
     private Gee.List<ChartWidget> charts = new Gee.ArrayList<ChartWidget> ();
     private Gee.List<PIDBox> pid_box_list = new Gee.ArrayList<PIDBox> ();
+    private Gee.List<PID2Box> pid2_box_list = new Gee.ArrayList<PID2Box> ();
     //private Gee.List<ModuleBox> module_box_list = new Gee.ArrayList<ModuleBox> ();
 
     /**
@@ -205,9 +206,12 @@ public class GraphicalWindow : Gtk.ApplicationWindow {
     private void add_channel_treeview_content () {
         var channel_scroll = builder.get_object ("scrolledwindow_channels");
         Gee.Map<string, Cld.Object> channels = new Gee.TreeMap<string, Cld.Object> ();
-        channels.set_all (model.ai_channels);
-        channels.set_all (model.vchannels);
-        channels.set_all (model.ao_channels);
+Cld.debug (">>>>>>>>>>>>>>>>>>>>>>>>");
+        channels = model.ctx.get_object_map (typeof (Cld.Channel));
+Cld.debug (">>>>>>>>>> channels.size: %d", channels.size);
+//        channels.set_all (model.ai_channels);
+//        channels.set_all (model.vchannels);
+//        channels.set_all (model.ao_channels);
 
         channel_treeview = new ChannelTreeView (channels);
         (channel_scroll as Gtk.ScrolledWindow).set_min_content_width (_chan_scroll_min_width);
@@ -313,12 +317,23 @@ public class GraphicalWindow : Gtk.ApplicationWindow {
         var control_box = new Box (Orientation.VERTICAL, 10);
         foreach (var pid in model.control_loops.values) {
             //var pid_box = new PIDBox (pid as Cld.Pid);
-            var pid_box = new PIDBox (pid.id, model);
-            pid_box.settings_dialog = new PIDSettingsDialog (pid as Cld.Pid, model.channels);
-            pid_box_list.add (pid_box);
+            if (pid is Cld.Pid) {
+                var pid_box = new PIDBox (pid.id, model);
+                pid_box.settings_dialog = new PIDSettingsDialog (pid as Cld.Pid, model.channels);
+                pid_box_list.add (pid_box);
+            } else if (pid is Cld.Pid2) {
+                var pid2_box = new PID2Box (pid.id, model);
+                pid2_box.settings_dialog = new PID2SettingsDialog (pid as Cld.Pid2, model.channels);
+                pid2_box_list.add (pid2_box);
+            }
         }
 
         foreach (var box in pid_box_list) {
+            (control_box as Box).pack_start (box, false, false, 0);
+            control_box.pack_start (new Gtk.Separator (Orientation.HORIZONTAL), false, false, 0);
+        }
+
+        foreach (var box in pid2_box_list) {
             (control_box as Box).pack_start (box, false, false, 0);
             control_box.pack_start (new Gtk.Separator (Orientation.HORIZONTAL), false, false, 0);
         }
@@ -348,6 +363,12 @@ public class GraphicalWindow : Gtk.ApplicationWindow {
             } else if (module is BrabenderModule) {
                 var brabender_box = new BrabenderModuleBox ((module as Module));
                 module_box.pack_start (brabender_box, false, false, 0);
+            } else if (module is ParkerModule) {
+                var parker_box = new ParkerModuleBox ((module as Module));
+                module_box.pack_start (parker_box, false, false, 0);
+            } else if (module is HeidolphModule) {
+                var heidolph_box = new HeidolphModuleBox (module as Module);
+                module_box.pack_start (heidolph_box, false, false, 0);
             }
         }
 

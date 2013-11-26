@@ -44,7 +44,7 @@ public class VelmexModuleBox : Gtk.Box {
                 if (!module.loaded) {
                     var res = module.load ();
                     if (!res) {
-                        message ("Failed to load the Velmex module.");
+                        GLib.message ("Failed to load the Velmex module.");
                         (btn_connect as Gtk.ToggleButton).set_active (false);
                     } else {
                         var img_status = builder.get_object ("img_status");
