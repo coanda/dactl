@@ -44,7 +44,7 @@ public class ChannelTreeView : TreeView {
             if (channel is AChannel) {
                 var cal = (channel as ScalableChannel).calibration;
                 scaled_as_string = ((channel as ScalableChannel).scaled_value).format (buf, "%.3f");
-                Cld.debug ("scaled_as_string: %s\n", scaled_as_string);
+                //Cld.debug ("scaled_as_string: %s\n", scaled_as_string);
                 listmodel.append (out iter);
                 listmodel.set (iter, Columns.TAG, (channel as Channel).tag,
                                      Columns.VALUE, scaled_as_string, //(channel as AChannel).scaled_value,
@@ -54,7 +54,7 @@ public class ChannelTreeView : TreeView {
             } else if (channel is VChannel) {
                 var cal = (channel as ScalableChannel).calibration;
                 scaled_as_string = ((channel as ScalableChannel).scaled_value).format (buf, "%.3f");
-                Cld.debug ("scaled_as_string: %s\n", scaled_as_string);
+                //Cld.debug ("scaled_as_string: %s\n", scaled_as_string);
                 listmodel.append (out iter);
                 listmodel.set (iter, Columns.TAG, (channel as Channel).tag,
                                      Columns.VALUE, scaled_as_string, //(channel as VChannel).scaled_value,

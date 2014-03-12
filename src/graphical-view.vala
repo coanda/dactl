@@ -30,6 +30,7 @@ public class GraphicalWindow : Gtk.ApplicationWindow {
     private Gtk.Widget btn_view_file;
     private Gtk.Widget mnu_item_view_dig;
     private Gtk.Widget mnu_item_view_data;
+    private Gtk.Widget mnu_item_view_data_recent;
     private Gtk.Widget mnu_item_view_config;
     private Gtk.Widget data_recent_chooser;
     private Gtk.RecentManager recentmanager1;
@@ -41,6 +42,8 @@ public class GraphicalWindow : Gtk.ApplicationWindow {
     private Gee.List<ChartWidget> charts = new Gee.ArrayList<ChartWidget> ();
     private Gee.List<PIDBox> pid_box_list = new Gee.ArrayList<PIDBox> ();
     private Gee.List<PID2Box> pid2_box_list = new Gee.ArrayList<PID2Box> ();
+    private Gee.List<AOBox> ao_box_list = new Gee.ArrayList<AOBox> ();
+    private Gee.List<DOBox> do_box_list = new Gee.ArrayList<DOBox> ();
     //private Gee.List<ModuleBox> module_box_list = new Gee.ArrayList<ModuleBox> ();
 
     /**
@@ -116,15 +119,15 @@ public class GraphicalWindow : Gtk.ApplicationWindow {
         data_recent_chooser = builder.get_object ("data_recent_chooser") as Widget;
         recentmanager1 = builder.get_object ("recentmanager1") as RecentManager;
         //(data_recent_chooser as Gtk.RecentChooser).recent_manager = recentmanager1;
-
+        mnu_item_view_data = builder.get_object ("mnu_item_view_data") as Widget;
+        mnu_item_view_data_recent = builder.get_object ("mnu_item_view_data_recent") as Widget;
         mnu_item_view_config = builder.get_object ("mnu_item_view_config") as Widget;
+        mnu_item_view_dig = builder.get_object ("mnu_item_view_dig") as Widget;
         dlg_data_file_chooser = builder.get_object ("dlg_data_file_chooser") as Widget;
-        mnu_item_view_config = builder.get_object ("mnu_item_view_config") as Widget;
         dlg_textview = builder.get_object ("dlg_textview") as Widget;
         textview = builder.get_object ("textview") as Widget;
         textbuffer = builder.get_object ("textbuffer");
         btn_view_file = builder.get_object ("btn_view_file") as Widget;
-        mnu_item_view_dig = builder.get_object ("mnu_item_view_dig") as Widget;
     }
 
     private void initialize_display () {
@@ -206,13 +209,7 @@ public class GraphicalWindow : Gtk.ApplicationWindow {
     private void add_channel_treeview_content () {
         var channel_scroll = builder.get_object ("scrolledwindow_channels");
         Gee.Map<string, Cld.Object> channels = new Gee.TreeMap<string, Cld.Object> ();
-Cld.debug (">>>>>>>>>>>>>>>>>>>>>>>>");
         channels = model.ctx.get_object_map (typeof (Cld.Channel));
-Cld.debug (">>>>>>>>>> channels.size: %d", channels.size);
-//        channels.set_all (model.ai_channels);
-//        channels.set_all (model.vchannels);
-//        channels.set_all (model.ao_channels);
-
         channel_treeview = new ChannelTreeView (channels);
         (channel_scroll as Gtk.ScrolledWindow).set_min_content_width (_chan_scroll_min_width);
 
@@ -259,8 +256,7 @@ Cld.debug (">>>>>>>>>> channels.size: %d", channels.size);
             /* Add data */
             Gee.List<Cld.Object> data = new Gee.ArrayList<Cld.Object> ();
             foreach (var series in chart_settings.get_strv ("series-list")) {
-                Cld.Builder cld_builder = model.builder;
-                data.add (cld_builder.get_object (series));
+                data.add (model.ctx.get_object (series));
                 GLib.debug ("Adding data series %s to chart %s", series, child);
                 chart.add_series (series);
                 /* Add two points at least */
@@ -323,7 +319,7 @@ Cld.debug (">>>>>>>>>> channels.size: %d", channels.size);
                 pid_box_list.add (pid_box);
             } else if (pid is Cld.Pid2) {
                 var pid2_box = new PID2Box (pid.id, model);
-                pid2_box.settings_dialog = new PID2SettingsDialog (pid as Cld.Pid2, model.channels);
+                pid2_box.settings_dialog = new PID2SettingsDialog (pid as Cld.Pid2, model.dataseries);
                 pid2_box_list.add (pid2_box);
             }
         }
@@ -334,6 +330,30 @@ Cld.debug (">>>>>>>>>> channels.size: %d", channels.size);
         }
 
         foreach (var box in pid2_box_list) {
+            (control_box as Box).pack_start (box, false, false, 0);
+            control_box.pack_start (new Gtk.Separator (Orientation.HORIZONTAL), false, false, 0);
+        }
+
+        foreach (var ao_channel in model.ao_channels.values) {
+            if (ao_channel is Cld.AOChannel) {
+                var ao_box = new AOBox (ao_channel.id, model);
+                ao_box_list.add (ao_box);
+            }
+        }
+
+        foreach (var box in ao_box_list) {
+            (control_box as Box).pack_start (box, false, false, 0);
+            control_box.pack_start (new Gtk.Separator (Orientation.HORIZONTAL), false, false, 0);
+        }
+
+        foreach (var do_channel in model.do_channels.values) {
+            if (do_channel is Cld.DOChannel) {
+                var do_box = new DOBox (do_channel.id, model);
+                do_box_list.add (do_box);
+            }
+        }
+
+        foreach (var box in do_box_list) {
             (control_box as Box).pack_start (box, false, false, 0);
             control_box.pack_start (new Gtk.Separator (Orientation.HORIZONTAL), false, false, 0);
         }
@@ -389,7 +409,6 @@ Cld.debug (">>>>>>>>>> channels.size: %d", channels.size);
         TreeModel model;
         TreeIter iter;
         TreeSelection selection;
-        Cld.Builder cld_builder = this.model.builder;
         Cld.Object channel;
 
         selection = (channel_treeview as Gtk.TreeView).get_selection ();
@@ -397,7 +416,7 @@ Cld.debug (">>>>>>>>>> channels.size: %d", channels.size);
         model.get (iter, ChannelTreeView.Columns.HIDDEN_ID, out id);
 
         GLib.debug ("Selected: %s", id);
-        channel = cld_builder.get_object (id);
+        channel = this.model.ctx.get_object (id);
 
         /* This is an ugly way of doing this but it shouldn't matter */
         foreach (var chart in charts) {
@@ -587,6 +606,10 @@ public class GraphicalView : Gtk.Application {
         quit_action.activate.connect (quit_activated_cb);
         this.add_action (quit_action);
 
+        var export_action = new SimpleAction ("export", null);
+        export_action.activate.connect (export_activated_cb);
+        this.add_action (export_action);
+
         /* Add some actions to the app menu */
         var help_menu = new GLib.Menu ();
         help_menu.append ("Help", "app.help");
@@ -620,6 +643,18 @@ public class GraphicalView : Gtk.Application {
         });
 
         (dialog as Gtk.Dialog).run ();
+    }
+
+    /**
+     * Action callback for export to CSV file.
+     */
+    private void export_activated_cb (SimpleAction action, Variant? parameter) {
+        Cld.debug ("Export CSV dialog run started.\n");
+
+        var dialog = new ExportCsvDialog (model);
+        (dialog as Dialog).response.connect (dialog.response_cb);
+        (dialog as Gtk.Dialog).run ();
+        Cld.debug ("Export CSV dialog run complete. \n");
     }
 
     /**
@@ -705,7 +740,7 @@ public class GraphicalView : Gtk.Application {
      */
     private void log_activated_cb (SimpleAction action, Variant? parameter) {
         /* XXX for multiple log files to work this needs to change */
-        var log = model.builder.get_object ("log0");
+        var log = model.ctx.get_object ("log0");
         int mode = Posix.R_OK | Posix.W_OK;
         int response = ResponseType.OK;
         bool go = false;                    /* XXX bad variable naming */

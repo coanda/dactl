@@ -64,7 +64,7 @@ public class Application : Object {
                 """;
                 stdout.printf ("%s\n%s - version %s\n", title, args[0], PACKAGE_VERSION);
             } else {
-                Cld.init (args);
+                Cld.init ();
 
                 /* Setup the application model */
                 if (cfgfile == null) {

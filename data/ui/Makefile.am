@@ -5,6 +5,7 @@ uifiles = \
 	brabender_control.ui\
 	chart_dialog.ui \
 	chart_widget.ui \
+	export_dialog.ui \
 	heidolph_control.ui \
 	licor_control.ui \
 	log_dialog.ui \

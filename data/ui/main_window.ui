@@ -156,6 +156,15 @@
                     <property name="use_stock">True</property>
                   </object>
                 </child>
+                <child>
+                  <object class="GtkMenuItem" id="mnu_item_file_export">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="action_name">app.export</property>
+                    <property name="label" translatable="yes">Export ...</property>
+                    <property name="use_underline">True</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

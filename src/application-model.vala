@@ -20,7 +20,6 @@ public class ApplicationModel : GLib.Object {
     public ApplicationConfig config { get; private set; }
 
     /* CLD data */
-    public Cld.Builder builder { get; private set; }
     public Cld.XmlConfig xml { get; private set; }
     public Cld.Context ctx { get; private set; }
     public Cld.Task task { get; private set; }
@@ -38,13 +37,28 @@ public class ApplicationModel : GLib.Object {
     /* Application specific classes. */
     private Gee.Map<string, Cld.Object> _channels;
     public Gee.Map<string, Cld.Object> channels {
-        get { return builder.channels; }
+        get {
+            if (_channels == null) {
+                _channels = new Gee.TreeMap<string, Cld.Object> ();
+                _channels = ctx.get_object_map (typeof (Cld.Channel));
+            }
+
+            return _channels;
+        }
         set { _channels = value; }
     }
 
     private Gee.Map<string, Cld.Object> _logs;
     public Gee.Map<string, Cld.Object> logs {
-        get { return builder.logs; }
+
+        get {
+            if (_logs == null) {
+                _logs = new Gee.TreeMap<string, Cld.Object> ();
+                _logs = ctx.get_object_map (typeof (Cld.Log));
+            }
+
+            return _channels;
+        }
         set { _logs = value; }
     }
 
@@ -52,14 +66,9 @@ public class ApplicationModel : GLib.Object {
     public Gee.Map<string, Cld.Object> devices {
         get {
             if (_devices == null) {
-                lock (builder) {
-                    var daq = builder.default_daq;
+                lock (ctx) {
                     _devices = new Gee.TreeMap<string, Cld.Object> ();
-                    foreach (var object in daq.objects.values) {
-                        if (object is Device)
-                            _devices.set (object.id, object);
-                    }
-                }
+                    _devices = ctx.get_object_map (typeof (Cld.Device)); }
             }
             return _devices;
         }
@@ -73,12 +82,9 @@ public class ApplicationModel : GLib.Object {
     public Gee.Map<string, Cld.Object>? ai_channels {
         get {
             if (_ai_channels == null) {
-                lock (builder) {
+                lock (ctx) {
                     _ai_channels = new Gee.TreeMap<string, Cld.Object> ();
-                    foreach (var channel in builder.channels.values) {
-                        if (channel is AIChannel)
-                            _ai_channels.set (channel.id, channel);
-                    }
+                    _ai_channels = ctx.get_object_map (typeof (Cld.AIChannel));
                 }
             }
             return _ai_channels;
@@ -93,12 +99,9 @@ public class ApplicationModel : GLib.Object {
     public Gee.Map<string, Cld.Object>? ao_channels {
         get {
             if (_ao_channels == null) {
-                lock (builder) {
+                lock (ctx) {
                     _ao_channels = new Gee.TreeMap<string, Cld.Object> ();
-                    foreach (var channel in builder.channels.values) {
-                        if (channel is AOChannel)
-                            _ao_channels.set (channel.id, channel);
-                    }
+                    _ao_channels = ctx.get_object_map (typeof (Cld.AOChannel));
                 }
             }
             return _ao_channels;
@@ -113,12 +116,9 @@ public class ApplicationModel : GLib.Object {
     public Gee.Map<string, Cld.Object>? di_channels {
         get {
             if (_di_channels == null) {
-                lock (builder) {
+                lock (ctx) {
                     _di_channels = new Gee.TreeMap<string, Cld.Object> ();
-                    foreach (var channel in builder.channels.values) {
-                        if (channel is DIChannel)
-                            _di_channels.set (channel.id, channel);
-                    }
+                    _di_channels = ctx.get_object_map (typeof (Cld.DIChannel));
                 }
             }
             return _di_channels;
@@ -133,12 +133,9 @@ public class ApplicationModel : GLib.Object {
     public Gee.Map<string, Cld.Object>? do_channels {
         get {
             if (_do_channels == null) {
-                lock (builder) {
+                lock (ctx) {
                     _do_channels = new Gee.TreeMap<string, Cld.Object> ();
-                    foreach (var channel in builder.channels.values) {
-                        if (channel is DOChannel)
-                            _do_channels.set (channel.id, channel);
-                    }
+                    _do_channels = ctx.get_object_map (typeof (Cld.DOChannel));
                 }
             }
             return _do_channels;
@@ -153,12 +150,9 @@ public class ApplicationModel : GLib.Object {
     public Gee.Map<string, Cld.Object>? vchannels {
         get {
             if (_vchannels == null) {
-                lock (builder) {
+                lock (ctx) {
                     _vchannels = new Gee.TreeMap<string, Cld.Object> ();
-                    foreach (var channel in builder.channels.values) {
-                        if (channel is VChannel)
-                            _vchannels.set (channel.id, channel);
-                    }
+                    _vchannels = ctx.get_object_map (typeof (Cld.VChannel));
                 }
             }
             return _vchannels;
@@ -173,19 +167,10 @@ public class ApplicationModel : GLib.Object {
     public Gee.Map<string, Cld.Object>? control_loops {
         get {
             if (_control_loops == null) {
-                lock (builder) {
+                lock (ctx) {
                     _control_loops = new Gee.TreeMap<string, Cld.Object> ();
-                    foreach (var object in builder.objects.values) {
-                        if (object is Cld.Control) {
-                            foreach (var ctl_object in (object as Cld.Container).objects.values) {
-                                if (ctl_object is Cld.Pid) {
-                                    _control_loops.set (ctl_object.id, ctl_object);
-                                } else if (ctl_object is Cld.Pid2) {
-                                    _control_loops.set (ctl_object.id, ctl_object);
-                                }
-                            }
-                        }
-                    }
+                    _control_loops = ctx.get_object_map (typeof (Cld.Pid));
+                    _control_loops.set_all (ctx.get_object_map (typeof (Cld.Pid2)));
                 }
             }
             return _control_loops;
@@ -200,13 +185,9 @@ public class ApplicationModel : GLib.Object {
     public Gee.Map<string, Cld.Object>? calibrations {
         get {
             if (_calibrations == null) {
-                lock (builder) {
+                lock (ctx) {
                     _calibrations = new Gee.TreeMap<string, Cld.Object> ();
-                    foreach (var calibration in builder.objects.values) {
-                        if (calibration is Cld.Calibration) {
-                            _calibrations.set (calibration.id, calibration);
-                        }
-                    }
+                    _calibrations = ctx.get_object_map (typeof (Cld.Calibration));
                 }
             }
             return _calibrations;
@@ -221,13 +202,9 @@ public class ApplicationModel : GLib.Object {
     public Gee.Map<string, Cld.Object> modules {
         get {
             if (_modules == null) {
-                lock (builder) {
+                lock (ctx) {
                     _modules = new Gee.TreeMap<string, Cld.Object> ();
-                    foreach (var module in builder.objects.values) {
-                        if (module is Cld.Module) {
-                            _modules.set (module.id, module);
-                        }
-                    }
+                    _modules = ctx.get_object_map (typeof (Cld.Module));
                 }
             }
             return _modules;
@@ -242,17 +219,14 @@ public class ApplicationModel : GLib.Object {
     public Gee.Map<string, Cld.Object>? dataseries {
         get {
             if (_dataseries == null) {
-                lock (builder) {
+                lock (ctx) {
                     _dataseries = new Gee.TreeMap<string, Cld.Object> ();
-                    foreach (var ds in builder.dataseries.values) {
-                        if (ds is DataSeries)
-                            _dataseries.set (ds.id, ds);
-                    }
+                    _dataseries = ctx.get_object_map (typeof (Cld.DataSeries));
                 }
             }
             return _dataseries;
         }
-        set { _do_channels = value; }
+        set { _dataseries = value; }
     }
 
 
@@ -275,7 +249,7 @@ public class ApplicationModel : GLib.Object {
     public ApplicationModel () {
         config = new ApplicationConfig (xml_file);
         xml = new Cld.XmlConfig.from_node (config.get_xml_node ("//dactl/cld:objects"));
-        builder = new Cld.Builder.from_xml_config (xml);
+        ctx = new Cld.Context.from_config (xml);
 
         config.property_changed.connect (config_property_changed_cb);
 
@@ -287,7 +261,9 @@ public class ApplicationModel : GLib.Object {
             run_device_output ();
 
         /* XXX change for multiple log files */
-        log = builder.get_object ("log0") as Cld.Log;
+        log = ctx.get_object ("log0") as Cld.Log;
+        //Gee.Map<string, Cld.Object> logs = new Gee.TreeMap<string, Cld.Object> ();
+        //logs = ctx.get_object_map (typeof (Cld.Log));
     }
 
     /**
@@ -304,14 +280,10 @@ public class ApplicationModel : GLib.Object {
         }
 
         config = new ApplicationConfig (this.xml_file);
-        xml = new Cld.XmlConfig.from_node (config.get_xml_node ("//dactl/cld:objects"));
-        builder = new Cld.Builder.from_xml_config (xml);
-        ctx = new Cld.Context ();
-        ctx.objects = builder.objects;
+        xml = new Cld.XmlConfig.from_node (config.get_xml_node ("//dactl/cld/cld:objects"));
+        ctx = new Cld.Context.from_config (xml);
 
         config.property_changed.connect (config_property_changed_cb);
-
-        //GLib.message ("%s", builder.to_string ());
 
         /* Read configuration settings to control application execution. */
         if (config.get_boolean_property ("launch-input-on-startup"))
@@ -329,10 +301,10 @@ public class ApplicationModel : GLib.Object {
          **/
 
         /* XXX change for multiple log files */
-        log = builder.get_object ("log0") as Cld.Log;
+        log = ctx.get_object ("log0") as Cld.Log;
 
         if (verbose)
-            Cld.debug ("%s\n", builder.to_string ());
+            Cld.debug ("Context to string:\n%s\n", ctx.to_string_recursive ());
     }
 
     /**
@@ -358,13 +330,11 @@ public class ApplicationModel : GLib.Object {
      */
      public void start_log () {
         if (!(log as Cld.Log).active) {
-            (log as Cld.Log).file_open ();
-            (log as Cld.Log).run ();
+//            (log as Cld.CsvLog).file_open ();
+            (log as Cld.Log).start ();
 
-            if ((log as Cld.Log).active) {
-                GLib.message ("Started log %s", log.id);
-                log_state_changed ((log as Cld.Log).id, true);
-            }
+            Cld.debug ("Started log %s", log.id);
+            log_state_changed ((log as Cld.Log).id, true);
         }
     }
 
@@ -375,12 +345,11 @@ public class ApplicationModel : GLib.Object {
     public void stop_log () {
         if ((log as Cld.Log).active) {
             (log as Cld.Log).stop ();
-            (log as Cld.Log).file_mv_and_date (false);
-
-            if ((log as Cld.Log).active) {
-                GLib.message ("Stopped log %s", log.id);
-                log_state_changed ((log as Cld.Log).id, false);
+            if (log is Cld.CsvLog) {
+                (log as Cld.CsvLog).file_mv_and_date (false);
             }
+            Cld.debug ("Stopped log %s", log.id);
+            log_state_changed ((log as Cld.Log).id, false);
         }
     }
 

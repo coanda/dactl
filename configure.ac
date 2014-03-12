@@ -72,6 +72,10 @@ PKG_CHECK_MODULES([CLD], [cld-0.2],
 	[VALA_PACKAGES="$VALA_PACKAGES --pkg cld-0.2"],
 	[AC_MSG_ERROR([cld-0.2 is required])])
 
+PKG_CHECK_MODULES([SQLITE], sqlite3,
+    [VALA_PACKAGES="$VALA_PACKAGES --pkg sqlite3"],
+	[AC_MSG_ERROR(sqlite3 is required)])
+
 dnl Package setup for Vala files
 AC_SUBST(VALA_PACKAGES)
 

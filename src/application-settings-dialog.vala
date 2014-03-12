@@ -9,7 +9,6 @@ public class ApplicationSettingsDialog : Dialog {
 
     private ApplicationModel model;
     private Gtk.Builder builder;
-    private Cld.Builder cld_builder;
     private int tab_id;
     private Gtk.Widget btn_apply;
     private Gtk.Widget btn_ok;
@@ -109,7 +108,6 @@ public class ApplicationSettingsDialog : Dialog {
 
     public ApplicationSettingsDialog (ApplicationModel model) {
         this.model = model;
-        cld_builder = model.builder;
 
         create_dialog ();
         set_default_size (800, 600);
@@ -125,7 +123,6 @@ public class ApplicationSettingsDialog : Dialog {
     public ApplicationSettingsDialog.with_startup_tab_id (ApplicationModel model, int tab_id) {
         this.model = model;
         this.tab_id = tab_id;
-        cld_builder = model.builder;
 
         create_dialog ();
         set_default_size (800, 600);
@@ -181,16 +178,14 @@ public class ApplicationSettingsDialog : Dialog {
         (lbl_app_name as Gtk.Label).label = app_name;
         (lbl_app_config as Gtk.Label).label = model.xml_file;
 
-        var cld_builder = model.builder;
-        var daq = cld_builder.get_object ("daq0");
+        var daq = model.ctx.get_object ("daq0");
         (lbl_daq_rate as Gtk.Label).label = "%.1f".printf ((daq as Cld.Daq).rate);
     }
 
     private void populate_logging_page () {
-        Cld.Builder cld_builder = model.builder;
 
         scrolledwindow_logs = builder.get_object ("scrolledwindow_logs") as Gtk.Widget;
-        log_treeview = new LogTreeView (cld_builder.logs);
+        log_treeview = new LogTreeView (model.ctx.get_object_map (typeof (Cld.Log)));
         (scrolledwindow_logs as ScrolledWindow).add (log_treeview);
 
         /* These get updated in a callback */
@@ -401,14 +396,13 @@ public class ApplicationSettingsDialog : Dialog {
         TreeModel tree_model;
         TreeIter iter;
         TreeSelection selection;
-        Cld.Builder cld_builder = this.model.builder;
         Cld.Object device;
 
         selection = (device_treeview as Gtk.TreeView).get_selection ();
         selection.get_selected (out tree_model, out iter);
         tree_model.get (iter, DeviceTreeView.Columns.ID, out id);
 
-        device = cld_builder.get_object (id);
+        device = model.ctx.get_object (id);
 
         (entry_dev_id as Gtk.Entry).set_text (id);
         (entry_dev_desc as Gtk.Entry).set_text ((device as Cld.Device).description);
@@ -420,14 +414,13 @@ public class ApplicationSettingsDialog : Dialog {
         TreeModel tree_model;
         TreeIter iter;
         TreeSelection selection;
-        Cld.Builder cld_builder = this.model.builder;
         Cld.Object log;
 
         selection = (log_treeview as Gtk.TreeView).get_selection ();
         selection.get_selected (out tree_model, out iter);
         tree_model.get (iter, LogTreeView.Columns.ID, out id);
 
-        log = cld_builder.get_object (id);
+        log = model.ctx.get_object (id);
 
         (entry_log_id as Gtk.Entry).set_text (id);
         (entry_log_title as Gtk.Entry).set_text ((log as Cld.Log).name);
@@ -544,7 +537,7 @@ public class ApplicationSettingsDialog : Dialog {
         selection.get_selected (out tree_model, out iter);
         tree_model.get (iter, column, out id);
 
-        channel = cld_builder.get_object (id);
+        channel = model.ctx.get_object (id);
         Cld.debug ("    channel.id: %s\n", channel.id);
 
         return channel as Channel;
@@ -563,7 +556,6 @@ public class ApplicationSettingsDialog : Dialog {
         TreeModel tree_model;
         TreeIter iter;
         TreeSelection selection;
-        Cld.Builder cld_builder = this.model.builder;
         Cld.Object module;
         string type;
 
@@ -571,7 +563,7 @@ public class ApplicationSettingsDialog : Dialog {
         selection.get_selected (out tree_model, out iter);
         tree_model.get (iter, ModuleTreeView.Columns.ID, out id);
 
-        module = cld_builder.get_object (id);
+        module = model.ctx.get_object (id);
         type = (module as GLib.Object).get_type ().name ();
         Cld.debug ("Module TreeView Selection :: Module ID: %s Module Type: %s\n", module.id, type);
         /* Empty display area */
@@ -631,9 +623,8 @@ public class ApplicationSettingsDialog : Dialog {
     }
 
     private void update_log_config () {
-        Cld.Builder cld_builder = this.model.builder;
 
-        var log = cld_builder.get_object ((entry_log_id as Gtk.Entry).text);
+        var log = model.ctx.get_object ((entry_log_id as Gtk.Entry).text);
         (log as Cld.Log).name = (entry_log_title as Gtk.Entry).text;
         (log as Cld.Log).date_format = (entry_log_format as Gtk.Entry).text;
         (log as Cld.Log).rate = (btn_log_rate as Gtk.SpinButton).get_value ();

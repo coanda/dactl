@@ -18,6 +18,7 @@ dactl_CFLAGS = \
 	$(GSL_CFLAGS) \
 	$(XML_CFLAGS) \
 	$(CLD_CFLAGS) \
+	$(SQLITE_CFLAGS) \
 	$(COMEDI_CFLAGS)
 
 dactl_LDADD = \
@@ -28,6 +29,7 @@ dactl_LDADD = \
 	$(GSL_LIBS) \
 	$(XML_LIBS) \
 	$(CLD_LIBS) \
+	$(SQLITE_LIBS) \
 	$(COMEDI_LIBS)
 
 dactl_headers = \
@@ -38,6 +40,7 @@ dactl_headers = \
 
 dactl_SOURCES = \
 	main.vala \
+	ao-box.vala \
 	application-model.vala \
 	application-config.vala \
 	graphical-view.vala \
@@ -55,7 +58,10 @@ dactl_SOURCES = \
 	device-treeview.vala \
 	dichannel-treeview.vala \
 	dio-viewer.vala \
+	do-box.vala \
 	dochannel-treeview.vala \
+	experiment-treeview.vala \
+	export-csv-dialog.vala \
 	heidolph-module-box.vala \
 	licor-module-box.vala \
 	log-treeview.vala \

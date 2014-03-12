@@ -109,9 +109,9 @@ public class PIDSettingsDialog : Dialog {
             case ResponseType.OK:
                 /* Update PID object */
                 string pv_id = input_combo.active_id;
-               GLib.debug ("Input selected:  %s", input_combo.active_id);
+                Cld.debug ("Input selected:  %s", input_combo.active_id);
                 string mv_id = output_combo.active_id;
-               GLib.debug ("Output selected: %s", output_combo.active_id);
+                Cld.debug ("Output selected: %s", output_combo.active_id);
                 Cld.Object pv_ch = channels.get (pv_id);
                 Cld.Object mv_ch = channels.get (mv_id);
                 Gee.Map<string, Cld.Object> process_values = new Gee.TreeMap<string, Cld.Object> ();
@@ -150,7 +150,7 @@ public class PID2SettingsDialog : Dialog {
     private Gtk.Adjustment adj_ki;
     private Gtk.Adjustment adj_kd;
     private Gtk.Builder builder;
-    private Gee.Map<string, Cld.Object> channels;
+    private Gee.Map<string, Cld.Object> dataseries;
 
     construct {
         string path = GLib.Path.build_filename (Config.UI_DIR,
@@ -174,9 +174,9 @@ public class PID2SettingsDialog : Dialog {
         adj_kd = builder.get_object ("adj_kd") as Gtk.Adjustment;
     }
 
-    public PID2SettingsDialog (Cld.Pid2 pid, Gee.Map<string, Cld.Object> channels) {
+    public PID2SettingsDialog (Cld.Pid2 pid, Gee.Map<string, Cld.Object> dataseries) {
         this.pid = pid;
-        this.channels = channels;
+        this.dataseries = dataseries;
 
         create_dialog ();
         connect_signals ();
@@ -195,13 +195,12 @@ public class PID2SettingsDialog : Dialog {
         Gtk.ListStore output_store = new Gtk.ListStore (1, typeof (string));
         Gtk.TreeIter iter;
 
-        foreach (var channel in channels.values) {
-            if (channel is AIChannel) {
+        foreach (var ds in dataseries.values) {
+            if (ds is DataSeries) {
                 input_store.append (out iter);
-                input_store.set (iter, 0, channel.id);
-            } else if (channel is AOChannel) {
+                input_store.set (iter, 0, ds.id);
                 output_store.append (out iter);
-                output_store.set (iter, 0, channel.id);
+                output_store.set (iter, 0, ds.id);
             }
         }
 
@@ -226,7 +225,7 @@ public class PID2SettingsDialog : Dialog {
         (pv_box as Gtk.Box).pack_start (output_combo, true, true, 0);
         pv_box.show_all ();
         /* XXX The pv_box is not working with DataSeries yet so it is made insensitive for now. */
-        (pv_box as Gtk.Widget).set_sensitive (false);
+        (pv_box as Gtk.Widget).set_sensitive (true);
 
         var _content = (dialog as Dialog).get_content_area ();
         _content.reparent (content);
@@ -245,14 +244,14 @@ public class PID2SettingsDialog : Dialog {
             case ResponseType.OK:
                 /* Update PID object */
                 string pv_id = input_combo.active_id;
-               GLib.debug ("Input selected:  %s", input_combo.active_id);
+                Cld.debug ("Input selected:  %s", input_combo.active_id);
                 string mv_id = output_combo.active_id;
-               GLib.debug ("Output selected: %s", output_combo.active_id);
-                Cld.Object pv_ch = channels.get (pv_id);
-                Cld.Object mv_ch = channels.get (mv_id);
+                Cld.debug ("Output selected: %s", output_combo.active_id);
+                Cld.Object pv_ds = dataseries.get (pv_id);
+                Cld.Object mv_ds = dataseries.get (mv_id);
                 Gee.Map<string, Cld.Object> process_values = new Gee.TreeMap<string, Cld.Object> ();
-                var pv = new ProcessValue.full ("pv0", pv_ch as Cld.Channel);
-                var mv = new ProcessValue.full ("pv1", mv_ch as Cld.Channel);
+                var pv = new ProcessValue2.full ("pv0", pv_ds as Cld.DataSeries);
+                var mv = new ProcessValue2.full ("pv1", mv_ds as Cld.DataSeries);
                 process_values.set (pv.id, pv);
                 process_values.set (mv.id, mv);
                 pid.process_values = process_values;
@@ -260,6 +259,7 @@ public class PID2SettingsDialog : Dialog {
                 pid.kp = adj_kp.value;
                 pid.ki = adj_ki.value;
                 pid.kd = adj_kd.value;
+                Cld.debug ("pid.id: %s kp: %.3f ki: %.3f kd: %.3f", pid.id, pid.kp, pid.ki, pid.kd);
                 hide ();
                 break;
             case ResponseType.CANCEL:

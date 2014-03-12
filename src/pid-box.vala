@@ -40,8 +40,7 @@ public class PIDBox : Gtk.Box {
         //this.pid = pid;
         this.pid_id = pid_id;
         this.model = model;
-        Cld.Builder builder = model.builder;
-        pid = builder.get_object (this.pid_id) as Cld.Pid;
+        pid = model.ctx.get_object (this.pid_id) as Cld.Pid;
         create_widgets ();
         connect_signals ();
     }
@@ -90,9 +89,8 @@ public class PIDBox : Gtk.Box {
         });
 
         (pid_enable as Gtk.ToggleButton).toggled.connect (() => {
-            var builder = model.builder;
-            var mv = builder.get_object (pid.mv_id);
-            var pv = builder.get_object (pid.pv_id);
+            var mv = model.ctx.get_object (pid.mv_id);
+            var pv = model.ctx.get_object (pid.pv_id);
             if ((pid_enable as Gtk.ToggleButton).active) {
                 manual_scale.sensitive = false;
                 manual_spin_button.sensitive = false;
@@ -125,8 +123,7 @@ public class PIDBox : Gtk.Box {
         /* for now the manual adjustment on the control is from 0 - 100 %,
          * hence the divide by 10 */
         manual_adjustment.value_changed.connect (() => {
-            Cld.Builder builder = model.builder;
-            var channel = builder.get_object (pid.mv_id);
+            var channel = model.ctx.get_object (pid.mv_id);
             (channel as Cld.AChannel).raw_value = manual_adjustment.value;
         });
 
@@ -189,8 +186,7 @@ public class PID2Box : Gtk.Box {
         //this.pid = pid;
         this.pid_id = pid_id;
         this.model = model;
-        Cld.Builder builder = model.builder;
-        pid = builder.get_object (this.pid_id) as Cld.Pid2;
+        pid = model.ctx.get_object (this.pid_id) as Cld.Pid2;
         create_widgets ();
         connect_signals ();
     }
@@ -239,9 +235,8 @@ public class PID2Box : Gtk.Box {
         });
 
         (pid_enable as Gtk.ToggleButton).toggled.connect (() => {
-            var builder = model.builder;
-            var mv = builder.get_object (pid.mv_id);
-            var pv = builder.get_object (pid.pv_id);
+            var mv = model.ctx.get_object (pid.mv_id);
+            var pv = model.ctx.get_object (pid.pv_id);
             if ((pid_enable as Gtk.ToggleButton).active) {
                 manual_scale.sensitive = false;
                 manual_spin_button.sensitive = false;
@@ -274,8 +269,7 @@ public class PID2Box : Gtk.Box {
         /* for now the manual adjustment on the control is from 0 - 100 %,
          * hence the divide by 10 */
         manual_adjustment.value_changed.connect (() => {
-            Cld.Builder builder = model.builder;
-            var dataseries = builder.get_object (pid.mv_id);
+            var dataseries = model.ctx.get_object (pid.mv_id);
             (((dataseries as Cld.DataSeries).channel) as AOChannel).raw_value = manual_adjustment.value;
         });
 
