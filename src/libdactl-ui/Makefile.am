@@ -1,0 +1,76 @@
+include $(top_srcdir)/common.am
+include $(srcdir)/filelist.am
+
+libdactl_ui_includedir = $(includedir)/dactl-0.3
+libdactl_ui_include_HEADERS = dactl-ui.h
+
+lib_LTLIBRARIES = libdactl-ui-0.3.la
+
+gresource_file = libdactl-ui.gresource.xml
+resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies $(gresource_file))
+resources.c: $(gresource_file) $(resource_files)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=. --generate-source $<
+
+BUILT_SOURCES = resources.c
+
+libdactl_ui_0_3_la_SOURCES = \
+	$(BUILT_SOURCES) \
+	$(LIBDACTL_UI_VAPI_SOURCE_FILES) \
+	$(LIBDACTL_UI_NONVAPI_SOURCE_FILES)
+
+libdactl_ui_0_3_la_VALAFLAGS = \
+	--target-glib=2.38 --gresources $(gresource_file) \
+	-H dactl-ui.h -C --library=dactl-ui-0.3 \
+	--gir=Dactl-0.3.gir \
+	$(LIBDACTL_UI_DEPS_VALAFLAGS) \
+	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
+	$(DACTL_COMMON_VALAFLAGS)
+
+libdactl_ui_0_3_la_CFLAGS = \
+	$(LIBDACTL_UI_DEPS_CFLAGS) \
+	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
+	-DG_LOG_DOMAIN='"Dactl"'
+
+libdactl_ui_0_3_la_LIBADD = \
+	$(LIBDACTL_UI_DEPS_LIBS) \
+	$(DACTL_COMMON_LIBDACTL_CORE_LIBS)
+
+LIBDACTL_UI_VERSION=0:3:0
+libdactl_ui_0_3_la_LDFLAGS = \
+	$(DACTL_DATA_DIR_DEFINES) \
+	-version-info $(LIBDACTL_UI_VERSION)
+
+VAPI_FILES = dactl-ui-0.3.vapi
+DEPS_FILES = dactl-ui-0.3.deps
+
+vapidir = $(VAPIDIR)
+vapi_DATA = $(VAPI_FILES) $(DEPS_FILES)
+dactl-ui.h dactl-ui-0.3.vapi Dactl-0.3.gir: libdactl_ui_0_3_la_vala.stamp
+
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS=
+INTROSPECTION_SCANNER_ARGS=
+INTROSPECTION_COMPILER_ARGS= -l libdactl-ui-0.3.so.2 --includedir=$(builddir)/../libdactl-core --includedir=$(srcdir)/../libdactl-core
+$(builddir)/DactlUI-0.3.gir: $(srcdir)/Dactl-0.3.gir
+	$(AM_V_GEN)$(SED) -e 's,Dactl\.,DactlUI.,g' \
+		-e 's,namespace name="Dactl",namespace name="DactlUI",g' \
+		-e 's,<package name="dactl-ui-0.3"/>,<include name="DactlCore" version="0.3"/>\n<package name="dactl-ui-0.3"/>,' \
+		$< >$@
+GIRS = DactlUI-0.3.gir
+
+girdir=$(datadir)/gir-1.0
+dist_gir_DATA = $(GIRS)
+
+typelibdir = $(libdir)/girepository-1.0
+nodist_typelib_DATA = $(GIRS:.gir=.typelib)
+
+DISTCLEANFILES = DactlUI-0.3.typelib
+
+EXTRA_DIST = \
+	dactl-ui.h \
+	$(VAPI_FILES) \
+	$(DEPS_FILES) \
+	$(gresource_file) \
+	$(resource_files) \
+	DactlUI-0.3.gir \
+	Dactl-0.3.gir

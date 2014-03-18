@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/coanda/dactl/plugins/parker">
+    <file preprocess="xml-stripblanks">parker_control.ui</file>
+    <file preprocess="xml-stripblanks">parker_settings.ui</file>
+  </gresource>
+</gresources>

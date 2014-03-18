@@ -1,0 +1,7 @@
+[Plugin]
+Version = @VERSION@
+Module = licor
+Name = Licor
+License = LGPL
+Description = Implementation of the Licor specification
+Copyright = Copyright © Dactl maintainers

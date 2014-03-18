@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/coanda/dactl">
+    <!-- Style sheets -->
+    <file>gtk-style.css</file>
+    <!-- Icons -->
+    <file>icons/dactl-arrow.png</file>
+    <file>icons/dactl-dark.png</file>
+    <file>icons/dactl-gray.png</file>
+    <!-- Glade UI files -->
+    <file preprocess="xml-stripblanks">ui/about_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/default_layout.ui</file>
+    <file preprocess="xml-stripblanks">ui/menubar.ui</file>
+    <file preprocess="xml-stripblanks">ui/toolbar.ui</file>
+    <file preprocess="xml-stripblanks">ui/chart_settings_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/chart_widget.ui</file>
+    <file preprocess="xml-stripblanks">ui/dio_viewer_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/data_file_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/export_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/log_settings_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/pid_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/pid2_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/plot_window.ui</file>
+    <file preprocess="xml-stripblanks">ui/recent_files_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/serial_port_settings_box.ui</file>
+    <file preprocess="xml-stripblanks">ui/settings_dialog.ui</file>
+    <file preprocess="xml-stripblanks">ui/xml_config_dialog.ui</file>
+  </gresource>
+</gresources>

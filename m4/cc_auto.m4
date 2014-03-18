@@ -32,7 +32,7 @@ AC_DEFUN([CC_AUTO_PRE], [
 	msg="$3"
 
 	if eval "test x`echo '$'$var` != xno" && eval "test x`echo '$'$found` = xno"; then
-                CC_AUTO_DISABLED([$name], [$feature], [$msg])
+        CC_AUTO_DISABLED([$name], [$feature], [$msg])
 	fi
 ])
 
@@ -48,9 +48,9 @@ AC_DEFUN([CC_AUTO_RESULT], [
 	fi
 
 	if eval "test x`echo '$'$found` = xyes"; then
-                CC_AUTO_ENABLED([$name], [$feature])
+        CC_AUTO_ENABLED([$name], [$feature])
 	else
-                CC_AUTO_DISABLED([$name], [$feature], [$msg])
+        CC_AUTO_DISABLED([$name], [$feature], [$msg])
 	fi
 ])
 

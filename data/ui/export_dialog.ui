@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.16.1 -->
 <interface>
-  <!-- interface-requires gtk+ 3.6 -->
+  <requires lib="gtk+" version="3.6"/>
   <object class="GtkAdjustment" id="adj_start_hour">
     <property name="upper">23</property>
     <property name="step_increment">1</property>
@@ -38,10 +39,11 @@
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
-  <object class="GtkDialog" id="export_dialog">
+  <template class="DactlExportCsvDialog" parent="GtkDialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
     <property name="type_hint">dialog</property>
+    <signal name="response" handler="response_cb" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="can_focus">False</property>
@@ -146,7 +148,6 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>
-                            <property name="invisible_char_set">True</property>
                             <property name="adjustment">adj_start_hour</property>
                             <property name="snap_to_ticks">True</property>
                             <property name="numeric">True</property>
@@ -174,7 +175,6 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>
-                            <property name="invisible_char_set">True</property>
                             <property name="adjustment">adj_start_minute</property>
                             <property name="snap_to_ticks">True</property>
                             <property name="numeric">True</property>
@@ -202,7 +202,6 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>
-                            <property name="invisible_char_set">True</property>
                             <property name="adjustment">adj_start_second</property>
                             <property name="snap_to_ticks">True</property>
                             <property name="numeric">True</property>
@@ -269,7 +268,6 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>
-                            <property name="invisible_char_set">True</property>
                             <property name="adjustment">adj_stop_hour</property>
                             <property name="snap_to_ticks">True</property>
                             <property name="numeric">True</property>
@@ -297,7 +295,6 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>
-                            <property name="invisible_char_set">True</property>
                             <property name="adjustment">adj_stop_minute</property>
                             <property name="snap_to_ticks">True</property>
                             <property name="numeric">True</property>
@@ -325,7 +322,6 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>
-                            <property name="invisible_char_set">True</property>
                             <property name="adjustment">adj_stop_second</property>
                             <property name="snap_to_ticks">True</property>
                             <property name="numeric">True</property>
@@ -443,5 +439,5 @@
         </child>
       </object>
     </child>
-  </object>
+  </template>
 </interface>

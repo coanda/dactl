@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Dactl Configuration File
+
+  Generated on: <%= @date.strftime('%A, %d %B %Y') %>
+-->
+<dactl xmlns:cld="urn:libcld">
+
+  <objects>
+  </objects>
+
+  <cld:objects>
+    <% for @cldobject in @cldobjects %>
+      <cld:object id="<%= @cldobject %>">
+      <cld:object>
+    <% end %>
+  </cld:objects>
+
+</dactl>

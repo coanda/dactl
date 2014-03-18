@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.16.1 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
-  <object class="GtkBox" id="serial_port_settings_box">
+  <requires lib="gtk+" version="3.0"/>
+  <template class="DactlSerialPortSettingsBox" parent="GtkBox">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="orientation">vertical</property>
@@ -365,5 +366,5 @@
         <property name="position">9</property>
       </packing>
     </child>
-  </object>
+  </template>
 </interface>

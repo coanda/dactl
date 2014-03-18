@@ -1,0 +1,7 @@
+[Plugin]
+Version = @VERSION@
+Module = velmex
+Name = Velmex
+License = LGPL
+Description = Implementation of the Velmex specification
+Copyright = Copyright © Dactl maintainers

@@ -1,0 +1,40 @@
+require 'erb'
+
+def get_objects()
+  ['vc00', 'vc01', 'vc02', 'vc03']
+end
+
+def get_template()
+  template = File.open('dactl.erb', 'rb')
+  content = template.read()
+end
+
+class DactlConfig
+  include ERB::Util
+  attr_accessor :cldobjects, :template, :date
+
+  def initialize(cldobjects, template, date=Time.now)
+    @date = date
+    @cldobjects = cldobjects
+    @template = template
+  end
+
+  def render()
+    ERB.new(@template).result(binding)
+  end
+
+  def print()
+    puts(render)
+  end
+
+  def save(file)
+    File.open(file, "w+") do |f|
+      f.write(render)
+    end
+  end
+
+end
+
+config = DactlConfig.new(get_objects, get_template)
+config.print()
+config.save(File.join(ENV['HOME'], 'dactl.xml'))

@@ -1,0 +1,53 @@
+shareddir = $(datadir)/dactl
+sysconfigdir = $(sysconfdir)
+desktopdir = $(datadir)/applications
+plugindir = @DACTL_PLUGIN_DIR@
+
+libdactlcoredir = $(top_srcdir)/src/libdactl-core
+libdactluidir = $(top_srcdir)/src/libdactl-ui
+
+MAINTAINERCLEANFILES = Makefile.in
+
+DACTL_COMMON_DEFINES_CFLAGS = \
+	-DDATADIR='"$(shareddir)"' \
+	-include config.h
+
+DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS = \
+	--vapidir=$(libdactlcoredir) \
+	--pkg dactl-core-0.3
+
+DACTL_COMMON_LIBDACTL_CORE_CFLAGS = \
+	$(DACTL_COMMON_DEFINES_CFLAGS) \
+	-I$(top_builddir)/src/libdactl-core \
+	-I$(top_srcdir)/src/libdactl-core
+
+DACTL_COMMON_LIBDACTL_CORE_LIBS = \
+	$(top_builddir)/src/libdactl-core/libdactl-core-0.3.la
+
+DACTL_COMMON_LIBDACTL_UI_VALAFLAGS = \
+	--vapidir=$(libdactluidir) \
+	--pkg dactl-ui-0.3 \
+	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS)
+
+DACTL_COMMON_LIBDACTL_UI_CFLAGS = \
+	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
+	-I$(top_builddir)/src/libdactl-ui \
+	-I$(top_srcdir)/src/libdactl-ui
+
+DACTL_COMMON_LIBDACTL_UI_LIBS = \
+	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
+	$(top_builddir)/src/libdactl-ui/libdactl-ui-0.3.la
+
+DACTL_COMMON_CONFIG_VALAFLAGS = \
+	--vapidir=$(libdactlcoredir) \
+	--pkg dactl-config
+
+# Note: This must always be the last one in *_VALAFLAGS,
+# because the -g needs to be at the end of VALAFLAGS to not break make dist.
+DACTL_COMMON_VALAFLAGS = \
+	$(DACTL_COMMON_CONFIG_VALAFLAGS) \
+	$(DACTL_COMMON_VALAFLAGS_PKG) \
+	$(DACTL_DEBUG_VALAFLAGS)
+
+vala-clean:
+	rm -f `find . -name "*.stamp"`

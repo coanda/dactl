@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# Helper script to add all template files needed for a new plugin.
+#
+# Proposed options:
+#
+# -n|--name : string    : name of the plugin to use
+# -u|--ui   : boolean   : add UI directory/files
+
+echo "Not implemented yet."
+
+ui="no"
+name="none"
+desc="none"
+
+# XXX add getopts section
+
+if [[ "$name" == "none" ]]; then
+  # possibly do an interactive section
+fi
+
+if [[ "$ui" != "no" ]]; then
+  # not sure
+fi
+
+plugin_setup() {
+  mkdir src/plugins/$name
+  add_makefile_am
+  add_plugin_in
+}
+
+add_makefile_am() {
+  # XXX the contents of this heredoc probably won't work as-is, $name needs to
+  #     resolve within the script but all other occurrences of $s don't
+  cat <<< EOF > src/plugins/$name/Makefile.am
+include $(top_srcdir)/common.am
+
+plugin_LTLIBRARIES = libdactl-$name.la
+plugin_DATA = $name.plugin
+
+libdactl_$name_la_SOURCES = \
+    dactl-$name-container.vala \
+    dactl-$name-dummy-container.vala \
+    dactl-$name-plugin.vala \
+    dactl-$name-plugin-factory.vala
+
+libdactl_$name_la_VALAFLAGS = \
+    $(DACTL_COMMON_LIBDACTL_SERVER_VALAFLAGS) \
+    $(DACTL_COMMON_VALAFLAGS)
+libdactl_$name_la_CFLAGS = \
+    $(DACTL_PLUGIN_$name_DEPS_CFLAGS) \
+    $(DACTL_COMMON_LIBDACTL_SERVER_CFLAGS) \
+    -DG_LOG_DOMAIN='"$name"'
+libdactl_$name_la_LIBADD = \
+    $(DACTL_PLUGIN_$name_DEPS_LIBS) \
+    $(DACTL_COMMON_LIBDACTL_SERVER_LIBS)
+libdactl_$name_la_LDFLAGS = \
+    $(DACTL_PLUGIN_LINKER_FLAGS)
+
+EXTRA_DIST=$name.plugin.in
+EOF
+}
+
+add_plugin_in() {
+    cat <<< EOF > src/plugins/$name/$name.plugin.in
+[Plugin]
+Version = @VERSION@
+Module = $name
+Name = `echo $name | sed -e "s/\b\(.\)/\u\1/g"`
+License = LGPL
+Description = Implementation of the $desc specification
+Copyright = Copyright © Dactl maintainers
+EOF
+}

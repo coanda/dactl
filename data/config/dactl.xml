@@ -143,6 +143,11 @@
             </cld:object>
         </cld:object>
         <cld:object id="cal03" type="calibration">
+=======
+        </cld:object>
+
+        <cld:object id="cal0" type="calibration">
+>>>>>>> 7cffea9... Rework widget classes to allow for configured layouts
             <cld:property name="units">Volts</cld:property>
             <cld:object id="cft0" type="coefficient">
                 <cld:property name="n">0</cld:property>

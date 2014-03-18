@@ -1,0 +1,12 @@
+LIBDACTL_CORE_VAPI_SOURCE_FILES = \
+    dactl-buildable.vala \
+    dactl-container.vala \
+    dactl-dbus-interface.vala \
+    dactl-log-handler.vala \
+    dactl-module-loader.vala \
+    dactl-object.vala \
+    dactl-plugin.vala \
+    dactl-plugin-loader.vala
+
+LIBDACTL_CORE_NONVAPI_SOURCE_FILES = \
+    dactl-plugin-information.vala

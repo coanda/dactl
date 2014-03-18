@@ -1,0 +1,30 @@
+if BUILD_BRABENDER_PLUGIN
+BRABENDER_PLUGIN = brabender
+endif
+
+if BUILD_HEIDOLPH_PLUGIN
+HEIDOLPH_PLUGIN = heidolph
+endif
+
+if BUILD_LICOR_PLUGIN
+LICOR_PLUGIN = licor
+endif
+
+if BUILD_PARKER_PLUGIN
+PARKER_PLUGIN = parker
+endif
+
+if BUILD_VELMEX_PLUGIN
+VELMEX_PLUGIN = velmex
+endif
+
+SUBDIRS = $(BRABENDER_PLUGIN) \
+		  $(HEIDOLPH_PLUGIN) \
+		  $(LICOR_PLUGIN) \
+		  $(PARKER_PLUGIN) \
+		  $(VELMEX_PLUGIN)
+
+MAINTAINERCLEANFILES = Makefile.in
+
+vala-clean:
+	rm -f `find . -name "*.stamp"`

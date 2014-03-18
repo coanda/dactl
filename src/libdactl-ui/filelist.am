@@ -1,0 +1,7 @@
+LIBDACTL_UI_VAPI_SOURCE_FILES = \
+    dactl-box.vala \
+    dactl-page.vala \
+    dactl-widget.vala
+
+LIBDACTL_UI_NONVAPI_SOURCE_FILES = \
+    dactl-widget-information.vala

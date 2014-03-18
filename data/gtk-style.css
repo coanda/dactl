@@ -1,0 +1,147 @@
+@define-color dactl_bg_color shade (@theme_bg_color, 0.5);
+@define-color dactl_bg2_color mix (@theme_bg_color, @dactl_bg_color, 0.5);
+@define-color dactl_selected_color #3465a4;
+
+#CollectionLabel {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.separator {
+    -GtkWidget-wide-separators: true;
+    -GtkWidget-separator-height: 1;
+}
+
+DactlChannelTreeView:selected {
+    background-color: @dactl_selected_color;
+    border-width: 1px 0 1px 0;
+    border-color: white;
+    border-style: solid;
+}
+
+.sidebar GtkTreeView:selected {
+    background-color: @dactl_selected_color;
+    border-width: 2px 8px 2px 0;
+    border-color: transparent;
+    border-image-source: url("icons/dactl-arrow.svg");
+    border-image-slice: 0 8 0 0;
+    border-image-width: 2px 8px 2px 0;
+    border-image-repeat: stretch;
+    border-style: solid;
+}
+
+.sidebar GtkTreeView {
+    -GtkTreeView-vertical-separator: 8;
+}
+
+.sidebar .cell {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.dactl-bg {
+    background-color: transparent;
+    background-image: none;
+}
+
+.dactl-property-name-label {
+    color: #bebebe;
+}
+
+.dactl-machine-name-label {
+    color: white;
+}
+
+.dactl-step-label {
+    color: #989898;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.dactl-source-label {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.dactl-graph-label {
+    font-size: 8px;
+    font-family: monospace;
+    color: #989898;
+}
+
+.dactl-source-nb {
+    background-color: alpha(#fff, 0.0);
+}
+
+.dactl-selected {
+    background-color: @dactl_selected_color;
+}
+
+.dactl-continue {
+    background-image: -gtk-gradient (linear,
+                                     left top, left bottom,
+                                     from (@dactl_selected_color),
+                                     to (darker (@dactl_selected_color)));
+}
+
+.dactl-continue:insensitive {
+    background-image: none;
+}
+
+/* Ensure the viewport is transparent so the background don't
+   show through the rounded corners */
+.dactl-menu GtkViewport {
+    background-image: none;
+    background-color: transparent;
+    border-style: none;
+}
+
+.dactl-menu-row {
+    -GtkWidget-focus-line-width: 0;
+    border-style: ridge none none none;
+    border-color: shade (@dactl_bg2_color, 0.7);
+    border-width: 2px 0 0 0;
+    box-shadow: none;
+    border-image: none;
+    background-image: none;
+    background-color: @dactl_bg2_color;
+    border-radius: 0;
+}
+
+.dactl-menu-row:nth-child(first) {
+    border-radius: 15px 15px 0 0;
+    border-style: none;
+}
+
+.dactl-menu-scrolled .dactl-menu-row:nth-child(first) {
+    border-radius: 0;
+}
+
+.dactl-menu > .dactl-menu-row:nth-child(last) {
+    border-radius: 0 0 15px 15px;
+}
+
+.dactl-menu-row:prelight, .dactl-menu-row:focus {
+    background-color: shade (@dactl_bg2_color, 1.2);
+}
+
+.dactl-menu-row:active {
+    background-color: @theme_selected_bg_color;
+}
+
+.dactl-menu-row *:active {
+    color: #ffffff;
+}
+
+.dactl-toplevel {
+    background-color: @theme_bg_color;
+}
+
+.dactl-empty-image {
+    color: #2e3436;
+    icon-shadow: 0 -1px rgba(0,0,0,0.5);
+}
+
+.dactl-empty-details-label {
+    color: #555753;
+}

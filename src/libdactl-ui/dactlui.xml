@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glade-catalog version="3.14" name="dactl" library="libdactl-ui-0.3.so" depends="gtk+">
+
+  <glade-widget-classes>
+    <glade-widget-class name="DactlWidget" generic-name="dactlwidget" title="Dactl Widget"></glade-widget-class>
+    <!--
+    <glade-widget-class name="DactlChart" generic-name="dactlchart" title="Dactl Chart">
+      <properties>
+        <property id="" />
+        <property>
+        </property>
+      </properties>
+    </glade-widget-class>
+    -->
+  </glade-widget-classes>
+
+  <glade-widget-group name="dactl-widgets" title="Dactl Widgets">
+    <glade-widget-class-ref name="DactlWidget"/>
+  </glade-widget-group>
+
+</glade-catalog>

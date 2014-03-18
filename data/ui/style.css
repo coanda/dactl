@@ -1,3 +1,5 @@
+@import url("resource://dactl/reset.css");
+
 /* Theme colors */
 @define-color row-bg-color #eee;
 @define-color row-fg-color black;
