@@ -37,6 +37,7 @@ internal class Dactl.Main : GLib.Object {
     private static int PLUGIN_TIMEOUT = 5;
 
     private Dactl.Application app;
+    private Dactl.ApplicationFactory factory;
     private Dactl.PluginLoader plugin_loader;
     private Dactl.LogHandler log_handler;
 
@@ -47,13 +48,13 @@ internal class Dactl.Main : GLib.Object {
     private Main () throws GLib.Error {
         GLib.Environment.set_application_name (_(Config.PACKAGE_NAME));
 
+        this.factory = Dactl.ApplicationFactory.get_default ();
         this.log_handler = Dactl.LogHandler.get_default ();
         this.plugin_loader = new Dactl.PluginLoader ();
 
         this.exit_code = 0;
 
-        app = new Dactl.UI.Application ();
-
+        app = Dactl.UI.Application.get_default ();
         app.closed.connect (() => {
             app = null;
         });
@@ -90,7 +91,7 @@ internal class Dactl.Main : GLib.Object {
         this.plugin_loader.load_modules ();
 
         var timeout = PLUGIN_TIMEOUT;
-        try {
+        //try {
             /*
              *var config = MetaConfig.get_default ();
              *timeout = config.get_int ("plugin",
@@ -98,7 +99,7 @@ internal class Dactl.Main : GLib.Object {
              *                          PLUGIN_TIMEOUT,
              *                          int.MAX);
              */
-        } catch (Error error) {};
+        //} catch (GLib.Error e) {};
 
         Timeout.add_seconds (timeout, () => {
             if (this.plugin_loader.list_plugins ().size == 0) {
@@ -107,7 +108,12 @@ internal class Dactl.Main : GLib.Object {
                                    PLUGIN_TIMEOUT),
                          PLUGIN_TIMEOUT);
 
-                this.exit (-82);
+                // FIXME: this causes the application to close the device connections
+                //this.exit (-82);
+            /*
+             *} else {
+             *    app.plugins = this.plugin_loader.list_plugins ();
+             */
             }
 
             return false;
@@ -124,10 +130,15 @@ internal class Dactl.Main : GLib.Object {
          */
     }
 
+    private static void register_default_factories () {
+        var ui_factory = Dactl.UI.Factory.get_default ();
+        Dactl.ApplicationFactory.register_factory (ui_factory);
+    }
+
     private static int main (string[] args) {
 
         Dactl.Main main = null;
-        DBusService service = null;
+        Dactl.DBusService service = null;
 
         var original_args = args;
 
@@ -137,15 +148,15 @@ internal class Dactl.Main : GLib.Object {
         Intl.textdomain (Config.GETTEXT_PACKAGE);
 
         try {
-            //Cld.init (args);
-
             parse_local_args (ref args);
+
+            Dactl.Main.register_default_factories ();
 
             main = new Dactl.Main ();
             service = new Dactl.DBusService (main);
             service.publish ();
-        } catch (GLib.Error err) {
-            error ("%s", err.message);
+        } catch (GLib.Error e) {
+            error ("%s", e.message);
         }
 
         /* Setup the application view */

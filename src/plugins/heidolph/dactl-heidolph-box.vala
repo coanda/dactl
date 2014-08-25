@@ -56,7 +56,7 @@ public class HeidolphModuleBox : Gtk.Box {
                 if (!module.loaded) {
                     var res = module.load ();
                     if (!res) {
-                        Cld.debug ("Failed to load the Heidolph module.\n");
+                        GLib.debug ("Failed to load the Heidolph module.\n");
                         (btn_connect as Gtk.ToggleButton).set_active (false);
                     } else {
                         var img_status = builder.get_object ("img_status");
@@ -78,7 +78,7 @@ public class HeidolphModuleBox : Gtk.Box {
 
         var btn_normalize = builder.get_object ("btn_normalize");
         (btn_normalize as Gtk.Button).clicked.connect (() => {
-            //Cld.debug ("btn_normalize clicked.\n");
+            //GLib.debug ("btn_normalize clicked.\n");
             (module as HeidolphModule).normalize ();
         });
 
@@ -90,7 +90,7 @@ public class HeidolphModuleBox : Gtk.Box {
                                 (btn_speed_set as Gtk.Entry).get_text ();
                 var res = (module as HeidolphModule).run ();
                 if (!res) {
-                    Cld.debug ("Failed to run the Heidolph module.\n");
+                    GLib.debug ("Failed to run the Heidolph module.\n");
                     (btn_run as Gtk.ToggleButton).set_active (false);
                 } else {
                     var img_run = builder.get_object ("img_run");
@@ -115,7 +115,7 @@ public class HeidolphModuleBox : Gtk.Box {
 
         var btn_remote = builder.get_object ("btn_remote");
         (btn_remote as Gtk.Button).clicked.connect (() => {
-            Cld.debug ("btn_remote clicked.\n");
+            GLib.debug ("btn_remote clicked.\n");
             if ((btn_remote as Gtk.ToggleButton).get_active ()) {
                 (btn_remote as Gtk.Button).set_label ("PC");
                 (btn_run as Gtk.Widget).set_sensitive (false);

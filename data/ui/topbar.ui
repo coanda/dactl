@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.10"/>
+  <template class="DactlTopbar" parent="GtkStack">
+    <property name="visible">True</property>
+    <property name="transition-type">crossfade</property>
+    <property name="transition-duration">400</property>
+
+    <!-- Application -->
+    <child>
+      <object class="DactlApplicationToolbar" id="application_toolbar">
+      </object>
+
+      <packing>
+        <property name="name">application</property>
+      </packing>
+    </child>
+
+    <!-- Configuration -->
+    <child>
+      <object class="DactlConfigurationToolbar" id="configuration_toolbar">
+        <property name="visible">True</property>
+        <property name="show-close-button">True</property>
+      </object>
+
+      <packing>
+        <property name="name">configuration</property>
+      </packing>
+    </child>
+
+    <!-- Settings -->
+    <child>
+      <object class="DactlSettingsToolbar" id="settings_toolbar">
+        <property name="visible">True</property>
+        <property name="show-close-button">True</property>
+      </object>
+
+      <packing>
+        <property name="name">settings</property>
+      </packing>
+    </child>
+  </template>
+
+</interface>

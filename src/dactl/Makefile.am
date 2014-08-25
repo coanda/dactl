@@ -4,48 +4,25 @@ bin_PROGRAMS = dactl
 
 gresource_file = $(top_srcdir)/data/dactl.gresource.xml
 
-# There should be an option to --enable-ui during configuration to allow for
-# building only the cli. Useful for example on an embedded device possibly.
-#
-# This is going to be confusing for a while because plugins have ui components,
-# and so do several of the configurable objects that use views like the chart
-# and grid. These will likely be broken out into multiple files later on.
+# FIXME: this flag is totally unnecessary now, the application is UI only
 if BUILD_UI
 UI_SOURCES = \
+	dactl-acquisition-settings.vala \
+	dactl-application-toolbar.vala \
+	dactl-configuration-editor.vala \
+	dactl-configuration-toolbar.vala \
+	dactl-control-settings.vala \
+	dactl-general-settings.vala \
+	dactl-log-settings.vala \
+	dactl-plugin-settings.vala \
+	dactl-settings.vala \
+	dactl-settings-sidebar.vala \
+	dactl-settings-toolbar.vala \
+	dactl-sidebar.vala \
+	dactl-topbar.vala \
 	dactl-ui-application.vala \
-	dactl-ui-application-settings-dialog.vala \
 	dactl-ui-application-view.vala \
-	dactl-ao-box.vala \
-	dactl-aichannel-treeview.vala \
-	dactl-aochannel-treeview.vala \
-	dactl-calibration-treeview.vala \
-	dactl-channel-treeview.vala \
-	dactl-chart.vala \
-	dactl-chart-axis.vala \
-	dactl-chart-trace.vala \
-	dactl-chart-settings-dialog.vala \
-	dactl-chart-widget.vala \
-	dactl-coefficient-treeview.vala \
-	dactl-data-file-dialog.vala \
-	dactl-device-treeview.vala \
-	dactl-dichannel-treeview.vala \
-	dactl-dio-viewer-dialog.vala \
-	dactl-do-box.vala \
-	dactl-dochannel-treeview.vala \
-	dactl-experiment-treeview.vala \
-	dactl-export-csv-dialog.vala \
-	dactl-grid.vala \
-	dactl-log-settings-dialog.vala \
-	dactl-log-treeview.vala \
-	dactl-module-treeview.vala \
-	dactl-pid-box.vala \
-	dactl-pid-control-treeview.vala \
-	dactl-pid-settings-dialog.vala \
-	dactl-pnid.vala \
-	dactl-recent-files-dialog.vala \
-	dactl-serialport-settings-box.vala \
-	dactl-vchannel-treeview.vala \
-	dactl-xml-config-dialog.vala
+	dactl-ui-settings.vala
 endif
 
 dactl_VALAFLAGS = \
@@ -59,6 +36,7 @@ dactl_VALAFLAGS = \
 	$(DACTL_CLD_DEPS_VALAFLAGS) \
 	$(DACTL_UI_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
+	$(DACTL_COMMON_LIBDACTL_UI_VALAFLAGS) \
 	$(DACTL_COMMON_VALAFLAGS)
 
 dactl_CFLAGS = \
@@ -68,13 +46,15 @@ dactl_CFLAGS = \
 	$(DACTL_DEPS_CFLAGS) \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_UI_DEPS_CFLAGS) \
-	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS)
+	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
+	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS)
 
 dactl_LDADD = \
 	$(DACTL_DEPS_LIBS) \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_UI_DEPS_LIBS) \
-	$(DACTL_COMMON_LIBDACTL_CORE_LIBS)
+	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
+	$(DACTL_COMMON_LIBDACTL_UI_LIBS)
 
 dactl_headers = \
 	dactl.h \
@@ -91,14 +71,13 @@ dactl_SOURCES = \
 	dactl-main.vala \
 	dactl-dbus-service.vala \
 	dactl-application.vala \
-	dactl-application-builder.vala \
+	dactl-application-factory.vala \
 	dactl-application-config.vala \
 	dactl-application-model.vala \
 	dactl-application-controller.vala \
 	dactl-application-view.vala \
+	dactl-cmdline-config.vala \
 	dactl-utility.vala \
-	dactl-view.vala \
-	$(CLI_SOURCES) \
 	$(UI_SOURCES) \
 	$(NULL)
 

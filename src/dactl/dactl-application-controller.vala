@@ -1,5 +1,3 @@
-using Cld;
-
 /**
  * The application controller in a MVC design is responsible for responding to
  * events from the view and updating the model.
@@ -75,32 +73,19 @@ public class Dactl.ApplicationController : GLib.Object {
      * classes that will be requesting data from a higher level.
      */
     private void connect_signals () {
-        /* XXX doing it this way wasn't exactly as intended */
+        /* XXX could probably make this more generic by retrieving the map of
+         *     Dactl.CldAdapter objects */
 
-        GLib.message ("Connecting signals in the controller");
+        message ("Connecting signals in the controller");
 
-        var trees = model.app_builder.get_object_map (typeof (Dactl.ChannelTree));
-        foreach (var tree in trees.values) {
-            GLib.message ("Configuring tree `%s'", tree.id);
-            var tree_model = (tree as Dactl.ChannelTree).model;
-            tree_model.channel_request.connect ((id) => {
-                var channel = model.ctx.get_object (id);
-                GLib.message ("Adding channel `%s' to `%s'", channel.id, tree_model.id);
-                tree_model.channels.set (channel.id, channel);
+        var adapters = model.get_object_map (typeof (Dactl.CldAdapter));
+        foreach (var adapter in adapters.values) {
+            message ("Configuring object `%s'", (adapter as Dactl.Object).id);
+            (adapter as Dactl.CldAdapter).request_object.connect ((uri) => {
+                var object = model.ctx.get_object_from_uri (uri);
+                message ("Offering object `%s' to `%s'", object.id, adapter.id);
+                (adapter as Dactl.CldAdapter).offer_cld_object (object);
             });
-            tree_model.add_channels ();
-        }
-
-        var pnids = model.app_builder.get_object_map (typeof (Dactl.Pnid));
-        foreach (var pnid in pnids.values) {
-            GLib.message ("Configuring PNID `%s'", pnid.id);
-            var pnid_model = (pnid as Dactl.Pnid).model;
-            pnid_model.channel_request.connect ((id) => {
-                var channel = model.ctx.get_object (id);
-                GLib.message ("Adding channel `%s' to `%s'", channel.id, pnid_model.id);
-                pnid_model.channels.set (channel.id, channel);
-            });
-            pnid_model.add_channels ();
         }
     }
 
@@ -113,10 +98,14 @@ public class Dactl.ApplicationController : GLib.Object {
      * XXX the intention is to use a common interface later on
      */
     public void save_requested_cb () {
-        stdout.printf ("Saving the configuration.\n");
-        model.xml.update_config (model.ctx.objects);
-        model.config.set_xml_node ("//dactl/cld:objects",
-                                   model.xml.get_node ("//cld/cld:objects"));
-        model.config.save ();
+        message ("Saving the configuration.");
+        try {
+            model.xml.update_config (model.ctx.objects);
+            model.config.set_xml_node ("//dactl/cld:objects",
+                                    model.xml.get_node ("//cld/cld:objects"));
+            model.config.save ();
+        } catch (GLib.Error e) {
+            critical (e.message);
+        }
     }
 }

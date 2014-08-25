@@ -1,4 +1,4 @@
-[GtkTemplate (ui = "/org/coanda/dactl/ui/serial_port_settings_box.ui")]
+[GtkTemplate (ui = "/org/coanda/dactl/ui/serial-port-settings-box.ui")]
 public class Dactl.SerialPortSettingsBox : Gtk.Box {
 
     [GtkChild]

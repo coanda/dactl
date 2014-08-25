@@ -4,6 +4,7 @@
 *.lo
 *.la
 *.swp
+*.stamp*
 
 .deps/
 .dirstamp
@@ -21,6 +22,7 @@ config.status
 config.sub
 configure
 dactl-core-0.3.pc
+dactl-ui-0.3.pc
 depcomp
 install-sh
 libtool
@@ -29,8 +31,23 @@ missing
 stamp-h1
 mkinstalldirs
 
+build-aux/compile
+
 data/dactl.desktop
+data/schemas/org.coanda.dactl.gschema.xml
 data/schemas/org.coanda.dactl.gschema.valid
+
+docs/dactl-uml.dia.autosave
+
+examples/.libs/
+examples/box
+examples/channel-treeview
+examples/chart
+examples/chart-axis
+examples/aobox
+examples/dobox
+examples/page
+examples/pnid
 
 m4/intltool.m4
 m4/libtool.m4
@@ -44,8 +61,6 @@ po/stamp-it
 
 src/dactl/dactl
 src/dactl/.libs/
-src/dactl/dactl_vala.stamp
-src/dactl/dactl_vala.stamp-t
 src/dactl/libdactl.h
 
 src/libdactl-*/.libs/
@@ -55,17 +70,15 @@ src/libdactl-core/DactlCore-0.3.gir
 src/libdactl-core/DactlCore-0.3.typelib
 src/libdactl-core/dactl-core-0.3.vapi
 src/libdactl-core/dactl-core.h
-src/libdactl-core/libdactl_core_0_3_la_vala.stamp
 
 src/libdactl-ui/DactlUI-0.3.gir
 src/libdactl-ui/DactlUI-0.3.typelib
 src/libdactl-ui/dactl-ui-0.3.vapi
 src/libdactl-ui/dactl-ui.h
-src/libdactl-ui/libdactl_ui_0_3_la_vala.stamp
+!src/libdactl-ui/init.c
 
 src/plugins/.deps/
 src/plugins/.dirstamp
-src/plugins/*/libdactl_*_la_vala.stamp*
 src/plugins/*/*.plugin
 src/plugins/*/.libs/
 

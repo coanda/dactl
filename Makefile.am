@@ -2,7 +2,8 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = \
 	data \
-	src
+	src \
+	examples
 
 pkgconfig_DATA = dactl-core-0.3.pc
 pkgconfigdir = $(libdir)/pkgconfig

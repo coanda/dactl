@@ -2,8 +2,7 @@ SUBDIRS = \
 	config \
 	icons \
 	mime \
-	schemas \
-	ui
+	schemas
 
 desktopdir = $(datadir)/applications
 desktop_in_files = dactl.desktop.in

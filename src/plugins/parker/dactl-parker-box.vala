@@ -104,15 +104,15 @@ public class ParkerModuleBox : Gtk.Box {
         speed_mlps = double.parse ((btn_inj_speed as Gtk.Entry).get_text ());
         inject_time_expected = volume_ml / speed_mlps;
         yield (module as ParkerModule).inject (convert (speed_mlps), out inject_time_actual);
-        Cld.debug ("inject_time_expected: %.3f inject_time_actual: %.3f\n", inject_time_expected, inject_time_actual);
+        GLib.debug ("inject_time_expected: %.3f inject_time_actual: %.3f\n", inject_time_expected, inject_time_actual);
         if (inject_time_actual > (1.05 * inject_time_expected)) {
             pass = false;
         }
         if ((module as ParkerModule).position < -1.0) {
             pass = false;
-            Cld.debug ("Fail: position < -1.0 mm: %.3f\n", (module as ParkerModule).position);
+            GLib.debug ("Fail: position < -1.0 mm: %.3f\n", (module as ParkerModule).position);
         } else {
-            Cld.debug("Pass: position > -1.0 mm: %.3f\n", (module as ParkerModule).position);
+            GLib.debug("Pass: position > -1.0 mm: %.3f\n", (module as ParkerModule).position);
         }
         if (pass) {
             (lbl_inj_status as Gtk.Label).set_text ("PASS");

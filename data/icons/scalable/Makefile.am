@@ -2,10 +2,10 @@ themedir = $(datadir)/icons/hicolor
 size = scalable
 context = apps
 
-iconsdir = $(themedir)/$(size)/$(context)
+svgdir = $(themedir)/$(size)/$(context)
 
-icons_DATA = \
+svg_DATA = \
 	dactl.svg
 
 EXTRA_DIST = \
-	$(icons_DATA)
+	$(svg_DATA)

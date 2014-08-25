@@ -82,7 +82,7 @@ public class BrabenderModuleBox : Gtk.Box {
                 if (!(module as BrabenderModule).running) {
                     var res = (module as BrabenderModule).run ();
                     if (!res) {
-                        Cld.debug ("Failed to run the Brabender module.\n");
+                        GLib.debug ("Failed to run the Brabender module.\n");
                         (btn_run as Gtk.ToggleButton).set_active (false);
                     } else {
                         var img_run = builder.get_object ("img_run");
@@ -105,7 +105,7 @@ public class BrabenderModuleBox : Gtk.Box {
 
         (btn_flow_control as Gtk.RadioButton).toggled.connect (() => {
             if ((btn_flow_control as Gtk.RadioButton).active) {
-                Cld.debug ("Gravimetric feed control selected\n");
+                GLib.debug ("Gravimetric feed control selected\n");
                 if (!(module as BrabenderModule).set_mode("GF")) {
                     critical ("Unable to set Brabender operating mode GF.");
                 }
@@ -114,7 +114,7 @@ public class BrabenderModuleBox : Gtk.Box {
 
         (btn_speed_control as Gtk.RadioButton).toggled.connect (() => {
             if ((btn_speed_control as Gtk.RadioButton).active) {
-                Cld.debug ("Discharge (speed) control selected\n");
+                GLib.debug ("Discharge (speed) control selected\n");
                 if (!(module as BrabenderModule).set_mode("DI")) {
                     critical ("Unable to set Brabender operating mode DI");
                 }
@@ -123,13 +123,13 @@ public class BrabenderModuleBox : Gtk.Box {
 
         (adj_flow as Gtk.Adjustment).value_changed.connect (() => {
             var flow = (adj_flow as Gtk.Adjustment).get_value ();
-            Cld.debug ("flow value: %.3f\n", flow);
+            GLib.debug ("flow value: %.3f\n", flow);
             (module as BrabenderModule).set_mass_flow (flow);
             });
 
         (adj_speed as Gtk.Adjustment).value_changed.connect (() => {
             var speed = (adj_speed as Gtk.Adjustment).get_value ();
-            Cld.debug ("speed value: %.3f\n", speed);
+            GLib.debug ("speed value: %.3f\n", speed);
             (module as BrabenderModule).set_discharge (speed);
         });
 

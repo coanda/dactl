@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.10"/>
+  <template class="DactlApplicationToolbar" parent="GtkHeaderBar">
+
+    <property name="visible">True</property>
+    <property name="show-close-button">True</property>
+    <style>
+      <class name="titlebar"/>
+    </style>
+
+<!--
+   -    <child>
+   -      <object class="GtkButton" id="btn_log">
+   -        <property name="visible">True</property>
+   -        <property name="valign">center</property>
+   -        <property name="action_name">app.log</property>
+   -        <style>
+   -          <class name="image-button"/>
+   -        </style>
+   -
+   -        <child internal-child="accessible">
+   -          <object class="AtkObject" id="a11y-button1">
+   -            <property name="accessible-name" translatable="yes">Log</property>
+   -          </object>
+   -        </child>
+   -
+   -        <child>
+   -          <object class="GtkImage" id="img_log">
+   -            <property name="visible">True</property>
+   -            <property name="icon-name">media-record-symbolic</property>
+   -          </object>
+   -        </child>
+   -      </object>
+   -    </child>
+   -->
+
+    <child>
+      <object class="GtkButton" id="btn_settings">
+        <property name="visible">True</property>
+        <property name="valign">center</property>
+        <property name="action_name">app.settings</property>
+        <style>
+          <class name="image-button"/>
+        </style>
+
+        <child internal-child="accessible">
+          <object class="AtkObject" id="a11y-button2">
+            <property name="accessible-name" translatable="yes">Settings</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkImage" id="img_settings">
+            <property name="visible">True</property>
+            <property name="icon-name">emblem-system-symbolic</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkButton" id="btn_previous">
+        <property name="visible">True</property>
+        <property name="valign">center</property>
+        <property name="action_name">app.previous-page</property>
+        <style>
+          <class name="image-button"/>
+        </style>
+
+        <child internal-child="accessible">
+          <object class="AtkObject" id="a11y-button3">
+            <property name="accessible-name" translatable="yes">Previous</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkImage" id="img_previous">
+            <property name="visible">True</property>
+            <property name="icon-name">go-previous-symbolic</property>
+            <property name="icon-size">1</property>
+          </object>
+        </child>
+      </object>
+
+      <packing>
+        <property name="pack-type">end</property>
+      </packing>
+    </child>
+
+    <child>
+      <object class="GtkButton" id="btn_next">
+        <property name="visible">True</property>
+        <property name="valign">center</property>
+        <property name="action_name">app.next-page</property>
+        <style>
+          <class name="image-button"/>
+        </style>
+
+        <child internal-child="accessible">
+          <object class="AtkObject" id="a11y-button4">
+            <property name="accessible-name" translatable="yes">Next</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkImage" id="img_next">
+            <property name="visible">True</property>
+            <property name="icon-name">go-next-symbolic</property>
+            <property name="icon-size">1</property>
+          </object>
+        </child>
+      </object>
+
+      <packing>
+        <property name="pack-type">end</property>
+      </packing>
+    </child>
+
+  </template>
+</interface>

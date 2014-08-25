@@ -16,6 +16,7 @@ public abstract class Dactl.ModuleLoader : GLib.Object {
                             FileAttribute.STANDARD_TYPE + "," +
                             FileAttribute.STANDARD_IS_HIDDEN + "," +
                             FileAttribute.STANDARD_CONTENT_TYPE;
+
     private delegate void FolderHandler (File folder);
 
     private bool done;
@@ -90,9 +91,10 @@ public abstract class Dactl.ModuleLoader : GLib.Object {
 
     /**
      * Load module from file.
+     *
      * @param file File to load the module from
      * @return The implementation should return true if the class should
-     * continue to search for modules, false otherwise.
+     *         continue to search for modules, false otherwise.
      */
     protected abstract bool load_module_from_file (File file);
 
@@ -146,8 +148,8 @@ public abstract class Dactl.ModuleLoader : GLib.Object {
 
     /**
      * Process a file info.
-     *
      * Utility method used by sync and async tree walk.
+     *
      * @param folder parent folder
      * @param info the FileInfo of the file to process
      * @param handler a call-back if the FileInfo represents a folder.

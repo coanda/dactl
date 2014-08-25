@@ -1,63 +1,89 @@
-public class Dactl.UI.Constraint {
-    public Clutter.BindCoordinate coordinate { get; set; default = Clutter.BindCoordinate.ALL; }
-    public int offset { get; set; default = 0; }
-}
-
 /**
- * Box data model class that is configurable using the application builder.
+ * Box class used to act as a layout for other interface classes.
  */
-public class Dactl.BoxModel : Dactl.AbstractContainer {
+[GtkTemplate (ui = "/org/coanda/libdactl/ui/box.ui")]
+public class Dactl.Box : Dactl.CompositeWidget {
 
-    /**
-     * {@inheritDoc}
+    private string _xml = """
+        <object id=\"ai-ctl0\" type=\"ai\" ref=\"cld://ai0\"/>
+    """;
+
+    private string _xsd = """
+        <xs:element name="object">
+          <xs:attribute name="id" type="xs:string" use="required"/>
+          <xs:attribute name="type" type="xs:string" use="required"/>
+          <xs:attribute name="ref" type="xs:string" use="required"/>
+        </xs:element>
+    """;
+
+    //private Dactl.Orientation _orientation = Dactl.Orientation.HORIZONTAL;
+
+    //public int spacing { get; set; default = 0; }
+
+    /*
+     *public Dactl.Orientation orientation {
+     *    get { return _orientation; }
+     *    set {
+     *        _orientation = value;
+     *        box.orientation = _orientation.to_gtk ();
+     *    }
+     *}
      */
-    public override string id { get; set; default = "box0"; }
 
-    public int spacing { get; set; default = 0; }
+    //public bool homogeneous { get; set; default = false; }
 
-    public string orientation { get; set; default = "horizontal"; }
-
-    public bool homogeneous { get; set; default = true; }
-
-    public int margin_top { get; set; default = 0; }
-
-    public int margin_right { get; set; default = 0; }
-
-    public int margin_bottom { get; set; default = 0; }
-
-    public int margin_left { get; set; default = 0; }
-
-    public bool x_expand { get; set; default = true; }
-
-    public bool y_expand { get; set; default = true; }
-
-    public Gee.List<Dactl.UI.Constraint> constraints = new Gee.ArrayList<Dactl.UI.Constraint> ();
-
-    /**
-     * {@inheritDoc}
-     */
     private Gee.Map<string, Dactl.Object> _objects;
+
+    /**
+     * {@inheritDoc}
+     */
+    protected override string xml {
+        get { return _xml; }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected override string xsd {
+        get { return _xsd; }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public override Gee.Map<string, Dactl.Object> objects {
         get { return _objects; }
         set { update_objects (value); }
     }
 
+    /*
+     *[GtkChild]
+     *private Gtk.Box box;
+     */
+
     /**
      * Common object construction.
      */
     construct {
+        id = "box0";
         objects = new Gee.TreeMap<string, Dactl.Object> ();
+
+        /*
+         *this.notify["homogeneous"].connect (() => {
+         *    box.homogeneous = homogeneous;
+         *});
+         */
     }
 
     /**
      * Default construction.
      */
-    public BoxModel () { }
+    public Box () { }
 
     /**
      * Construction using an XML node.
      */
-    public BoxModel.from_xml_node (Xml.Node *node) {
+    public Box.from_xml_node (Xml.Node *node) {
         build_from_xml_node (node);
     }
 
@@ -81,7 +107,20 @@ public class Dactl.BoxModel : Dactl.AbstractContainer {
                             homogeneous = bool.parse (value);
                             break;
                         case "orientation":
-                            orientation = iter->get_content ();
+                            Dactl.Orientation _orientation;
+                            if (iter->get_content () == "horizontal")
+                                _orientation = Dactl.Orientation.HORIZONTAL;
+                            else
+                                _orientation = Dactl.Orientation.VERTICAL;
+                            orientation = _orientation.to_gtk ();
+                            break;
+                        case "expand":
+                            value = iter->get_content ();
+                            expand = bool.parse (value);
+                            break;
+                        case "fill":
+                            value = iter->get_content ();
+                            fill = bool.parse (value);
                             break;
                         case "spacing":
                             value = iter->get_content ();
@@ -103,36 +142,13 @@ public class Dactl.BoxModel : Dactl.AbstractContainer {
                             value = iter->get_content ();
                             margin_left = int.parse (value);
                             break;
-                        case "x-expand":
+                        case "hexpand":
                             value = iter->get_content ();
-                            x_expand = bool.parse (value);
+                            hexpand = bool.parse (value);
                             break;
-                        case "y-expand":
+                        case "vexpand":
                             value = iter->get_content ();
-                            y_expand = bool.parse (value);
-                            break;
-                        case "constraint":
-                            var constraint = new Dactl.UI.Constraint ();
-                            switch (iter->get_prop ("coordinate")) {
-                                case "width":
-                                    constraint.coordinate = Clutter.BindCoordinate.WIDTH;
-                                    break;
-                                case "height":
-                                    constraint.coordinate = Clutter.BindCoordinate.HEIGHT;
-                                    break;
-                                case "x":
-                                    constraint.coordinate = Clutter.BindCoordinate.X;
-                                    break;
-                                case "y":
-                                    constraint.coordinate = Clutter.BindCoordinate.Y;
-                                    break;
-                                case "all":
-                                    constraint.coordinate = Clutter.BindCoordinate.ALL;
-                                    break;
-                                default:
-                                    break;
-                            }
-                            constraints.add (constraint);
+                            vexpand = bool.parse (value);
                             break;
                         default:
                             break;
@@ -141,25 +157,63 @@ public class Dactl.BoxModel : Dactl.AbstractContainer {
                     Dactl.Object? object = null;
                     type = iter->get_prop ("type");
                     /**
-                     * XXX will need to add checks for pnid and plugin types
+                     * XXX will need to add checks for plugin widget types
                      *     when they get implemented
                      */
                     switch (type) {
                         case "box":
-                            var model = new Dactl.BoxModel.from_xml_node (iter);
-                            object = new Dactl.Box.with_model (model);
+                            object = new Dactl.Box.from_xml_node (iter);
                             break;
                         case "chart":
-                            var model = new Dactl.ChartModel.from_xml_node (iter);
-                            object = new Dactl.Chart.with_model (model);
+                            object = new Dactl.Chart.from_xml_node (iter);
+                            break;
+                        case "stripchart":
+                            object = new Dactl.StripChart.from_xml_node (iter);
                             break;
                         case "tree":
-                            var model = new Dactl.ChannelTreeModel.from_xml_node (iter);
-                            object = new Dactl.ChannelTree.with_model (model);
+                            object = new Dactl.ChannelTreeView.from_xml_node (iter);
                             break;
                         case "pnid":
-                            var model = new Dactl.PnidModel.from_xml_node (iter);
-                            object = new Dactl.Pnid.with_model (model);
+                            object = new Dactl.Pnid.from_xml_node (iter);
+                            break;
+                        case "pid":
+                            object = new Dactl.PidControl.from_xml_node (iter);
+                            break;
+                        case "ai":
+                            object = new Dactl.AIControl.from_xml_node (iter);
+                            break;
+                        case "ao":
+                            object = new Dactl.AOControl.from_xml_node (iter);
+                            break;
+                        case "exec":
+                            object = new Dactl.ExecControl.from_xml_node (iter);
+                            break;
+                        case "log":
+                            object = new Dactl.LogControl.from_xml_node (iter);
+                            break;
+                        case "velmex":
+
+                            /**
+                             * FIXME: this will need to either just set a placeholder
+                             *        and notify the application that it's there,
+                             *        or signal a request for the plugin control.
+                             */
+
+                            /*
+                             *bool ready = false;
+                             *var app = Dactl.UI.Application.get_default ();
+                             *Dactl.Plugin velmex;
+                             *foreach (var plugin in app.model.plugins) {
+                             *    if (plugin.name == "velmex")
+                             *        velmex = plugin;
+                             *}
+                             *velmex.post_construction (iter);
+                             *velmex.cld_object_added.connect (() => {
+                             *    ready = true;
+                             *});
+                             *while (!ready) {}
+                             *object = velmex.get_control ();
+                             */
                             break;
                         default:
                             object = null;
@@ -168,12 +222,40 @@ public class Dactl.BoxModel : Dactl.AbstractContainer {
 
                     /* no point adding an object type that isn't recognized */
                     if (object != null) {
-                        add (object);
                         message ("Loading object of type `%s' with id `%s'", type, object.id);
+                        add_child (object);
                     }
                 }
             }
         }
+    }
+
+    public void add_child (Dactl.Object object) {
+        // For testing
+        /*
+         *if (object.id == "box0-0") {
+         *    (object as Gtk.Widget).get_style_context ().add_class ("test1");
+         *} else if (object.id == "box0-1") {
+         *    (object as Gtk.Widget).get_style_context ().add_class ("test2");
+         *}
+         */
+
+        // FIXME: shouldn't have to do this
+        if (object is Dactl.ChannelTreeView) {
+            (this as Gtk.Widget).width_request = (object as Gtk.Widget).width_request;
+        }
+
+        objects.set (object.id, object);
+        if (object is Dactl.CustomWidget) {
+            pack_start (object as Dactl.CustomWidget,
+                            (object as Gtk.Widget).expand,
+                            (object as Dactl.Widget).fill, 0);
+        } else if (object is Dactl.CompositeWidget) {
+            pack_start (object as Dactl.CompositeWidget,
+                            (object as Gtk.Widget).expand,
+                            (object as Dactl.Widget).fill, 0);
+        }
+        show_all ();
     }
 
     /**
@@ -181,182 +263,5 @@ public class Dactl.BoxModel : Dactl.AbstractContainer {
      */
     public override void update_objects (Gee.Map<string, Dactl.Object> val) {
         _objects = val;
-    }
-}
-
-/**
- * Box class used to act as a layout for other interface classes.
- *
- * XXX not sure how yet but this should contain a BoxLayout, either by extending
- *     one or by using one as a GtkClutter.Actor
- */
-public class Dactl.BoxView : Clutter.Actor {
-
-    /**
-     * Backend data model used to configure the class.
-     */
-    public BoxModel model { get; private set; }
-
-    private Clutter.Actor box;
-
-    private Clutter.BoxLayout layout;
-
-    /**
-     * Default construction.
-     */
-    public BoxView () {
-        model = new BoxModel ();
-        connect_signals ();
-        post_construct ();
-    }
-
-    /**
-     * Construction using a provided data model.
-     */
-    public BoxView.with_model (BoxModel model) {
-        this.model = model;
-        connect_signals ();
-        post_construct ();
-    }
-
-    /**
-     * Connect any signals including the notifications from the model.
-     */
-    private void connect_signals () {
-
-        /*
-         *model.notify["xxx"].connect (() => {
-         *    [> Change the xxx <]
-         *});
-         */
-    }
-
-    private void post_construct () {
-        box = new Clutter.Actor ();
-        layout = new Clutter.BoxLayout ();
-
-        layout.homogeneous = model.homogeneous;
-        layout.spacing = model.spacing;
-        layout.pack_start = true;
-        layout.orientation = (model.orientation == "horizontal") ?
-            Clutter.Orientation.HORIZONTAL : Clutter.Orientation.VERTICAL;
-
-        box.layout_manager = layout;
-        name = "dactl-box-%s".printf (model.id);
-
-        x_expand = true;
-        y_expand = true;
-        x_align = Clutter.ActorAlign.FILL;
-        y_align = Clutter.ActorAlign.FILL;
-
-        /*
-         *box.margin_top = model.margin_top;
-         *box.margin_right = model.margin_right;
-         *box.margin_bottom = model.margin_bottom;
-         *box.margin_left = model.margin_left;
-         */
-
-        box.x_align = Clutter.ActorAlign.FILL;
-        box.y_align = Clutter.ActorAlign.FILL;
-        box.x_expand = model.x_expand;
-        box.y_expand = model.y_expand;
-
-        add (box);
-    }
-
-    public void add_child (Clutter.Actor child) {
-        box.add_child (child);
-    }
-}
-
-public class Dactl.Box : Dactl.AbstractContainer {
-
-    /**
-     * {@inheritDoc}
-     */
-    public override string id {
-        get { return model.id; }
-        set { model.id = value; }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public override Gee.Map<string, Dactl.Object> objects {
-        get { return model.objects; }
-        set { update_objects (value); }
-    }
-
-    public Dactl.BoxModel model { get; private set; }
-    public Dactl.BoxView view { get; private set; }
-
-    /**
-     * Default construction.
-     */
-    public Box () {
-        model = new Dactl.BoxModel ();
-        view = new Dactl.BoxView.with_model (model);
-    }
-
-    /**
-     * Construction using a data model.
-     */
-    public Box.with_model (Dactl.BoxModel model) {
-        this.model = model;
-        view = new Dactl.BoxView.with_model (model);
-    }
-
-    /**
-     * Add the views for any children that are available in the model.
-     *
-     * XXX these MVC classes should have a common interface and this really
-     *     should be an abstract method
-     */
-    public void add_children () {
-        var boxes = model.get_children (typeof (Dactl.Box));
-        foreach (var box in boxes.values) {
-            GLib.message ("Adding box `%s' to box `%s'", box.id, id);
-            foreach (var constraint in (box as Dactl.Box).model.constraints) {
-                var bind_constraint = new Clutter.BindConstraint (view, constraint.coordinate, constraint.offset);
-                (box as Dactl.Box).view.add_constraint (bind_constraint);
-            }
-            view.add_child ((box as Dactl.Box).view);
-
-            /* XXX possibly check for object.has_children first? */
-            (box as Dactl.Box).add_children ();
-        }
-
-        var trees = model.get_children (typeof (Dactl.ChannelTree));
-        foreach (var tree in trees.values) {
-            GLib.message ("Adding tree `%s' to box `%s'", tree.id, id);
-            foreach (var constraint in (tree as Dactl.ChannelTree).model.constraints) {
-                var bind_constraint = new Clutter.BindConstraint (view, constraint.coordinate, constraint.offset);
-                (tree as Dactl.ChannelTree).view.add_constraint (bind_constraint);
-            }
-            view.add_child ((tree as Dactl.ChannelTree).view);
-        }
-
-        var pnids = model.get_children (typeof (Dactl.Pnid));
-        foreach (var pnid in pnids.values) {
-            GLib.message ("Adding PNID `%s' to box `%s'", pnid.id, id);
-            view.add_child ((pnid as Dactl.Pnid).view);
-        }
-
-        var charts = model.get_children (typeof (Dactl.Chart));
-        foreach (var chart in charts.values) {
-            GLib.message ("Adding chart `%s' to box `%s'", chart.id, id);
-            foreach (var constraint in (chart as Dactl.Chart).model.constraints) {
-                var bind_constraint = new Clutter.BindConstraint (view, constraint.coordinate, constraint.offset);
-                (chart as Dactl.Chart).view.add_constraint (bind_constraint);
-            }
-            view.add_child ((chart as Dactl.Chart).view);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public override void update_objects (Gee.Map<string, Dactl.Object> val) {
-        model.objects = val;
     }
 }

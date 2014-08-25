@@ -69,7 +69,7 @@ public class Dactl.PluginLoader : Dactl.ModuleLoader {
         return this.plugin_hash.get (name);
     }
 
-    public Collection<Plugin> list_plugins () {
+    public Collection<Dactl.Plugin> list_plugins () {
         return this.plugin_hash.values;
     }
 

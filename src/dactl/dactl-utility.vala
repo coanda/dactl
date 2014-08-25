@@ -50,16 +50,18 @@ namespace Dactl {
         return rsvg;
     }
 
-    public Clutter.Color gdk_rgba_to_clutter_color (Gdk.RGBA gdk_rgba) {
-        Clutter.Color color = {
-            (uint8) (gdk_rgba.red * 255).clamp (0, 255),
-            (uint8) (gdk_rgba.green * 255).clamp (0, 255),
-            (uint8) (gdk_rgba.blue * 255).clamp (0, 255),
-            (uint8) (gdk_rgba.alpha * 255).clamp (0, 255)
-        };
-
-        return color;
-    }
+/*
+ *    public Clutter.Color gdk_rgba_to_clutter_color (Gdk.RGBA gdk_rgba) {
+ *        Clutter.Color color = {
+ *            (uint8) (gdk_rgba.red * 255).clamp (0, 255),
+ *            (uint8) (gdk_rgba.green * 255).clamp (0, 255),
+ *            (uint8) (gdk_rgba.blue * 255).clamp (0, 255),
+ *            (uint8) (gdk_rgba.alpha * 255).clamp (0, 255)
+ *        };
+ *
+ *        return color;
+ *    }
+ */
 
     public Gdk.RGBA get_dactl_bg_color () {
         var style = new Gtk.StyleContext ();

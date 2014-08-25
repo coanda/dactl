@@ -1,11 +1,22 @@
 @define-color dactl_bg_color shade (@theme_bg_color, 0.5);
 @define-color dactl_bg2_color mix (@theme_bg_color, @dactl_bg_color, 0.5);
 @define-color dactl_selected_color #3465a4;
+@define-color dactl_alert_color #d7702f;
 
-#CollectionLabel {
-    font-size: 11px;
-    font-weight: bold;
-}
+@define-color tango_sky_blue1 #729fcf;
+@define-color tango_sky_blue2 #3465a4;
+@define-color tango_sky_blue3 #204a87;
+@define-color tango_chameleon1 #8ae234;
+@define-color tango_chameleon2 #73d216;
+@define-color tango_chameleon3 #4e9a06;
+@define-color tango_plum1 #ad7fa8;
+@define-color tango_plum2 #75507b;
+@define-color tango_plum3 #5c3566;
+@define-color tango_scarlet_red1 #ef2929;
+@define-color tango_scarlet_red2 #cc0000;
+@define-color tango_scarlet_red3 #a40000;
+@define-color tango_aluminum2 #d3d7cf;
+@define-color tango_aluminum3 #babdb6;
 
 .separator {
     -GtkWidget-wide-separators: true;
@@ -17,6 +28,50 @@ DactlChannelTreeView:selected {
     border-width: 1px 0 1px 0;
     border-color: white;
     border-style: solid;
+}
+
+.page {
+    /*background-color: @tango_scarlet_red3;*/
+}
+
+.test0 {
+    background-color: @tango_sky_blue1;
+}
+
+.test1 {
+    background-color: @tango_sky_blue2;
+}
+
+.test2 {
+    background-color: @tango_sky_blue3;
+}
+
+DactlChannelTreeView {
+    /*background-color: @tango_plum1;*/
+}
+
+DactlPnid {
+    background-color: @tango_aluminum2;
+}
+
+DactlChartCanvas {
+    background-color: @tango_aluminum2;
+}
+
+DactlStripChartCanvas {
+    background-color: @tango_aluminum2;
+}
+
+DactlLogControl .start-button {
+    background-image: -gtk-gradient(linear, left top, left bottom,
+                                    from (shade(shade(@dactl_selected_color, 1.02), 1.05)),
+                                    to (shade(shade(@dactl_selected_color, 1.02), 0.97)));
+}
+
+DactlLogControl .stop-button {
+    background-image: -gtk-gradient(linear, left top, left bottom,
+                                    from (shade(shade(@dactl_alert_color, 1.02), 1.05)),
+                                    to (shade(shade(@dactl_alert_color, 1.02), 0.97)));
 }
 
 .sidebar GtkTreeView:selected {
@@ -46,10 +101,6 @@ DactlChannelTreeView:selected {
 
 .dactl-property-name-label {
     color: #bebebe;
-}
-
-.dactl-machine-name-label {
-    color: white;
 }
 
 .dactl-step-label {

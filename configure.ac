@@ -59,8 +59,8 @@ dnl Library checks
 VALAFLAGS="--enable-deprecated --target-glib=2.38 $VALAFLAGS"
 
 dnl Need to work these in to simplify checking
-DACTL_BASE_MODULES="gee-0.8 libxml-2.0"
-DACTL_BASE_MODULES_VALAFLAGS="--pkg gee-0.8 --pkg libxml-2.0"
+DACTL_BASE_MODULES="gee-1.0 libxml-2.0"
+DACTL_BASE_MODULES_VALAFLAGS="--pkg gee-1.0 --pkg libxml-2.0"
 
 PKG_CHECK_MODULES([LIBDACTL_CORE_DEPS], [$DACTL_BASE_MODULES gio-2.0 gmodule-2.0])
 LIBDACTL_CORE_DEPS_VALAFLAGS="$DACTL_BASE_MODULES_VALAFLAGS --pkg gio-2.0 --pkg gmodule-2.0"
@@ -113,10 +113,10 @@ AC_ARG_WITH(ui,
 
 HAVE_CLUTTER_GTK=no
 AS_IF([test "x$try_ui" = "xyes"],
-      [PKG_CHECK_MODULES([DACTL_UI_DEPS], [gtk+-3.0 clutter-1.0 clutter-gtk-1.0 librsvg-2.0],
+      [PKG_CHECK_MODULES([DACTL_UI_DEPS], [gtk+-3.0 clutter-1.0 clutter-gtk-1.0 librsvg-2.0 gtksourceview-3.0],
 	    [
-           DACTL_UI_MODULES="gtk+-3.0 clutter-1.0 clutter-gtk-1.0 librsvg-2.0"
-           DACTL_UI_DEPS_VALAFLAGS="--pkg gtk+-3.0 --pkg clutter-1.0 --pkg clutter-gtk-1.0 --pkg cogl-1.0 --pkg librsvg-2.0"
+           DACTL_UI_MODULES="gtk+-3.0 clutter-1.0 clutter-gtk-1.0 librsvg-2.0 gtksourceview-3.0"
+           DACTL_UI_DEPS_VALAFLAGS="--pkg gtk+-3.0 --pkg clutter-1.0 --pkg clutter-gtk-1.0 --pkg cogl-1.0 --pkg librsvg-2.0 --pkg gtksourceview-3.0"
            AC_SUBST([DACTL_UI_DEPS_VALAFLAGS])
            DACTL_CHECK_PACKAGES([$DACTL_UI_MODULES], [HAVE_CLUTTER_GTK=yes])
 	       DACTL_PLUGIN_COMMON_VALAFLAGS="$DACTL_PLUGIN_COMMON_VALAFLAGS $DACTL_UI_DEPS_VALAFLAGS"
@@ -176,7 +176,7 @@ AC_ARG_ENABLE(debug,
 AS_IF([test "x$enable_debug" != "xno"],
       [AC_DEFINE(DEBUG, [1], ["Enable debugging support"])]
       [CFLAGS="$CFLAGS -O0 -g"]
-      [DACTL_DEBUG_VALAFLAGS="-g -DDEBUG"]
+      [DACTL_DEBUG_VALAFLAGS="-g -D DEBUG"]
       [AS_IF([test "x$GCC" = xyes],
              [CC_CHECK_FLAG([-g])])])
 
@@ -214,7 +214,7 @@ AC_CONFIG_FILES([
 	Makefile
 	data/dactl.desktop
 	data/Makefile
-    data/config/Makefile
+	data/config/Makefile
 	data/icons/Makefile
 	data/icons/16x16/Makefile
 	data/icons/22x22/Makefile
@@ -224,14 +224,15 @@ AC_CONFIG_FILES([
 	data/icons/scalable/Makefile
 	data/mime/Makefile
 	data/schemas/Makefile
-	data/ui/Makefile
 	po/Makefile.in
 	src/Makefile
 	src/dactl/Makefile
 	src/libdactl-core/Makefile
 	src/libdactl-ui/Makefile
 	src/plugins/Makefile
+	examples/Makefile
 	dactl-core-0.3.pc
+	dactl-ui-0.3.pc
 ])
 AC_OUTPUT
 

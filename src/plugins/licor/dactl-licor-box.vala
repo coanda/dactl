@@ -44,7 +44,7 @@ public class LicorModuleBox : Gtk.Box {
                 if (!module.loaded) {
                     var res = module.load ();
                     if (!res) {
-                        Cld.debug ("Failed to load the Licor module.\n");
+                        GLib.debug ("Failed to load the Licor module.\n");
                         (btn_connect as Gtk.ToggleButton).set_active (false);
                     } else {
                         var img_status = builder.get_object ("img_status");
@@ -64,41 +64,65 @@ public class LicorModuleBox : Gtk.Box {
             }
         });
 
-                        case "lc1":
-                        message("normalizing id:%s scaled value:%.3f",
-                        vchannel.id, (vchannel as Cld.VChannel).raw_value);
-                        var calibration = (vchannel as Cld.VChannel).calibration;
-                        var c0 = (calibration as Cld.Calibration).get_coefficient(0);
-                        message ("value of c[0]: %.3f", c0.value);
-                        c0.value = -1 *  (vchannel as Cld.VChannel).raw_value;
-                        message ("new value of c[0]: %.3f", c0.value);
-                        break;
+       var btn_normalize = builder.get_object ("btn_normalize");
+       (btn_normalize as Gtk.Button).clicked.connect (() => {
+               GLib.debug ("vchannels has %d items\n", vchannels.size);
+               foreach (var vchannel in vchannels.values){
+                   switch (vchannel.id){
+                       case "lc0":
+                       GLib.debug ("normalizing id:%s raw value:%.3f\n",
+                       vchannel.id, (vchannel as Cld.VChannel).raw_value);
+                       var calibration = (vchannel as Cld.VChannel).calibration;
+                       var c0 = (calibration as Cld.Calibration).get_coefficient(0);
+                       GLib.debug ("value of c[0]: %.3f\n", c0.value);
+                       c0.value = -1 *  (vchannel as Cld.VChannel).raw_value;
+                       GLib.debug ("new value of c[0]: %.3f\n", c0.value);
+                       break;
 
-                        case "lc2":
-                        message("normalizing id:%s scaled value:%.3f",
-                        vchannel.id, (vchannel as Cld.VChannel).raw_value);
-                        var calibration = (vchannel as Cld.VChannel).calibration;
-                        var c0 = (calibration as Cld.Calibration).get_coefficient(0);
-                        message ("value of c[0]: %.3f", c0.value);
-                        c0.value = -1 *  (vchannel as Cld.VChannel).raw_value;
-                        message ("new value of c[0]: %.3f", c0.value);
-                        break;
+                       case "lc1":
+                       GLib.debug ("normalizing id:%s scaled value:%.3f\n",
+                       vchannel.id, (vchannel as Cld.VChannel).raw_value);
+                       var calibration = (vchannel as Cld.VChannel).calibration;
+                       var c0 = (calibration as Cld.Calibration).get_coefficient(0);
+                       GLib.debug ("value of c[0]: %.3f\n", c0.value);
+                       c0.value = -1 *  (vchannel as Cld.VChannel).raw_value;
+                       GLib.debug ("new value of c[0]: %.3f\n", c0.value);
+                       break;
 
-                        case "lc3":
-                        message("normalizing id:%s scaled value:%.3f",
-                        vchannel.id, (vchannel as Cld.VChannel).raw_value);
-                        var calibration = (vchannel as Cld.VChannel).calibration;
-                        var c0 = (calibration as Cld.Calibration).get_coefficient(0);
-                        message ("value of c[0]: %.3f", c0.value);
-                        c0.value = -1 *  (vchannel as Cld.VChannel).raw_value;
-                        message ("new value of c[0]: %.3f", c0.value);
-                        break;
-                    }
-                }
+                       case "lc2":
+                       GLib.debug ("normalizing id:%s scaled value:%.3f\n",
+                       vchannel.id, (vchannel as Cld.VChannel).raw_value);
+                       var calibration = (vchannel as Cld.VChannel).calibration;
+                       var c0 = (calibration as Cld.Calibration).get_coefficient(0);
+                       GLib.debug ("value of c[0]: %.3f\n", c0.value);
+                       c0.value = -1 *  (vchannel as Cld.VChannel).raw_value;
+                       GLib.debug ("new value of c[0]: %.3f\n", c0.value);
+                       break;
+
+                       case "lc3":
+                       GLib.debug ("normalizing id:%s scaled value:%.3f\n",
+                       vchannel.id, (vchannel as Cld.VChannel).raw_value);
+                       var calibration = (vchannel as Cld.VChannel).calibration;
+                       var c0 = (calibration as Cld.Calibration).get_coefficient(0);
+                       GLib.debug ("value of c[0]: %.3f\n", c0.value);
+                       c0.value = -1 *  (vchannel as Cld.VChannel).raw_value;
+                       GLib.debug ("new value of c[0]: %.3f\n", c0.value);
+                       break;
+                   }
+               }
+       });
+
+        (module as LicorModule).diagnostic_event.connect (() => {
+            var img_diag = builder.get_object ("img_diag");
+            (img_diag as Gtk.Image).icon_name = "package-broken";
         });
 
-                message ("normalize this!");
+        (module as LicorModule).diagnostic_reset.connect (() => {
+            var img_diag = builder.get_object ("img_diag");
+            (img_diag as Gtk.Image).icon_name = "package-installed-updated";
         });
+    }
+}
 
         (module as LicorModule).diagnostic_event.connect (() => {
             var img_diag = builder.get_object ("img_diag");

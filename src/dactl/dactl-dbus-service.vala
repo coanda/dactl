@@ -1,5 +1,5 @@
 [DBus (name = "org.gnome.Dactl")]
-internal class Dactl.DBusService : GLib.Object {
+internal class Dactl.DBusService : GLib.Object, Dactl.DBusInterface {
 
     private Dactl.Main main;
     private uint name_id;
@@ -15,7 +15,7 @@ internal class Dactl.DBusService : GLib.Object {
 
     internal void publish () {
         this.name_id = Bus.own_name (BusType.SESSION,
-                                     "/org/gnome/Dactl",
+                                     Dactl.DBusInterface.SERVICE_NAME,
                                      BusNameOwnerFlags.NONE,
                                      this.on_bus_aquired,
                                      this.on_name_available,
@@ -35,11 +35,12 @@ internal class Dactl.DBusService : GLib.Object {
         }
     }
 
-
     private void on_bus_aquired (DBusConnection connection) {
         try {
-            this.connection_id = connection.register_object ("/org/gnome/Dactl", this);
-        } catch (IOError error) {
+            this.connection_id = connection.register_object (
+                                        Dactl.DBusInterface.OBJECT_PATH,
+                                        this);
+        } catch (Error error) {
             stderr.printf ("Could not register service");
         }
     }
@@ -59,4 +60,13 @@ internal class Dactl.DBusService : GLib.Object {
         message (_("Another instance of dactl is already running. Not starting."));
         this.main.exit (-15);
     }
+
+    /*** Test Methods ***/
+
+    public void ping (GLib.BusName sender) {
+        message (_("Received ping from: %s"), sender);
+        pong ();
+    }
+
+    public signal void pong ();
 }

@@ -22,13 +22,13 @@ public class Dactl.LogHandler : GLib.Object {
                                                 LogLevelFlags.LEVEL_MESSAGE |
                                                 LogLevelFlags.LEVEL_INFO;
 
-    private HashMap<string,LogLevelFlags> log_level_hash;
+    private Gee.HashMap<string,LogLevelFlags> log_level_hash;
 
-    private static LogHandler log_handler; // Singleton
+    private static Dactl.LogHandler log_handler; // Singleton
 
-    public static LogHandler get_default () {
+    public static Dactl.LogHandler get_default () {
         if (log_handler == null) {
-            log_handler = new LogHandler ();
+            log_handler = new Dactl.LogHandler ();
         }
 
         return log_handler;

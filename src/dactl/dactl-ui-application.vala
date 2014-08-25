@@ -7,8 +7,13 @@
  */
 public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
-    /* Allow administrative functionality */
+    /* Application singleton */
+    private static Dactl.UI.Application app;
+
     public bool _admin = false;
+    /**
+     * Allow administrative functionality
+     */
     public bool admin {
         get { return _admin; }
         set {
@@ -42,12 +47,23 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     public signal void save_requested ();
 
     /**
+     * Returns the singleton for this class creating it first if it hasn't
+     * been yet.
+     */
+    public static new Dactl.UI.Application get_default () {
+        if (app == null) {
+            app = new Dactl.UI.Application ();
+        }
+        return app;
+    }
+
+    /**
      * Default construction.
      */
-    public Application () {
+    internal Application () {
         string[] args1 = {};
         unowned string[] args2 = args1;
-        GtkClutter.init (ref args2);
+        Gtk.init (ref args2);
 
         GLib.message ("Application construction");
 
@@ -61,31 +77,40 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      *     Gtk.ApplicationWindow.
      */
     private void add_actions () {
+        /* file menu actions */
+        var save_action = new SimpleAction ("save", null);
+        save_action.activate.connect (save_activated_cb);
+        this.add_action (save_action);
+
         /* view menu actions */
         var view_data_action = new SimpleAction ("data", null);
         view_data_action.activate.connect (view_data_action_activated_cb);
         this.add_action (view_data_action);
 
-        var view_recent_action = new SimpleAction ("recent", null);
-        view_recent_action.activate.connect (view_recent_action_activated_cb);
-        this.add_action (view_recent_action);
+        /*
+         *var view_recent_action = new SimpleAction ("recent", null);
+         *view_recent_action.activate.connect (view_recent_action_activated_cb);
+         *this.add_action (view_recent_action);
+         */
 
-        var view_digio_action = new SimpleAction ("digio", null);
-        view_digio_action.activate.connect (view_digio_action_activated_cb);
-        this.add_action (view_digio_action);
+        /*
+         *var view_digio_action = new SimpleAction ("digio", null);
+         *view_digio_action.activate.connect (view_digio_action_activated_cb);
+         *this.add_action (view_digio_action);
+         */
 
-        var view_xmlconfig_action = new SimpleAction ("xmlconfig", null);
-        view_xmlconfig_action.activate.connect (view_xmlconfig_action_activated_cb);
-        this.add_action (view_xmlconfig_action);
+        var configuration_action = new SimpleAction ("configuration", null);
+        configuration_action.activate.connect (configuration_action_activated_cb);
+        this.add_action (configuration_action);
 
-        /* preferences menu actions */
-        var pref_action = new SimpleAction ("pref", null);
-        pref_action.activate.connect (preferences_activated_cb);
-        this.add_action (pref_action);
+        var configuration_back_action = new SimpleAction ("configuration-back", null);
+        configuration_back_action.activate.connect (configuration_back_activated_cb);
+        this.add_action (configuration_back_action);
 
-        var settings_action = new SimpleAction ("settings", null);
-        settings_action.activate.connect (settings_activated_cb);
-        this.add_action (settings_action);
+        /* admin menu actions */
+        var defaults_action = new SimpleAction.stateful ("defaults", null, new Variant.boolean (false));
+        defaults_action.activate.connect (defaults_activated_cb);
+        this.add_action (defaults_action);
 
         /* top-level menu actions */
         var help_action = new SimpleAction ("help", null);
@@ -96,36 +121,34 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         about_action.activate.connect (about_activated_cb);
         this.add_action (about_action);
 
-        /* toolbar actions */
-        var save_action = new SimpleAction ("save", null);
-        save_action.activate.connect (save_activated_cb);
-        this.add_action (save_action);
-
-        var log_action = new SimpleAction.stateful ("log", null, new Variant.boolean (false));
-        log_action.activate.connect (log_activated_cb);
-        this.add_action (log_action);
-
-        var acquire_action = new SimpleAction.stateful ("acquire", null, new Variant.boolean (false));
-        acquire_action.activate.connect (acquire_activated_cb);
-        this.add_action (acquire_action);
-
-        var defaults_action = new SimpleAction.stateful ("defaults", null, new Variant.boolean (false));
-        defaults_action.activate.connect (defaults_activated_cb);
-        this.add_action (defaults_action);
-
         var quit_action = new SimpleAction ("quit", null);
         quit_action.activate.connect (quit_activated_cb);
         this.add_action (quit_action);
 
-        /* toggle-able actions to control interface view/state */
-        var theme_action = new SimpleAction.stateful ("wintheme", null, new Variant.boolean (false));
-        theme_action.activate.connect (theme_activated_cb);
-        this.add_action (theme_action);
-        theme_action.activate (true);
+        /* toolbar actions */
+        var log_action = new SimpleAction.stateful ("log", null, new Variant.boolean (false));
+        log_action.activate.connect (log_activated_cb);
+        this.add_action (log_action);
 
-        var tb_max_action = new SimpleAction.stateful ("wintbmax", null, new Variant.boolean (false));
-        tb_max_action.activate.connect (tb_max_activated_cb);
-        this.add_action (tb_max_action);
+        var previous_page_action = new SimpleAction ("previous-page", null);
+        previous_page_action.activate.connect (previous_page_activated_cb);
+        this.add_action (previous_page_action);
+
+        var next_page_action = new SimpleAction ("next-page", null);
+        next_page_action.activate.connect (next_page_activated_cb);
+        this.add_action (next_page_action);
+
+        var settings_action = new SimpleAction ("settings", null);
+        settings_action.activate.connect (settings_activated_cb);
+        this.add_action (settings_action);
+
+        var settings_back_action = new SimpleAction ("settings-back", null);
+        settings_back_action.activate.connect (settings_back_activated_cb);
+        this.add_action (settings_back_action);
+
+        /* Handling some of the actions at the view level to reduce the need to
+         * make public a lot of widget content. */
+        (view as Dactl.UI.ApplicationView).add_actions ();
     }
 
     /**
@@ -138,16 +161,17 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
 
         GLib.message ("Creating application model using file %s", opt_cfgfile);
-        model = new Dactl.ApplicationModel.with_xml_file (opt_cfgfile);
+        model = new Dactl.ApplicationModel (opt_cfgfile);
         assert (model != null);
         //model.verbose = opt_verbose;
 
         view = new Dactl.UI.ApplicationView (model);
         assert (view != null);
         (view as Gtk.Window).application = this;
-        (view as Gtk.Window).hide_titlebar_when_maximized = true;
 
-        /*
+        /**
+         * FIXME: This hides the window and then shows the message box
+         *
          *(view as Gtk.Window).destroy.connect (() => {
          *    activate_action ("quit", null);
          *});
@@ -155,11 +179,16 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
         controller = new Dactl.ApplicationController.with_data (model, view);
         assert (controller != null);
-        controller.admin = admin;
+
+        model.notify["admin"].connect (() => {
+            admin = model.admin;
+            controller.admin = model.admin;
+        });
+
+        add_app_menu ();
 
         /* XXX would like to move this inside of the view but doesn't work until
          *     the application activate is performed */
-        (view as Dactl.UI.ApplicationView).show_menubar = false;
         (view as Dactl.UI.ApplicationView).maximize ();
         (view as Dactl.UI.ApplicationView).show_all ();
 
@@ -167,9 +196,16 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
         /* Load the layout from either the configuration or use the default */
         (view as Dactl.UI.ApplicationView).construct_layout ();
+        (view as Dactl.UI.ApplicationView).layout_change_page (model.startup_page);
         (view as Dactl.UI.ApplicationView).connect_signals ();
 
         add_actions ();
+
+        lock (model) {
+            message ("Start device acquisition and output tasks");
+            model.start_acquisition ();
+            //model.start_device_output ();
+        }
     }
 
     /**
@@ -178,18 +214,37 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      */
     protected override void startup () {
         base.startup ();
+    }
 
+    private void add_app_menu () {
         /* Add some actions to the app menu */
+        var file_menu = new GLib.Menu ();
+        file_menu.append ("Save", "app.save");
+        file_menu.append ("Export", "app.export");
+
         var view_menu = new GLib.Menu ();
         view_menu.append ("Data", "app.data");
-        view_menu.append ("Recent", "app.recent");
-        view_menu.append ("Configuration", "app.xmlconfig");
-        view_menu.append ("Digital I/O", "app.digio");
-        var pref_menu = new GLib.Menu ();
-        pref_menu.append ("Preferences", "app.pref");
+        view_menu.append ("Configuration", "app.configuration");
+        //view_menu.append ("Recent", "app.recent");
+        //view_menu.append ("Digital I/O", "app.digio");
+
+        /*
+         *var settings_menu = new GLib.Menu ();
+         *settings_menu.append ("Settings", "app.settings");
+         */
+
         var menu = new GLib.Menu ();
+        menu.append_submenu ("File", file_menu);
         menu.append_submenu ("View", view_menu);
-        menu.append_section (null, pref_menu);
+
+        if (model.admin) {
+            message ("Adding a menu for admin functionality");
+            var admin_menu = new GLib.Menu ();
+            admin_menu.append ("Defaults", "app.defaults");
+            menu.append_submenu ("Admin", admin_menu);
+        }
+
+        //menu.append_section (null, settings_menu);
         menu.append ("Help", "app.help");
         menu.append ("About Dactl", "app.about");
         menu.append ("Quit", "app.quit");
@@ -198,6 +253,13 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
     public override void shutdown () {
         base.shutdown ();
+
+        lock (model) {
+            message ("Stopping device acquisition and output tasks");
+            model.stop_acquisition ();
+            //model.stop_device_output ();
+        }
+
         /* Let someone else deal with shutting down. */
         closed ();
     }
@@ -302,49 +364,42 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      * Action callback for settings.
      */
     private void settings_activated_cb (SimpleAction action, Variant? parameter) {
-        var dialog = new ApplicationSettingsDialog.with_startup_tab_id (model, 2);
-        (dialog as Gtk.Dialog).response.connect (dialog.response_cb);
-
-        Cld.debug ("Preferences dialog run started.\n");
-        (dialog as Gtk.Dialog).run ();
-        Cld.debug ("Preferences dialog run complete.\n");
+        (view as Dactl.UI.ApplicationView).layout_change_page ("settings");
     }
 
     /**
-     * Action callback for settings.
+     * Action callback for going back to previous page from settings.
      */
-    private void preferences_activated_cb (SimpleAction action, Variant? parameter) {
-        var dialog = new ApplicationSettingsDialog.with_startup_tab_id (model, 0);
-        (dialog as Gtk.Dialog).response.connect (dialog.response_cb);
-
-        Cld.debug ("Preferences dialog run started.\n");
-        (dialog as Gtk.Dialog).run ();
-        Cld.debug ("Preferences dialog run complete.\n");
+    private void settings_back_activated_cb (SimpleAction action, Variant? parameter) {
+        (view as Dactl.UI.ApplicationView).layout_back_page ();
     }
 
     /**
-     * Action callback for changing the window theme.
+     * Action callback for configuration.
      */
-    private void theme_activated_cb (SimpleAction action, Variant? parameter) {
-        this.hold ();
-        Variant state = action.get_state ();
-        bool active = state.get_boolean ();
-        var settings = Gtk.Settings.get_default ();
-        (settings as GLib.Object).set ("gtk-application-prefer-dark-theme", !active);
-        action.set_state (new Variant.boolean (!active));
-        this.release ();
+    private void configuration_action_activated_cb (SimpleAction action, Variant? parameter) {
+        (view as Dactl.UI.ApplicationView).layout_change_page ("configuration");
     }
 
     /**
-     * Action callback for changing the window toolbar behaviour on maximized.
+     * Action callback for going back to previous page from configuration.
      */
-    private void tb_max_activated_cb (SimpleAction action, Variant? parameter) {
-        this.hold ();
-        Variant state = action.get_state ();
-        bool active = state.get_boolean ();
-        action.set_state (new Variant.boolean (!active));
-        (view as Gtk.Window).hide_titlebar_when_maximized = !active;
-        this.release ();
+    private void configuration_back_activated_cb (SimpleAction action, Variant? parameter) {
+        (view as Dactl.UI.ApplicationView).layout_back_page ();
+    }
+
+    /**
+     * Action callback for going to the previous available non-settings page.
+     */
+    private void previous_page_activated_cb (SimpleAction action, Variant? parameter) {
+        (view as Dactl.UI.ApplicationView).layout_previous_page ();
+    }
+
+    /**
+     * Action callback for going to the next available non-settings page.
+     */
+    private void next_page_activated_cb (SimpleAction action, Variant? parameter) {
+        (view as Dactl.UI.ApplicationView).layout_next_page ();
     }
 
     /**
@@ -405,98 +460,103 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      * Action callback for logging.
      */
     private void log_activated_cb (SimpleAction action, Variant? parameter) {
-        /* XXX for multiple log files to work this needs to change */
-        var log = model.ctx.get_object ("log0");
-        int mode = Posix.R_OK | Posix.W_OK;
-        int response = Gtk.ResponseType.OK;
-        bool go = false;                    /* XXX bad variable naming */
-
-        /* XXX this could be done in a loop */
-        Cld.debug ("Testing path: %s\n", (log as Cld.Log).path);
-        if (Posix.access ((log as Cld.Log).path, mode) == 0) {
-            Cld.debug ("Path is valid.\n");
-            go = true;
-        } else {
-            /* Alert the user if path is not valid */
-            var dialog = new Gtk.MessageDialog (null,
-                                                Gtk.DialogFlags.MODAL,
-                                                Gtk.MessageType.ERROR,
-                                                Gtk.ButtonsType.CANCEL,
-                                                "File access permission denied: %s\n",
-                                                (log as Cld.Log).path);
-
-            dialog.secondary_text = "Use the Chooser to select a new directory.";
-            dialog.response.connect ((response_id) => {
-                switch (response_id) {
-                    case Gtk.ResponseType.CANCEL:
-                        break;
-                }
-                dialog.destroy();
-            });
-
-            dialog.run ();
-
-            /* Allow user to select a different directory */
-            var log_dialog = new Dactl.LogSettingsDialog (log as Cld.Log);
-
-            while (!((log_dialog as Dactl.LogSettingsDialog).done)) {
-                (log_dialog as Gtk.Dialog).run ();
-                Cld.debug ("running ...\n");
-                if ((dialog as Dactl.LogSettingsDialog).done) {
-                    Cld.debug ("done = true\n");
-                } else {
-                    Cld.debug ("done = false\n");
-                }
-            }
-            Cld.debug ("Finished.\n");
-        }
-
-        /* Test the path again */
-        Cld.debug ("Path is %s\n", (log as Cld.Log).path);
-        if (Posix.access ((log as Cld.Log).path, mode) == 0) {
-            Cld.debug ("Path is valid.\n");
-            go = true;
-        } else {
-            /* Alert the user that no log file will be generated. */
-            var dialog = new Gtk.MessageDialog (null,
-                                                Gtk.DialogFlags.MODAL,
-                                                Gtk.MessageType.ERROR,
-                                                Gtk.ButtonsType.CANCEL,
-                                                "File access permission denied: %s\n",
-                                                (log as Cld.Log).path);
-
-            dialog.secondary_text = "No log file will be generated.";
-            dialog.response.connect ((response_id) => {
-                switch (response_id) {
-                    /* XXX what is this supposed to do?!?!? */
-                    case Gtk.ResponseType.CANCEL:
-                        break;
-                }
-                dialog.destroy();
-            });
-
-            dialog.run ();
-        }
-
-        /* XXX not sure this is necessary anymore, might be dealt with in CLD */
-        if (!((log as Cld.Log).path.has_suffix ("/")))
-            (log as Cld.Log).path = "%s%s".printf ((log as Cld.Log).path, "/");
-
-        this.hold ();
-        Variant state = action.get_state ();
-        bool active = state.get_boolean ();
-        action.set_state (new Variant.boolean (!active));
-        /* XXX locking the model may not be necessary, from older version */
-        if (!active && go) {
-            lock (model) {
-                model.start_log ();
-            }
-        } else {
-            lock (model) {
-                model.stop_log ();
-            }
-        }
-        this.release ();
+/*
+ *        [> FIXME: this should be better <]
+ *
+ *        [> XXX for multiple log files to work this needs to change <]
+ *        var log = model.ctx.get_object_from_uri ("/ctr0/logctl0/log0");
+ *        message (log.to_string ());
+ *        int mode = Posix.R_OK | Posix.W_OK;
+ *        int response = Gtk.ResponseType.OK;
+ *        bool go = false;                    [> XXX bad variable naming <]
+ *
+ *        [> XXX this could be done in a loop <]
+ *        message ("Testing path: %s", (log as Cld.Log).path);
+ *        if (Posix.access ((log as Cld.Log).path, mode) == 0) {
+ *            warning ("Path is valid.");
+ *            go = true;
+ *        } else {
+ *            [> Alert the user if path is not valid <]
+ *            var dialog = new Gtk.MessageDialog (null,
+ *                                                Gtk.DialogFlags.MODAL,
+ *                                                Gtk.MessageType.ERROR,
+ *                                                Gtk.ButtonsType.CANCEL,
+ *                                                "File access permission denied: %s\n",
+ *                                                (log as Cld.Log).path);
+ *
+ *            dialog.secondary_text = "Use the Chooser to select a new directory.";
+ *            dialog.response.connect ((response_id) => {
+ *                switch (response_id) {
+ *                    case Gtk.ResponseType.CANCEL:
+ *                        break;
+ *                }
+ *                dialog.destroy();
+ *            });
+ *
+ *            dialog.run ();
+ *
+ *            [> Allow user to select a different directory <]
+ *            var log_dialog = new Dactl.LogSettingsDialog (log as Cld.Log);
+ *
+ *            while (!((log_dialog as Dactl.LogSettingsDialog).done)) {
+ *                (log_dialog as Gtk.Dialog).run ();
+ *                debug ("running ...");
+ *                if ((dialog as Dactl.LogSettingsDialog).done) {
+ *                    debug ("done = true");
+ *                } else {
+ *                    debug ("done = false");
+ *                }
+ *            }
+ *            debug ("Finished.");
+ *        }
+ *
+ *        [> Test the path again <]
+ *        message ("Path is %s", (log as Cld.Log).path);
+ *        if (Posix.access ((log as Cld.Log).path, mode) == 0) {
+ *            debug ("Path is valid.");
+ *            go = true;
+ *        } else {
+ *            [> Alert the user that no log file will be generated. <]
+ *            var dialog = new Gtk.MessageDialog (null,
+ *                                                Gtk.DialogFlags.MODAL,
+ *                                                Gtk.MessageType.ERROR,
+ *                                                Gtk.ButtonsType.CANCEL,
+ *                                                "File access permission denied: %s\n",
+ *                                                (log as Cld.Log).path);
+ *
+ *            dialog.secondary_text = "No log file will be generated.";
+ *            dialog.response.connect ((response_id) => {
+ *                switch (response_id) {
+ *                    [> XXX what is this supposed to do?!?!? <]
+ *                    case Gtk.ResponseType.CANCEL:
+ *                        break;
+ *                }
+ *                dialog.destroy();
+ *            });
+ *
+ *            dialog.run ();
+ *        }
+ *
+ *        [> XXX not sure this is necessary anymore, might be dealt with in CLD <]
+ *        if (!((log as Cld.Log).path.has_suffix ("/")))
+ *            (log as Cld.Log).path = "%s%s".printf ((log as Cld.Log).path, "/");
+ *
+ *        this.hold ();
+ *        Variant state = action.get_state ();
+ *        bool active = state.get_boolean ();
+ *        action.set_state (new Variant.boolean (!active));
+ *        [> XXX locking the model may not be necessary, from older version <]
+ *        if (!active && go) {
+ *            lock (model) {
+ *                model.start_log ();
+ *            }
+ *        } else {
+ *            lock (model) {
+ *                model.stop_log ();
+ *            }
+ *        }
+ *        this.release ();
+ */
     }
 
     /**
@@ -528,9 +588,12 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         Variant state = action.get_state ();
         bool active = state.get_boolean ();
         action.set_state (new Variant.boolean (!active));
+
+        var channels = model.ctx.get_object_map (typeof (Cld.Channel));
+
         if (!active) {
             model.def_enabled = true;
-            foreach (var channel in model.channels.values) {
+            foreach (var channel in channels.values) {
                 /* Don't scale output channels */
                 if (!(channel is Cld.AOChannel)) {
                     stdout.printf ("Found channel: %s reading %f\n",
@@ -551,7 +614,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         } else {
             /* FIXME: the application shouldn't have to use XPath for edits */
             model.def_enabled = false;
-            foreach (var channel in model.channels.values) {
+            foreach (var channel in channels.values) {
                 /* Don't scale output channels */
                 if (!(channel is Cld.AOChannel)) {
                     stdout.printf ("Found channel: %s reading %f\n",
@@ -561,15 +624,25 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
                         cal.id, cal.units);
 
                     var xpath = "//cld/cld:objects/cld:object[@id=\"%s\"]/cld:property[@name=\"units\"]".printf (cal.id);
-                    var value = model.xml.value_at_xpath (xpath);
-                    cal.units = value;
+                    string value;
+
+                    try {
+                        value = model.xml.value_at_xpath (xpath);
+                        cal.units = value;
+                    } catch (Cld.XmlError error) {
+                        warning (error.message);
+                    }
 
                     foreach (var coefficient in cal.coefficients.values) {
                         stdout.printf ("Found coefficient: %s\n", coefficient.id);
                         xpath = "//cld/cld:objects/cld:object[@id=\"%s\"]/cld:object[@id=\"%s\"]/cld:property[@name=\"value\"]".printf (cal.id, coefficient.id);
-                        value = model.xml.value_at_xpath (xpath);
-                        stdout.printf ("Printing @ %s: value: %s\n", xpath, value);
-                        (coefficient as Cld.Coefficient).value = double.parse (value);
+                        try {
+                            value = model.xml.value_at_xpath (xpath);
+                            stdout.printf ("Printing @ %s: value: %s\n", xpath, value);
+                            (coefficient as Cld.Coefficient).value = double.parse (value);
+                        } catch (Cld.XmlError error) {
+                            warning (error.message);
+                        }
                     }
                 }
             }
@@ -581,19 +654,38 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      * Action callback for about.
      */
     private void about_activated_cb (SimpleAction action, Variant? parameter) {
-        var dlg_builder = load_ui ("about_dialog.ui");
-        var about_dialog = dlg_builder.get_object ("about_dialog");
+        var window = get_active_window ();
 
-        (about_dialog as Gtk.Dialog).response.connect ((response_id) => {
-            switch (response_id) {
-                case Gtk.ResponseType.CANCEL:
-                case Gtk.ResponseType.DELETE_EVENT:
-                    (about_dialog as Gtk.Dialog).destroy ();
-                    break;
-            }
-        });
+        string[] authors = {
+            "Geoff Johnson <geoff.johnson@coanda.ca>",
+            "Stephen Roy <stephen.roy@coanda.ca>"
+        };
 
-        (about_dialog as Gtk.Dialog).run ();
+        string[] documenters = {
+            "Geoff Johnson <geoff.johnson@coanda.ca>",
+            "Stephen Roy <stephen.roy@coanda.ca>"
+        };
+
+        string comments = N_("dactl is an application for data acquisition and control for the GNOME Desktop");
+
+        Gdk.Pixbuf? logo = null;
+        try {
+            logo = Dactl.load_asset ("scalable/dactl.svg");
+        } catch (GLib.Error error) {
+            warning (error.message);
+        }
+
+        Gtk.show_about_dialog (window,
+                               "program-name", ("Dactl"),
+                               "authors", authors,
+                               "comments", _(comments),
+                               "copyright", ("Copyright © 2012-2014 Coanda"),
+                               "license", Gtk.License.UNKNOWN,
+                               "documenters", documenters,
+                               "logo", logo,
+                               "version", Config.PACKAGE_VERSION,
+                               "website", "http://www.coanda.ca",
+                               "website-label", ("Coanda Research and Development"));
     }
 
     /**
@@ -610,18 +702,17 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         GLib.message ("View: Data viewer action activated");
     }
 
-    private void view_digio_action_activated_cb (SimpleAction action, Variant? parameter) {
-        GLib.message ("View: Digital I/O viewer action activated");
-        var dialog = new Dactl.DioViewerDialog (model);
-    }
+    /*
+     *private void view_digio_action_activated_cb (SimpleAction action, Variant? parameter) {
+     *    GLib.message ("View: Digital I/O viewer action activated");
+     *    var dialog = new Dactl.DioViewerDialog (model);
+     *}
+     */
 
-    private void view_recent_action_activated_cb (SimpleAction action, Variant? parameter) {
-        GLib.message ("View: Recent files action activated");
-        var dialog = new Dactl.RecentFilesDialog ();
-    }
-
-    private void view_xmlconfig_action_activated_cb (SimpleAction action, Variant? parameter) {
-        GLib.message ("View: XML config viewer action activated");
-        var dialog = new Dactl.XmlConfigDialog (model.xml_file);
-    }
+    /*
+     *private void view_recent_action_activated_cb (SimpleAction action, Variant? parameter) {
+     *    GLib.message ("View: Recent files action activated");
+     *    var dialog = new Dactl.RecentFilesDialog ();
+     *}
+     */
 }

@@ -6,6 +6,8 @@ libdactl_ui_include_HEADERS = dactl-ui.h
 
 lib_LTLIBRARIES = libdactl-ui-0.3.la
 
+LIBDACTL_UI_VERSION=0:3:0
+
 gresource_file = libdactl-ui.gresource.xml
 resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies $(gresource_file))
 resources.c: $(gresource_file) $(resource_files)
@@ -21,21 +23,23 @@ libdactl_ui_0_3_la_SOURCES = \
 libdactl_ui_0_3_la_VALAFLAGS = \
 	--target-glib=2.38 --gresources $(gresource_file) \
 	-H dactl-ui.h -C --library=dactl-ui-0.3 \
-	--gir=Dactl-0.3.gir \
+	--gir=Dactl-0.3.gir --pkg posix \
 	$(LIBDACTL_UI_DEPS_VALAFLAGS) \
+	$(DACTL_CLD_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
 	$(DACTL_COMMON_VALAFLAGS)
 
 libdactl_ui_0_3_la_CFLAGS = \
 	$(LIBDACTL_UI_DEPS_CFLAGS) \
+	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
 	-DG_LOG_DOMAIN='"Dactl"'
 
 libdactl_ui_0_3_la_LIBADD = \
 	$(LIBDACTL_UI_DEPS_LIBS) \
+	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS)
 
-LIBDACTL_UI_VERSION=0:3:0
 libdactl_ui_0_3_la_LDFLAGS = \
 	$(DACTL_DATA_DIR_DEFINES) \
 	-version-info $(LIBDACTL_UI_VERSION)
@@ -54,6 +58,9 @@ INTROSPECTION_COMPILER_ARGS= -l libdactl-ui-0.3.so.2 --includedir=$(builddir)/..
 $(builddir)/DactlUI-0.3.gir: $(srcdir)/Dactl-0.3.gir
 	$(AM_V_GEN)$(SED) -e 's,Dactl\.,DactlUI.,g' \
 		-e 's,namespace name="Dactl",namespace name="DactlUI",g' \
+		-e 's,DactlUI\.AbstractObject,DactlCore.AbstractObject,g' \
+		-e 's,DactlUI\.AbstractBuildable,DactlCore.AbstractBuildable,g' \
+		-e 's,DactlUI\.AbstractContainer,DactlCore.AbstractContainer,g' \
 		-e 's,<package name="dactl-ui-0.3"/>,<include name="DactlCore" version="0.3"/>\n<package name="dactl-ui-0.3"/>,' \
 		$< >$@
 GIRS = DactlUI-0.3.gir

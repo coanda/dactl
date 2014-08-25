@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.16.1 -->
+<interface>
+  <requires lib="dactl" version="3.14"/>
+  <requires lib="gtk+" version="3.10"/>
+  <template class="DactlChart" parent="GtkBox">
+    <property name="name">chart</property>
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="DactlChartCanvas" id="canvas">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="id">canvas0</property>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <style>
+      <class name="chart"/>
+    </style>
+  </template>
+</interface>

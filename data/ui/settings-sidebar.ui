@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.10"/>
+
+  <object class="GtkListStore" id="listmodel">
+    <columns>
+      <!-- column-name gchararray -->
+      <column type="gchararray"/>
+      <!-- column-name gboolean -->
+      <column type="gboolean"/>
+    </columns>
+  </object>
+
+  <object class="GtkTreeModelFilter" id="model_filter">
+    <property name="child_model">listmodel</property>
+  </object>
+
+  <template class="DactlSettingsSidebar" parent="GtkBox">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="orientation">vertical</property>
+    <property name="spacing">10</property>
+
+    <child>
+      <object class="GtkTreeView" id="tree_view">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="model">model_filter</property>
+        <property name="headers_visible">False</property>
+        <property name="activate_on_single_click">True</property>
+        <signal name="row-activated" handler="row_activated_cb" swapped="no"/>
+
+        <child internal-child="selection">
+          <object class="GtkTreeSelection" id="selection">
+            <property name="mode">browse</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkTreeViewColumn" id="text-column">
+            <child>
+              <object class="GtkCellRendererText" id="text-renderer">
+                <property name="xpad">20</property>
+                <property name="weight">700</property>
+              </object>
+              <attributes>
+                <attribute name="text">0</attribute>
+              </attributes>
+            </child>
+          </object>
+        </child>
+        <style>
+          <class name="transparent-bg"/>
+        </style>
+      </object>
+
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+
+    <!--
+       -<child>
+       -  <object class="GtkBox" id="message_box">
+       -    <property name="visible">True</property>
+       -    <property name="can_focus">False</property>
+       -    <child>
+       -      <object class="GtkLabel" id="label_change">
+       -        <property name="visible">True</property>
+       -        <property name="can_focus">False</property>
+       -        <property name="xpad">5</property>
+       -        <property name="ypad">5</property>
+       -        <property name="label" translatable="yes">Settings change status:</property>
+       -      </object>
+       -      <packing>
+       -        <property name="expand">False</property>
+       -        <property name="fill">True</property>
+       -        <property name="position">0</property>
+       -      </packing>
+       -    </child>
+       -    <child>
+       -      <object class="GtkLabel" id="label_change_status">
+       -        <property name="visible">True</property>
+       -        <property name="can_focus">False</property>
+       -        <property name="xpad">5</property>
+       -        <property name="ypad">5</property>
+       -        <property name="label" translatable="yes">Unedited</property>
+       -      </object>
+       -      <packing>
+       -        <property name="expand">False</property>
+       -        <property name="fill">True</property>
+       -        <property name="position">1</property>
+       -      </packing>
+       -    </child>
+       -  </object>
+       -  <packing>
+       -    <property name="expand">False</property>
+       -    <property name="fill">True</property>
+       -    <property name="pack_type">end</property>
+       -    <property name="position">1</property>
+       -  </packing>
+       -</child>
+       -->
+
+  </template>
+</interface>

@@ -1,7 +1,24 @@
 LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-box.vala \
+    dactl-ai-control.vala \
+    dactl-ao-control.vala \
+    dactl-drawing.vala \
+    dactl-channel-treeview.vala \
+    dactl-chart.vala \
+    dactl-chart-axis.vala \
+    dactl-chart-trace.vala \
+    dactl-chart-widget.vala \
+    dactl-exec-control.vala \
+    dactl-log-control.vala \
+    dactl-grid.vala \
     dactl-page.vala \
-    dactl-widget.vala
+    dactl-pid-control.vala \
+    dactl-pnid.vala \
+    dactl-stripchart.vala \
+    dactl-ui-factory.vala \
+    dactl-widget.vala \
+    dactl-zoom-window.vala
 
 LIBDACTL_UI_NONVAPI_SOURCE_FILES = \
+    dactl-utility.vala \
     dactl-widget-information.vala

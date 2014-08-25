@@ -17,10 +17,12 @@ libdactl_core_0_3_la_VALAFLAGS = \
 	--vapidir=$(srcdir) \
 	--pkg posix \
 	$(LIBDACTL_CORE_DEPS_VALAFLAGS) \
+	$(DACTL_CLD_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_VALAFLAGS)
 
 libdactl_core_0_3_la_CFLAGS = \
 	$(DACTL_COMMON_DEFINES_CFLAGS) \
+	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(LIBDACTL_CORE_DEPS_CFLAGS) \
 	-DPLUGIN_DIR='"$(plugindir)"' \
 	-DSMALL_ICON_DIR='"$(smallicondir)"' \
@@ -29,6 +31,7 @@ libdactl_core_0_3_la_CFLAGS = \
 	-DG_LOG_DOMAIN='"Dactl"'
 
 libdactl_core_0_3_la_LIBADD = \
+	$(DACTL_CLD_DEPS_LIBS) \
 	$(LIBDACTL_CORE_DEPS_LIBS) \
 	-lm
 

@@ -2,20 +2,28 @@
 <glade-catalog version="3.14" name="dactl" library="libdactl-ui-0.3.so" depends="gtk+">
 
   <glade-widget-classes>
-    <glade-widget-class name="DactlWidget" generic-name="dactlwidget" title="Dactl Widget"></glade-widget-class>
-    <!--
-    <glade-widget-class name="DactlChart" generic-name="dactlchart" title="Dactl Chart">
-      <properties>
-        <property id="" />
-        <property>
-        </property>
-      </properties>
-    </glade-widget-class>
-    -->
+
+    <glade-widget-class name="DactlBox" generic-name="dactlbox" title="Dactl Box"/>
+
+    <glade-widget-class name="DactlChart" generic-name="dactlchart" title="Dactl Chart"/>
+
+    <glade-widget-class name="DactlChartCanvas" generic-name="dactlchartcanvas" title="Dactl Chart Canvas"/>
+
+    <glade-widget-class name="DactlStripChart" generic-name="dactlstripchart" title="Dactl Stipchart"/>
+
+    <glade-widget-class name="DactlStripChartCanvas" generic-name="dactlstripchartcanvas" title="Dactl Stripchart Canvas"/>
+
+    <glade-widget-class name="DactlPage" generic-name="dactlpage" title="Dactl Page"/>
+
   </glade-widget-classes>
 
   <glade-widget-group name="dactl-widgets" title="Dactl Widgets">
-    <glade-widget-class-ref name="DactlWidget"/>
+    <glade-widget-class-ref name="DactlBox"/>
+    <glade-widget-class-ref name="DactlChart"/>
+    <glade-widget-class-ref name="DactlChartCanvas"/>
+    <glade-widget-class-ref name="DactlStripChart"/>
+    <glade-widget-class-ref name="DactlStripChartCanvas"/>
+    <glade-widget-class-ref name="DactlPage"/>
   </glade-widget-group>
 
 </glade-catalog>

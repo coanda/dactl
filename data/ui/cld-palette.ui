@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.3 -->
+<interface>
+  <requires lib="gtk+" version="3.12"/>
+  <template class="DactlCldPalette" parent="GtkToolPalette">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="orientation">vertical</property>
+    <property name="icon_size">small-toolbar</property>
+    <property name="toolbar_style">both-horiz</property>
+    <child>
+      <object class="GtkToolItemGroup" id="acquisition_group">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Acquisition</property>
+        <child>
+          <object class="GtkToolButton" id="btn_acq_controller">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Controller</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">weather-clear-night</property>
+            <signal name="clicked" handler="btn_acq_controller_clicked_cb" swapped="no"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToolButton" id="btn_ai_channel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Analog Input</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">weather-clear</property>
+            <signal name="clicked" handler="btn_ai_channel_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolButton" id="btn_ao_channel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Analog Output</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">weather-clear</property>
+            <signal name="clicked" handler="btn_ao_channel_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolButton" id="btn_di_channel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Digital Input</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">weather-clear</property>
+            <signal name="clicked" handler="btn_di_channel_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolButton" id="btn_do_channel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Digital Output</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">weather-clear</property>
+            <signal name="clicked" handler="btn_do_channel_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolButton" id="btn_math_channel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Math Expression</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">weather-clear</property>
+            <signal name="clicked" handler="btn_math_channel_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">5</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToolItemGroup" id="control_group">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Control</property>
+        <child>
+          <object class="GtkToolButton" id="btn_ctl_controller">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Controller</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">weather-clear-night</property>
+            <signal name="clicked" handler="btn_ctl_controller_clicked_cb" swapped="no"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToolButton" id="btn_pid">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">PID</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">weather-clear</property>
+            <signal name="clicked" handler="btn_pid_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolButton" id="btn_script">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Script</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">weather-clear</property>
+            <signal name="clicked" handler="btn_script_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToolItemGroup" id="logging_group">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Logging</property>
+        <child>
+          <object class="GtkToolButton" id="btn_log_controller">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Controller</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">weather-clear-night</property>
+            <signal name="clicked" handler="btn_log_controller_clicked_cb" swapped="no"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToolButton" id="btn_log">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Log</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">weather-clear</property>
+            <signal name="clicked" handler="btn_log_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkToolButton" id="btn_column">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Column</property>
+            <property name="use_underline">True</property>
+            <property name="icon_name">weather-clear</property>
+            <signal name="clicked" handler="btn_column_clicked_cb" swapped="no"/>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+      </packing>
+    </child>
+  </template>
+</interface>
