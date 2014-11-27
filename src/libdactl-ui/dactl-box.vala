@@ -191,30 +191,6 @@ public class Dactl.Box : Dactl.CompositeWidget {
                         case "log":
                             object = new Dactl.LogControl.from_xml_node (iter);
                             break;
-                        case "velmex":
-
-                            /**
-                             * FIXME: this will need to either just set a placeholder
-                             *        and notify the application that it's there,
-                             *        or signal a request for the plugin control.
-                             */
-
-                            /*
-                             *bool ready = false;
-                             *var app = Dactl.UI.Application.get_default ();
-                             *Dactl.Plugin velmex;
-                             *foreach (var plugin in app.model.plugins) {
-                             *    if (plugin.name == "velmex")
-                             *        velmex = plugin;
-                             *}
-                             *velmex.post_construction (iter);
-                             *velmex.cld_object_added.connect (() => {
-                             *    ready = true;
-                             *});
-                             *while (!ready) {}
-                             *object = velmex.get_control ();
-                             */
-                            break;
                         default:
                             object = null;
                             break;
@@ -240,18 +216,27 @@ public class Dactl.Box : Dactl.CompositeWidget {
          *}
          */
 
+        var type = (object as GLib.Object).get_type ();
+        var type_name = type.name ();
+        message ("Packing object of type `%s' into `%s'", type_name, id);
+
         // FIXME: shouldn't have to do this
         if (object is Dactl.ChannelTreeView) {
             (this as Gtk.Widget).width_request = (object as Gtk.Widget).width_request;
         }
 
         objects.set (object.id, object);
+        // FIXME: could probably just add them all as a Dactl.Widget
         if (object is Dactl.CustomWidget) {
             pack_start (object as Dactl.CustomWidget,
                             (object as Gtk.Widget).expand,
                             (object as Dactl.Widget).fill, 0);
         } else if (object is Dactl.CompositeWidget) {
             pack_start (object as Dactl.CompositeWidget,
+                            (object as Gtk.Widget).expand,
+                            (object as Dactl.Widget).fill, 0);
+        } else if (object is Dactl.SimpleWidget) {
+            pack_start (object as Dactl.SimpleWidget,
                             (object as Gtk.Widget).expand,
                             (object as Dactl.Widget).fill, 0);
         }

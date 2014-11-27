@@ -32,6 +32,7 @@ stamp-h1
 mkinstalldirs
 
 build-aux/compile
+build-aux/py-compile
 
 data/dactl.desktop
 data/schemas/org.coanda.dactl.gschema.xml

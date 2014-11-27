@@ -2,7 +2,45 @@
 <!-- Generated with glade 3.16.1 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
+  <requires lib="" version="3.10"/>
   <requires lib="dactl" version="3.14"/>
+  <object class="GtkAdjustment" id="adj_t_major">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_t_minor">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_time_step">
+    <property name="upper">1000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_y_major">
+    <property name="upper">10000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_y_max">
+    <property name="lower">-10000</property>
+    <property name="upper">10000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_y_min">
+    <property name="lower">-10000</property>
+    <property name="upper">10000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_y_minor">
+    <property name="upper">10000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <template class="DactlStripChart" parent="GtkBox">
     <property name="name">stripchart</property>
     <property name="visible">True</property>
@@ -65,9 +103,10 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="entry1">
+                          <object class="GtkEntry" id="entry_title">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="editable">False</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -101,9 +140,10 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="entry2">
+                          <object class="GtkEntry" id="entry_y_axis">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="editable">False</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -138,9 +178,13 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton1">
+                          <object class="GtkSpinButton" id="spinbutton_y_min">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="editable">False</property>
+                            <property name="adjustment">adj_y_min</property>
+                            <property name="digits">2</property>
+                            <property name="numeric">True</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -175,9 +219,13 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton2">
+                          <object class="GtkSpinButton" id="spinbutton_y_max">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="editable">False</property>
+                            <property name="adjustment">adj_y_max</property>
+                            <property name="digits">2</property>
+                            <property name="numeric">True</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -212,9 +260,13 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton5">
+                          <object class="GtkSpinButton" id="spinbutton_y_major">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="editable">False</property>
+                            <property name="adjustment">adj_y_major</property>
+                            <property name="digits">2</property>
+                            <property name="numeric">True</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -249,9 +301,13 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton6">
+                          <object class="GtkSpinButton" id="spinbutton_y_minor">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="editable">False</property>
+                            <property name="adjustment">adj_y_minor</property>
+                            <property name="digits">2</property>
+                            <property name="numeric">True</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -285,9 +341,10 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="entry3">
+                          <object class="GtkEntry" id="entry_time_axis">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="editable">False</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -322,9 +379,13 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton4">
+                          <object class="GtkSpinButton" id="spinbutton_time_step">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="editable">False</property>
+                            <property name="adjustment">adj_time_step</property>
+                            <property name="digits">3</property>
+                            <property name="numeric">True</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -359,9 +420,13 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton3">
+                          <object class="GtkSpinButton" id="spinbutton_t_major">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="editable">False</property>
+                            <property name="adjustment">adj_t_major</property>
+                            <property name="digits">3</property>
+                            <property name="numeric">True</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -396,9 +461,13 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton7">
+                          <object class="GtkSpinButton" id="spinbutton_t_minor">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="editable">False</property>
+                            <property name="adjustment">adj_t_minor</property>
+                            <property name="digits">3</property>
+                            <property name="numeric">True</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>

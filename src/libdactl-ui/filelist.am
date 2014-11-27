@@ -13,6 +13,7 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-grid.vala \
     dactl-page.vala \
     dactl-pid-control.vala \
+    dactl-plugin-control.vala \
     dactl-pnid.vala \
     dactl-stripchart.vala \
     dactl-ui-factory.vala \

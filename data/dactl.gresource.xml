@@ -9,14 +9,16 @@
     <file>icons/dactl-dark.png</file>
     <file>icons/dactl-gray.png</file>
     <!-- Glade UI files -->
-    <file preprocess="xml-stripblanks">ui/application-view.ui</file>
     <file preprocess="xml-stripblanks">ui/topbar.ui</file>
+    <file preprocess="xml-stripblanks">ui/application-view.ui</file>
     <file preprocess="xml-stripblanks">ui/application-toolbar.ui</file>
-    <file preprocess="xml-stripblanks">ui/configuration-toolbar.ui</file>
-    <file preprocess="xml-stripblanks">ui/settings-toolbar.ui</file>
     <file preprocess="xml-stripblanks">ui/configuration.ui</file>
+    <file preprocess="xml-stripblanks">ui/configuration-toolbar.ui</file>
+    <file preprocess="xml-stripblanks">ui/csv-export.ui</file>
+    <file preprocess="xml-stripblanks">ui/csv-export-toolbar.ui</file>
     <file preprocess="xml-stripblanks">ui/sidebar.ui</file>
     <file preprocess="xml-stripblanks">ui/settings.ui</file>
+    <file preprocess="xml-stripblanks">ui/settings-toolbar.ui</file>
     <file preprocess="xml-stripblanks">ui/settings-sidebar.ui</file>
     <file preprocess="xml-stripblanks">ui/general-settings.ui</file>
     <file preprocess="xml-stripblanks">ui/acquisition-settings.ui</file>
@@ -30,7 +32,6 @@
     <file preprocess="xml-stripblanks">ui/dio-viewer-dialog.ui</file>
     <file preprocess="xml-stripblanks">ui/log-settings-dialog.ui</file>
     <file preprocess="xml-stripblanks">ui/pid-dialog.ui</file>
-    <file preprocess="xml-stripblanks">ui/export-dialog.ui</file>
     <file preprocess="xml-stripblanks">ui/data-file-dialog.ui</file>
     <file preprocess="xml-stripblanks">ui/settings-dialog.ui</file>
     <file preprocess="xml-stripblanks">ui/serial-port-settings-box.ui</file>

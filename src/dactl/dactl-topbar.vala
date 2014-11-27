@@ -6,13 +6,18 @@ public enum Dactl.TopbarPage {
 [GtkTemplate (ui = "/org/coanda/dactl/ui/topbar.ui")]
 private class Dactl.Topbar : Gtk.Stack {
 
-    private const string[] page_names = { "application", "configuration", "settings" };
+    private const string[] page_names = {
+        "application", "configuration", "export", "settings"
+    };
 
     [GtkChild]
     public Dactl.ApplicationToolbar application_toolbar;
 
     [GtkChild]
     public Dactl.ConfigurationToolbar configuration_toolbar;
+
+    [GtkChild]
+    public Dactl.CsvExportToolbar export_toolbar;
 
     [GtkChild]
     public Dactl.SettingsToolbar settings_toolbar;

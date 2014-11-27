@@ -16,7 +16,7 @@ case "$1" in
             src/dactl/dactl-application-model.vala \
             src/dactl/dactl-application-toolbar.vala \
             src/dactl/dactl-topbar.vala \
-            src/dactl/dactl-configuration.vala \
+            src/dactl/dactl-configuration-editor.vala \
             src/dactl/dactl-configuration-toolbar.vala \
             src/dactl/dactl-sidebar.vala \
             src/dactl/dactl-settings.vala \

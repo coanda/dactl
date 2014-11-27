@@ -248,6 +248,9 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
     [GtkChild]
     private Gtk.TreeView treeview;
 
+    //[GtkChild]
+    //private Gtk.TreeSelection selection;
+
     public signal void channels_loaded ();
 
     public signal void channel_selected (string id);
@@ -340,7 +343,7 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
             message ("Creating treeview");
             create_treeview ();
 
-            treeview.cursor_changed.connect (cursor_changed_cb);
+            treeview.cursor_changed.connect (treeview_cursor_changed_cb);
             Timeout.add (1000, update);
             show_all ();
         }
@@ -401,10 +404,9 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
         treeview.insert_column_with_attributes (-1, "Units", new Gtk.CellRendererText (), "text", Columns.UNITS);
         treeview.insert_column_with_attributes (-1, "Description", new Gtk.CellRendererText (), "text", Columns.DESCRIPTION);
 
-        Gtk.TreeIter iter;
-
         foreach (var category in get_object_map (typeof (Dactl.ChannelTreeCategory)).values) {
-            debug ("DactlChannelTreeView::create_treeview adding `%s'", category.id);
+            Gtk.TreeIter iter;
+            debug ("create_treeview adding `%s'", category.id);
             treemodel.append (out iter, null);
             treemodel.set (iter, Columns.TAG, (category as Dactl.ChannelTreeCategory).title,
                                  Columns.VALUE, null,
@@ -413,13 +415,13 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
                                  Columns.HIDDEN_ID, null);
 
             foreach (var entry in (category as Dactl.Container).get_object_map (typeof (Dactl.ChannelTreeEntry)).values) {
-                debug ("DactlChannelTreeView::create_treeview adding `%s'", entry.id);
+                debug ("create_treeview adding `%s'", entry.id);
                 Gtk.TreeIter child_iter;
                 char[] buf = new char[double.DTOSTR_BUF_SIZE];
                 string scaled_as_string;
 
                 var channel = (entry as Dactl.ChannelTreeEntry).channel;
-                debug ("DactlChannelTreeView::create_treeview adding `%s'", channel.id);
+                debug ("create_treeview adding `%s'", channel.id);
                 if (channel is Cld.ScalableChannel) {
                     var cal = (channel as Cld.ScalableChannel).calibration;
                     scaled_as_string = ((channel as Cld.ScalableChannel).scaled_value).format (buf, "%.3f");
@@ -437,17 +439,20 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
         treeview.expand_all ();
     }
 
-    private void cursor_changed_cb () {
-        string id;
+    //[GtkCallback]
+    private void treeview_cursor_changed_cb () {
+        string selection_id;
         Gtk.TreeModel model;
         Gtk.TreeIter iter;
-        Gtk.TreeSelection selection;
 
-        selection = (treeview as Gtk.TreeView).get_selection ();
+        var selection = (treeview as Gtk.TreeView).get_selection ();
         selection.get_selected (out model, out iter);
-        model.get (iter, Columns.HIDDEN_ID, out id);
+        model.get (iter, Columns.HIDDEN_ID, out selection_id);
 
-        channel_selected (id);
+        debug ("Selected: %s", selection_id);
+
+        var entry = get_object (selection_id) as Dactl.ChannelTreeEntry;
+        channel_selected (entry.ch_ref);
     }
 
     /**
@@ -488,6 +493,11 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
 
         return false;
     }
+
+    //[GtkCallback]
+    //private void selection_changed_cb () {
+        //[> XXX future home of multiple selection highlighting for charts <]
+    //}
 
     /**
      * {@inheritDoc}

@@ -17,7 +17,7 @@ public class Dactl.AIControl : Dactl.CompositeWidget, Dactl.CldAdapter {
     private Gtk.Button btn_secondary;
 
     [GtkChild]
-    private Gtk.Label lbl_id;
+    private Gtk.Label lbl_tag;
 
     [GtkChild]
     private Gtk.Label lbl_value;
@@ -132,7 +132,7 @@ public class Dactl.AIControl : Dactl.CompositeWidget, Dactl.CldAdapter {
             satisfied = true;
 
             Timeout.add (1000, update);
-            lbl_id.label = channel.id;
+            lbl_tag.label = channel.tag;
         }
     }
 

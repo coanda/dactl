@@ -3,6 +3,12 @@
 
   <glade-widget-classes>
 
+    <glade-widget-class name="DactlSimpleWidget" generic-name="dactlsimplewidget" title="Dactl Simple Widget"/>
+
+    <glade-widget-class name="DactlCustomWidget" generic-name="dactlcustomwidget" title="Dactl Custom Widget"/>
+
+    <glade-widget-class name="DactlCompositeWidget" generic-name="dactlcompositewidget" title="Dactl Composite Widget"/>
+
     <glade-widget-class name="DactlBox" generic-name="dactlbox" title="Dactl Box"/>
 
     <glade-widget-class name="DactlChart" generic-name="dactlchart" title="Dactl Chart"/>
@@ -18,6 +24,9 @@
   </glade-widget-classes>
 
   <glade-widget-group name="dactl-widgets" title="Dactl Widgets">
+    <glade-widget-class-ref name="DactlSimpleWidget"/>
+    <glade-widget-class-ref name="DactlCustomWidget"/>
+    <glade-widget-class-ref name="DactlCompositeWidget"/>
     <glade-widget-class-ref name="DactlBox"/>
     <glade-widget-class-ref name="DactlChart"/>
     <glade-widget-class-ref name="DactlChartCanvas"/>

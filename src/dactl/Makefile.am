@@ -8,9 +8,12 @@ gresource_file = $(top_srcdir)/data/dactl.gresource.xml
 if BUILD_UI
 UI_SOURCES = \
 	dactl-acquisition-settings.vala \
+	dactl-application-menu.vala \
 	dactl-application-toolbar.vala \
 	dactl-configuration-editor.vala \
 	dactl-configuration-toolbar.vala \
+	dactl-csv-export.vala \
+	dactl-csv-export-toolbar.vala \
 	dactl-control-settings.vala \
 	dactl-general-settings.vala \
 	dactl-log-settings.vala \
@@ -22,7 +25,8 @@ UI_SOURCES = \
 	dactl-topbar.vala \
 	dactl-ui-application.vala \
 	dactl-ui-application-view.vala \
-	dactl-ui-settings.vala
+	dactl-ui-settings.vala \
+	dactl-ux-manager.vala
 endif
 
 dactl_VALAFLAGS = \

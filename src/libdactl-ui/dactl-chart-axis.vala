@@ -139,7 +139,6 @@ public class Dactl.Axis : Dactl.CustomWidget {
      * Draw callback.
      */
     public override bool draw (Cairo.Context cr) {
-
         var w = get_allocated_width ();
         var h = get_allocated_height ();
 

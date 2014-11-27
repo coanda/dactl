@@ -1,3 +1,8 @@
+public enum Dactl.UI.State {
+    WINDOWED,
+    FULLSCREEN,
+}
+
 /**
  * The Gtk.Application class expects an ApplicationWindow so a lot is being
  * moved here from outside of the actual view class.
@@ -42,15 +47,21 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     private Dactl.ConfigurationEditor configuration;
 
     [GtkChild]
+    private Dactl.CsvExport export;
+
+    [GtkChild]
     private Dactl.Settings settings_content;
 
     private uint configure_id;
+
     public static const uint configure_id_timeout = 100;    // ms
 
     private string previous_page;
 
+    public Dactl.UI.State state { get; set; default = Dactl.UI.State.WINDOWED; }
+
     // The application page is intentionally left out
-    private string[] pages = { "configuration", "settings" };
+    private string[] pages = { "configuration", "export", "settings" };
 
     /**
      * Default construction.
@@ -66,17 +77,13 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         assert (this.model != null);
 
         /* FIXME: Load previous window size and fullscreen state using settings. */
-        (this as Gtk.ApplicationWindow).set_default_size (1280, 720);
+        set_default_size (1280, 720);
 
-        load_widgets ();
+        setup ();
         load_style ();
     }
 
-    /**
-     * Load all Gtk widgets that will be used internally with the
-     * application window.
-     */
-    private void load_widgets () {
+    private void setup () {
         layout.transition_duration = 400;
         layout.transition_type = Gtk.StackTransitionType.CROSSFADE;
         layout.expand = true;
@@ -129,6 +136,9 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         }
 
         layout.show_all ();
+
+        layout_change_page (model.startup_page);
+        connect_signals ();
     }
 
     private void layout_add_page (Dactl.Page page) {
@@ -143,6 +153,11 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
             if (id == "configuration" && layout.visible_child != configuration) {
                 previous_page = layout.visible_child_name;
                 layout.visible_child = configuration;
+                topbar.set_visible_child_name (id);
+                sidebar.page = Dactl.SidebarPage.NONE;
+            } else if (id == "export" && layout.visible_child != export) {
+                previous_page = layout.visible_child_name;
+                layout.visible_child = export;
                 topbar.set_visible_child_name (id);
                 sidebar.page = Dactl.SidebarPage.NONE;
             } else if (id == "settings" && layout.visible_child != settings) {
@@ -194,36 +209,25 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     }
 
     public void connect_signals () {
-        /* Signals from the application data model */
-        model.log_state_changed.connect ((id, state) => {
-            //topbar.application_toolbar.set_log_state (state);
-        });
-
         /* Callbacks with functions */
-        //channel_treeview.cursor_changed.connect (channel_cursor_changed_cb);
+        var treeviews = model.get_object_map (typeof (Dactl.ChannelTreeView));
+        foreach (var treeview in treeviews.values) {
+            (treeview as Dactl.ChannelTreeView).channel_selected.connect (treeview_channel_selected_cb);
+        }
     }
 
-/*
- *    private void channel_cursor_changed_cb () {
- *        string id;
- *        Gtk.TreeModel tree_model;
- *        Gtk.TreeIter iter;
- *        Gtk.TreeSelection selection;
- *        Cld.Object channel;
- *
- *        selection = (channel_treeview as Gtk.TreeView).get_selection ();
- *        selection.get_selected (out tree_model, out iter);
- *        tree_model.get (iter, Dactl.ChannelTreeView.Columns.HIDDEN_ID, out id);
- *
- *        GLib.debug ("Selected: %s", id);
- *        channel = this.model.ctx.get_object (id);
- *
- *        [> This is an ugly way of doing this but it shouldn't matter <]
- *        foreach (var chart in charts) {
- *            chart.select_series (id);
- *        }
- *    }
- */
+    private void treeview_channel_selected_cb (string id) {
+        debug ("Selected channel `%s' to be highlighted on chart", id);
+        var channel = model.ctx.get_object (id);
+
+        /**
+         * FIXME: the stripchart class doesn't use the chart as its base yet
+         */
+        var charts = model.get_object_map (typeof (Dactl.StripChart));
+        foreach (var chart in charts.values) {
+            (chart as Dactl.StripChart).highlight_trace (id);
+        }
+    }
 
     /**
      * Action callback for settings page selection.
@@ -232,21 +236,28 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         (settings_content as Dactl.Settings).page = (Dactl.SettingsPage) parameter;
     }
 
-
     [GtkCallback]
     public bool key_pressed_cb (Gdk.EventKey event) {
+        var app = Dactl.UI.Application.get_default ();
         var default_modifiers = Gtk.accelerator_get_default_mod_mask ();
 
-        if (event.keyval == Gdk.Key.F11) {
-            //fullscreen = !fullscreen;
-            message ("(.)(.)");
+        if (event.keyval == Gdk.Key.Home) {
+            layout_change_page (model.startup_page);
+        } else if (event.keyval == Gdk.Key.F11) {
+            if (state == Dactl.UI.State.WINDOWED) {
+                (this as Gtk.Window).fullscreen ();
+                state = Dactl.UI.State.FULLSCREEN;
+            } else {
+                (this as Gtk.Window).unfullscreen ();
+                state = Dactl.UI.State.WINDOWED;
+            }
             return true;
         } else if (event.keyval == Gdk.Key.F1) {
-            //App.app.activate_action ("help", null);
+            app.activate_action ("help", null);
             return true;
         } else if (event.keyval == Gdk.Key.q &&
                    (event.state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
-            /* quit? */
+            app.activate_action ("quit", null);
             return true;
         } else if (event.keyval == Gdk.Key.Left && // ALT + Left -> back
                    (event.state & default_modifiers) == Gdk.ModifierType.MOD1_MASK) {
@@ -265,8 +276,8 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
 
     [GtkCallback]
     private bool configure_event_cb () {
-        //if (fullscreen)
-            //return false;
+        if (state == Dactl.UI.State.FULLSCREEN)
+            return false;
 
         if (configure_id != 0)
             GLib.Source.remove (configure_id);
@@ -282,26 +293,57 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
 
     [GtkCallback]
     private bool window_state_event_cb (Gdk.EventWindowState event) {
-/*
- *        if (WindowState.FULLSCREEN in event.changed_mask)
- *            this.notify_property ("fullscreen");
- *
- *        if (fullscreen)
- *            return false;
- *
- *        settings.set_boolean ("window-maximized", maximized);
- */
+        if (Dactl.UI.State.FULLSCREEN in event.changed_mask)
+            this.notify_property ("fullscreen");
+
+        if (state == Dactl.UI.State.FULLSCREEN)
+            return false;
+
+        //settings.set_boolean ("window-maximized", maximized);
 
         return false;
     }
 
     [GtkCallback]
     private bool delete_event_cb () {
-        /* FIXME: should be checking if the window was closed during an
+        /**
+         * FIXME: this doesn't work, it still closes the window, not really a
+         *        big surprise though
+         * FIXME: should be checking if the window was closed during an
          *        important operation, or while in a state that could cause
-         *        issues */
+         *        issues
+         * FIXME: this should just chain up to the application quit but is
+         *        doesn't seem to want to fire the dialog when it does
+         */
 
-        //return App.app.remove_window (this);
+/*
+ *        var dialog = new Gtk.MessageDialog (null,
+ *                                            Gtk.DialogFlags.MODAL,
+ *                                            Gtk.MessageType.QUESTION,
+ *                                            Gtk.ButtonsType.YES_NO,
+ *                                            "Are you sure you want to quit?");
+ *
+ *        (dialog as Gtk.Dialog).response.connect ((response_id) => {
+ *            switch (response_id) {
+ *                case Gtk.ResponseType.NO:
+ *                    (dialog as Gtk.Dialog).destroy ();
+ *                    break;
+ *                case Gtk.ResponseType.YES:
+ *                    var app = Dactl.UI.Application.get_default ();
+ *                    app.remove_window (this);
+ *                    (dialog as Gtk.Dialog).destroy ();
+ *                    app.quit ();
+ *                    break;
+ *            }
+ *        });
+ *
+ *        (dialog as Gtk.Dialog).run ();
+ */
+
+        var app = Dactl.UI.Application.get_default ();
+        app.remove_window (this);
+        app.quit ();
+
         return false;
     }
 }

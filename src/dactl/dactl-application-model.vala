@@ -73,7 +73,8 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
             /* XXX might be better if somehow done after gui was launched
              *     so that a dialog could be given, or use conditional
              *     ApplicationModel construction */
-            critical ("Configuration selection '%s' does not exist.", config_filename);
+            critical ("Configuration selection '%s' does not exist.",
+                      config_filename);
         }
 
         /* Load the entire application configuration file */
@@ -83,25 +84,22 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
 
         /* Get the nodeset to use from the configuration */
         try {
-            Xml.Node *node = config.get_xml_node ("/dactl/objects/object");
+            Xml.Node *node = config.get_xml_node ("/dactl/ui:objects/ui:object");
             objects = factory.make_object_map (node);
-        } catch (Dactl.ConfigError e) {
-            GLib.error ("Configuration error: %s", e.message);
+        } catch (Dactl.FactoryError e) {
+            GLib.error (e.message);
         }
-
-        (this as Dactl.Container).print_objects (0);
 
         /* Load the CLD specific configuration and builder */
-        Xml.Node *node;
         try {
-            node = config.get_xml_node ("//dactl/cld:objects");
+            Xml.Node *node = config.get_xml_node ("/dactl/cld:objects");
             xml = new Cld.XmlConfig.from_node (node);
             ctx = new Cld.Context.from_config (xml);
-
-            setup_model ();
         } catch (Dactl.ConfigError e) {
-            error ("Configuration error: %s", e.message);
+            GLib.error (e.message);
         }
+
+        setup_model ();
     }
 
     /**

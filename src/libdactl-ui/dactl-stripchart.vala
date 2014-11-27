@@ -101,7 +101,7 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
         cr.set_source_surface (t_axis_ctx.get_target (), t_axis_x, t_axis_y);
         cr.paint ();
 
-        var y_axis_x = padding_left -40;
+        var y_axis_x = padding_left - 40;
         var y_axis_y = padding_top;
         var y_axis_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, w, h);
         var y_axis_ctx = new Dactl.AxisView (y_axis_surface);
@@ -117,6 +117,17 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
         cr.set_font_size (12);
         cr.move_to (padding_left, padding_top - 5);
         cr.show_text ((parent as Dactl.StripChart).title);
+        cr.move_to (padding_left + grid_w / 2, padding_top + grid_h + 40);
+        cr.show_text (t_axis.label);
+        cr.move_to (5, h / 2);
+        cr.show_text (y_axis.label);
+//      XXX TBD: Rotate the Y-Axis label 90 degrees CCW.
+//        var y_axis_label_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, w, h);
+//        var y_axis_label_ctx = new Cairo.Context (y_axis_label_surface);
+//        y_axis_label_ctx.rotate (90 * GLib.Math.PI / 190);
+//        cr.set_operator (Cairo.Operator.OVER);
+//        cr.set_source_surface (y_axis_label_surface, w / 2, h / 2);
+//        cr.paint ();
 
         /* Legend */
 
@@ -157,6 +168,7 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
             switch ((trace as Dactl.Trace).draw_type) {
                 case Dactl.TraceDrawType.BAR:
                     var stencil = new Dactl.Bar (trace_surface);
+                    stencil.set_line_width ((trace as Dactl.Trace).line_weight);
                     stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
                     stencil.draw (data, new Dactl.Point (0.0, y_offset), true);
                     cr.set_operator (Cairo.Operator.OVER);
@@ -165,6 +177,7 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
                     break;
                 case Dactl.TraceDrawType.LINE:
                     var stencil = new Dactl.Line (trace_surface);
+                    stencil.set_line_width ((trace as Dactl.Trace).line_weight);
                     stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
                     stencil.draw (data);
                     cr.set_operator (Cairo.Operator.OVER);
@@ -173,6 +186,7 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
                     break;
                 case Dactl.TraceDrawType.POLYLINE:
                     var stencil = new Dactl.Polyline (trace_surface);
+                    stencil.set_line_width ((trace as Dactl.Trace).line_weight);
                     stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
                     stencil.draw (data);
                     cr.set_operator (Cairo.Operator.OVER);
@@ -181,6 +195,7 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
                     break;
                 case Dactl.TraceDrawType.SCATTER:
                     var stencil = new Dactl.Scatter (trace_surface);
+                    stencil.set_line_width ((trace as Dactl.Trace).line_weight);
                     stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
                     stencil.draw (data);
                     cr.set_operator (Cairo.Operator.OVER);
@@ -279,6 +294,36 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     [GtkChild]
     private Gtk.Revealer settings;
+
+    [GtkChild]
+    private Gtk.Entry entry_title;
+
+    [GtkChild]
+    private Gtk.Entry entry_y_axis;
+
+    [GtkChild]
+    private Gtk.SpinButton spinbutton_y_min;
+
+    [GtkChild]
+    private Gtk.SpinButton spinbutton_y_max;
+
+    [GtkChild]
+    private Gtk.SpinButton spinbutton_y_major;
+
+    [GtkChild]
+    private Gtk.SpinButton spinbutton_y_minor;
+
+    [GtkChild]
+    private Gtk.Entry entry_time_axis;
+
+    [GtkChild]
+    private Gtk.SpinButton spinbutton_time_step;
+
+    [GtkChild]
+    private Gtk.SpinButton spinbutton_t_major;
+
+    [GtkChild]
+    private Gtk.SpinButton spinbutton_t_minor;
 
     /**
      * Common object construction.
@@ -400,6 +445,17 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
         }
     }
 
+    public void highlight_trace (string id) {
+        var traces = get_object_map (typeof (Dactl.Trace));
+        foreach (var trace in traces.values) {
+            (trace as Dactl.Trace).highlight = false;
+            if ((trace as Dactl.Trace).ch_ref == id) {
+                debug ("Chart `%s' highlighting `%s'", this.id, id);
+                (trace as Dactl.Trace).highlight = true;
+            }
+        }
+    }
+
     private void update_layout () {
         var axes = get_object_map (typeof (Dactl.Axis));
         foreach (var axis in axes.values) {
@@ -458,6 +514,26 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
     public bool canvas_button_press_event_cb (Gdk.EventButton event) {
 
         if (event.type == Gdk.EventType.2BUTTON_PRESS) {
+            entry_title.set_text (title);
+            entry_y_axis.set_text (canvas.y_axis.label);
+            entry_time_axis.set_text (canvas.t_axis.label);
+            spinbutton_y_min.set_value (canvas.y_axis.min);
+            spinbutton_y_max.set_value (canvas.y_axis.max);
+            spinbutton_y_major.set_value (canvas.t_axis.div_major);
+            spinbutton_y_minor.set_value (canvas.t_axis.div_minor);
+            var traces = get_children (typeof (Dactl.Trace));
+            /** XXX FIXME Stride should be a propery of the chart, not the trace
+             * For now just choose the largest one to populate the reveal
+             */
+            int stride = 0;
+            foreach (var trace in traces.values) {
+                if ((trace as Dactl.Trace).stride > stride) {
+                    stride = (trace as Dactl.Trace).stride;
+                }
+            }
+            spinbutton_time_step.set_value (stride);
+            spinbutton_t_major.set_value (canvas.t_axis.div_major);
+            spinbutton_t_minor.set_value (canvas.t_axis.div_minor);
             settings.set_reveal_child (!settings.reveal_child);
         }
 

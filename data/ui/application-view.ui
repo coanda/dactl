@@ -22,6 +22,8 @@
      |     |        |
      |     |        |-> configuration = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
      |     |        |
+     |     |        |-> export = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+     |     |        |
      |     |        |-> (generated page list) = new Dactl.Page ();
      |     |        |
      |     |        |-> ...
@@ -110,6 +112,12 @@
 
                 <child>
                   <object class="DactlConfigurationEditor" id="configuration">
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="DactlCsvExport" id="export">
                     <property name="visible">True</property>
                   </object>
                 </child>

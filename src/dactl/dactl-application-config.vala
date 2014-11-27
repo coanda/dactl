@@ -51,12 +51,14 @@ public class Dactl.ApplicationConfig : GLib.Object {
         /* Create context for XPath queries */
         ctx = new Xml.XPath.Context (doc);
         ctx->register_ns ("cld", "urn:libcld");
+        ctx->register_ns ("ui", "urn:libdactl-ui");
 
         /* Assume success if we made it here */
         loaded = true;
     }
 
     public void save () {
+        debug ("Saving file `%s'", file_name);
         doc->save_file (file_name);
     }
 

@@ -125,6 +125,8 @@ public class Dactl.LogControl : Dactl.CompositeWidget, Dactl.CldAdapter {
             log = (object as Cld.Log);
             satisfied = true;
             lbl_id.label = log.id;
+            lbl_path.label = "%s%s".printf (log.path, log.file);
+            lbl_logging_path.label = "%s%s".printf (log.path, log.file);
         }
     }
 

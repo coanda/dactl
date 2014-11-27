@@ -29,7 +29,7 @@ public class Dactl.AOControl : Dactl.CompositeWidget, Dactl.CldAdapter {
     private Gtk.Button btn_previous;
 
     [GtkChild]
-    private Gtk.Label lbl_id;
+    private Gtk.Label lbl_tag;
 
     [GtkChild]
     private Gtk.Label lbl_value;
@@ -119,7 +119,7 @@ public class Dactl.AOControl : Dactl.CompositeWidget, Dactl.CldAdapter {
             channel = (object as Cld.Channel);
             satisfied = true;
 
-            lbl_id.label = channel.id;
+            lbl_tag.label = channel.tag;
         }
     }
 

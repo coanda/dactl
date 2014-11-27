@@ -43,6 +43,11 @@ public class Dactl.Plugin : GLib.Object {
 
     public bool active { get; set; }
 
+    private bool _has_factory = false;
+    public virtual bool has_factory { get { return _has_factory; } }
+
+    public Dactl.Factory factory { get; protected set; }
+
     /**
      * Create an instance of the plugin.
      *
@@ -80,18 +85,22 @@ public class Dactl.Plugin : GLib.Object {
      *
      * @param node An XML node containing the configuration settings.
      */
-    public virtual void post_construction (Xml.Node *node) throws GLib.Error {
-        throw new PluginError.NO_CONFIGURABLE_SETTINGS
-                    (_("Plugin `%s' contains no configuration settings"), name);
-    }
+    /*
+     *public virtual void post_construction (Xml.Node *node) throws GLib.Error {
+     *    throw new PluginError.NO_CONFIGURABLE_SETTINGS
+     *                (_("Plugin `%s' contains no configuration settings"), name);
+     *}
+     */
 
     /**
      * Return the UI control for this plugin.
      *
      * @return Corresponding Dactl UI control as a Dactl.Object.
      */
-    public virtual Dactl.Object get_control () throws GLib.Error {
-        throw new PluginError.CONTROL_NOT_AVAILABLE
-                    (_("Plugin `%s' contains no configuration settings"), name);
-    }
+    /*
+     *public virtual Dactl.Object get_control () throws GLib.Error {
+     *    throw new PluginError.CONTROL_NOT_AVAILABLE
+     *                (_("Plugin `%s' contains no configuration settings"), name);
+     *}
+     */
 }

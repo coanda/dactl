@@ -8,7 +8,7 @@
     <property name="icon_name">emblem-system</property>
     <property name="icon_size">1</property>
   </object>
-  <template class="DactlExecControl" parent="GtkBox">
+  <template class="DactlExecControl" parent="DactlCompositeWidget">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="spacing">5</property>

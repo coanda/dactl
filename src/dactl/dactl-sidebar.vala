@@ -21,6 +21,8 @@ private class Dactl.Sidebar : Gtk.Revealer {
         settings_selection_action = new SimpleAction ("settings-selection", null);
         settings_sidebar.selection_action = settings_selection_action;
         notify["page"].connect (page_changed_cb);
+        set_valign (Gtk.Align.START);
+        set_transition_duration (750);
     }
 
     /**

@@ -13,6 +13,7 @@ BUILT_SOURCES = resources.c
 libdactl_velmex_la_SOURCES = \
 	$(BUILT_SOURCES) \
 	dactl-velmex-control.vala \
+	dactl-velmex-factory.vala \
 	dactl-velmex-settings.vala \
 	dactl-velmex-plugin.vala
 

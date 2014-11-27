@@ -280,7 +280,6 @@ private class Dactl.AxisView : Cairo.Context {
     }
 
     public void draw (int w, int h, Dactl.Axis axis) {
-
         int major_tick_height = 8;
         int minor_tick_height = 5;
         int div_major = axis.div_major;
@@ -307,15 +306,11 @@ private class Dactl.AxisView : Cairo.Context {
             tick_layout_list.append (layout);
         }
 
-        //cr.set_source_rgba (0.0, 0.0, 0.0, 1.0);
-
-        for (var i = 0; i <= div_major; i++) {
-            if (orientation == Dactl.Orientation.HORIZONTAL) {
-                x = (w / div_major + 1) * i;
-                if (i == 0)
-                    x += 1;
-                else {
-                    x -= (int)(i * 0.5);
+        if (orientation == Dactl.Orientation.HORIZONTAL) {
+            for (var i = 0; i <= div_major; i++) {
+                x = i * w / div_major;
+                /* Shift the first one over a bit */
+                if (i == 0) {
                     x += 1;
                 }
                 this.move_to (x, y);
@@ -333,21 +328,25 @@ private class Dactl.AxisView : Cairo.Context {
                     this.move_to (x, y + major_tick_height + 2);
                 Pango.cairo_update_layout (this, layout);
                 Pango.cairo_show_layout (this, layout);
+            }
 
-                /* draw minor ticks */
-                for (var j = 1; j < div_minor; j++) {
-                    x += (w / div_major) / div_minor;
-                    this.move_to (x, y);
-                    this.line_to (x, minor_tick_height);
-                    this.set_line_width (0.5);
-                    this.stroke ();
-                }
-            } else if (orientation == Dactl.Orientation.VERTICAL) {
-                x = w - major_tick_height;
-                if (i == 0)
+            /* draw minor ticks */
+            for (var i = 0; i <= (div_major * div_minor); i++) {
+                x = i * w / (div_major * div_minor);
+                this.move_to (x, y);
+                this.line_to (x, minor_tick_height);
+                this.set_line_width (0.5);
+                this.stroke ();
+            }
+
+        } else if (orientation == Dactl.Orientation.VERTICAL) {
+            x = w - major_tick_height;
+            for (var i = 0; i <= div_major; i++) {
+                y = i * h / div_major;
+                /* Shift the first one over a bit */
+                if (i == 0) {
                     y += 1;
-                else
-                    y += (h / div_major);
+                }
                 this.move_to (x, y);
                 this.line_to (w, y);
                 this.set_line_width (1);
@@ -365,16 +364,16 @@ private class Dactl.AxisView : Cairo.Context {
                     this.move_to (0, y - (fonth / 2));
                 Pango.cairo_update_layout (this, layout);
                 Pango.cairo_show_layout (this, layout);
+            }
 
-                /* draw minor ticks */
-                x = w - minor_tick_height;
-                for (var j = 1; j < div_minor; j++) {
-                    y += (h / div_major) / div_minor;
-                    this.move_to (x, y);
-                    this.line_to (w, y);
-                    this.set_line_width (0.5);
-                    this.stroke ();
-                }
+            /* draw minor ticks */
+            x = w - minor_tick_height;
+            for (var i = 0; i <= (div_major * div_minor); i++) {
+                y = i * h / (div_major * div_minor);
+                this.move_to (x, y);
+                this.line_to (w, y);
+                this.set_line_width (0.5);
+                this.stroke ();
             }
         }
 

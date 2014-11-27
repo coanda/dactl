@@ -46,8 +46,6 @@ internal class Dactl.Main : GLib.Object {
     public bool need_restart;
 
     private Main () throws GLib.Error {
-        GLib.Environment.set_application_name (_(Config.PACKAGE_NAME));
-
         this.factory = Dactl.ApplicationFactory.get_default ();
         this.log_handler = Dactl.LogHandler.get_default ();
         this.plugin_loader = new Dactl.PluginLoader ();
@@ -55,9 +53,6 @@ internal class Dactl.Main : GLib.Object {
         this.exit_code = 0;
 
         app = Dactl.UI.Application.get_default ();
-        app.closed.connect (() => {
-            app = null;
-        });
 
         this.plugin_loader.plugin_available.connect (this.on_plugin_loaded);
 
@@ -110,10 +105,8 @@ internal class Dactl.Main : GLib.Object {
 
                 // FIXME: this causes the application to close the device connections
                 //this.exit (-82);
-            /*
-             *} else {
-             *    app.plugins = this.plugin_loader.list_plugins ();
-             */
+            } else {
+                message ("Plugin timeout is complete, assuming all are loaded");
             }
 
             return false;
@@ -122,6 +115,17 @@ internal class Dactl.Main : GLib.Object {
 
     private void on_plugin_loaded (PluginLoader plugin_loader,
                                    Plugin       plugin) {
+        if (plugin.has_factory) {
+            Dactl.ApplicationFactory.register_factory (plugin.factory);
+        }
+
+        app.plugins.add (plugin);
+        app.register_plugin (plugin);
+        if (app.plugins.size > 0) {
+            message ("Added `%s', there are now %d plugins loaded",
+                     plugin.name, app.plugins.size);
+        }
+
         /*
          *var iterator = this.factories.iterator ();
          *while (iterator.next ()) {
@@ -147,6 +151,9 @@ internal class Dactl.Main : GLib.Object {
         Intl.bind_textdomain_codeset (Config.GETTEXT_PACKAGE, "UTF-8");
         Intl.textdomain (Config.GETTEXT_PACKAGE);
 
+        GLib.Environment.set_prgname (_(Config.PACKAGE_NAME));
+        GLib.Environment.set_application_name (_(Config.PACKAGE_NAME));
+
         try {
             parse_local_args (ref args);
 
@@ -158,17 +165,6 @@ internal class Dactl.Main : GLib.Object {
         } catch (GLib.Error e) {
             error ("%s", e.message);
         }
-
-        /* Setup the application view */
-        /*
-         *if (cli) {
-         *    GLib.message ("CLI application requested");
-         *    app = new Dactl.CLI.Application ();
-         *} else {
-         *    GLib.message ("UI application requested");
-         *    app = new Dactl.UI.Application ();
-         *}
-         */
 
         /* Launch the application */
         int exit_code = main.run (args);

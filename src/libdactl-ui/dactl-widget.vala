@@ -52,6 +52,33 @@ public interface Dactl.Widget : GLib.Object {
     public abstract bool fill { get; set; }
 }
 
+public abstract class Dactl.SimpleWidget : Gtk.Box, Dactl.Widget, Dactl.Buildable, Dactl.Object {
+
+    /**
+     * {@inheritDoc}
+     */
+    public virtual string id { get; set; }
+
+    //public bool expand { get; set; default = true; }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected abstract string xml { get; }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected abstract string xsd { get; }
+
+    public bool fill { get; set; default = true; }
+
+    /**
+     * {@inheritDoc}
+     */
+    public abstract void build_from_xml_node (Xml.Node *node);
+}
+
 public abstract class Dactl.CustomWidget : Gtk.DrawingArea, Dactl.Widget, Dactl.Buildable, Dactl.Object {
 
     /**

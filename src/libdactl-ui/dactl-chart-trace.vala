@@ -85,6 +85,8 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
 
     public bool channel_isset { get; private set; default = false; }
 
+    public bool highlight { get; set; default = false; }
+
     /**
      * Timeout in milliseconds duration to accumulate values over.
      */
@@ -130,6 +132,8 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
      * Line width to use for drawing.
      */
     public double line_weight { get; set; default = 1.0; }
+
+    private double initial_line_weight = 1.0;
 
     /* FIXME: Couldn't use a Gdk.RGBA here for some unknown reason */
     /**
@@ -214,6 +218,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
      */
     public Trace () {
         buffer = new double[buffer_size];
+        connect_signals ();
     }
 
     /**
@@ -222,6 +227,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
     public Trace.from_xml_node (Xml.Node *node) {
         build_from_xml_node (node);
         buffer = new double[buffer_size];
+        connect_signals ();
     }
 
     /**
@@ -245,6 +251,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
                             break;
                         case "line-weight":
                             line_weight = double.parse (iter->get_content ());
+                            initial_line_weight = line_weight;
                             break;
                         case "color":
                             color_spec = iter->get_content ();
@@ -292,6 +299,15 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
                 }
             }
         }
+    }
+
+    private void connect_signals () {
+        this.notify["highlight"].connect (() => {
+            if (highlight)
+                line_weight = initial_line_weight * 3.0;
+            else
+                line_weight = initial_line_weight;
+        });
     }
 
     private void new_value_cb (string id, double value) {

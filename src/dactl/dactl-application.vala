@@ -126,6 +126,8 @@ public interface Dactl.Application : GLib.Object {
      */
     public abstract Dactl.ApplicationController controller { get; set; }
 
+    public abstract Gee.ArrayList<Dactl.Plugin> plugins { get; set; }
+
     /**
      * Emitted when the application has been stopped.
      */
@@ -147,4 +149,6 @@ public interface Dactl.Application : GLib.Object {
  *
  *    protected abstract void _activate ();
  */
+
+    public abstract void register_plugin (Dactl.Plugin plugin);
 }

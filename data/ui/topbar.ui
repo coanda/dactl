@@ -28,6 +28,18 @@
       </packing>
     </child>
 
+    <!-- CSV Export -->
+    <child>
+      <object class="DactlCsvExportToolbar" id="export_toolbar">
+        <property name="visible">True</property>
+        <property name="show-close-button">True</property>
+      </object>
+
+      <packing>
+        <property name="name">export</property>
+      </packing>
+    </child>
+
     <!-- Settings -->
     <child>
       <object class="DactlSettingsToolbar" id="settings_toolbar">
