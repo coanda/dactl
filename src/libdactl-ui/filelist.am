@@ -17,6 +17,7 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-pnid.vala \
     dactl-stripchart.vala \
     dactl-ui-factory.vala \
+    dactl-video-processor.vala \
     dactl-widget.vala \
     dactl-zoom-window.vala
 

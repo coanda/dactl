@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.18.3 -->
+<!-- Generated with glade 3.16.1 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
   <object class="GtkAdjustment" id="adjustment_avg_ai">
     <property name="upper">1000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment_length_ds">
+    <property name="upper">10000</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
@@ -147,6 +152,22 @@
       <column type="gchararray"/>
     </columns>
   </object>
+  <object class="GtkListStore" id="liststore_ds">
+    <columns>
+      <!-- column-name ID -->
+      <column type="gchararray"/>
+      <!-- column-name Length -->
+      <column type="gint"/>
+      <!-- column-name URI -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="liststore_ds_chref">
+    <columns>
+      <!-- column-name chref -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkListStore" id="liststore_math_chan">
     <columns>
       <!-- column-name ID -->
@@ -175,13 +196,13 @@
     <property name="name">acquisition</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="margin_left">10</property>
-    <property name="margin_right">10</property>
-    <property name="margin_top">10</property>
-    <property name="margin_bottom">10</property>
+    <property name="margin_left">5</property>
+    <property name="margin_right">5</property>
+    <property name="margin_top">5</property>
+    <property name="margin_bottom">5</property>
     <property name="orientation">vertical</property>
     <child>
-      <object class="GtkFrame" id="frame1">
+      <object class="GtkFrame" id="frame_content">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label_xalign">0</property>
@@ -190,17 +211,25 @@
           <object class="GtkNotebook" id="notebook_channel">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="margin_left">5</property>
+            <property name="margin_right">5</property>
+            <property name="margin_top">5</property>
+            <property name="margin_bottom">5</property>
             <property name="scrollable">True</property>
             <property name="enable_popup">True</property>
             <child>
               <object class="GtkBox" id="box_ai">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="spacing">5</property>
                 <child>
                   <object class="GtkScrolledWindow" id="scrolledwindow_ai">
                     <property name="width_request">300</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_top">5</property>
+                    <property name="margin_bottom">5</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkTreeView" id="treeview_ai">
@@ -261,7 +290,6 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="width_chars">22</property>
-                                    <property name="max_width_chars">20</property>
                                     <signal name="activate" handler="entry_tag_ai_activate_cb" swapped="no"/>
                                   </object>
                                   <packing>
@@ -299,7 +327,6 @@
                                   <object class="GtkEntry" id="entry_desc_ai">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <property name="max_width_chars">40</property>
                                     <signal name="activate" handler="entry_desc_ai_activate_cb" swapped="no"/>
                                   </object>
                                   <packing>
@@ -341,7 +368,7 @@
                                     <property name="xalign">1</property>
                                     <property name="adjustment">adjustment_num_ai</property>
                                     <property name="numeric">True</property>
-                                    <signal name="activate" handler="spinbutton_num_ai_activate_cb" swapped="no"/>
+                                    <signal name="value-changed" handler="spinbutton_num_ai_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -383,7 +410,7 @@
                                     <property name="xalign">1</property>
                                     <property name="adjustment">adjustment_subdev_ai</property>
                                     <property name="numeric">True</property>
-                                    <signal name="activate" handler="spinbutton_subdev_ai_activate_cb" swapped="no"/>
+                                    <signal name="value-changed" handler="spinbutton_subdev_ai_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -425,7 +452,7 @@
                                     <property name="xalign">1</property>
                                     <property name="adjustment">adjustment_avg_ai</property>
                                     <property name="numeric">True</property>
-                                    <signal name="activate" handler="spinbutton_avg_ai_activate_cb" swapped="no"/>
+                                    <signal name="value-changed" handler="spinbutton_avg_ai_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -467,7 +494,7 @@
                                     <property name="xalign">1</property>
                                     <property name="adjustment">adjustment_range_ai</property>
                                     <property name="numeric">True</property>
-                                    <signal name="activate" handler="spinbutton_range_ai_activate_cb" swapped="no"/>
+                                    <signal name="value-changed" handler="spinbutton_range_ai_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -505,7 +532,6 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="width_chars">22</property>
-                                    <property name="max_width_chars">20</property>
                                     <signal name="activate" handler="entry_alias_ai_activate_cb" swapped="no"/>
                                   </object>
                                   <packing>
@@ -544,7 +570,6 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="width_chars">22</property>
-                                    <property name="max_width_chars">20</property>
                                     <signal name="activate" handler="entry_cal_ai_activate_cb" swapped="no"/>
                                   </object>
                                   <packing>
@@ -561,6 +586,44 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkBox" id="box32">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="spacing">5</property>
+                                <child>
+                                  <object class="GtkLabel" id="label30">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Calibration Units:</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="entry_cal_units_ai">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="width_chars">22</property>
+                                    <signal name="activate" handler="entry_cal_units_ai_activate_cb" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">8</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkBox" id="box_cal_ai">
                                 <property name="width_request">200</property>
                                 <property name="visible">True</property>
@@ -570,6 +633,7 @@
                                   <object class="GtkScrolledWindow" id="scrolledwindow4">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
+                                    <property name="margin_bottom">6</property>
                                     <property name="shadow_type">in</property>
                                     <child>
                                       <object class="GtkViewport" id="viewport7">
@@ -598,7 +662,7 @@
                               <packing>
                                 <property name="expand">True</property>
                                 <property name="fill">True</property>
-                                <property name="position">8</property>
+                                <property name="position">9</property>
                               </packing>
                             </child>
                           </object>
@@ -778,7 +842,7 @@
                                     <property name="xalign">1</property>
                                     <property name="adjustment">adjustment_num_ao</property>
                                     <property name="numeric">True</property>
-                                    <signal name="activate" handler="spinbutton_num_ao_activate_cb" swapped="no"/>
+                                    <signal name="value-changed" handler="spinbutton_num_ao_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -820,7 +884,7 @@
                                     <property name="xalign">1</property>
                                     <property name="adjustment">adjustment_subdev_ao</property>
                                     <property name="numeric">True</property>
-                                    <signal name="activate" handler="spinbutton_subdev_ao_activate_cb" swapped="no"/>
+                                    <signal name="value-changed" handler="spinbutton_subdev_ao_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -862,7 +926,7 @@
                                     <property name="xalign">1</property>
                                     <property name="adjustment">adjustment_range_ao</property>
                                     <property name="numeric">True</property>
-                                    <signal name="activate" handler="spinbutton_range_ao_activate_cb" swapped="no"/>
+                                    <signal name="value-changed" handler="spinbutton_range_ao_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -874,7 +938,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">5</property>
+                                <property name="position">4</property>
                               </packing>
                             </child>
                             <child>
@@ -912,7 +976,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">6</property>
+                                <property name="position">5</property>
                               </packing>
                             </child>
                             <child>
@@ -939,6 +1003,44 @@
                                     <property name="can_focus">True</property>
                                     <property name="width_chars">22</property>
                                     <signal name="activate" handler="entry_cal_ao_activate_cb" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">6</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox" id="box38">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="spacing">5</property>
+                                <child>
+                                  <object class="GtkLabel" id="label33">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Calibration Units:</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="entry_cal_units_ao">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="width_chars">22</property>
+                                    <signal name="activate" handler="entry_cal_units_ao_activate_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1174,7 +1276,7 @@
                                     <property name="xalign">1</property>
                                     <property name="adjustment">adjustment_num_di</property>
                                     <property name="numeric">True</property>
-                                    <signal name="activate" handler="spinbutton_num_di_activate_cb" swapped="no"/>
+                                    <signal name="value-changed" handler="spinbutton_num_di_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1216,7 +1318,7 @@
                                     <property name="xalign">1</property>
                                     <property name="adjustment">adjustment_subdev_di</property>
                                     <property name="numeric">True</property>
-                                    <signal name="activate" handler="spinbutton_subdev_di_activate_cb" swapped="no"/>
+                                    <signal name="value-changed" handler="spinbutton_subdev_di_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1411,7 +1513,7 @@
                                     <property name="input_purpose">digits</property>
                                     <property name="adjustment">adjustment_num_do</property>
                                     <property name="numeric">True</property>
-                                    <signal name="activate" handler="spinbutton_num_do_activate_cb" swapped="no"/>
+                                    <signal name="value-changed" handler="spinbutton_num_do_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1453,7 +1555,7 @@
                                     <property name="xalign">1</property>
                                     <property name="adjustment">adjustment_subdev_do</property>
                                     <property name="numeric">True</property>
-                                    <signal name="activate" handler="spinbutton_subdev_do_activate_cb" swapped="no"/>
+                                    <signal name="value-changed" handler="spinbutton_subdev_do_value_changed_cb" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1494,6 +1596,161 @@
               </object>
               <packing>
                 <property name="position">3</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="box_ds">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkScrolledWindow" id="scrolledwindow_ds">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <object class="GtkTreeView" id="treeview_ds">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="model">liststore_ds</property>
+                        <property name="search_column">0</property>
+                        <property name="tooltip_column">0</property>
+                        <signal name="row-activated" handler="row_activated_ds_cb" swapped="no"/>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection" id="treeview_selection_ds"/>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow" id="scrolledwindow_ds_set">
+                    <property name="width_request">300</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <object class="GtkViewport" id="viewport9">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkBox" id="box33">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_top">5</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <object class="GtkBox" id="box34">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="spacing">5</property>
+                                <child>
+                                  <object class="GtkLabel" id="label28">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Length:</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkSpinButton" id="spinbutton_length_ds">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="width_chars">5</property>
+                                    <property name="text" translatable="yes">0</property>
+                                    <property name="xalign">1</property>
+                                    <property name="adjustment">adjustment_length_ds</property>
+                                    <property name="numeric">True</property>
+                                    <signal name="value-changed" handler="spinbutton_length_ds_value_changed_cb" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox" id="box37">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="spacing">5</property>
+                                <child>
+                                  <object class="GtkLabel" id="label29">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Channel Referenced:</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBox" id="combobox_ds_chref">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="model">liststore_ds_chref</property>
+                                    <signal name="changed" handler="combobox_ds_chref_changed_cb" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="padding">5</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">4</property>
+                <property name="tab_expand">True</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="lbl_ds">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Data Series</property>
+              </object>
+              <packing>
+                <property name="position">4</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>
@@ -1731,6 +1988,44 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
+                                <property name="position">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox" id="box39">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="spacing">5</property>
+                                <child>
+                                  <object class="GtkLabel" id="label34">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Calibration Units:</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="entry_cal_units_math">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="width_chars">22</property>
+                                    <signal name="activate" handler="entry_cal_units_math_activate_cb" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
                                 <property name="position">5</property>
                               </packing>
                             </child>
@@ -1790,7 +2085,7 @@
                 </child>
               </object>
               <packing>
-                <property name="position">4</property>
+                <property name="position">5</property>
                 <property name="tab_expand">True</property>
               </packing>
             </child>
@@ -1801,7 +2096,7 @@
                 <property name="label" translatable="yes">Math</property>
               </object>
               <packing>
-                <property name="position">4</property>
+                <property name="position">5</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>

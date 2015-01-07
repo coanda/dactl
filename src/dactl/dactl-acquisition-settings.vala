@@ -14,6 +14,12 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
         EXPRESSION
     }
 
+    public enum DSColumns {
+        ID,
+        LENGTH,
+        URI
+    }
+
     public const int URI = 5;
 
     public enum CoeffColumns {
@@ -27,6 +33,7 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
         AO,
         DI,
         DO,
+        DS,
         MATH
     }
 
@@ -51,6 +58,9 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     private Gtk.ListStore liststore_coeff;
 
     [GtkChild]
+    private Gtk.ListStore liststore_ds;
+
+    [GtkChild]
     private Gtk.Notebook notebook_channel;
 
     [GtkChild]
@@ -67,6 +77,9 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     [GtkChild]
     private Gtk.Box box_math;
+
+    [GtkChild]
+    private Gtk.Box box_ds;
 
     [GtkChild]
     private Gtk.ScrolledWindow scrolledwindow_ai;
@@ -108,6 +121,9 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     private Gtk.Entry entry_cal_ai;
 
     [GtkChild]
+    private Gtk.Entry entry_cal_units_ai;
+
+    [GtkChild]
     private Gtk.ScrolledWindow scrolledwindow_ao;
 
     [GtkChild]
@@ -142,6 +158,9 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     [GtkChild]
     private Gtk.Entry entry_cal_ao;
+
+    [GtkChild]
+    private Gtk.Entry entry_cal_units_ao;
 
     [GtkChild]
     private Gtk.ScrolledWindow scrolledwindow_di;
@@ -215,11 +234,31 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     [GtkChild]
     private Gtk.Entry entry_cal_math;
 
+    [GtkChild]
+    private Gtk.Entry entry_cal_units_math;
+
+    [GtkChild]
+    private Gtk.TreeView treeview_ds;
+
+    [GtkChild]
+    private Gtk.TreeSelection treeview_selection_ds;
+
+    [GtkChild]
+    private Gtk.SpinButton spinbutton_length_ds;
+
+    [GtkChild]
+    private Gtk.ComboBox combobox_ds_chref;
+
+    [GtkChild]
+    private Gtk.ListStore liststore_ds_chref;
+
     private Cld.AIChannel ai_selected;
     private Cld.AOChannel ao_selected;
     private Cld.DIChannel di_selected;
     private Cld.DOChannel do_selected;
     private Cld.MathChannel math_selected;
+    private Cld.DataSeries ds_selected;
+    private bool ignore_combobox_ds_changed;
 
     construct {
         notebook_channel.switch_page.connect (notebook_channel_switch_page_cb);
@@ -229,16 +268,20 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
         treeview_di.set_activate_on_single_click (true);
         treeview_do.set_activate_on_single_click (true);
         treeview_math.set_activate_on_single_click (true);
+        treeview_ds.set_activate_on_single_click (true);
 
         populate_ai_treeview ();
         populate_ao_treeview ();
         populate_di_treeview ();
         populate_do_treeview ();
         populate_math_treeview ();
+        populate_ds_treeview ();
 
         create_coefficient_treeview_ai ();
         create_coefficient_treeview_ao ();
         create_coefficient_treeview_math ();
+
+        setup_ds_chref_combobox ();
     }
 
     private void notebook_channel_switch_page_cb (Gtk.Widget page, uint page_num) {
@@ -255,7 +298,7 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     private void populate_ai_treeview () {
         var app = Dactl.UI.Application.get_default ();
-        var channels = app.model.ctx.get_object_map (typeof (Cld.AIChannel));
+        var channels = app.model.ctx.get_object_map_from_uri (typeof (Cld.AIChannel));
 
         if (channels.size > 0) {
             treeview_ai.set_model (liststore_ai_chan);
@@ -296,7 +339,7 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     private void refresh_ai_treeview () {
         var app = Dactl.UI.Application.get_default ();
-        var channels = app.model.ctx.get_object_map (typeof (Cld.AIChannel));
+        var channels = app.model.ctx.get_object_map_from_uri (typeof (Cld.AIChannel));
 
         liststore_ai_chan.clear ();
         Gtk.TreeIter iter;
@@ -328,14 +371,12 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     [GtkCallback]
     private void row_activated_ai_cb (Gtk.TreePath path, Gtk.TreeViewColumn column) {
-
-        Cld.Calibration calibration;
-        Cld.AIChannel channel;
         Gtk.TreeIter iter;
         string uri;
 
         var app = Dactl.UI.Application.get_default ();
-        if (treeview_selection_ai == null ) GLib.message ("selection is null");
+        if (treeview_selection_ai == null )
+            critical ("AI channel selection is null");
         liststore_ai_chan.get_iter (out iter, path);
         liststore_ai_chan.get (iter, ChanColumns.URI, out uri);
         ai_selected = app.model.ctx.get_object_from_uri (uri) as Cld.AIChannel;
@@ -373,16 +414,6 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
 
     private void update_ai_entries () {
-        /* Clear entries */
-        entry_tag_ai.set_text ("");
-        entry_desc_ai.set_text ("");
-        spinbutton_num_ai.set_value (0);
-        spinbutton_subdev_ai.set_value (0);
-        spinbutton_avg_ai.set_value (0);
-        spinbutton_range_ai.set_value (0);
-        entry_alias_ai.set_text ("");
-        entry_cal_ai.set_text ("");
-
         /* Update entries */
         entry_tag_ai.set_text (ai_selected.tag);
         entry_desc_ai.set_text (ai_selected.desc);
@@ -392,6 +423,10 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
         spinbutton_range_ai.set_value (ai_selected.range);
         entry_alias_ai.set_text (ai_selected.alias);
         entry_cal_ai.set_text (ai_selected.calref);
+
+        var app = Dactl.UI.Application.get_default ();
+        var cal = app.model.ctx.get_object_from_uri (entry_cal_ai.get_text ());
+        entry_cal_units_ai.set_text ((cal as Cld.Calibration).units);
     }
 
     [GtkCallback]
@@ -407,25 +442,25 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     }
 
     [GtkCallback]
-    private void spinbutton_num_ai_activate_cb () {
+    private void spinbutton_num_ai_value_changed_cb () {
         ai_selected.num = (int) spinbutton_num_ai.get_value ();
         refresh_ai_treeview ();
     }
 
     [GtkCallback]
-    private void spinbutton_subdev_ai_activate_cb () {
+    private void spinbutton_subdev_ai_value_changed_cb () {
         ai_selected.subdevnum = (int) spinbutton_subdev_ai.get_value ();
         refresh_ai_treeview ();
     }
 
     [GtkCallback]
-    private void spinbutton_avg_ai_activate_cb () {
+    private void spinbutton_avg_ai_value_changed_cb () {
         ai_selected.raw_value_list_size = (int) spinbutton_avg_ai.get_value ();
         refresh_ai_treeview ();
     }
 
     [GtkCallback]
-    private void spinbutton_range_ai_activate_cb () {
+    private void spinbutton_range_ai_value_changed_cb () {
         ai_selected.range = (int) spinbutton_range_ai.get_value ();
         refresh_ai_treeview ();
     }
@@ -450,6 +485,14 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
         }
     }
 
+    [GtkCallback]
+    private void entry_cal_units_ai_activate_cb () {
+        var app = Dactl.UI.Application.get_default ();
+        var cal = app.model.ctx.get_object_from_uri (entry_cal_ai.get_text ());
+        ai_selected.calibration.units = entry_cal_units_ai.get_text ();
+        refresh_ai_treeview ();
+    }
+
     private void value_cell_edited_ai_cb (string path_string, string new_text) {
         int n;
 
@@ -472,7 +515,7 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     private void populate_ao_treeview () {
         var app = Dactl.UI.Application.get_default ();
-        var channels = app.model.ctx.get_object_map (typeof (Cld.AOChannel));
+        var channels = app.model.ctx.get_object_map_from_uri (typeof (Cld.AOChannel));
 
         if (channels.size > 0) {
             treeview_ao.set_model (liststore_ao_chan);
@@ -510,7 +553,7 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     private void refresh_ao_treeview () {
         var app = Dactl.UI.Application.get_default ();
-        var channels = app.model.ctx.get_object_map (typeof (Cld.AOChannel));
+        var channels = app.model.ctx.get_object_map_from_uri (typeof (Cld.AOChannel));
 
         liststore_ao_chan.clear ();
         Gtk.TreeIter iter;
@@ -586,15 +629,6 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
 
     private void update_ao_entries () {
-        /* Clear entries */
-        entry_tag_ao.set_text ("");
-        entry_desc_ao.set_text ("");
-        spinbutton_num_ao.set_value (0);
-        spinbutton_subdev_ao.set_value (0);
-        spinbutton_range_ao.set_value (0);
-        entry_alias_ao.set_text ("");
-        entry_cal_ao.set_text ("");
-
         /* Update entries */
         entry_tag_ao.set_text (ao_selected.tag);
         entry_desc_ao.set_text (ao_selected.desc);
@@ -603,6 +637,10 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
         spinbutton_range_ao.set_value (ao_selected.range);
         entry_alias_ao.set_text (ao_selected.alias);
         entry_cal_ao.set_text (ao_selected.calref);
+
+        var app = Dactl.UI.Application.get_default ();
+        var cal = app.model.ctx.get_object_from_uri (entry_cal_ao.get_text ());
+        entry_cal_units_ao.set_text ((cal as Cld.Calibration).units);
     }
 
     [GtkCallback]
@@ -620,19 +658,19 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     }
 
     [GtkCallback]
-    private void spinbutton_num_ao_activate_cb () {
+    private void spinbutton_num_ao_value_changed_cb () {
         ao_selected.num = (int) spinbutton_num_ao.get_value ();
         refresh_ao_treeview ();
     }
 
     [GtkCallback]
-    private void spinbutton_subdev_ao_activate_cb () {
+    private void spinbutton_subdev_ao_value_changed_cb () {
         ao_selected.subdevnum = (int) spinbutton_subdev_ao.get_value ();
         refresh_ao_treeview ();
     }
 
     [GtkCallback]
-    private void spinbutton_range_ao_activate_cb () {
+    private void spinbutton_range_ao_value_changed_cb () {
         ao_selected.range = (int) spinbutton_range_ao.get_value ();
         refresh_ao_treeview ();
     }
@@ -657,6 +695,14 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
         }
     }
 
+    [GtkCallback]
+    private void entry_cal_units_ao_activate_cb () {
+        var app = Dactl.UI.Application.get_default ();
+        var cal = app.model.ctx.get_object_from_uri (entry_cal_ao.get_text ());
+        ao_selected.calibration.units = entry_cal_units_ao.get_text ();
+        refresh_ao_treeview ();
+    }
+
     private void value_cell_edited_ao_cb (string path_string, string new_text) {
         int n;
 
@@ -679,7 +725,7 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     private void populate_di_treeview () {
         var app = Dactl.UI.Application.get_default ();
-        var channels = app.model.ctx.get_object_map (typeof (Cld.DIChannel));
+        var channels = app.model.ctx.get_object_map_from_uri (typeof (Cld.DIChannel));
 
         if (channels.size > 0) {
             treeview_di.set_model (liststore_di_chan);
@@ -711,7 +757,7 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     private void refresh_di_treeview () {
         var app = Dactl.UI.Application.get_default ();
-        var channels = app.model.ctx.get_object_map (typeof (Cld.DIChannel));
+        var channels = app.model.ctx.get_object_map_from_uri (typeof (Cld.DIChannel));
 
         liststore_di_chan.clear ();
         Gtk.TreeIter iter;
@@ -742,12 +788,6 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     }
 
     private void update_di_entries () {
-        /* Clear entries */
-        entry_tag_di.set_text ("");
-        entry_desc_di.set_text ("");
-        spinbutton_num_di.set_value (0);
-        spinbutton_subdev_di.set_value (0);
-
         /* Update entries */
         entry_tag_di.set_text (di_selected.tag);
         entry_desc_di.set_text (di_selected.desc);
@@ -769,13 +809,13 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     }
 
     [GtkCallback]
-    private void spinbutton_num_di_activate_cb () {
+    private void spinbutton_num_di_value_changed_cb () {
         di_selected.num = (int) spinbutton_num_di.get_value ();
         refresh_di_treeview ();
     }
 
     [GtkCallback]
-    private void spinbutton_subdev_di_activate_cb () {
+    private void spinbutton_subdev_di_value_changed_cb () {
         di_selected.subdevnum = (int) spinbutton_subdev_di.get_value ();
         refresh_di_treeview ();
     }
@@ -783,7 +823,7 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     /* Digital Output Channels */
     private void populate_do_treeview () {
         var app = Dactl.UI.Application.get_default ();
-        var channels = app.model.ctx.get_object_map (typeof (Cld.DOChannel));
+        var channels = app.model.ctx.get_object_map_from_uri (typeof (Cld.DOChannel));
 
         if (channels.size > 0) {
             treeview_do.set_model (liststore_do_chan);
@@ -815,7 +855,7 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     private void refresh_do_treeview () {
         var app = Dactl.UI.Application.get_default ();
-        var channels = app.model.ctx.get_object_map (typeof (Cld.DOChannel));
+        var channels = app.model.ctx.get_object_map_from_uri (typeof (Cld.DOChannel));
 
         liststore_do_chan.clear ();
         Gtk.TreeIter iter;
@@ -847,12 +887,6 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     }
 
     private void update_do_entries () {
-        /* Clear entries */
-        entry_tag_do.set_text ("");
-        entry_desc_do.set_text ("");
-        spinbutton_num_do.set_value (0);
-        spinbutton_subdev_do.set_value (0);
-
         /* Update entries */
         entry_tag_do.set_text (do_selected.tag);
         entry_desc_do.set_text (do_selected.desc);
@@ -874,13 +908,13 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     }
 
     [GtkCallback]
-    private void spinbutton_num_do_activate_cb () {
+    private void spinbutton_num_do_value_changed_cb () {
         do_selected.num = (int) spinbutton_num_do.get_value ();
         refresh_do_treeview ();
     }
 
     [GtkCallback]
-    private void spinbutton_subdev_do_activate_cb () {
+    private void spinbutton_subdev_do_value_changed_cb () {
         do_selected.subdevnum = (int) spinbutton_subdev_do.get_value ();
         refresh_do_treeview ();
     }
@@ -889,7 +923,7 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     private void populate_math_treeview () {
         var app = Dactl.UI.Application.get_default ();
-        var channels = app.model.ctx.get_object_map (typeof (Cld.MathChannel));
+        var channels = app.model.ctx.get_object_map_from_uri (typeof (Cld.MathChannel));
 
         if (channels.size > 0) {
             treeview_math.set_model (liststore_math_chan);
@@ -921,7 +955,7 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     private void refresh_math_treeview () {
         var app = Dactl.UI.Application.get_default ();
-        var channels = app.model.ctx.get_object_map (typeof (Cld.MathChannel));
+        var channels = app.model.ctx.get_object_map_from_uri (typeof (Cld.MathChannel));
 
         liststore_math_chan.clear ();
         Gtk.TreeIter iter;
@@ -994,19 +1028,16 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     }
 
     private void update_math_entries () {
-        /* Clear entries */
-        entry_tag_math.set_text ("");
-        entry_desc_math.set_text ("");
-        entry_expression_math.set_text ("");
-        entry_alias_math.set_text ("");
-        entry_cal_math.set_text ("");
-
         /* Update entries */
         entry_tag_math.set_text (math_selected.tag);
         entry_desc_math.set_text (math_selected.desc);
         entry_expression_math.set_text (math_selected.expression);
         entry_alias_math.set_text (math_selected.alias);
         entry_cal_math.set_text (math_selected.calref);
+
+        var app = Dactl.UI.Application.get_default ();
+        var cal = app.model.ctx.get_object_from_uri (entry_cal_math.get_text ());
+        entry_cal_units_math.set_text ((cal as Cld.Calibration).units);
     }
 
     [GtkCallback]
@@ -1047,6 +1078,14 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
         }
     }
 
+    [GtkCallback]
+    private void entry_cal_units_math_activate_cb () {
+        var app = Dactl.UI.Application.get_default ();
+        var cal = app.model.ctx.get_object_from_uri (entry_cal_math.get_text ());
+        math_selected.calibration.units = entry_cal_units_math.get_text ();
+        refresh_math_treeview ();
+    }
+
     private void value_cell_edited_math_cb (string path_string, string new_text) {
         int n;
 
@@ -1063,5 +1102,111 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
         GLib.message ("%s %s %s", path_string, new_text, coeff.uri);
         refresh_math_coeff_treeview ();
+    }
+
+    private void populate_ds_treeview () {
+        var app = Dactl.UI.Application.get_default ();
+        var dslist = app.model.ctx.get_object_map_from_uri (typeof (Cld.DataSeries));
+
+        if (dslist.size > 0) {
+            treeview_ds.set_model (liststore_ds);
+            treeview_ds.insert_column_with_attributes
+                (-1, "ID", new Gtk.CellRendererText (), "text", DSColumns.ID);
+            treeview_ds.insert_column_with_attributes
+                (-1, "Length", new Gtk.CellRendererText (), "text", DSColumns.LENGTH);
+            treeview_ds.insert_column_with_attributes
+                (-1, "URI", new Gtk.CellRendererText (), "text", DSColumns.URI);
+
+            Gtk.TreeIter iter;
+            foreach (var dataseries in dslist.values) {
+                liststore_ds.append (out iter);
+                liststore_ds.set (iter, DSColumns.ID, dataseries.id,
+                    DSColumns.LENGTH, (dataseries as Cld.DataSeries).length,
+                    DSColumns.URI, (dataseries as Cld.DataSeries).uri);
+          }
+            treeview_ds.set_rules_hint (true);
+            var path = new Gtk.TreePath.first ();
+            treeview_ds.set_cursor (path, null, false);
+            row_activated_ds_cb (path, treeview_ds.get_column (0));
+        }
+    }
+
+    private void setup_ds_chref_combobox () {
+        Gtk.CellRendererText renderer = new Gtk.CellRendererText ();
+        combobox_ds_chref.pack_start (renderer, true);
+        combobox_ds_chref.add_attribute (renderer, "text", 0);
+        combobox_ds_chref.active = 0;
+    }
+
+    private void refresh_ds_treeview () {
+        var app = Dactl.UI.Application.get_default ();
+        var dslist = app.model.ctx.get_object_map_from_uri (typeof (Cld.DataSeries));
+
+        liststore_ds.clear ();
+        Gtk.TreeIter iter;
+        foreach (var dataseries in dslist.values) {
+            liststore_ds.append (out iter);
+            liststore_ds.set (iter, DSColumns.ID, dataseries.id,
+                DSColumns.LENGTH, (dataseries as Cld.DataSeries).length,
+                DSColumns.URI, (dataseries as Cld.DataSeries).uri);
+        }
+    }
+
+    [GtkCallback]
+    private void row_activated_ds_cb (Gtk.TreePath path, Gtk.TreeViewColumn column) {
+        Gtk.TreeIter iter;
+        string uri;
+
+        var app = Dactl.UI.Application.get_default ();
+        if (treeview_selection_ds == null ) GLib.message ("selection is null");
+        liststore_ds.get_iter (out iter, path);
+        liststore_ds.get (iter, DSColumns.URI, out uri);
+        ds_selected = app.model.ctx.get_object_from_uri (uri) as Cld.DataSeries;
+        message ("Dataseries URI selected: %s", ds_selected.uri);
+        ignore_combobox_ds_changed = true;
+        update_ds_entries ();
+        ignore_combobox_ds_changed = false;
+    }
+
+    private void update_ds_entries () {
+        Gtk.TreeIter iter;
+        var app = Dactl.UI.Application.get_default ();
+        var ch_list = app.model.ctx.get_object_map_from_uri (typeof (Cld.Channel));
+
+        /* Populate selection list */
+        liststore_ds_chref.clear ();
+        liststore_ds_chref.append (out iter);
+        liststore_ds_chref.set (iter, 0, (ds_selected as Cld.DataSeries).chref);
+        foreach (var ch in ch_list.values) {
+            if ((ch as Cld.Channel).uri != (ds_selected as Cld.DataSeries).chref) {
+                liststore_ds_chref.append (out iter);
+                liststore_ds_chref.set (iter, 0, (ch as Cld.Channel).uri);
+            }
+        }
+        combobox_ds_chref.active = 0;
+
+        /* Update entries */
+        spinbutton_length_ds.set_value (ds_selected.length);
+    }
+
+    [GtkCallback]
+    private void combobox_ds_chref_changed_cb () {
+        Value chref;
+        Gtk.TreeIter iter;
+        var app = Dactl.UI.Application.get_default ();
+        combobox_ds_chref.get_active_iter (out iter);
+
+        if (!ignore_combobox_ds_changed) {
+            liststore_ds_chref.get_value (iter, 0, out chref);
+            (ds_selected as Cld.DataSeries).chref = (string) chref;
+            message ("DataSeries %s references %s", (ds_selected as Cld.DataSeries).uri,
+                        (ds_selected as Cld.DataSeries).chref);
+        }
+    }
+
+    [GtkCallback]
+    private void spinbutton_length_ds_value_changed_cb () {
+        ds_selected.length = (int) spinbutton_length_ds.get_value ();
+        refresh_ds_treeview ();
     }
 }

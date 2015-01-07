@@ -10,6 +10,7 @@ public class Dactl.Velmex.Control : Dactl.SimpleWidget, Dactl.PluginControl, Dac
           <xs:attribute name="id" type="xs:string" use="required"/>
           <xs:attribute name="type" type="xs:string" use="required"/>
           <xs:attribute name="ref" type="xs:string" use="required"/>
+          <xs:attribute name="parent" type="xs:string" use="required"/>
         </xs:element>
     """;
 
@@ -123,6 +124,27 @@ public class Dactl.Velmex.Control : Dactl.SimpleWidget, Dactl.PluginControl, Dac
             yield nap (1000);
         }
         cld_object_added ();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * FIXME: currently has no configurable property nodes or attributes
+     */
+    protected override void update_node () {
+        /*
+         *for (Xml.Node *iter = node->children; iter != null; iter = iter->next) {
+         *    if (iter->name == "property") {
+         *        switch (iter->get_prop ("name")) {
+         *            case "---":
+         *                iter->set_content (---);
+         *                break;
+         *            default:
+         *                break;
+         *        }
+         *    }
+         *}
+         */
     }
 
     [GtkCallback]

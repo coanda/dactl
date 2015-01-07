@@ -4,23 +4,32 @@
   <requires lib="gtk+" version="3.10"/>
   <requires lib="" version="3.10"/>
   <requires lib="dactl" version="3.14"/>
+  <object class="GtkAdjustment" id="adj_delta_t">
+    <property name="lower">1</property>
+    <property name="upper">10000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_points">
+    <property name="upper">10000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkAdjustment" id="adj_t_major">
+    <property name="lower">1</property>
     <property name="upper">100</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adj_t_minor">
+    <property name="lower">1</property>
     <property name="upper">100</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
-  <object class="GtkAdjustment" id="adj_time_step">
-    <property name="upper">1000</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
   <object class="GtkAdjustment" id="adj_y_major">
-    <property name="upper">10000</property>
+    <property name="lower">1</property>
+    <property name="upper">100</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
@@ -37,11 +46,12 @@
     <property name="page_increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adj_y_minor">
-    <property name="upper">10000</property>
+    <property name="lower">1</property>
+    <property name="upper">100</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
-  <template class="DactlStripChart" parent="GtkBox">
+  <template class="DactlStripChart" parent="DactlCompositeWidget">
     <property name="name">stripchart</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -94,22 +104,24 @@
                           <object class="GtkLabel" id="label1">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
                             <property name="label" translatable="yes">Title:</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">True</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkEntry" id="entry_title">
+                            <property name="width_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="editable">False</property>
+                            <signal name="activate" handler="entry_title_activate_cb" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="expand">True</property>
+                            <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
                           </packing>
@@ -130,23 +142,25 @@
                           <object class="GtkLabel" id="label2">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
                             <property name="label" translatable="yes">Y Axis:</property>
                             <property name="width_chars">10</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">True</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkEntry" id="entry_y_axis">
+                            <property name="width_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="editable">False</property>
+                            <signal name="activate" handler="entry_y_axis_activate_cb" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="expand">True</property>
+                            <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
                           </packing>
@@ -167,27 +181,28 @@
                           <object class="GtkLabel" id="label3">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0.80000001192092896</property>
+                            <property name="xalign">0</property>
                             <property name="label" translatable="yes">Min:</property>
                             <property name="width_chars">8</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">True</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkSpinButton" id="spinbutton_y_min">
+                            <property name="width_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="editable">False</property>
                             <property name="adjustment">adj_y_min</property>
-                            <property name="digits">2</property>
+                            <property name="digits">3</property>
                             <property name="numeric">True</property>
+                            <signal name="value-changed" handler="spinbutton_y_min_value_changed_cb" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="expand">True</property>
+                            <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
                           </packing>
@@ -208,27 +223,28 @@
                           <object class="GtkLabel" id="label4">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0.80000001192092896</property>
+                            <property name="xalign">0</property>
                             <property name="label" translatable="yes">Max:</property>
                             <property name="width_chars">8</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">True</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkSpinButton" id="spinbutton_y_max">
+                            <property name="width_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="editable">False</property>
                             <property name="adjustment">adj_y_max</property>
-                            <property name="digits">2</property>
+                            <property name="digits">3</property>
                             <property name="numeric">True</property>
+                            <signal name="value-changed" handler="spinbutton_y_max_value_changed_cb" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="expand">True</property>
+                            <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
                           </packing>
@@ -249,27 +265,27 @@
                           <object class="GtkLabel" id="label5">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0.80000001192092896</property>
+                            <property name="xalign">0</property>
                             <property name="label" translatable="yes">Major:</property>
                             <property name="width_chars">8</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">True</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkSpinButton" id="spinbutton_y_major">
+                            <property name="width_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="editable">False</property>
                             <property name="adjustment">adj_y_major</property>
-                            <property name="digits">2</property>
                             <property name="numeric">True</property>
+                            <signal name="value-changed" handler="spinbutton_y_major_value_changed_cb" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="expand">True</property>
+                            <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
                           </packing>
@@ -290,27 +306,27 @@
                           <object class="GtkLabel" id="label6">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0.80000001192092896</property>
+                            <property name="xalign">0</property>
                             <property name="label" translatable="yes">Minor:</property>
                             <property name="width_chars">8</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">True</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkSpinButton" id="spinbutton_y_minor">
+                            <property name="width_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="editable">False</property>
                             <property name="adjustment">adj_y_minor</property>
-                            <property name="digits">2</property>
                             <property name="numeric">True</property>
+                            <signal name="value-changed" handler="spinbutton_y_minor_value_changed_cb" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="expand">True</property>
+                            <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
                           </packing>
@@ -331,23 +347,25 @@
                           <object class="GtkLabel" id="label7">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
                             <property name="label" translatable="yes">Time Axis:</property>
                             <property name="width_chars">10</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">True</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkEntry" id="entry_time_axis">
+                            <property name="width_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="editable">False</property>
+                            <signal name="activate" handler="entry_time_axis_activate_cb" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="expand">True</property>
+                            <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
                           </packing>
@@ -360,35 +378,35 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox" id="box9">
+                      <object class="GtkBox" id="box10">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="spacing">5</property>
                         <child>
-                          <object class="GtkLabel" id="label8">
+                          <object class="GtkLabel" id="label9">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0.80000001192092896</property>
-                            <property name="label" translatable="yes">T:</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">Major:</property>
                             <property name="width_chars">8</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">True</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton_time_step">
+                          <object class="GtkSpinButton" id="spinbutton_t_major">
+                            <property name="width_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="editable">False</property>
-                            <property name="adjustment">adj_time_step</property>
-                            <property name="digits">3</property>
+                            <property name="adjustment">adj_t_major</property>
                             <property name="numeric">True</property>
+                            <signal name="value-changed" handler="spinbutton_t_major_value_changed_cb" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="expand">True</property>
+                            <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
                           </packing>
@@ -401,35 +419,35 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox" id="box10">
+                      <object class="GtkBox" id="box11">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="spacing">5</property>
                         <child>
-                          <object class="GtkLabel" id="label9">
+                          <object class="GtkLabel" id="label10">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0.80000001192092896</property>
-                            <property name="label" translatable="yes">Major:</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">Minor:</property>
                             <property name="width_chars">8</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">True</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton_t_major">
+                          <object class="GtkSpinButton" id="spinbutton_t_minor">
+                            <property name="width_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="editable">False</property>
-                            <property name="adjustment">adj_t_major</property>
-                            <property name="digits">3</property>
+                            <property name="adjustment">adj_t_minor</property>
                             <property name="numeric">True</property>
+                            <signal name="value-changed" handler="spinbutton_t_minor_value_changed_cb" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="expand">True</property>
+                            <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
                           </packing>
@@ -442,35 +460,38 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox" id="box11">
+                      <object class="GtkBox" id="box12">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="spacing">5</property>
                         <child>
-                          <object class="GtkLabel" id="label10">
+                          <object class="GtkLabel" id="label11">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0.80000001192092896</property>
-                            <property name="label" translatable="yes">Minor:</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">Δ T:</property>
                             <property name="width_chars">8</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">True</property>
                             <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton_t_minor">
+                          <object class="GtkSpinButton" id="spinbutton_delta_t">
+                            <property name="width_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="editable">False</property>
-                            <property name="adjustment">adj_t_minor</property>
+                            <property name="max_length">4</property>
+                            <property name="text" translatable="yes">0.00</property>
+                            <property name="adjustment">adj_delta_t</property>
                             <property name="digits">3</property>
                             <property name="numeric">True</property>
+                            <signal name="value-changed" handler="spinbutton_delta_t_value_changed_cb" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="expand">True</property>
+                            <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
                           </packing>
@@ -480,6 +501,50 @@
                         <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">9</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="box9">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkLabel" id="label8">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">Data Points:</property>
+                            <property name="width_chars">8</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton" id="spinbutton_points">
+                            <property name="width_request">200</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="max_length">4</property>
+                            <property name="text" translatable="yes">0.00</property>
+                            <property name="input_purpose">number</property>
+                            <property name="adjustment">adj_points</property>
+                            <property name="numeric">True</property>
+                            <signal name="value-changed" handler="spinbutton_points_value_changed_cb" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">10</property>
                       </packing>
                     </child>
                   </object>

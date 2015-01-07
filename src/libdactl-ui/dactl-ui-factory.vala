@@ -62,6 +62,7 @@ public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
             case "DactlChannelTreeView":        break;
             case "DactlChannelTreeCategory":    break;
             case "DactlChannelTreeEntry":       break;
+            case "DactlVideoProcessor":         break;
             default:
                 throw new Dactl.FactoryError.TYPE_NOT_FOUND (
                     _("The type requested is not a known Dactl type"));
@@ -98,6 +99,7 @@ public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
                     case "tree":            return make_tree (node);
                     case "tree-category":   return make_tree_category (node);
                     case "tree-entry":      return make_tree_entry (node);
+                    case "video":           return make_video_processor (node);
                     default:
                         throw new Dactl.FactoryError.TYPE_NOT_FOUND (
                             _("The type requested is not a known Dactl type"));
@@ -176,5 +178,9 @@ public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
 
     private Dactl.Object make_tree_entry (Xml.Node *node) {
         return new Dactl.ChannelTreeEntry.from_xml_node (node);
+    }
+
+    private Dactl.Object make_video_processor (Xml.Node *node) {
+        return new Dactl.VideoProcessor.from_xml_node (node);
     }
 }

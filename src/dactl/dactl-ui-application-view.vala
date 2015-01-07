@@ -44,6 +44,9 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     private Gtk.Box settings;
 
     [GtkChild]
+    private Dactl.Loader loader;
+
+    [GtkChild]
     private Dactl.ConfigurationEditor configuration;
 
     [GtkChild]
@@ -61,7 +64,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     public Dactl.UI.State state { get; set; default = Dactl.UI.State.WINDOWED; }
 
     // The application page is intentionally left out
-    private string[] pages = { "configuration", "export", "settings" };
+    private string[] pages = { "loader", "configuration", "export", "settings" };
 
     /**
      * Default construction.
@@ -78,6 +81,9 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
 
         /* FIXME: Load previous window size and fullscreen state using settings. */
         set_default_size (1280, 720);
+
+        topbar.application_toolbar.title = this.title;
+        topbar.application_toolbar.subtitle = model.config_filename;
 
         setup ();
         load_style ();
@@ -150,7 +156,12 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     public void layout_change_page (string id) {
         debug ("Changing layout page from `%s' to `%s'", layout.visible_child_name, id);
         if (layout.visible_child_name != id) {
-            if (id == "configuration" && layout.visible_child != configuration) {
+            if (id == "loader" && layout.visible_child != loader) {
+                previous_page = layout.visible_child_name;
+                layout.visible_child = loader;
+                topbar.set_visible_child_name (id);
+                sidebar.page = Dactl.SidebarPage.NONE;
+            } else if (id == "configuration" && layout.visible_child != configuration) {
                 previous_page = layout.visible_child_name;
                 layout.visible_child = configuration;
                 topbar.set_visible_child_name (id);
@@ -201,7 +212,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
                 pos = i;
         }
 
-        if (pos != -1 && pages[pos + 1] != "configuration") {
+        if (pos != -1 && pages[pos + 1] != "loader") {
             layout.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
             layout_change_page (pages[pos + 1]);
             layout.transition_type = Gtk.StackTransitionType.CROSSFADE;
@@ -241,9 +252,9 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         var app = Dactl.UI.Application.get_default ();
         var default_modifiers = Gtk.accelerator_get_default_mod_mask ();
 
-        if (event.keyval == Gdk.Key.Home) {
+        if (event.keyval == Gdk.Key.Home) {             // Home -> go to default page
             layout_change_page (model.startup_page);
-        } else if (event.keyval == Gdk.Key.F11) {
+        } else if (event.keyval == Gdk.Key.F11) {       // F11 -> fullscreen
             if (state == Dactl.UI.State.WINDOWED) {
                 (this as Gtk.Window).fullscreen ();
                 state = Dactl.UI.State.FULLSCREEN;
@@ -252,22 +263,38 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
                 state = Dactl.UI.State.WINDOWED;
             }
             return true;
-        } else if (event.keyval == Gdk.Key.F1) {
+        } else if (event.keyval == Gdk.Key.F1) {        // F1 -> open help
             app.activate_action ("help", null);
+
             return true;
-        } else if (event.keyval == Gdk.Key.q &&
+        } else if (event.keyval == Gdk.Key.q &&         // CTRL = q -> quit application
                    (event.state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
             app.activate_action ("quit", null);
+
             return true;
-        } else if (event.keyval == Gdk.Key.Left && // ALT + Left -> back
+        } else if (event.keyval == Gdk.Key.o &&         // CTRL + o -> open loader
+                   (event.state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
+            layout_change_page ("loader");
+
+            return true;
+        } else if (event.keyval == Gdk.Key.x &&         // CTRL + x -> open CSV export
+                   (event.state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
+            layout_change_page ("export");
+
+            return true;
+        } else if (event.keyval == Gdk.Key.Left &&      // ALT + Left -> back
                    (event.state & default_modifiers) == Gdk.ModifierType.MOD1_MASK) {
             //topbar.click_back_button ();
+            layout_previous_page ();
+
             return true;
-        } else if (event.keyval == Gdk.Key.Right && // ALT + Right -> forward
+        } else if (event.keyval == Gdk.Key.Right &&     // ALT + Right -> forward
                    (event.state & default_modifiers) == Gdk.ModifierType.MOD1_MASK) {
             //topbar.click_forward_button ();
+            layout_next_page ();
+
             return true;
-        } else if (event.keyval == Gdk.Key.Escape) { // ESC -> cancel
+        } else if (event.keyval == Gdk.Key.Escape) {    // ESC -> cancel
             //topbar.click_cancel_button ();
         }
 

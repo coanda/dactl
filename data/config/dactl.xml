@@ -24,7 +24,7 @@
   <!-- Plugin configuration -->
   <plugins>
     <plugin id="velmex0" type="velmex">
-      <ui:object id="velmex-ctl0" type="plugin-control" parent="box0-0" ref="/ctr0/vm0"/>
+      <ui:object id="velmex-ctl0" type="plugin-control" parent="box0-0" ref="/vm0"/>
     </plugin>
   </plugins>
 
@@ -46,28 +46,27 @@
           <ui:property name="expand">false</ui:property>
           <ui:property name="fill">false</ui:property>
 
-          <ui:object id="log-ctl0" type="log" ref="/ctr0/logctl0/log0"/>
-
+          <ui:object id="log-ctl0" type="log" ref="/logctl0/log0"/>
           <ui:object id="tree0" type="tree">
             <ui:property name="show-header">true</ui:property>
             <ui:object id="cat0" type="tree-category">
               <ui:property name="title">Measurements</ui:property>
-              <ui:object id="cat0ent00" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai00"/>
-              <ui:object id="cat0ent01" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai01"/>
-              <ui:object id="cat0ent02" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai02"/>
-              <ui:object id="cat0ent03" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai03"/>
-              <ui:object id="cat0ent04" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai04"/>
-              <ui:object id="cat0ent05" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai05"/>
-              <ui:object id="cat0ent06" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai06"/>
-              <ui:object id="cat0ent07" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai07"/>
-              <ui:object id="cat0ent08" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai08"/>
-              <ui:object id="cat0ent09" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai09"/>
-              <ui:object id="cat0ent10" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai10"/>
-              <ui:object id="cat0ent11" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai11"/>
-              <ui:object id="cat0ent12" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai12"/>
-              <ui:object id="cat0ent13" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai13"/>
-              <ui:object id="cat0ent14" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai14"/>
-              <ui:object id="cat0ent15" type="tree-entry" chref="/ctr0/daqctl0/dev0/ai15"/>
+              <ui:object id="cat0ent00" type="tree-entry" chref="/daqctl0/dev0/ai00"/>
+              <ui:object id="cat0ent01" type="tree-entry" chref="/daqctl0/dev0/ai01"/>
+              <ui:object id="cat0ent02" type="tree-entry" chref="/daqctl0/dev0/ai02"/>
+              <ui:object id="cat0ent03" type="tree-entry" chref="/daqctl0/dev0/ai03"/>
+              <ui:object id="cat0ent04" type="tree-entry" chref="/daqctl0/dev0/ai04"/>
+              <ui:object id="cat0ent05" type="tree-entry" chref="/daqctl0/dev0/ai05"/>
+              <ui:object id="cat0ent06" type="tree-entry" chref="/daqctl0/dev0/ai06"/>
+              <ui:object id="cat0ent07" type="tree-entry" chref="/daqctl0/dev0/ai07"/>
+              <ui:object id="cat0ent08" type="tree-entry" chref="/daqctl0/dev0/ai08"/>
+              <ui:object id="cat0ent09" type="tree-entry" chref="/daqctl0/dev0/ai09"/>
+              <ui:object id="cat0ent10" type="tree-entry" chref="/daqctl0/dev0/ai10"/>
+              <ui:object id="cat0ent11" type="tree-entry" chref="/daqctl0/dev0/ai11"/>
+              <ui:object id="cat0ent12" type="tree-entry" chref="/daqctl0/dev0/ai12"/>
+              <ui:object id="cat0ent13" type="tree-entry" chref="/daqctl0/dev0/ai13"/>
+              <ui:object id="cat0ent14" type="tree-entry" chref="/daqctl0/dev0/ai14"/>
+              <ui:object id="cat0ent15" type="tree-entry" chref="/daqctl0/dev0/ai15"/>
             </ui:object>
           </ui:object>
         </ui:object>
@@ -75,7 +74,7 @@
         <ui:object id="box0-1" type="box">
           <ui:property name="homogeneous">true</ui:property>
           <ui:property name="orientation">vertical</ui:property>
-          <!--<ui:property name="spacing">5</ui:property>-->
+          <ui:property name="spacing">5</ui:property>
           <ui:property name="margin-top">5</ui:property>
           <ui:property name="margin-right">5</ui:property>
           <ui:property name="margin-bottom">5</ui:property>
@@ -104,7 +103,7 @@
                 <ui:property name="div-major">10</ui:property>
                 <ui:property name="div-minor">5</ui:property>
               </ui:object>
-              <ui:object id="tr0" type="chart-trace" ref="/ctr0/daqctl0/dev0/ai00">
+              <ui:object id="tr0" type="chart-trace" ref="/daqctl0/dev0/ai00">
                 <ui:property name="buffer-size">500</ui:property>
                 <ui:property name="color">red</ui:property>
                 <ui:property name="line-weight">1.0</ui:property>
@@ -112,7 +111,7 @@
                 <ui:property name="window-size">100</ui:property>
                 <ui:property name="stride">5</ui:property>
               </ui:object>
-              <ui:object id="tr1" type="chart-trace" ref="/ctr0/daqctl0/dev0/ai01">
+              <ui:object id="tr1" type="chart-trace" ref="/daqctl0/dev0/ai01">
                 <ui:property name="buffer-size">500</ui:property>
                 <ui:property name="color">green</ui:property>
                 <ui:property name="line-weight">1.0</ui:property>
@@ -141,7 +140,7 @@
                 <ui:property name="div-major">10</ui:property>
                 <ui:property name="div-minor">5</ui:property>
               </ui:object>
-              <ui:object id="tr0" type="chart-trace" ref="/ctr0/daqctl0/dev0/ai02">
+              <ui:object id="tr0" type="chart-trace" ref="/daqctl0/dev0/ai02">
                 <ui:property name="buffer-size">600</ui:property>
                 <ui:property name="color">rgba(141,166,86,0.5)</ui:property>
                 <ui:property name="line-weight">1.0</ui:property>
@@ -149,7 +148,7 @@
                 <ui:property name="window-size">100</ui:property>
                 <ui:property name="stride">6</ui:property>
               </ui:object>
-              <ui:object id="tr1" type="chart-trace" ref="/ctr0/daqctl0/dev0/ai03">
+              <ui:object id="tr1" type="chart-trace" ref="/daqctl0/dev0/ai03">
                 <ui:property name="buffer-size">600</ui:property>
                 <ui:property name="color">rgba(242,178,155,0.5)</ui:property>
                 <ui:property name="line-weight">2.0</ui:property>
@@ -169,188 +168,169 @@
   <!-- Data acquisition configuration -->
   <cld:objects>
 
-    <cld:object id="daqctl0" type="controller" ctype="acquisition">
+    <cld:object id="daqctl0" type="controller" ctype="acquisition">-->
       <cld:object id="dev0" type="device" driver="comedi">
         <cld:property name="hardware">PCI-1710</cld:property>
         <cld:property name="type">input</cld:property>
         <cld:property name="filename">/dev/comedi1</cld:property>
         <cld:object id="tk0" type="task" ttype="comedi">
           <cld:property name="exec-type">polling</cld:property>
-          <cld:property name="devref">/ctr0/daqctl0/dev0</cld:property>
+          <cld:property name="devref">/daqctl0/dev0</cld:property>
           <cld:property name="subdevice">0</cld:property>
           <cld:property name="direction">read</cld:property>
           <cld:property name="interval-ms">100</cld:property>
           <cld:property name="data-source">channel</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai00</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai01</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai02</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai03</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai04</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai05</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai06</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai07</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai08</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai09</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai10</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai11</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai12</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai13</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai14</cld:property>
-          <cld:property name="chref">/ctr0/daqctl0/dev0/ai15</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai00</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai01</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai02</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai03</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai04</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai05</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai06</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai07</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai08</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai09</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai10</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai11</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai12</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai13</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai14</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ai15</cld:property>
         </cld:object>
+        <!-- Input channels -->
+        <cld:object id="ai00" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN00</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">0</cld:property>
+          <cld:property name="subdevnum">0</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+          <cld:property name="naverage">10</cld:property>
+        </cld:object>
+        <cld:object id="ai01" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN01</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">1</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai02" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN02</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">2</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai03" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN03</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">3</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai04" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN04</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">4</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai05" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN05</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">5</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai06" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN06</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">6</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai07" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN07</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">7</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai08" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN08</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">8</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai09" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN09</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">9</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai10" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN10</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">10</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai11" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN11</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">11</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai12" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN12</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">12</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai13" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN13</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">13</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai14" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN14</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">14</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+        <cld:object id="ai15" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="input">
+          <cld:property name="tag">IN15</cld:property>
+          <cld:property name="desc">Sample Input</cld:property>
+          <cld:property name="num">15</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">4</cld:property>
+        </cld:object>
+      </cld:object>
+    </cld:object>
 
-        <!--
-        Tasks
-        -->
-        <cld:object id="tk0" type="task" ttype="comedi">
-            <cld:property name="devref">dev0</cld:property>
-            <cld:property name="exec-type">polling</cld:property>
-            <cld:property name="subdevice">0</cld:property>
-            <cld:property name="poll-type">read</cld:property>
-            <cld:property name="poll-interval-ms">20</cld:property>
-        </cld:object>
+    <!-- Velmex port -->
+    <cld:object id="ser1" type="port" ptype="serial">
+      <cld:property name="device">/dev/ttyUSB0</cld:property>
+      <cld:property name="baudrate">9600</cld:property>
+      <cld:property name="databits">8</cld:property>
+      <cld:property name="stopbits">1</cld:property>
+      <cld:property name="parity">none</cld:property>
+      <cld:property name="handshake">hardware</cld:property>
+      <cld:property name="accessmode">rw</cld:property>
+      <cld:property name="echo">false</cld:property>
+    </cld:object>
 
-            </cld:object>
-        </cld:object>
-
-        <!-- log files configuration -->
-        <cld:object id="log0" type="log">
-            <!-- path should end in / for now -->
-            <cld:property name="title">Data Log</cld:property>
-            <cld:property name="path">./</cld:property>
-            <cld:property name="file">log.dat</cld:property>
-            <cld:property name="format">%F-%T</cld:property>
-            <!-- log rate in hz -->
-            <cld:property name="rate">50.000</cld:property>
-            <cld:object id="col00" type="column" chref="ai00"/>
-            <cld:object id="col01" type="column" chref="ai01"/>
-            <cld:object id="col02" type="column" chref="ai02"/>
-            <cld:object id="col03" type="column" chref="ai03"/>
-            <cld:object id="col04" type="column" chref="ai04"/>
-            <cld:object id="col05" type="column" chref="ai05"/>
-            <cld:object id="col06" type="column" chref="ai06"/>
-            <cld:object id="col07" type="column" chref="ai07"/>
-        </cld:object>
-        -->
-
-
-         <!-- Channel calibrations for scaling process values -->
-        <cld:object id="ai_cal0" type="calibration">
-            <cld:property name="units">Volts</cld:property>
-            <cld:object id="cft0" type="coefficient">
-                <cld:property name="n">0</cld:property>
-                <cld:property name="value">5.0000</cld:property>
-            </cld:object>
-            <cld:object id="cft1" type="coefficient">
-                <cld:property name="n">1</cld:property>
-                <cld:property name="value">2.0000</cld:property>
-            </cld:object>
-        </cld:object>
-
-        <cld:object id="ctl0" type="control">
-            <cld:object id="pid0" type="pid-2">
-                <cld:property name="desc">PID 0</cld:property>
-                <cld:property name="dt">10</cld:property>
-                <cld:property name="sp">5.000000</cld:property>
-                <cld:property name="kp">3.000000</cld:property>
-                <cld:property name="ki">0.010000</cld:property>
-                <cld:property name="kd">0.000000</cld:property>
-                <cld:object id="pv0" type="process_value2" dsref="ds00" direction="input"/>
-                <cld:object id="pv1" type="process_value2" dsref="ds01" direction="output"/>
-            </cld:object>
-        </cld:object>
-        <cld:object id="ctl1" type="control">
-            <cld:object id="pid1" type="pid-2">
-                <cld:property name="desc">PID 1</cld:property>
-                <cld:property name="dt">10</cld:property>
-                <cld:property name="sp">0.000000</cld:property>
-                <cld:property name="kp">7.500000</cld:property>
-                <cld:property name="ki">0.015000</cld:property>
-                <cld:property name="kd">0.000000</cld:property>
-                <cld:property name="sp_chanref">mc00</cld:property>
-                <cld:object id="pv0" type="process_value2" dsref="ds02" direction="input"/>
-                <cld:object id="pv1" type="process_value2" dsref="ds03" direction="output"/>
-            </cld:object>
-        </cld:object>
-        <cld:object id="ao_cal0" type="calibration">
-            <cld:property name="units">% of max.</cld:property>
->>>>>>> 68781d4... Add interface elements for additional CLD support
-            <cld:object id="cft0" type="coefficient">
-                <cld:property name="n">0</cld:property>
-                <cld:property name="value">0.0000</cld:property>
-            </cld:object>
-            <cld:object id="cft1" type="coefficient">
-                <cld:property name="n">1</cld:property>
-                <cld:property name="value">1.0000</cld:property>
-            </cld:object>
-        </cld:object>
-        <cld:object id="cal01" type="calibration">
-            <cld:property name="units">Volts</cld:property>
-            <cld:object id="cft0" type="coefficient">
-                <cld:property name="n">0</cld:property>
-                <cld:property name="value">0.000</cld:property>
-            </cld:object>
-            <cld:object id="cft1" type="coefficient">
-                <cld:property name="n">1</cld:property>
-                <cld:property name="value">1.000</cld:property>
-            </cld:object>
-        </cld:object>
-        <cld:object id="cal02" type="calibration">
-            <cld:property name="units">Volts</cld:property>
-            <cld:object id="cft0" type="coefficient">
-                <cld:property name="n">0</cld:property>
-                <cld:property name="value">0.000</cld:property>
-            </cld:object>
-            <cld:object id="cft1" type="coefficient">
-                <cld:property name="n">1</cld:property>
-                <cld:property name="value">1.000</cld:property>
-            </cld:object>
-        </cld:object>
-        <cld:object id="cal03" type="calibration">
-=======
-        </cld:object>
-
-        <cld:object id="cal0" type="calibration">
->>>>>>> 7cffea9... Rework widget classes to allow for configured layouts
-            <cld:property name="units">Volts</cld:property>
-            <cld:object id="cft0" type="coefficient">
-                <cld:property name="n">0</cld:property>
-                <cld:property name="value">0.000</cld:property>
-            </cld:object>
-            <cld:object id="cft1" type="coefficient">
-                <cld:property name="n">1</cld:property>
-                <cld:property name="value">1.000</cld:property>
-            </cld:object>
-        </cld:object>
-
-        <cld:object id="cal1" type="calibration">
-            <cld:property name="units">Volts</cld:property>
-            <cld:object id="cft0" type="coefficient">
-                <cld:property name="n">0</cld:property>
-                <cld:property name="value">0.000</cld:property>
-            </cld:object>
-            <cld:object id="cft1" type="coefficient">
-                <cld:property name="n">1</cld:property>
-                <cld:property name="value">1.000</cld:property>
-            </cld:object>
-        </cld:object>
-
-        <!-- Velmex port -->
-        <cld:object id="ser1" type="port" ptype="serial">
-            <cld:property name="device">/dev/ttyS2</cld:property>
-            <cld:property name="baudrate">9600</cld:property>
-            <cld:property name="databits">8</cld:property>
-            <cld:property name="stopbits">1</cld:property>
-            <cld:property name="parity">none</cld:property>
-            <cld:property name="handshake">hardware</cld:property>
-            <cld:property name="accessmode">rw</cld:property>
-            <cld:property name="echo">false</cld:property>
-        </cld:object>
-
-        <!-- Velmex Module -->
-        <cld:object id="vm0" type="module" mtype="velmex">
-            <cld:property name="port">ser1</cld:property>
-            <cld:property name="program">
+     Velmex Module
+    <cld:object id="vm0" type="module" mtype="velmex">
+      <cld:property name="port">ser1</cld:property>
+      <cld:property name="program">
 C,
 SA1M4000,
 A1M50,
@@ -359,6 +339,21 @@ A1M20,
 I1M-300
       </cld:property>
     </cld:object>
+
+    <cld:object id="ds00" type="dataseries">
+        <cld:property name="length">10</cld:property>
+        <cld:property name="chref">/daqctl0/dev0/ai00</cld:property>
+    </cld:object>
+    <cld:object id="ds01" type="dataseries">
+        <cld:property name="length">10</cld:property>
+        <cld:property name="chref">/daqctl0/dev0/ai01</cld:property>
+    </cld:object>
+    <cld:object id="ds02" type="dataseries">
+        <cld:property name="length">10</cld:property>
+        <cld:property name="chref">/daqctl0/dev0/ai02</cld:property>
+    </cld:object>
+
+
 
     <cld:object id="cal0" type="calibration">
       <cld:property name="units">Volts</cld:property>
@@ -386,28 +381,55 @@ I1M-300
 
     <cld:object id="logctl0" type="controller" ctype="log">
       <cld:object id="log0" type="log" ltype="csv">
-        <cld:property name="title">Data Log</cld:property>
+        <cld:property name="title">Data Log1</cld:property>
         <cld:property name="path">/srv/data/dactl/</cld:property>
         <cld:property name="file">log.csv</cld:property>
         <cld:property name="format">%F-%T</cld:property>
+        <cld:property name="time-stamp">open</cld:property>
         <cld:property name="rate">10.000</cld:property>
         <cld:property name="data-source">channel</cld:property>
-        <cld:object id="col00" type="column" chref="/ctr0/daqctl0/dev0/ai00"/>
-        <cld:object id="col01" type="column" chref="/ctr0/daqctl0/dev0/ai01"/>
-        <cld:object id="col02" type="column" chref="/ctr0/daqctl0/dev0/ai02"/>
-        <cld:object id="col03" type="column" chref="/ctr0/daqctl0/dev0/ai03"/>
-        <cld:object id="col04" type="column" chref="/ctr0/daqctl0/dev0/ai04"/>
-        <cld:object id="col05" type="column" chref="/ctr0/daqctl0/dev0/ai05"/>
-        <cld:object id="col06" type="column" chref="/ctr0/daqctl0/dev0/ai06"/>
-        <cld:object id="col07" type="column" chref="/ctr0/daqctl0/dev0/ai07"/>
-        <cld:object id="col08" type="column" chref="/ctr0/daqctl0/dev0/ai08"/>
-        <cld:object id="col09" type="column" chref="/ctr0/daqctl0/dev0/ai09"/>
-        <cld:object id="col10" type="column" chref="/ctr0/daqctl0/dev0/ai10"/>
-        <cld:object id="col11" type="column" chref="/ctr0/daqctl0/dev0/ai11"/>
-        <cld:object id="col12" type="column" chref="/ctr0/daqctl0/dev0/ai12"/>
-        <cld:object id="col13" type="column" chref="/ctr0/daqctl0/dev0/ai13"/>
-        <cld:object id="col14" type="column" chref="/ctr0/daqctl0/dev0/ai14"/>
-        <cld:object id="col15" type="column" chref="/ctr0/daqctl0/dev0/ai15"/>
+        <cld:object id="col00" type="column" chref="/daqctl0/dev0/ai00"/>
+        <cld:object id="col01" type="column" chref="/daqctl0/dev0/ai01"/>
+        <cld:object id="col02" type="column" chref="/daqctl0/dev0/ai02"/>
+        <cld:object id="col03" type="column" chref="/daqctl0/dev0/ai03"/>
+        <cld:object id="col04" type="column" chref="/daqctl0/dev0/ai04"/>
+        <cld:object id="col05" type="column" chref="/daqctl0/dev0/ai05"/>
+        <cld:object id="col06" type="column" chref="/daqctl0/dev0/ai06"/>
+        <cld:object id="col07" type="column" chref="/daqctl0/dev0/ai07"/>
+        <cld:object id="col08" type="column" chref="/daqctl0/dev0/ai08"/>
+        <cld:object id="col09" type="column" chref="/daqctl0/dev0/ai09"/>
+        <cld:object id="col10" type="column" chref="/daqctl0/dev0/ai10"/>
+        <cld:object id="col11" type="column" chref="/daqctl0/dev0/ai11"/>
+        <cld:object id="col12" type="column" chref="/daqctl0/dev0/ai12"/>
+        <cld:object id="col13" type="column" chref="/daqctl0/dev0/ai13"/>
+        <cld:object id="col14" type="column" chref="/daqctl0/dev0/ai14"/>
+        <cld:object id="col15" type="column" chref="/daqctl0/dev0/ai15"/>
+      </cld:object>
+      <cld:object id="log1" type="log" ltype="sqlite">
+        <cld:property name="title">Data Log2</cld:property>
+        <cld:property name="path">/srv/data/dactl/</cld:property>
+        <cld:property name="file">log.db</cld:property>
+        <cld:property name="format">%F-%T</cld:property>
+        <cld:property name="data-source">streaming</cld:property>
+        <cld:property name="backup-interval-hrs">6</cld:property>
+        <cld:property name="backup-path">/srv/data/dactl/</cld:property>
+        <cld:property name="backup-file">backup.db</cld:property>
+        <cld:object id="col00" type="column" chref="/daqctl0/dev0/ai00"/>
+        <cld:object id="col01" type="column" chref="/daqctl0/dev0/ai01"/>
+        <cld:object id="col02" type="column" chref="/daqctl0/dev0/ai02"/>
+        <cld:object id="col03" type="column" chref="/daqctl0/dev0/ai03"/>
+        <cld:object id="col04" type="column" chref="/daqctl0/dev0/ai04"/>
+        <cld:object id="col05" type="column" chref="/daqctl0/dev0/ai05"/>
+        <cld:object id="col06" type="column" chref="/daqctl0/dev0/ai06"/>
+        <cld:object id="col07" type="column" chref="/daqctl0/dev0/ai07"/>
+        <cld:object id="col08" type="column" chref="/daqctl0/dev0/ai08"/>
+        <cld:object id="col09" type="column" chref="/daqctl0/dev0/ai09"/>
+        <cld:object id="col10" type="column" chref="/daqctl0/dev0/ai10"/>
+        <cld:object id="col11" type="column" chref="/daqctl0/dev0/ai11"/>
+        <cld:object id="col12" type="column" chref="/daqctl0/dev0/ai12"/>
+        <cld:object id="col13" type="column" chref="/daqctl0/dev0/ai13"/>
+        <cld:object id="col14" type="column" chref="/daqctl0/dev0/ai14"/>
+        <cld:object id="col15" type="column" chref="/daqctl0/dev0/ai15"/>
       </cld:object>
     </cld:object>
 

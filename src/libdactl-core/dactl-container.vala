@@ -107,7 +107,7 @@ public interface Dactl.Container : GLib.Object {
         Gee.List<Dactl.Object> map_values = new Gee.ArrayList<Dactl.Object> ();
 
         map_values.add_all (objects.values);
-        map_values.sort ((GLib.CompareFunc?) Dactl.Object.compare);
+        map_values.sort ((GLib.CompareDataFunc<Dactl.Object>?) Dactl.Object.compare);
         objects.clear ();
         foreach (Dactl.Object object in map_values) {
             objects.set (object.id, object);

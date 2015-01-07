@@ -1,4 +1,23 @@
+[Flags]
+public enum Dactl.GridFlag {
+    DRAW_BORDER     = 0x01;
+
+    public Dactl.GridFlag set (Dactl.GridFlag flag) {
+        return (this | flag);
+    }
+
+    public Dactl.GridFlag unset (Dactl.GridFlag flag) {
+        return (this & ~flag);
+    }
+
+    public bool is_set (Dactl.GridFlag flag) {
+        return (flag in this);
+    }
+}
+
 public class Dactl.GridCell : GLib.Object, Dactl.Object, Dactl.Buildable {
+
+    private Xml.Node* _node;
 
     private string _xml = """
         <object id=\"ai-ctl0\" type=\"ai\" ref=\"cld://ai0\"/>
@@ -11,6 +30,18 @@ public class Dactl.GridCell : GLib.Object, Dactl.Object, Dactl.Buildable {
           <xs:attribute name="ref" type="xs:string" use="required"/>
         </xs:element>
     """;
+
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual Xml.Node* node {
+        get {
+            return _node;
+        }
+        set {
+            _node = value;
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -39,10 +70,11 @@ public class Dactl.GridCell : GLib.Object, Dactl.Object, Dactl.Buildable {
 
     public int col_span { get; set; default = 1; }
 
-    /**
-     * Default construction.
-     */
-    public GridCell () { }
+    public Dactl.GridFlag flags { get; set; }
+
+    construct {
+        flags = Dactl.GridFlag.DRAW_BORDER;
+    }
 
     /**
      * Construction using data provided.
@@ -106,6 +138,8 @@ public class Dactl.GridCell : GLib.Object, Dactl.Object, Dactl.Buildable {
  */
 public class Dactl.GridModel : GLib.Object, Dactl.Object, Dactl.Buildable, Dactl.Container {
 
+    private Xml.Node* _node;
+
     private string _xml = """
         <object id=\"ai-ctl0\" type=\"ai\" ref=\"cld://ai0\"/>
     """;
@@ -117,6 +151,18 @@ public class Dactl.GridModel : GLib.Object, Dactl.Object, Dactl.Buildable, Dactl
           <xs:attribute name="ref" type="xs:string" use="required"/>
         </xs:element>
     """;
+
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual Xml.Node* node {
+        get {
+            return _node;
+        }
+        set {
+            _node = value;
+        }
+    }
 
     /**
      * {@inheritDoc}

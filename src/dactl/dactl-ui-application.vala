@@ -68,7 +68,8 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         message ("Application construction");
 
         GLib.Object (application_id: "org.coanda.dactl",
-                     flags: ApplicationFlags.HANDLES_COMMAND_LINE);
+                     flags: ApplicationFlags.HANDLES_COMMAND_LINE |
+                            ApplicationFlags.HANDLES_OPEN);
 
         plugins = new Gee.ArrayList<Dactl.Plugin> ();
     }
@@ -80,21 +81,21 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         base.activate ();
 
         Gtk.Window.set_default_icon_name ("dactl");
-        Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
 
         message ("Creating application model using file %s", opt_cfgfile);
         model = new Dactl.ApplicationModel (opt_cfgfile);
         assert (model != null);
 
         (model as Dactl.Container).print_objects (0);
+        Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = model.dark_theme;
 
-        debug (" --- Finished constructing the model");
+        message (" > Finished constructing the model");
 
         view = new Dactl.UI.ApplicationView (model);
         assert (view != null);
         (view as Gtk.Window).application = this;
 
-        debug (" --- Finished constructing the view");
+        message (" > Finished constructing the view");
 
         /**
          * FIXME: This hides the window and then shows the message box
@@ -107,7 +108,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         controller = new Dactl.ApplicationController (model, view);
         assert (controller != null);
 
-        debug (" --- Finished constructing the controller");
+        message (" > Finished constructing the controller");
 
         add_app_menu ();
 
@@ -129,10 +130,12 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         add_actions ();
 
         lock (model) {
-            message ("Start device acquisition and output tasks");
+            message (" > Starting device acquisition and output tasks");
             model.start_acquisition ();
-            //model.start_device_output ();
+            model.start_device_output ();
         }
+
+        message ("Application activation completed");
     }
 
     /**
@@ -265,6 +268,14 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         export_back_action.activate.connect (export_back_activated_cb);
         this.add_action (export_back_action);
 
+        var loader_action = new SimpleAction ("loader", null);
+        loader_action.activate.connect (loader_action_activated_cb);
+        this.add_action (loader_action);
+
+        var loader_back_action = new SimpleAction ("loader-back", null);
+        loader_back_action.activate.connect (loader_back_activated_cb);
+        this.add_action (loader_back_action);
+
         /* admin menu actions */
         var defaults_action = new SimpleAction.stateful ("defaults", null, new Variant.boolean (false));
         defaults_action.activate.connect (defaults_activated_cb);
@@ -388,6 +399,41 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         return 0;
     }
 
+    public override void open (GLib.File[] files, string hint) {
+
+        add_app_menu ();
+
+        var tmp = File.new_for_path ("/tmp/dactl.out");
+        var ios = tmp.create_readwrite (FileCreateFlags.PRIVATE);
+        var os = ios.output_stream;
+        var dos = new DataOutputStream (os);
+        dos.put_string ("Test output:\n\n");
+
+        foreach (var file in files) {
+            stderr.printf ("Reading from file: %s\n", file.get_uri ());
+            dos.put_string ("Reading from file: %s\n".printf (file.get_uri ()));
+
+            try {
+                //var arrangement = Tabler.load_from_file (file.get_uri ());
+                //create_window (arrangement);
+            } catch (GLib.Error e) {
+                stderr.printf (_("An error occured while reading file %s: %s\n"),
+                               file.get_uri (), e.message);
+                dos.put_string (_("An error occured while reading file %s: %s\n".printf (
+                                file.get_uri (), e.message)));
+                //create_window (new Arrangement ());
+                //show_error (_("Invalid file"), _("Error loading %s."),
+                            //file.get_basename ());
+                continue;
+            } catch (FileError e) {
+                //create_window (new Arrangement ());
+                //show_error (_("File not found or could not be read."),
+                            //_("%s not found or could not be read."), file.get_path ());
+                continue;
+            }
+        }
+    }
+
     /**
      * Action callback for quit.
      */
@@ -452,6 +498,20 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      * Action callback for going back to previous page from the CSV export.
      */
     private void export_back_activated_cb (SimpleAction action, Variant? parameter) {
+        (view as Dactl.UI.ApplicationView).layout_back_page ();
+    }
+
+    /**
+     * Action callback for configuration loader.
+     */
+    private void loader_action_activated_cb (SimpleAction action, Variant? parameter) {
+        (view as Dactl.UI.ApplicationView).layout_change_page ("loader");
+    }
+
+    /**
+     * Action callback for going back to previous page from the configuration loader.
+     */
+    private void loader_back_activated_cb (SimpleAction action, Variant? parameter) {
         (view as Dactl.UI.ApplicationView).layout_back_page ();
     }
 

@@ -1,0 +1,499 @@
+From 3098e0a2a5786a8169c3424c2978287a701dc70e Mon Sep 17 00:00:00 2001
+From: Geoff Johnson <geoff.johnson@coanda.ca>
+Date: Mon, 16 Feb 2015 14:20:25 -0800
+Subject: [PATCH] Incomplete ring class
+
+---
+ src/libdactl-ui/dactl-ring.vala | 480 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 480 insertions(+)
+ create mode 100644 src/libdactl-ui/dactl-ring.vala
+
+diff --git a/src/libdactl-ui/dactl-ring.vala b/src/libdactl-ui/dactl-ring.vala
+new file mode 100644
+index 0000000..b56bd10
+--- /dev/null
++++ b/src/libdactl-ui/dactl-ring.vala
+@@ -0,0 +1,480 @@
++private class Dactl.RingCanvas : Dactl.Canvas {
++
++    public weak Dactl.Axis t_axis { get; set; }
++
++    private int padding_top = 0;
++    private int padding_right = 0;
++    private int padding_bottom = 0;
++    private int padding_left = 0;
++
++    construct {
++        margin_top = 5;
++        margin_right = 5;
++        margin_bottom = 5;
++        margin_left = 5;
++
++        add_events (Gdk.EventMask.BUTTON_PRESS_MASK |
++                    Gdk.EventMask.BUTTON_RELEASE_MASK |
++                    Gdk.EventMask.POINTER_MOTION_MASK |
++                    Gdk.EventMask.KEY_PRESS_MASK |
++                    Gdk.EventMask.KEY_RELEASE_MASK |
++                    Gdk.EventMask.SCROLL_MASK);
++
++        set_size_request (100, 100);
++    }
++
++    public RingCanvas () {
++    }
++
++    private void update_padding () {
++
++        /* Reset to defaults */
++        padding_top = 0;
++        padding_right = 0;
++        padding_bottom = 0;
++        padding_left = 0;
++
++        var parent = get_parent ();
++
++        /* Calculate padding based on flags */
++    }
++
++    /**
++     * Draw callback.
++     */
++    public override bool draw (Cairo.Context cr) {
++
++        var allocation = Gtk.Allocation ();
++        var parent = get_parent ();
++
++        cr.set_source_rgba (1, 1, 1, 0);
++        cr.paint ();
++
++        this.get_allocation (out allocation);
++
++        /*
++         *cr.rectangle (0.5, 0.5, allocation.width - 1, allocation.height - 1);
++         *cr.set_source_rgba (0, 0, 0, 0);
++         *cr.set_line_width (1.0);
++         *cr.stroke ();
++         */
++
++        update_padding ();
++
++        cr.set_antialias (Cairo.Antialias.SUBPIXEL);
++
++        /* Draw the rings */
++/*
++ *        var trace_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32,
++ *                                                    allocation.width,
++ *                                                    allocation.height);
++ *        foreach (var trace in traces.values) {
++ *
++ *            //var data = (trace as Dactl.Trace).window.to_array ();
++ *            Dactl.Point[] data = new Dactl.Point[(trace as Dactl.Trace).window_size + 1];
++ *            //for (var i = 0; i < data.length - 1; i++) {
++ *            for (var i = 0; i < data.length; i++) {
++ *                var point = (trace as Dactl.Trace).window.get (i);
++ *                data[i] = new Dactl.Point (0.0, point.y);
++ *            }
++ *
++ *            double trace_div = (double)grid_w / (double)(data.length - 1);
++ *
++ *            [> Scale the points to pixel values <]
++ *            for (var i = 0; i < data.length; i++) {
++ *                data[i].x = i * trace_div;
++ *                double value = data[i].y;
++ *
++ *                if (value > y_axis.max || value == double.NAN)
++ *                    value = y_axis.max;
++ *                else if (value < y_axis.min)
++ *                    value = y_axis.min;
++ *                data [i].y = grid_h * (1 - ((value - y_axis.min) /
++ *                                                    (y_axis.max - y_axis.min)));
++ *            }
++ *
++ *            var color = Gdk.RGBA ();
++ *            color.parse ((trace as Dactl.Trace).color_spec);
++ *
++ *            switch ((trace as Dactl.Trace).draw_type) {
++ *                case Dactl.TraceDrawType.LINE:
++ *                    var stencil = new Dactl.Line (trace_surface);
++ *                    stencil.set_line_width ((trace as Dactl.Trace).line_weight);
++ *                    stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
++ *                    stencil.draw (data);
++ *                    cr.set_operator (Cairo.Operator.OVER);
++ *                    cr.set_source_surface (stencil.get_target (), grid_x, grid_y);
++ *                    cr.paint ();
++ *                    break;
++ *                default:
++ *                    assert_not_reached ();
++ *            }
++ *        }
++ */
++
++        return false;
++    }
++
++    private bool update () {
++        redraw ();
++
++        return true;
++    }
++
++    public void redraw () {
++        var window = get_window ();
++        if (window == null)
++            return;
++
++        var region = window.get_clip_region ();
++        // redraw the cairo canvas completely by exposing it
++        window.invalidate_region (region, true);
++        //window.process_updates (true);
++    }
++}
++
++[GtkTemplate (ui = "/org/coanda/libdactl/ui/ring.ui")]
++public class Dactl.Ring : Dactl.CompositeWidget, Dactl.CldAdapter {
++
++    private string _xml = """
++        <object id=\"chart0\" type=\"stripchart\"/>
++    """;
++
++    private string _xsd = """
++        <xs:element name="object">
++          <xs:attribute name="id" type="xs:string" use="required"/>
++          <xs:attribute name="type" type="xs:string" use="required"/>
++          <xs:attribute name="ref" type="xs:string" use="required"/>
++        </xs:element>
++    """;
++
++    /* Global variable that holds the maximum window size of all the traces */
++    private int window_size_max = 0;
++    /* Global variable that holds the mainimum stride of all the traces */
++    private int stride_min = int.MAX;
++    /* The number of data points per second */
++    private double pps = 0;
++    bool once = false;
++
++    private Gee.Map<string, Dactl.Object> _objects;
++
++    /**
++     * {@inheritDoc}
++     */
++    protected override string xml {
++        get { return _xml; }
++    }
++
++    /**
++     * {@inheritDoc}
++     */
++    protected override string xsd {
++        get { return _xsd; }
++    }
++
++    /**
++     * {@inheritDoc}
++     */
++    public override Gee.Map<string, Dactl.Object> objects {
++        get { return _objects; }
++        set { update_objects (value); }
++    }
++
++    /**
++     * {@inheritDoc}
++     */
++    protected bool satisfied { get; set; default = false; }
++
++    /**
++     * Update timeout in ms.
++     */
++    public int timeout { get; set; default = 33; }
++
++    /* Title */
++    public string title { get; set; default = "Chart"; }
++
++    /* Minimum height to support scrollable container */
++    public int height_min { get; set; default = 100; }
++
++    /* Minimum width to support scrollable container */
++    public int width_min { get; set; default = 100; }
++
++    public Dactl.ChartFlag flags { get; set; }
++
++    [GtkChild]
++    private Dactl.RingCanvas canvas;
++
++    /**
++     * Common object construction.
++     */
++    construct {
++        id = "chart0";
++        canvas.id = "%s-canvas0".printf (id);
++        objects = new Gee.TreeMap<string, Dactl.Object> ();
++
++        flags = Dactl.ChartFlag.DRAW_TITLE |
++                Dactl.ChartFlag.DRAW_GRID |
++                Dactl.ChartFlag.DRAW_GRID_BORDER;
++
++        hexpand = true;
++        vexpand = true;
++        halign = Gtk.Align.FILL;
++        valign = Gtk.Align.FILL;
++
++        settings.set_reveal_child (false);
++        settings.transition_type = Gtk.RevealerTransitionType.SLIDE_LEFT;
++        settings.transition_duration = 400;
++    }
++
++    /**
++     * Default construction.
++     */
++    public Ring () {
++        var t_axis = new Dactl.Axis ();
++        var y_axis = new Dactl.Axis ();
++        t_axis.orientation = Dactl.Orientation.HORIZONTAL;
++        y_axis.orientation = Dactl.Orientation.VERTICAL;
++        add_child (t_axis);
++        add_child (y_axis);
++        canvas.t_axis = t_axis;
++        canvas.y_axis = y_axis;
++        request_data.begin ();
++    }
++
++    /**
++     * Construction using an XML node.
++     */
++    public Ring.from_xml_node (Xml.Node *node) {
++        build_from_xml_node (node);
++        canvas.id = "%s-canvas0".printf (id);
++        request_data.begin ();
++    }
++
++    /**
++     * {@inheritDoc}
++     */
++    public override void build_from_xml_node (Xml.Node *node) {
++        string? value;
++        this.node = node;
++
++        if (node->type == Xml.ElementType.ELEMENT_NODE &&
++            node->type != Xml.ElementType.COMMENT_NODE) {
++            id = node->get_prop ("id");
++
++            /* Iterate through node children */
++            for (Xml.Node *iter = node->children; iter != null; iter = iter->next) {
++                if (iter->name == "property") {
++                    switch (iter->get_prop ("name")) {
++                        case "title":
++                            title = iter->get_content ();
++                            break;
++                        case "expand":
++                            value = iter->get_content ();
++                            expand = bool.parse (value);
++                            break;
++                        case "fill":
++                            value = iter->get_content ();
++                            fill = bool.parse (value);
++                            break;
++                        case "height-min":
++                            value = iter->get_content ();
++                            height_min = int.parse (value);
++                            break;
++                        case "width-min":
++                            value = iter->get_content ();
++                            width_min = int.parse (value);
++                            break;
++                        case "show-title":
++                            value = iter->get_content ();
++                            if (bool.parse (value))
++                                flags = flags.set (Dactl.ChartFlag.DRAW_TITLE);
++                            else
++                                flags = flags.unset (Dactl.ChartFlag.DRAW_TITLE);
++                            break;
++                        case "show-grid":
++                            value = iter->get_content ();
++                            if (bool.parse (value))
++                                flags = flags.set (Dactl.ChartFlag.DRAW_GRID);
++                            else
++                                flags = flags.unset (Dactl.ChartFlag.DRAW_GRID);
++                            break;
++                        case "show-grid-border":
++                            value = iter->get_content ();
++                            if (bool.parse (value))
++                                flags = flags.set (Dactl.ChartFlag.DRAW_GRID_BORDER);
++                            else
++                                flags = flags.unset (Dactl.ChartFlag.DRAW_GRID_BORDER);
++                            break;
++                        case "points-per-second":
++                            value = iter->get_content ();
++                            pps = double.parse (value);
++                            break;
++                        default:
++                            break;
++                    }
++                } else if (iter->name == "object") {
++                    var type = iter->get_prop ("type");
++                    if (type == "chart-axis") {
++                        var axis = new Dactl.Axis.from_xml_node (iter);
++                        this.add_child (axis);
++                    } else if (type == "chart-trace") {
++                        var trace = new Dactl.Trace.from_xml_node (iter);
++                        this.add_child (trace);
++                    }
++                }
++            }
++        }
++        if (pps == 0) {
++            warning ("point-per-second (pps) is set to 0");
++        }
++        connect_notify_signals ();
++    }
++
++    /**
++     * Connect all notify signals to update node
++     */
++    protected void connect_notify_signals () {
++        Type type = get_type ();
++        ObjectClass ocl = (ObjectClass)type.class_ref ();
++
++        foreach (ParamSpec spec in ocl.list_properties ()) {
++            notify[spec.get_name ()].connect ((s, p) => {
++            message ("type: %s spec: %s", type.name (), spec.get_name ());
++                update_node ();
++            });
++        }
++    }
++
++    /**
++     * Update XML node
++     */
++    protected void update_node () {
++        if (node->type == Xml.ElementType.ELEMENT_NODE &&
++            node->type != Xml.ElementType.COMMENT_NODE) {
++            /* iterate through node children */
++            for (Xml.Node *iter = node->children;
++                 iter != null;
++                 iter = iter->next) {
++                if (iter->name == "property") {
++                    switch (iter->get_prop ("name")) {
++                        case "title":
++                            iter->set_content (title);
++                            break;
++                        case "expand":
++                            iter->set_content (expand.to_string ());
++                            break;
++                        case "fill":
++                            iter->set_content (fill.to_string ());
++                            break;
++                        case "height-min":
++                            iter->set_content ("%d".printf (height_min));
++                            break;
++                        case "width-min":
++                            iter->set_content ("%d".printf (width_min));
++                            break;
++                        default:
++                            break;
++                    }
++                }
++            }
++        }
++    }
++
++    /**
++     * {@inheritDoc}
++     */
++    public virtual void offer_cld_object (Cld.Object object) {
++        var traces = get_object_map (typeof (Dactl.Trace));
++        foreach (var trace in traces.values) {
++            if ((trace as Dactl.Trace).ch_ref == object.uri) {
++                message ("Assigning channel `%s' to `%s'", object.uri, trace.id);
++                (trace as Dactl.Trace).channel = (object as Cld.Channel);
++            }
++            satisfied = (trace as Dactl.Trace).channel_isset;
++        }
++
++        message ("Chart `%s' requirements satisfied: %s", id, satisfied.to_string ());
++
++        if (satisfied) {
++            /*
++             *channels_loaded ();
++             */
++
++            message ("Updating the layout for `%s' using configured data", id);
++            update_layout ();
++
++            Timeout.add (timeout, update);
++            show_all ();
++        }
++        refresh ();
++    }
++
++    public void highlight_ring (string id) {
++        var traces = get_object_map (typeof (Dactl.Trace));
++        foreach (var trace in traces.values) {
++            (trace as Dactl.Trace).highlight = false;
++            if ((trace as Dactl.Trace).ch_ref == id) {
++                debug ("Chart `%s' highlighting `%s'", this.id, id);
++                (trace as Dactl.Trace).highlight = true;
++            }
++        }
++    }
++
++    private void update_layout () {
++        var axes = get_object_map (typeof (Dactl.Axis));
++        foreach (var axis in axes.values) {
++            if ((axis as Dactl.Axis).orientation == Dactl.Orientation.HORIZONTAL)
++                canvas.t_axis = axis as Dactl.Axis;
++            else if ((axis as Dactl.Axis).orientation == Dactl.Orientation.VERTICAL)
++                canvas.y_axis = axis as Dactl.Axis;
++        }
++
++        var traces = get_object_map (typeof (Dactl.Trace));
++        canvas.traces = traces;
++    }
++
++    /**
++     * {@inheritDoc}
++     */
++    protected async void request_data () {
++        while (!satisfied) {
++            var traces = get_object_map (typeof (Dactl.Trace));
++            foreach (var trace in traces.values) {
++                if (!(trace as Dactl.Trace).channel_isset)
++                    request_object ((trace as Dactl.Trace).ch_ref);
++            }
++            // Try again in a second
++            yield nap (1000);
++        }
++    }
++
++    /**
++     * Callback to perform on the timeout interval.
++     */
++    private bool update () {
++        canvas.redraw ();
++
++        return true;
++    }
++
++    /**
++     * {@inheritDoc}
++     */
++    public override void update_objects (Gee.Map<string, Dactl.Object> val) {
++        _objects = val;
++    }
++
++    [GtkCallback]
++    public bool canvas_button_press_event_cb (Gdk.EventButton event) {
++        if (event.type == Gdk.EventType.2BUTTON_PRESS) {
++            /* XXX do something */
++        }
++
++        return false;
++    }
++
++    [GtkCallback]
++    public bool canvas_button_release_event_cb (Gdk.EventButton event) {
++        return false;
++    }
++}
+-- 
+2.1.0
+

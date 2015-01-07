@@ -16,6 +16,18 @@
       </packing>
     </child>
 
+    <!-- Loader -->
+    <child>
+      <object class="DactlLoaderToolbar" id="loader_toolbar">
+        <property name="visible">True</property>
+        <property name="show-close-button">True</property>
+      </object>
+
+      <packing>
+        <property name="name">loader</property>
+      </packing>
+    </child>
+
     <!-- Configuration -->
     <child>
       <object class="DactlConfigurationToolbar" id="configuration_toolbar">

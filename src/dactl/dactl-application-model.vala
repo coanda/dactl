@@ -21,6 +21,9 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
     /* Which page to load on startup */
     public string startup_page { get; set; default = "pg0"; }
 
+    /* Whether or not to use the dark theme */
+    public bool dark_theme { get; set; default = true; }
+
     /* Basic output verbosity, should use an integer to allow for -vvv */
     public bool verbose { get; set; default = false; }
 
@@ -111,6 +114,7 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
         /* Property loading */
         admin = config.get_boolean_property ("admin");
         startup_page = config.get_string_property ("startup-page");
+        dark_theme = config.get_boolean_property ("dark-theme");
     }
 
     /**
@@ -120,7 +124,7 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
     ~ApplicationModel () {
         /* Stop hardware threads. */
         stop_acquisition ();
-        stop_device_output ();
+        //stop_device_output ();
     }
 
     /**
@@ -170,22 +174,36 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
      */
     public void start_acquisition () {
 
+        var multiplexers = ctx.get_object_map (typeof (Cld.Multiplexer));
+        bool using_mux = (multiplexers.size > 0);
+
+        /* Manually open all of the devices */
         var devices = ctx.get_object_map (typeof (Cld.Device));
         foreach (var device in devices.values) {
-            message ("Starting tasks for: `%s'", device.id);
+
             if (!(device as Cld.ComediDevice).is_open) {
-                message ("  Opening Comedi Device: %s", device.id);
+                message ("  Opening Comedi Device: `%s'", device.id);
                 (device as Cld.ComediDevice).open ();
                 if (!(device as Cld.ComediDevice).is_open)
                     error ("Failed to open Comedi device: `%s'", device.id);
             }
 
-            var tasks = (device as Cld.Container).get_object_map (typeof (Cld.Task));
-            foreach (var task in tasks.values) {
-                //if ((task as Cld.ComediTask).direction == "read") {
-                    message ("  Starting task: `%s` ", task.id);
-                    (task as Cld.ComediTask).run ();
-                //}
+            if (!using_mux) {
+                message ("Starting tasks for: `%s'", device.id);
+                var tasks = (device as Cld.Container).get_object_map (typeof (Cld.Task));
+                foreach (var task in tasks.values) {
+                    //if ((task as Cld.ComediTask).direction == "read") {
+                        message ("  Starting task: `%s'", task.id);
+                        (task as Cld.ComediTask).run ();
+                    //}
+                }
+            }
+        }
+
+        if (using_mux) {
+            var acq_ctls = ctx.get_object_map (typeof (Cld.AcquisitionController));
+            foreach (var acq_ctl in acq_ctls.values) {
+                (acq_ctl as Cld.AcquisitionController).run ();
             }
         }
 
@@ -198,16 +216,24 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
      * XXX this is possibly more aptly placed in the controller
      */
     public void stop_acquisition () {
+
+        var multiplexers = ctx.get_object_map (typeof (Cld.Multiplexer));
+        bool using_mux = (multiplexers.size > 0);
+
+        /* Manually close all of the devices */
         var devices = ctx.get_object_map (typeof (Cld.Device));
         foreach (var device in devices.values) {
-            message ("Stopping tasks for: `%s'", device.id);
-            var tasks = (device as Cld.Container).get_object_map (typeof (Cld.Task));
-            foreach (var task in tasks.values) {
-                if (task is Cld.ComediTask) {
-                    //if ((task as Cld.ComediTask).direction == "read") {
-                        message ("  Stopping task: `%s` ", task.id);
-                        (task as Cld.ComediTask).stop ();
-                    //}
+
+            if (!using_mux) {
+                message ("Stopping tasks for: `%s'", device.id);
+                var tasks = (device as Cld.Container).get_object_map (typeof (Cld.Task));
+                foreach (var task in tasks.values) {
+                    if (task is Cld.ComediTask) {
+                        //if ((task as Cld.ComediTask).direction == "read") {
+                            message ("  Stopping task: `%s` ", task.id);
+                            (task as Cld.ComediTask).stop ();
+                        //}
+                    }
                 }
             }
 

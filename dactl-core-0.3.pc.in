@@ -11,5 +11,5 @@ Description: Data Acquisition and Control Interface
 Version: @VERSION@
 Libs: -L${libdir} -ldactl-core-0.3
 Cflags: -I${includedir}/dactl-0.3
-Requires: gee-1.0
+Requires: gee-0.8
 Requires.Private: gmodule-2.0

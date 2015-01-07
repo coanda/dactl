@@ -1,14 +1,4 @@
-private class Dactl.StripChartCanvas : Dactl.CustomWidget {
-
-    /**
-     * {@inheritDoc}
-     */
-    protected override string xml { get { return "<object />"; } }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected override string xsd { get { return "<object />"; } }
+private class Dactl.StripChartCanvas : Dactl.Canvas {
 
     public weak Dactl.Axis t_axis { get; set; }
 
@@ -21,13 +11,10 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
         set { _traces.set_all (value); }
     }
 
-    private int padding_top = 40;
-
-    private int padding_right = 40;
-
-    private int padding_bottom = 80;
-
-    private int padding_left = 80;
+    private int padding_top = 10;
+    private int padding_right = 10;
+    private int padding_bottom = 10;
+    private int padding_left = 10;
 
     construct {
         margin_top = 5;
@@ -51,49 +38,86 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
         set_size_request (320, 240);
     }
 
-    // FIXME: Didn't expect to need internal CustomWidget classes
-    public override void build_from_xml_node (Xml.Node *node) { }
+    private void update_padding () {
+
+        /* Reset to defaults */
+        padding_top = 10;
+        padding_right = 10;
+        padding_bottom = 10;
+        padding_left = 10;
+
+        var parent = get_parent ();
+
+        if ((parent as Dactl.StripChart).flags.is_set (Dactl.ChartFlag.DRAW_TITLE))
+            padding_top += 20;
+
+        if (y_axis.flags.is_set (Dactl.AxisFlag.DRAW_LABEL))
+            padding_left += 50;
+
+        if (t_axis.flags.is_set (Dactl.AxisFlag.DRAW_LABEL))
+            padding_bottom += 40;
+    }
 
     /**
      * Draw callback.
      */
     public override bool draw (Cairo.Context cr) {
 
+        var allocation = Gtk.Allocation ();
         var parent = get_parent ();
 
-        var w = get_allocated_width ();
-        var h = get_allocated_height ();
+        cr.set_source_rgb (1, 1, 1);
+        cr.paint ();
+
+        this.get_allocation (out allocation);
+
+        cr.rectangle (0.5, 0.5, allocation.width - 1, allocation.height - 1);
+        cr.set_source_rgb (0, 0, 0);
+        cr.set_line_width (1.0);
+        cr.stroke ();
+
+        update_padding ();
 
         var grid_x = padding_left;
         var grid_y = padding_top;
-        var grid_w = w - padding_left - padding_right;
-        var grid_h = h - padding_top - padding_bottom;
-
-        /* FIXME: probably won't work if min and max y are negative */
-
-        var y_offset = Math.fabs ((y_axis.max / (y_axis.max - y_axis.min)) * grid_h);
+        var grid_w = allocation.width - padding_left - padding_right;
+        var grid_h = allocation.height - padding_top - padding_bottom;
 
         cr.set_antialias (Cairo.Antialias.SUBPIXEL);
 
         /* Grid */
-        var grid_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, w, h);
-        var grid_color = Gdk.RGBA () {
-            red = 0.5,
-            green = 0.5,
-            blue = 0.5,
-            alpha = 1.0
-        };
-        var grid = new Dactl.ChartGrid (grid_surface);
-        grid.draw (t_axis, y_axis, grid_color, grid_w, grid_h);
+        if ((parent as Dactl.StripChart).flags.is_set (Dactl.ChartFlag.DRAW_GRID)) {
+            var grid_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32,
+                                                       allocation.width,
+                                                       allocation.height);
+            var grid_color = Gdk.RGBA () {
+                red = 0.5,
+                green = 0.5,
+                blue = 0.5,
+                alpha = 1.0
+            };
+            var grid = new Dactl.ChartGrid (grid_surface);
 
-        cr.set_operator (Cairo.Operator.OVER);
-        cr.set_source_surface (grid.get_target (), grid_x, grid_y);
-        cr.paint ();
+            if ((parent as Dactl.StripChart).flags.is_set (Dactl.ChartFlag.DRAW_GRID_BORDER)) {
+                grid.set_source_rgba (grid_color.red, grid_color.green, grid_color.blue, grid_color.alpha);
+                grid.rectangle (0.5, 0.5, grid_w - 1, grid_h - 1);
+                grid.set_line_width (1.0);
+                grid.stroke ();
+            }
+
+            grid.draw (t_axis, y_axis, grid_color, grid_w, grid_h);
+
+            cr.set_operator (Cairo.Operator.OVER);
+            cr.set_source_surface (grid.get_target (), grid_x, grid_y);
+            cr.paint ();
+        }
 
         /* Axes */
         var t_axis_x = padding_left;
         var t_axis_y = padding_top + grid_h;
-        var t_axis_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, w, h);
+        var t_axis_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32,
+                                                     allocation.width,
+                                                     allocation.height);
         var t_axis_ctx = new Dactl.AxisView (t_axis_surface);
         t_axis_ctx.draw (grid_w, 40, t_axis);
 
@@ -103,7 +127,9 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
 
         var y_axis_x = padding_left - 40;
         var y_axis_y = padding_top;
-        var y_axis_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, w, h);
+        var y_axis_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32,
+                                                     allocation.width,
+                                                     allocation.height);
         var y_axis_ctx = new Dactl.AxisView (y_axis_surface);
         y_axis_ctx.draw (40, grid_h, y_axis);
 
@@ -115,25 +141,56 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
         cr.set_source_rgb (0.5, 0.5, 0.5);
         cr.select_font_face ("sans-serif", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
         cr.set_font_size (12);
-        cr.move_to (padding_left, padding_top - 5);
-        cr.show_text ((parent as Dactl.StripChart).title);
-        cr.move_to (padding_left + grid_w / 2, padding_top + grid_h + 40);
-        cr.show_text (t_axis.label);
-        cr.move_to (5, h / 2);
-        cr.show_text (y_axis.label);
-//      XXX TBD: Rotate the Y-Axis label 90 degrees CCW.
-//        var y_axis_label_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, w, h);
-//        var y_axis_label_ctx = new Cairo.Context (y_axis_label_surface);
-//        y_axis_label_ctx.rotate (90 * GLib.Math.PI / 190);
-//        cr.set_operator (Cairo.Operator.OVER);
-//        cr.set_source_surface (y_axis_label_surface, w / 2, h / 2);
-//        cr.paint ();
+
+        if ((parent as Dactl.StripChart).flags.is_set (Dactl.ChartFlag.DRAW_TITLE)) {
+            cr.move_to (padding_left, padding_top - 5);
+            cr.show_text ((parent as Dactl.StripChart).title);
+        }
+
+        if (t_axis.flags.is_set (Dactl.AxisFlag.DRAW_LABEL)) {
+            if (t_axis.flags.is_set (Dactl.AxisFlag.ROTATE_LABEL)) {
+                cr.save ();
+                var font_extents = Cairo.FontExtents ();
+                cr.font_extents (out font_extents);
+                var text_extents = Cairo.TextExtents ();
+                cr.text_extents (t_axis.label, out text_extents);
+                cr.translate (padding_left + grid_w / 2, padding_top + grid_h + 40);
+                cr.rotate (-1 * Math.PI / 2);
+                cr.translate (-1 * text_extents.height / 2, font_extents.height / 2);
+                cr.move_to (0, 0);
+                cr.show_text (t_axis.label);
+                cr.restore ();
+            } else {
+                cr.move_to (padding_left + grid_w / 2, padding_top + grid_h + 40);
+                cr.show_text (t_axis.label);
+            }
+        }
+
+        if (y_axis.flags.is_set (Dactl.AxisFlag.DRAW_LABEL)) {
+            if (y_axis.flags.is_set (Dactl.AxisFlag.ROTATE_LABEL)) {
+                cr.save ();
+                var font_extents = Cairo.FontExtents ();
+                cr.font_extents (out font_extents);
+                var text_extents = Cairo.TextExtents ();
+                cr.text_extents (y_axis.label, out text_extents);
+                cr.translate (5, allocation.height / 2);
+                cr.rotate (-1 * Math.PI / 2);
+                cr.translate (-1 * text_extents.height / 2, font_extents.height / 2);
+                cr.move_to (0, 0);
+                cr.show_text (y_axis.label);
+                cr.restore ();
+            } else {
+                cr.move_to (5, allocation.height / 2);
+                cr.show_text (y_axis.label);
+            }
+        }
 
         /* Legend */
 
         /* Traces */
-        var trace_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, w, h);
-
+        var trace_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32,
+                                                    allocation.width,
+                                                    allocation.height);
         foreach (var trace in traces.values) {
 
             //var data = (trace as Dactl.Trace).window.to_array ();
@@ -151,15 +208,12 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
                 data[i].x = i * trace_div;
                 double value = data[i].y;
 
-                /* FIXME: negative values displayed incorrectly */
                 if (value > y_axis.max || value == double.NAN)
                     value = y_axis.max;
                 else if (value < y_axis.min)
                     value = y_axis.min;
-
-                data[i].y = (value > 0.0)
-                    ? y_offset * (1 - (value / y_axis.max))
-                    : y_offset * (1 + (value / y_axis.min));
+                data [i].y = grid_h * (1 - ((value - y_axis.min) /
+                                                    (y_axis.max - y_axis.min)));
             }
 
             var color = Gdk.RGBA ();
@@ -170,7 +224,13 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
                     var stencil = new Dactl.Bar (trace_surface);
                     stencil.set_line_width ((trace as Dactl.Trace).line_weight);
                     stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
-                    stencil.draw (data, new Dactl.Point (0.0, y_offset), true);
+                    var y_origin = grid_h * (1 - ((0 - y_axis.min) /
+                                                    (y_axis.max - y_axis.min)));
+                    if (y_origin > grid_h)
+                        y_origin = grid_h;
+                    else if (y_origin < 0)
+                        y_origin = 0;
+                    stencil.draw (data, new Dactl.Point (0.0, y_origin), true);
                     cr.set_operator (Cairo.Operator.OVER);
                     cr.set_source_surface (stencil.get_target (), grid_x, grid_y);
                     cr.paint ();
@@ -204,7 +264,6 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
                     break;
                 default:
                     assert_not_reached ();
-                    break;
             }
         }
 
@@ -213,6 +272,7 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
 
     private bool update () {
         redraw ();
+
         return true;
     }
 
@@ -235,7 +295,7 @@ private class Dactl.StripChartCanvas : Dactl.CustomWidget {
 public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     private string _xml = """
-        <object id=\"ai-ctl0\" type=\"ai\" ref=\"cld://ai0\"/>
+        <object id=\"chart0\" type=\"stripchart\"/>
     """;
 
     private string _xsd = """
@@ -245,6 +305,14 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
           <xs:attribute name="ref" type="xs:string" use="required"/>
         </xs:element>
     """;
+
+    /* Global variable that holds the maximum window size of all the traces */
+    private int window_size_max = 0;
+    /* Global variable that holds the mainimum stride of all the traces */
+    private int stride_min = int.MAX;
+    /* The number of data points per second */
+    private double pps = 0;
+    bool once = false;
 
     private Gee.Map<string, Dactl.Object> _objects;
 
@@ -289,6 +357,8 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
     /* Minimum width to support scrollable container */
     public int width_min { get; set; default = 100; }
 
+    public Dactl.ChartFlag flags { get; set; }
+
     [GtkChild]
     private Dactl.StripChartCanvas canvas;
 
@@ -317,7 +387,10 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
     private Gtk.Entry entry_time_axis;
 
     [GtkChild]
-    private Gtk.SpinButton spinbutton_time_step;
+    private Gtk.SpinButton spinbutton_delta_t;
+
+    [GtkChild]
+    private Gtk.SpinButton spinbutton_points;
 
     [GtkChild]
     private Gtk.SpinButton spinbutton_t_major;
@@ -332,6 +405,10 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
         id = "chart0";
         canvas.id = "%s-canvas0".printf (id);
         objects = new Gee.TreeMap<string, Dactl.Object> ();
+
+        flags = Dactl.ChartFlag.DRAW_TITLE |
+                Dactl.ChartFlag.DRAW_GRID |
+                Dactl.ChartFlag.DRAW_GRID_BORDER;
 
         hexpand = true;
         vexpand = true;
@@ -372,6 +449,7 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
      */
     public override void build_from_xml_node (Xml.Node *node) {
         string? value;
+        this.node = node;
 
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
@@ -400,6 +478,31 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
                             value = iter->get_content ();
                             width_min = int.parse (value);
                             break;
+                        case "show-title":
+                            value = iter->get_content ();
+                            if (bool.parse (value))
+                                flags = flags.set (Dactl.ChartFlag.DRAW_TITLE);
+                            else
+                                flags = flags.unset (Dactl.ChartFlag.DRAW_TITLE);
+                            break;
+                        case "show-grid":
+                            value = iter->get_content ();
+                            if (bool.parse (value))
+                                flags = flags.set (Dactl.ChartFlag.DRAW_GRID);
+                            else
+                                flags = flags.unset (Dactl.ChartFlag.DRAW_GRID);
+                            break;
+                        case "show-grid-border":
+                            value = iter->get_content ();
+                            if (bool.parse (value))
+                                flags = flags.set (Dactl.ChartFlag.DRAW_GRID_BORDER);
+                            else
+                                flags = flags.unset (Dactl.ChartFlag.DRAW_GRID_BORDER);
+                            break;
+                        case "points-per-second":
+                            value = iter->get_content ();
+                            pps = double.parse (value);
+                            break;
                         default:
                             break;
                     }
@@ -411,6 +514,60 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
                     } else if (type == "chart-trace") {
                         var trace = new Dactl.Trace.from_xml_node (iter);
                         this.add_child (trace);
+                    }
+                }
+            }
+        }
+        if (pps == 0) {
+            warning ("point-per-second (pps) is set to 0");
+        }
+        connect_notify_signals ();
+    }
+
+    /**
+     * Connect all notify signals to update node
+     */
+    protected void connect_notify_signals () {
+        Type type = get_type ();
+        ObjectClass ocl = (ObjectClass)type.class_ref ();
+
+        foreach (ParamSpec spec in ocl.list_properties ()) {
+            notify[spec.get_name ()].connect ((s, p) => {
+            message ("type: %s spec: %s", type.name (), spec.get_name ());
+                update_node ();
+            });
+        }
+    }
+
+    /**
+     * Update XML node
+     */
+    protected void update_node () {
+        if (node->type == Xml.ElementType.ELEMENT_NODE &&
+            node->type != Xml.ElementType.COMMENT_NODE) {
+            /* iterate through node children */
+            for (Xml.Node *iter = node->children;
+                 iter != null;
+                 iter = iter->next) {
+                if (iter->name == "property") {
+                    switch (iter->get_prop ("name")) {
+                        case "title":
+                            iter->set_content (title);
+                            break;
+                        case "expand":
+                            iter->set_content (expand.to_string ());
+                            break;
+                        case "fill":
+                            iter->set_content (fill.to_string ());
+                            break;
+                        case "height-min":
+                            iter->set_content ("%d".printf (height_min));
+                            break;
+                        case "width-min":
+                            iter->set_content ("%d".printf (width_min));
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
@@ -443,6 +600,7 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
             Timeout.add (timeout, update);
             show_all ();
         }
+        refresh ();
     }
 
     public void highlight_trace (string id) {
@@ -459,11 +617,10 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
     private void update_layout () {
         var axes = get_object_map (typeof (Dactl.Axis));
         foreach (var axis in axes.values) {
-            if ((axis as Dactl.Axis).orientation == Dactl.Orientation.HORIZONTAL) {
+            if ((axis as Dactl.Axis).orientation == Dactl.Orientation.HORIZONTAL)
                 canvas.t_axis = axis as Dactl.Axis;
-            } else if ((axis as Dactl.Axis).orientation == Dactl.Orientation.VERTICAL) {
+            else if ((axis as Dactl.Axis).orientation == Dactl.Orientation.VERTICAL)
                 canvas.y_axis = axis as Dactl.Axis;
-            }
         }
 
         var traces = get_object_map (typeof (Dactl.Trace));
@@ -486,20 +643,11 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
     }
 
     /**
-     * Connect any signals including the notifications from the model.
-     */
-    private void connect_signals () {
-
-        notify["title"].connect (() => {
-            /* Change the title */
-        });
-    }
-
-    /**
      * Callback to perform on the timeout interval.
      */
     private bool update () {
         canvas.redraw ();
+
         return true;
     }
 
@@ -514,34 +662,180 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
     public bool canvas_button_press_event_cb (Gdk.EventButton event) {
 
         if (event.type == Gdk.EventType.2BUTTON_PRESS) {
+
+            /* Set all traces to have the same configuration */
+            refresh ();
+            settings.set_reveal_child (!settings.reveal_child);
+        }
+
+
+        return false;
+    }
+
+    private void refresh () {
+        update_max_min ();
+
+        var traces = get_children (typeof (Dactl.Trace));
+        foreach (var trace in traces.values) {
+            (trace as Dactl.Trace).window_size = window_size_max;
+            if ((trace as Dactl.Trace).buffer_size < (window_size_max * stride_min)) {
+                (trace as Dactl.Trace).buffer_size = window_size_max * stride_min;
+            }
+            (trace as Dactl.Trace).stride = stride_min;
+        }
+
             entry_title.set_text (title);
             entry_y_axis.set_text (canvas.y_axis.label);
             entry_time_axis.set_text (canvas.t_axis.label);
             spinbutton_y_min.set_value (canvas.y_axis.min);
             spinbutton_y_max.set_value (canvas.y_axis.max);
-            spinbutton_y_major.set_value (canvas.t_axis.div_major);
-            spinbutton_y_minor.set_value (canvas.t_axis.div_minor);
-            var traces = get_children (typeof (Dactl.Trace));
-            /** XXX FIXME Stride should be a propery of the chart, not the trace
-             * For now just choose the largest one to populate the reveal
-             */
-            int stride = 0;
-            foreach (var trace in traces.values) {
-                if ((trace as Dactl.Trace).stride > stride) {
-                    stride = (trace as Dactl.Trace).stride;
-                }
-            }
-            spinbutton_time_step.set_value (stride);
+            spinbutton_y_major.set_value (canvas.y_axis.div_major);
+            spinbutton_y_minor.set_value (canvas.y_axis.div_minor);
             spinbutton_t_major.set_value (canvas.t_axis.div_major);
             spinbutton_t_minor.set_value (canvas.t_axis.div_minor);
-            settings.set_reveal_child (!settings.reveal_child);
-        }
+            spinbutton_delta_t.set_value (canvas.t_axis.max - canvas.t_axis.min);
+            spinbutton_points.set_value (window_size_max);
+    }
 
-        return false;
+    private void update_max_min () {
+        window_size_max = 0;
+        stride_min = int.MAX;
+
+        var traces = get_children (typeof (Dactl.Trace));
+        foreach (var trace in traces.values) {
+            if ((trace as Dactl.Trace).window_size > window_size_max) {
+                window_size_max = (trace as Dactl.Trace).window_size;
+            }
+            if ((trace as Dactl.Trace).stride < stride_min) {
+                stride_min = (trace as Dactl.Trace).stride;
+            }
+        }
     }
 
     [GtkCallback]
     public bool canvas_button_release_event_cb (Gdk.EventButton event) {
         return false;
+    }
+
+    [GtkCallback]
+    private void entry_title_activate_cb () {
+        title = entry_title.get_text ();
+    }
+
+    [GtkCallback]
+    private void entry_y_axis_activate_cb () {
+        canvas.y_axis.label = entry_y_axis.get_text ();
+    }
+
+    [GtkCallback]
+    private void spinbutton_y_min_value_changed_cb () {
+        canvas.y_axis.min = spinbutton_y_min.get_value ();
+    }
+
+    [GtkCallback]
+    private void spinbutton_y_max_value_changed_cb () {
+        canvas.y_axis.max = spinbutton_y_max.get_value ();
+    }
+
+    [GtkCallback]
+    private void spinbutton_y_major_value_changed_cb () {
+        canvas.y_axis.div_major = spinbutton_y_major.get_value_as_int ();
+    }
+
+    [GtkCallback]
+    private void spinbutton_y_minor_value_changed_cb () {
+        canvas.y_axis.div_minor = spinbutton_y_minor.get_value_as_int ();
+    }
+
+    [GtkCallback]
+    private void entry_time_axis_activate_cb () {
+        canvas.t_axis.label = entry_time_axis.get_text ();
+    }
+
+
+    [GtkCallback]
+    private void spinbutton_t_major_value_changed_cb () {
+        canvas.t_axis.div_major = spinbutton_t_major.get_value_as_int ();
+    }
+
+    [GtkCallback]
+    private void spinbutton_t_minor_value_changed_cb () {
+        canvas.t_axis.div_minor = spinbutton_t_minor.get_value_as_int ();
+    }
+
+    [GtkCallback]
+    private void spinbutton_delta_t_value_changed_cb () {
+        double s;
+        int stride_new;
+        double dt_old = canvas.t_axis.max - canvas.t_axis.min;
+        double dt_new = spinbutton_delta_t.get_value ();
+
+        update_max_min ();
+
+        s = pps * spinbutton_delta_t.get_value () / (double) window_size_max;
+        stride_new = (int) GLib.Math.ceil (s);
+        if (dt_old > dt_new) {
+            stride_new -= 1;
+        }
+
+        stride_new = stride_new < 1 ? 1 : stride_new;
+        canvas.t_axis.max = canvas.t_axis.min + window_size_max * stride_new / pps;
+        var traces = get_children (typeof (Dactl.Trace));
+        foreach (var trace in traces.values) {
+            (trace as Dactl.Trace).stride = stride_new;
+            if ((trace as Dactl.Trace).buffer_size < (window_size_max * stride_new)) {
+                (trace as Dactl.Trace).buffer_size = window_size_max * stride_new;
+            }
+        }
+        spinbutton_delta_t.set_value (canvas.t_axis.max - canvas.t_axis.min);
+    }
+
+    [GtkCallback]
+    private void spinbutton_points_value_changed_cb () {
+
+        int pts = spinbutton_points.get_value_as_int ();
+        int pts_old;
+        int win_buf;
+
+        update_max_min ();
+        pts = pts <=0 ? 1 : pts;
+        win_buf = window_size_max * stride_min;
+
+        var traces = get_children (typeof (Dactl.Trace));
+        foreach (var trace in traces.values) {
+            pts_old = (trace as Dactl.Trace).window_size;
+            if (pts > win_buf) {
+                pts = win_buf;
+            }
+
+            int num = win_buf / pts;
+            if (pts_old > pts) {
+
+                if ((win_buf % pts) != 0) {
+                    for (int i = num + 1; i < win_buf; i ++) {
+                        if ((win_buf % i) == 0) {
+                            num = i;
+                            break;
+                        }
+                    }
+                }
+            } else if (pts_old < pts) {
+
+                for (int i = num; i > 0; i--) {
+                    if ((win_buf % i) == 0) {
+                        num = i;
+                        break;
+                    }
+                }
+            } else {
+
+                num = win_buf / pts;
+            }
+
+            pts = win_buf / num;
+            spinbutton_points.set_value (pts);
+            (trace as Dactl.Trace).stride = (int) ((double) win_buf / (double) pts);
+            (trace as Dactl.Trace).window_size = pts;
+        }
     }
 }

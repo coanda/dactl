@@ -7,6 +7,8 @@ public interface Dactl.Buildable : GLib.Object {
 
     protected abstract string xsd { get; }
 
+    protected abstract Xml.Node* node { get; set; }
+
     public static unowned string get_xml_default () {
         return "<object type=\"buildable\"/>";
     }

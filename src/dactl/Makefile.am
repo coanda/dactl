@@ -16,11 +16,15 @@ UI_SOURCES = \
 	dactl-csv-export-toolbar.vala \
 	dactl-control-settings.vala \
 	dactl-general-settings.vala \
+	dactl-loader.vala \
+	dactl-loader-toolbar.vala \
 	dactl-log-settings.vala \
 	dactl-plugin-settings.vala \
 	dactl-settings.vala \
 	dactl-settings-sidebar.vala \
 	dactl-settings-toolbar.vala \
+	dactl-chart-settings.vala \
+	dactl-chart-settings-page.vala \
 	dactl-sidebar.vala \
 	dactl-topbar.vala \
 	dactl-ui-application.vala \

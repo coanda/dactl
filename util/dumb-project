@@ -13,6 +13,7 @@ case "$1" in
             src/dactl/dactl-ui-application-view.vala \
             src/dactl/dactl-acquisition-settings.vala \
             src/dactl/dactl-application-controller.vala \
+            src/dactl/dactl-application-factory.vala \
             src/dactl/dactl-application-model.vala \
             src/dactl/dactl-application-toolbar.vala \
             src/dactl/dactl-topbar.vala \

@@ -3,8 +3,7 @@
 mimexmldir = $(datadir)/mime/packages
 mimexml_DATA = dactl.xml
 
-## See tabler for original example that includes i18n
-## @INTLTOOL_XML_RULE@
+@INTLTOOL_XML_RULE@
 
 EXTRA_DIST = $(mimexml_DATA)
 

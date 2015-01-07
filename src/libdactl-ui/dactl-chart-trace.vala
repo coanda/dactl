@@ -36,6 +36,8 @@ public enum Dactl.TraceDrawType {
 
 public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
 
+    private Xml.Node* _node;
+
     private string _xml = """
         <object id=\"ai-ctl0\" type=\"ai\" ref=\"cld://ai0\"/>
     """;
@@ -67,6 +69,18 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
         get { return _xsd; }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual Xml.Node* node {
+        get {
+            return _node;
+        }
+        set {
+            _node = value;
+        }
+    }
+
     public string ch_ref { get; set; }
 
     private weak Cld.Channel _channel;
@@ -83,12 +97,15 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
         }
     }
 
+    //public bool channel_isset { get; private set; default = false; }
+
     public bool channel_isset { get; private set; default = false; }
 
     public bool highlight { get; set; default = false; }
 
     /**
      * Timeout in milliseconds duration to accumulate values over.
+     * XXX FIXME Is this needed for anything???
      */
     public int duration { get; set; default = 10; }
 
@@ -107,14 +124,17 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
                     if (n < _buffer_size) {
                         for (int i = 0; i < n - 1; i++)
                             buffer[i] = buffer[i + 1];
-                        buffer.resize (n);
+                        buffer.resize (n - 1);
                     } else {
+                        //buffer.resize (n - 1);
                         buffer.resize (n);
-                        for (int i = 0; i < n - _buffer_size; i++) {
-                            for (int j = n; j > 0; j--)
-                                buffer[i] = buffer[j - 1];
-                            buffer[0] = 0.0;
+                        for (int i = n - 1; i > n - _buffer_size - 1; i--) {
+                            buffer [i] = buffer [i - (n - _buffer_size)];
                         }
+                        for (int i = 0; i < (n - buffer_size); i++) {
+                            buffer [i] = 0;
+                        }
+                        buffer.resize (n - 1);
                     }
                 }
                 _buffer_size = n;
@@ -122,7 +142,6 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
             }
         }
     }
-
     /**
      * Which simple drawing type to use to display the trace data.
      */
@@ -172,7 +191,8 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
         get { return _window_size - 1; }
         set {
             int n = value + 1;
-            if (value != _window_size) {
+            /* XXX Removed this to fix chart resizing problem */
+//            if (value != _window_size) {
                 lock (window) {
                     /* Resizing is just dropping elements at the head */
                     if (n < _window_size) {
@@ -183,7 +203,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
                             _window.add (new Dactl.Point (0.0, 0.0));
                     }
                 }
-            }
+//            }
             _window_size = n;
             window_size_changed (_window_size);
         }
@@ -195,8 +215,14 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
      */
     public int stride {
         get { return _stride; }
-        set { _stride = (value > 0) ? value : 1; }
+        set {
+            lock (window) {
+                _stride = (value > 0) ? value : 1;
+            }
+        }
     }
+
+    private int nth_sample = 0;
 
     /**
      * Measured data from the connect channel.
@@ -238,6 +264,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
             node->type != Xml.ElementType.COMMENT_NODE) {
             id = node->get_prop ("id");
             ch_ref = node->get_prop ("ref");
+            this.node = node;
 
             /* Iterate through node children */
             for (Xml.Node *iter = node->children; iter != null; iter = iter->next) {
@@ -299,6 +326,61 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
                 }
             }
         }
+        connect_notify_signals ();
+    }
+
+    /**
+     * Connect all notify signals to update node
+     */
+    protected void connect_notify_signals () {
+        Type type = get_type ();
+        ObjectClass ocl = (ObjectClass)type.class_ref ();
+
+        foreach (ParamSpec spec in ocl.list_properties ()) {
+            notify[spec.get_name ()].connect ((s, p) => {
+                update_node ();
+            });
+        }
+    }
+
+    /**
+     * Update the XML Node for this object.
+     */
+    private void update_node () {
+        if (node->type == Xml.ElementType.ELEMENT_NODE &&
+            node->type != Xml.ElementType.COMMENT_NODE) {
+            /* iterate through node children */
+            for (Xml.Node *iter = node->children;
+                 iter != null;
+                 iter = iter->next) {
+                if (iter->name == "property") {
+                    switch (iter->get_prop ("name")) {
+                        case "buffer-size":
+                            iter->set_content ("%d".printf (buffer_size));
+                            break;
+                        case "draw-type":
+                            iter->set_content (draw_type.to_string ());
+                            break;
+                        case "line-weight":
+                            iter->set_content (line_weight.to_string ());
+                            break;
+                        case "color":
+                            iter->set_content (color_spec);
+                            break;
+                        case "stride":
+                            /* XXX FIXME Saving this causes problem with charts */
+                            //iter->set_content ("%d".printf (stride));
+                            break;
+                        case "window-size":
+                            /* XXX FIXME Saving this causes problem with charts */
+                            //iter->set_content ("%d".printf (window_size));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     private void connect_signals () {
@@ -315,49 +397,32 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
             /* Simple rotate left by one value */
             lock (buffer) {
                 for (var i = 0; i < _buffer_size - 1; i++) {
+
                     buffer[i] = buffer[i + 1];
                 }
                 buffer[_buffer_size - 1] = value;
             }
 
+            nth_sample++;
+
             /* Update the window with the required data */
-            lock (window) {
-                /*
-                 *for (int i = 0; i < _window_size; i++) {
-                 *    int offset = _buffer_size - ((_window_size - 1) * stride);
-                 *    int pos = offset + (i * stride);
-                 *    var point = _window.get (i);
-                 *    point.y = buffer[pos];
-                 *}
-                 */
+            if (nth_sample >= stride) {
 
-                for (int i = 0; i < window.size; i++) {
-
-                    /* source */
-                    int pos = buffer.length - (i * stride);
-                    var point = _window.get ((window.size - 1) - i);
-                    point.y = buffer[pos];
-//                    if (this.id == "test-tr0") {
-//                        stdout.printf ("i: %d trace: %s channel: %s time_us: %lld y: %.3f \n",
-//                                            i, this.channel.uri, this.id, GLib.get_monotonic_time (), point.y);
-//                    }
+                lock (window) {
+                    for (int i = 0; i < window.size; i++) {
+                        int pos = buffer.length - (i * stride);
+                        var point = _window.get ((window.size - 1) - i);
+                        point.y = buffer[pos];
+                    }
+//                    int x = buffer.length - ((window.size - 1) * stride);
+//                    stdout.printf ("buffer [%d] %.3f buffer [%d], %.3f\n",
+//                                        buffer.length,
+//                                        buffer[buffer.length],
+//                                        buffer.length - 1,
+//                                        buffer[buffer.length -1]);
                 }
+                nth_sample = 0;
             }
-
-                /*
-                stdout.printf ("%.3f %.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f\n",
-                    window[window_size-10].y,
-                    window[window_size-9].y,
-                    window[window_size-8].y,
-                    window[window_size-7].y,
-                    window[window_size-6].y,
-                    window[window_size-5].y,
-                    window[window_size-4].y,
-                    window[window_size-3].y,
-                    window[window_size-2].y,
-                    window[window_size-1].y,
-                    window[window_size].y);
-                */
         }
     }
 }

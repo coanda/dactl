@@ -103,7 +103,13 @@ public class Dactl.AIControl : Dactl.CompositeWidget, Dactl.CldAdapter {
         objects = new Gee.TreeMap<string, Dactl.Object> ();
     }
 
-    //public AIControl (string ai_ref) {}
+    public AIControl (string ai_ref) {
+        message ("wooot!");
+        this.ch_ref = ai_ref;
+
+        // Request CLD data
+        request_data.begin ();
+    }
 
     public AIControl.from_xml_node (Xml.Node *node) {
         build_from_xml_node (node);

@@ -62,6 +62,7 @@ public class Dactl.Settings : Gtk.Stack {
             case Dactl.SettingsPage.CONTROL:
                 break;
             case Dactl.SettingsPage.LOG:
+                log.populate_logs_treeview ();
                 break;
             case Dactl.SettingsPage.PLUGIN:
                 break;

@@ -2,7 +2,7 @@ dnl dactl.m4
 dnl
 dnl Copyright 2014 Geoff Johnson
 dnl
-dnl Useful macros borrowed from rygel.
+dnl Useful macros adapted from rygel.
 
 AC_DEFUN([DACTL_ADD_STAMP], [
     dactl_stamp_files="$dactl_stamp_files $srcdir/$1"
@@ -65,4 +65,43 @@ dnl --------------------------------------
 dnl Hands off to internal m4.
 AC_DEFUN([DACTL_DISABLE_PLUGIN], [
     _DACTL_DISABLE_PLUGIN_INTERNAL(m4_translit([$1],[-],[_]))
+])
+
+AC_DEFUN([DACTL_CHECK_VALA],
+[
+    AC_ARG_ENABLE([vala],
+        [AS_HELP_STRING([--enable-vala],[enable checks for vala])],,
+            [enable_vala=no])
+    AC_ARG_ENABLE([strict-valac],
+        [AS_HELP_STRING([--enable-strict-valac],[enable strict Vala compiler])],,
+              [enable_strict_valac=no])
+    AS_IF([test "x$enable_strict_valac" = "xyes"],
+          [DACTL_ADD_VALAFLAGS([--fatal-warnings])])
+    AC_SUBST([VALAFLAGS])
+
+    dnl Enable check for Vala even if not asked to do so if stamp files are absent.
+    for stamp in $dactl_stamp_files
+    do
+        AS_IF([test ! -e "$stamp"],
+              [AC_MSG_WARN([Missing stamp file $[]stamp. Forcing vala mode])
+               enable_vala=yes
+              ])
+    done
+
+    dnl Vala
+    AS_IF([test x$enable_vala = xyes],
+          [dnl check for vala
+           AM_PROG_VALAC([$1])
+
+            AS_IF([test x$VALAC = "x"],
+                [AC_MSG_ERROR([Cannot find the "valac" compiler in your PATH])],
+                [
+                    VALA_CHECK_PACKAGES([$2])
+                ])
+           ],
+           []
+    )
+
+    VAPIDIR="${datadir}/vala/vapi"
+    AC_SUBST(VAPIDIR)
 ])

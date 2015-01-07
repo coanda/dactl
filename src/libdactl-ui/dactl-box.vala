@@ -67,6 +67,11 @@ public class Dactl.Box : Dactl.CompositeWidget {
     construct {
         id = "box0";
         objects = new Gee.TreeMap<string, Dactl.Object> ();
+        spacing = 0;
+        margin_top = 0;
+        margin_right = 0;
+        margin_bottom = 0;
+        margin_left = 0;
 
         /*
          *this.notify["homogeneous"].connect (() => {
@@ -191,6 +196,9 @@ public class Dactl.Box : Dactl.CompositeWidget {
                         case "log":
                             object = new Dactl.LogControl.from_xml_node (iter);
                             break;
+                        case "video":
+                            object = new Dactl.VideoProcessor.from_xml_node (iter);
+                            break;
                         default:
                             object = null;
                             break;
@@ -240,6 +248,16 @@ public class Dactl.Box : Dactl.CompositeWidget {
                             (object as Gtk.Widget).expand,
                             (object as Dactl.Widget).fill, 0);
         }
+
+        /**
+         * Without this the scaling of packed widgets doesn't always do what
+         * you think it should.
+         */
+        if (object is Dactl.Box) {
+            //child_set_property (object as Gtk.Widget, "expand", true);
+            child_set_property (object as Gtk.Widget, "fill", true);
+        }
+
         show_all ();
     }
 

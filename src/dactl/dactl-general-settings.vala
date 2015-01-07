@@ -1,8 +1,8 @@
 [GtkTemplate (ui = "/org/coanda/dactl/ui/general-settings.ui")]
 private class Dactl.GeneralSettings : Gtk.Box {
 
-    [GtkChild]
-    private Gtk.Alignment alignment_ui;
+//    [GtkChild]
+//    private Gtk.Alignment alignment_ui;
 
     private Gtk.StackSwitcher switcher;
 
@@ -17,6 +17,6 @@ private class Dactl.GeneralSettings : Gtk.Box {
         ui_settings.transition_type = Gtk.StackTransitionType.CROSSFADE;
         //switcher.set_stack (ui_settings as Gtk.Stack);
 
-        alignment_ui.add (ui_settings);
+//        alignment_ui.add (ui_settings);
     }
 }

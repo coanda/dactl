@@ -38,6 +38,8 @@ data/dactl.desktop
 data/schemas/org.coanda.dactl.gschema.xml
 data/schemas/org.coanda.dactl.gschema.valid
 
+data/mime/dactl.xml
+
 docs/dactl-uml.dia.autosave
 
 examples/.libs/
@@ -59,6 +61,7 @@ m4/lt~obsolete.m4
 
 po/POTFILES
 po/stamp-it
+po/.intltool-merge-cache
 
 src/dactl/dactl
 src/dactl/.libs/

@@ -55,12 +55,21 @@ AC_DEFINE_UNQUOTED(DATADIR, "$SYSCONFDIR/$PACKAGE",
 AC_DEFINE_UNQUOTED(UI_DIR, "$ac_default_prefix/share/$PACKAGE/ui",
                    [Define the read-only user interface files directory.])
 
+dnl Required versions of library packages
+dnl These aren't used yet, but they will be eventually
+GLIB_REQUIRED=2.38.0
+LIBXML_REQUIRED=2.7
+VALA_REQUIRED=0.22.0
+VALADOC_REQUIRED=0.2
+GEE_REQUIRED=0.8
+GTK_REQUIRED=3.0
+
 dnl Library checks
 VALAFLAGS="--enable-deprecated --target-glib=2.38 $VALAFLAGS"
 
 dnl Need to work these in to simplify checking
-DACTL_BASE_MODULES="gee-1.0 libxml-2.0"
-DACTL_BASE_MODULES_VALAFLAGS="--pkg gee-1.0 --pkg libxml-2.0"
+DACTL_BASE_MODULES="gee-0.8 libxml-2.0"
+DACTL_BASE_MODULES_VALAFLAGS="--pkg gee-0.8 --pkg libxml-2.0"
 
 PKG_CHECK_MODULES([LIBDACTL_CORE_DEPS], [$DACTL_BASE_MODULES gio-2.0 gmodule-2.0])
 LIBDACTL_CORE_DEPS_VALAFLAGS="$DACTL_BASE_MODULES_VALAFLAGS --pkg gio-2.0 --pkg gmodule-2.0"
@@ -90,10 +99,10 @@ AC_ARG_WITH(cld,
 
 HAVE_CLD=no
 AS_IF([test "x$try_cld" = "xyes"],
-      [PKG_CHECK_MODULES([DACTL_CLD_DEPS], [cld-0.2 comedi gsl sqlite3],
+      [PKG_CHECK_MODULES([DACTL_CLD_DEPS], [cld-0.3 comedi gsl sqlite3],
 	    [
-           DACTL_CHECK_PACKAGES([cld-0.2 comedi gsl sqlite3], [HAVE_CLD=yes])
-           DACTL_CLD_DEPS_VALAFLAGS="--pkg cld-0.2 --pkg comedi --pkg gsl --pkg sqlite3"
+           DACTL_CHECK_PACKAGES([cld-0.3 comedi gsl sqlite3], [HAVE_CLD=yes])
+           DACTL_CLD_DEPS_VALAFLAGS="--pkg cld-0.3 --pkg comedi --pkg gsl --pkg sqlite3"
 	       DACTL_PLUGIN_COMMON_VALAFLAGS="$DACTL_PLUGIN_COMMON_VALAFLAGS $DACTL_CLD_DEPS_VALAFLAGS"
            AC_SUBST([DACTL_CLD_DEPS_VALAFLAGS])
         ],
@@ -138,36 +147,43 @@ DACTL_ADD_PLUGIN([brabender],[CLD Brabender plugin],[yes])
 AS_IF([test "x$enable_brabender_plugin" = "xyes"],
   [
     PKG_CHECK_MODULES([DACTL_PLUGIN_BRABENDER_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.2])
+                      [$DACTL_COMMON_MODULES cld-0.3])
   ])
 
 DACTL_ADD_PLUGIN([heidolph],[CLD Heidolph plugin],[yes])
 AS_IF([test "x$enable_heidolph_plugin" = "xyes"],
   [
     PKG_CHECK_MODULES([DACTL_PLUGIN_HEIDOLPH_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.2])
+                      [$DACTL_COMMON_MODULES cld-0.3])
   ])
 
 DACTL_ADD_PLUGIN([licor],[CLD Licor plugin],[yes])
 AS_IF([test "x$enable_licor_plugin" = "xyes"],
   [
     PKG_CHECK_MODULES([DACTL_PLUGIN_LICOR_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.2])
+                      [$DACTL_COMMON_MODULES cld-0.3])
   ])
 
 DACTL_ADD_PLUGIN([parker],[CLD Parker plugin],[yes])
 AS_IF([test "x$enable_parker_plugin" = "xyes"],
   [
     PKG_CHECK_MODULES([DACTL_PLUGIN_PARKER_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.2])
+                      [$DACTL_COMMON_MODULES cld-0.3])
   ])
 
 DACTL_ADD_PLUGIN([velmex],[CLD Velmex plugin],[yes])
 AS_IF([test "x$enable_velmex_plugin" = "xyes"],
   [
     PKG_CHECK_MODULES([DACTL_PLUGIN_VELMEX_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.2])
+                      [$DACTL_COMMON_MODULES cld-0.3])
   ])
+
+# This should be called only after all DACTL_CHECK_VALA() and DACTL_ADD_PLUGIN() calls:
+DACTL_CHECK_VALA([$VALA_REQUIRED],)
+                 #[cld-0.3
+                  #gio-2.0
+                  #gee-0.8
+                  #posix])
 
 dnl Build Options
 AC_ARG_ENABLE(debug,

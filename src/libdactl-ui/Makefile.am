@@ -54,13 +54,14 @@ dactl-ui.h dactl-ui-0.3.vapi Dactl-0.3.gir: libdactl_ui_0_3_la_vala.stamp
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS=
 INTROSPECTION_SCANNER_ARGS=
-INTROSPECTION_COMPILER_ARGS= -l libdactl-ui-0.3.so.2 --includedir=$(builddir)/../libdactl-core --includedir=$(srcdir)/../libdactl-core
+INTROSPECTION_COMPILER_ARGS= -l libdactl-ui-0.3.so.0 --includedir=$(builddir)/../libdactl-core --includedir=$(srcdir)/../libdactl-core
 $(builddir)/DactlUI-0.3.gir: $(srcdir)/Dactl-0.3.gir
 	$(AM_V_GEN)$(SED) -e 's,Dactl\.,DactlUI.,g' \
 		-e 's,namespace name="Dactl",namespace name="DactlUI",g' \
-		-e 's,DactlUI\.AbstractObject,DactlCore.AbstractObject,g' \
-		-e 's,DactlUI\.AbstractBuildable,DactlCore.AbstractBuildable,g' \
-		-e 's,DactlUI\.AbstractContainer,DactlCore.AbstractContainer,g' \
+		-e 's,DactlUI\.Object,DactlCore.Object,g' \
+		-e 's,DactlUI\.Buildable,DactlCore.Buildable,g' \
+		-e 's,DactlUI\.Container,DactlCore.Container,g' \
+		-e 's,DactlUI\.CldAdapter,DactlCore.CldAdapter,g' \
 		-e 's,<package name="dactl-ui-0.3"/>,<include name="DactlCore" version="0.3"/>\n<package name="dactl-ui-0.3"/>,' \
 		$< >$@
 GIRS = DactlUI-0.3.gir

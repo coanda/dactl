@@ -59,7 +59,7 @@ public class Dactl.ApplicationController : GLib.Object {
         message ("Saving the configuration.");
         try {
             model.config.set_xml_node ("//dactl/cld:objects",
-                                    model.xml.get_node ("//cld/cld:objects"));
+                                       model.xml.get_node ("//cld/cld:objects"));
             model.config.save ();
         } catch (GLib.Error e) {
             critical (e.message);

@@ -5,6 +5,8 @@
  */
 public class Dactl.PnidElement : GLib.Object, Dactl.Object, Dactl.Buildable {
 
+    private Xml.Node* _node;
+
     private string _xml = """
         <object id=\"ai-ctl0\" type=\"ai\" ref=\"cld://ai0\"/>
     """;
@@ -17,7 +19,19 @@ public class Dactl.PnidElement : GLib.Object, Dactl.Object, Dactl.Buildable {
         </xs:element>
     """;
 
-    private weak Cld.Channel _channel;
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual Xml.Node* node {
+        get {
+            return _node;
+        }
+        set {
+            _node = value;
+        }
+    }
+
+    private weak Cld.Sensor _sensor;
 
     /**
      * {@inheritDoc}
@@ -39,16 +53,20 @@ public class Dactl.PnidElement : GLib.Object, Dactl.Object, Dactl.Buildable {
     }
 
     /**
-     * The channel reference that this text field wants to display.
+     * The sensor reference that this text field wants to display.
      */
-    public string ch_ref { get; set; }
+    public string cld_ref { get; set; }
 
-    public Cld.Channel channel {
-        get { return _channel; }
+    public Cld.Sensor sensor {
+        get { return _sensor; }
         set {
-            if ((value as Cld.Object).uri == ch_ref) {
-                _channel = value;
-                channel_isset = true;
+            var tokens = cld_ref.split (":");
+            message ("Waaaa! `%s' `%s'", (value as Cld.Object).uri, tokens[0]);
+            if ((value as Cld.Object).uri == tokens[0]) {
+                _sensor = value;
+                sensor_isset = true;
+                if (sensor_isset)
+                    message ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             }
         }
     }
@@ -60,7 +78,7 @@ public class Dactl.PnidElement : GLib.Object, Dactl.Object, Dactl.Buildable {
 
     public double value { get; private set; }
 
-    public bool channel_isset { get; private set; default = false; }
+    public bool sensor_isset { get; private set; default = false; }
 
     /**
      * Default construction.
@@ -70,9 +88,9 @@ public class Dactl.PnidElement : GLib.Object, Dactl.Object, Dactl.Buildable {
     /**
      * Construction using data provided.
      */
-    public PnidElement.with_data (string id, string ch_ref) {
+    public PnidElement.with_data (string id, string cld_ref) {
         this.id = id;
-        this.ch_ref = ch_ref;
+        this.cld_ref = cld_ref;
     }
 
     /**
@@ -80,6 +98,10 @@ public class Dactl.PnidElement : GLib.Object, Dactl.Object, Dactl.Buildable {
      */
     public PnidElement.from_xml_node (Xml.Node *node) {
         build_from_xml_node (node);
+
+        notify["sensor-isset"].connect (() => {
+            message ("sensor-isset: `%s'", sensor_isset.to_string ());
+        });
     }
 
     /**
@@ -89,23 +111,34 @@ public class Dactl.PnidElement : GLib.Object, Dactl.Object, Dactl.Buildable {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
             id = node->get_prop ("id");
-            ch_ref = node->get_prop ("chref");
-            svg_ref = node->get_prop ("svgref");
+            cld_ref = node->get_prop ("cld-ref");
+            svg_ref = node->get_prop ("svg-ref");
+        }
+    }
+
+    /**
+     * Update XML node
+     */
+    protected void update_node () {
+        /* Iterate through node children */
+        for (Xml.Node *iter = node->children; iter != null; iter = iter->next) {
+            if (iter->name == "property") {
+                switch (iter->get_prop ("name")) {
+                    case "cld-ref":
+                        iter->set_content (cld_ref);
+                        break;
+                    case "svg-ref":
+                        iter->set_content (svg_ref);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 }
 
-private class Dactl.PnidCanvas : Dactl.CustomWidget {
-
-    /**
-     * {@inheritDoc}
-     */
-    protected override string xml { get { return "<object />"; } }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected override string xsd { get { return "<object />"; } }
+private class Dactl.PnidCanvas : Dactl.Canvas {
 
     private Xml.Doc *doc;
 
@@ -153,15 +186,12 @@ private class Dactl.PnidCanvas : Dactl.CustomWidget {
         update ();
     }
 
-    // FIXME: Didn't expect to need internal CustomWidget classes
-    public override void build_from_xml_node (Xml.Node *node) { }
-
     /**
      * Draw callback.
      */
     public override bool draw (Cairo.Context cr) {
 
-        string xmlstr;
+        string xmlstr, hi;
 
         // All of the SVG manipulations happen on each iteration, couldn't find
         // a more efficient way of using XPath on a file stream
@@ -181,7 +211,16 @@ private class Dactl.PnidCanvas : Dactl.CustomWidget {
                 obj = ctx->eval_expression (xpath);
                 var nodes = obj->nodesetval;
                 var node = nodes->item (0);
-                var value = "%.2f".printf (((element as Dactl.PnidElement).channel as Cld.ScalableChannel).scaled_value);
+
+                var tokens = (element as Dactl.PnidElement).cld_ref.split (":");
+                var prop = (tokens.length > 1) ? tokens[1] : "value";
+                debug (" > %s : %d", (element as Dactl.PnidElement).cld_ref, tokens.length);
+
+                /* Check if a property was requested, use the channel scaled value if not */
+                double fval;
+                (element as Dactl.PnidElement).sensor.get (prop, out fval);
+                var value = "%.2f".printf (fval);
+                debug ("%s - %s value: %s", tokens[0], prop, value);
                 node->set_content (value);
             } catch (Cld.XmlError e) {
                 warning (e.message);
@@ -379,6 +418,8 @@ public class Dactl.Pnid : Dactl.CompositeWidget, Dactl.CldAdapter {
             node->type != Xml.ElementType.COMMENT_NODE) {
             id = node->get_prop ("id");
 
+            this.node = node;
+
             /* Iterate through node children */
             for (Xml.Node *iter = node->children; iter != null; iter = iter->next) {
                 if (iter->name == "property") {
@@ -416,16 +457,20 @@ public class Dactl.Pnid : Dactl.CompositeWidget, Dactl.CldAdapter {
      * {@inheritDoc}
      */
     public virtual void offer_cld_object (Cld.Object object) {
+        message ("Offering CLD data `%s' to `%s'", object.id, id);
+
         var elements = get_object_map (typeof (Dactl.PnidElement));
         foreach (var element in elements.values) {
-            if ((element as Dactl.PnidElement).ch_ref == object.uri) {
-                message ("Assigning channel `%s' to `%s'", object.uri, element.id);
-                (element as Dactl.PnidElement).channel = (object as Cld.Channel);
+            var tokens = (element as Dactl.PnidElement).cld_ref.split (":");
+
+            if (tokens[0] == object.uri) {
+                message (" > Assigning `%s' to `%s'", object.uri, element.id);
+                (element as Dactl.PnidElement).sensor = (object as Cld.Sensor);
             }
-            satisfied = (element as Dactl.PnidElement).channel_isset;
+            satisfied = (element as Dactl.PnidElement).sensor_isset;
         }
 
-        message ("PNID requirements satisfied: %s", satisfied.to_string ());
+        message ("PNID requirements for `%s' satisfied: %s", id, satisfied.to_string ());
 
         if (satisfied) {
             channels_loaded ();
@@ -439,15 +484,24 @@ public class Dactl.Pnid : Dactl.CompositeWidget, Dactl.CldAdapter {
      * {@inheritDoc}
      */
     protected async void request_data () {
+        message ("Initiating CLD data request routine");
         while (!satisfied) {
-            var entries = get_object_map (typeof (Dactl.PnidElement));
-            foreach (var entry in entries.values) {
-                if (!(entry as Dactl.PnidElement).channel_isset)
-                    request_object ((entry as Dactl.PnidElement).ch_ref);
+            message (" > `%s' still not satisfied", id);
+            var elements = get_object_map (typeof (Dactl.PnidElement));
+            foreach (var element in elements.values) {
+                if (!(element as Dactl.PnidElement).sensor_isset) {
+                    message ("   > `%s' sensor_isset: %s",
+                             element.id, (element as Dactl.PnidElement).sensor_isset.to_string ());
+                    var tokens = (element as Dactl.PnidElement).cld_ref.split (":");
+                    message ("   > Requesting object `%s' for `%s'", tokens[0], element.id);
+                    request_object (tokens[0]);
+                }
             }
+
             // Try again in a second
             yield nap (1000);
         }
+        message ("`%s' satisfied now", id);
     }
 
     /**
@@ -464,6 +518,7 @@ public class Dactl.Pnid : Dactl.CompositeWidget, Dactl.CldAdapter {
      */
     private bool update () {
         canvas.redraw ();
+
         return true;
     }
 

@@ -54,7 +54,7 @@ dactl-core-0.3.vapi dactl-core.h Dactl-0.3.gir: libdactl_core_0_3_la_vala.stamp
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS=
 INTROSPECTION_SCANNER_ARGS=
-INTROSPECTION_COMPILER_ARGS= -l libdactl-core-0.3.so.2
+INTROSPECTION_COMPILER_ARGS= -l libdactl-core-0.3.so.0
 $(builddir)/DactlCore-0.3.gir: $(srcdir)/Dactl-0.3.gir
 	$(AM_V_GEN)$(SED) -e 's,Dactl\.,DactlCore.,g' -e 's,namespace name="Dactl",namespace name="DactlCore",g' $< >$@
 GIRS = DactlCore-0.3.gir

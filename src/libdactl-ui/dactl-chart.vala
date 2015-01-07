@@ -1,42 +1,35 @@
-private class Dactl.ChartCanvas : Dactl.CustomWidget {
+[Flags]
+public enum Dactl.ChartFlag {
+    DRAW_TITLE          = 0x01,
+    DRAW_GRID           = 0x02,
+    DRAW_GRID_BORDER    = 0x04;
 
-    private string _xml = """
-        <object id=\"ai-ctl0\" type=\"ai\" ref=\"cld://ai0\"/>
-    """;
+    public Dactl.ChartFlag set (Dactl.ChartFlag flag) {
+        return (this | flag);
+    }
 
-    private string _xsd = """
-        <xs:element name="object">
-          <xs:attribute name="id" type="xs:string" use="required"/>
-          <xs:attribute name="type" type="xs:string" use="required"/>
-          <xs:attribute name="ref" type="xs:string" use="required"/>
-        </xs:element>
-    """;
+    public Dactl.ChartFlag unset (Dactl.ChartFlag flag) {
+        return (this & ~flag);
+    }
+
+    public bool is_set (Dactl.ChartFlag flag) {
+        return (flag in this);
+    }
+}
+
+private class Dactl.ChartCanvas : Dactl.Canvas {
 
     public weak Dactl.Axis x_axis { get; set; }
 
     public weak Dactl.Axis y_axis { get; set; }
 
-    private int padding_top = 40;
+    protected int padding_top = 40;
 
-    private int padding_right = 40;
+    protected int padding_right = 40;
 
-    private int padding_bottom = 80;
+    protected int padding_bottom = 80;
 
-    private int padding_left = 80;
-
-    /**
-     * {@inheritDoc}
-     */
-    protected override string xml {
-        get { return _xml; }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected override string xsd {
-        get { return _xsd; }
-    }
+    protected int padding_left = 80;
 
     construct {
         margin_top = 5;
@@ -57,9 +50,6 @@ private class Dactl.ChartCanvas : Dactl.CustomWidget {
 
         set_size_request (320, 240);
     }
-
-    // FIXME: Didn't expect to need internal CustomWidget classes
-    public override void build_from_xml_node (Xml.Node *node) { }
 
     /**
      * Draw callback.
@@ -137,7 +127,7 @@ private class Dactl.ChartCanvas : Dactl.CustomWidget {
         }
 
         var region = window.get_clip_region ();
-        // redraw the cairo canvas completely by exposing it
+        // Redraw the cairo canvas completely by exposing it
         window.invalidate_region (region, true);
         window.process_updates (true);
     }
@@ -147,7 +137,7 @@ private class Dactl.ChartCanvas : Dactl.CustomWidget {
 public class Dactl.Chart : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     private string _xml = """
-        <object id=\"ai-ctl0\" type=\"ai\" ref=\"cld://ai0\"/>
+        <object id=\"chart0\" type=\"chart\"/>
     """;
 
     private string _xsd = """
@@ -196,6 +186,8 @@ public class Dactl.Chart : Dactl.CompositeWidget, Dactl.CldAdapter {
     /* Minimum width to support scrollable container */
     public int width_min { get; set; default = 100; }
 
+    public Dactl.ChartFlag flags { get; set; }
+
     [GtkChild]
     private Dactl.ChartCanvas canvas;
 
@@ -211,6 +203,8 @@ public class Dactl.Chart : Dactl.CompositeWidget, Dactl.CldAdapter {
         vexpand = true;
         halign = Gtk.Align.FILL;
         valign = Gtk.Align.FILL;
+
+        flags = Dactl.ChartFlag.DRAW_TITLE | Dactl.ChartFlag.DRAW_GRID;
     }
 
     /**
@@ -269,6 +263,27 @@ public class Dactl.Chart : Dactl.CompositeWidget, Dactl.CldAdapter {
                         case "width-min":
                             value = iter->get_content ();
                             width_min = int.parse (value);
+                            break;
+                        case "show-title":
+                            value = iter->get_content ();
+                            if (bool.parse (value))
+                                flags = flags.set (Dactl.ChartFlag.DRAW_TITLE);
+                            else
+                                flags = flags.unset (Dactl.ChartFlag.DRAW_TITLE);
+                            break;
+                        case "show-grid":
+                            value = iter->get_content ();
+                            if (bool.parse (value))
+                                flags = flags.set (Dactl.ChartFlag.DRAW_GRID);
+                            else
+                                flags = flags.unset (Dactl.ChartFlag.DRAW_GRID);
+                            break;
+                        case "show-grid-border":
+                            value = iter->get_content ();
+                            if (bool.parse (value))
+                                flags = flags.set (Dactl.ChartFlag.DRAW_GRID_BORDER);
+                            else
+                                flags = flags.unset (Dactl.ChartFlag.DRAW_GRID_BORDER);
                             break;
                         default:
                             break;

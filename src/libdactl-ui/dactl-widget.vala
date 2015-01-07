@@ -52,14 +52,24 @@ public interface Dactl.Widget : GLib.Object {
     public abstract bool fill { get; set; }
 }
 
-public abstract class Dactl.SimpleWidget : Gtk.Box, Dactl.Widget, Dactl.Buildable, Dactl.Object {
+public abstract class Dactl.Canvas : Gtk.DrawingArea, Dactl.Object {
+
+    private Xml.Node* _node;
 
     /**
      * {@inheritDoc}
      */
     public virtual string id { get; set; }
+}
 
-    //public bool expand { get; set; default = true; }
+public abstract class Dactl.SimpleWidget : Gtk.Box, Dactl.Widget, Dactl.Buildable, Dactl.Object {
+
+    private Xml.Node* _node;
+
+    /**
+     * {@inheritDoc}
+     */
+    public virtual string id { get; set; }
 
     /**
      * {@inheritDoc}
@@ -71,22 +81,39 @@ public abstract class Dactl.SimpleWidget : Gtk.Box, Dactl.Widget, Dactl.Buildabl
      */
     protected abstract string xsd { get; }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual Xml.Node* node {
+        get {
+            return _node;
+        }
+        set {
+            _node = value;
+        }
+    }
+
     public bool fill { get; set; default = true; }
 
     /**
      * {@inheritDoc}
      */
     public abstract void build_from_xml_node (Xml.Node *node);
+
+    /**
+     * {@inheritDoc}
+     */
+    protected abstract void update_node ();
 }
 
 public abstract class Dactl.CustomWidget : Gtk.DrawingArea, Dactl.Widget, Dactl.Buildable, Dactl.Object {
 
+    private Xml.Node* _node;
+
     /**
      * {@inheritDoc}
      */
     public virtual string id { get; set; }
-
-    //public bool expand { get; set; default = true; }
 
     /**
      * {@inheritDoc}
@@ -97,6 +124,18 @@ public abstract class Dactl.CustomWidget : Gtk.DrawingArea, Dactl.Widget, Dactl.
      * {@inheritDoc}
      */
     protected abstract string xsd { get; }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual Xml.Node* node {
+        get {
+            return _node;
+        }
+        set {
+            _node = value;
+        }
+    }
 
     public bool fill { get; set; default = true; }
 
@@ -104,16 +143,21 @@ public abstract class Dactl.CustomWidget : Gtk.DrawingArea, Dactl.Widget, Dactl.
      * {@inheritDoc}
      */
     public abstract void build_from_xml_node (Xml.Node *node);
+
+    /**
+     * {@inheritDoc}
+     */
+    protected abstract void update_node ();
 }
 
 public abstract class Dactl.CompositeWidget : Gtk.Box, Dactl.Widget, Dactl.Container, Dactl.Buildable, Dactl.Object {
+
+    private Xml.Node* _node;
 
     /**
      * {@inheritDoc}
      */
     public virtual string id { get; set; }
-
-    //public bool expand { get; set; default = true; }
 
     public bool fill { get; set; default = true; }
 
@@ -126,6 +170,18 @@ public abstract class Dactl.CompositeWidget : Gtk.Box, Dactl.Widget, Dactl.Conta
      * {@inheritDoc}
      */
     protected abstract string xsd { get; }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual Xml.Node* node {
+        get {
+            return _node;
+        }
+        set {
+            _node = value;
+        }
+    }
 
     /**
      * {@inheritDoc}

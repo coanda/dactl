@@ -126,8 +126,10 @@ public class ParkerModuleBox : Gtk.Box {
      * its volume in [mL].
      */
     private double convert (double volume_ml) {
+        //double radius_mm = 20.6;
         double length_mm;
-        length_mm = volume_ml * (1 / 1.57281); // In email to stroy Jan29/2014.
+        //length_mm = 1000 * ((volume_ml / 1e6) / (GLib.Math.PI * GLib.Math.pow ((radius_mm / 1000), 2)));
+        length_mm = volume_ml * (127.2 / 200); // Syringe moves 127.2 mm for 200 mL volume displacement.
 
         return length_mm;
     }

@@ -5,12 +5,13 @@ SUBDIRS = \
 	src \
 	examples
 
-pkgconfig_DATA = dactl-core-0.3.pc
+pkgconfig_DATA = dactl-core-0.3.pc dactl-ui-0.3.pc
 pkgconfigdir = $(libdir)/pkgconfig
 
 EXTRA_DIST = \
 	$(noinst_DATA) \
 	dactl-core-0.3.pc.in \
+	dactl-ui-0.3.pc.in \
 	.version \
 	autogen.sh
 
@@ -30,7 +31,7 @@ MAINTAINERCLEANFILES = \
 	missing \
 	config.h.in
 
-# see build-aux/git-version-get for details
+# see build-aux/git-version-gen for details
 BUILT_SOURCES = $(top_srcdir)/.version
 
 $(top_srcdir)/.version:

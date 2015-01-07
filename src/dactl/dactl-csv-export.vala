@@ -69,6 +69,9 @@ private class Dactl.CsvExport : Gtk.Box {
     [GtkChild]
     private Gtk.TreeSelection log_selection;
 
+    [GtkChild]
+    private Gtk.ToggleButton btn_single_header;
+
     private bool first_open = true;
 
     private Cld.SqliteLog log;
@@ -84,6 +87,7 @@ private class Dactl.CsvExport : Gtk.Box {
     private int stop_minute;
     private double start_second;
     private double stop_second;
+    private bool single_header;
 
     /* A experiment selections to use */
     private ExperimentSelection select_begin;
@@ -149,23 +153,61 @@ private class Dactl.CsvExport : Gtk.Box {
 
     private void populate () {
         var experiments = log.get_experiment_entries ();
-        foreach (var experiment in experiments) {
-            message ("Adding `%d' to experiment list", experiment.id);
-            list_append (experiment.id.to_string (),
-                         experiment.name,
-                         experiment.start_date,
-                         experiment.stop_date,
-                         experiment.start_time,
-                         experiment.stop_time,
-                         experiment.log_rate.to_string (),
-                         true);
-        }
-
         if (experiments.size > 0) {
-            model_filter.set_visible_column (1);
+            foreach (var experiment in experiments) {
+                if (experiment != null) {
+                    message ("Adding `%d' to experiment list", experiment.id);
+                    list_append (experiment.id.to_string (),
+                                 experiment.name,
+                                 experiment.start_date,
+                                 experiment.stop_date,
+                                 experiment.start_time,
+                                 experiment.stop_time,
+                                 experiment.log_rate.to_string (),
+                                 true);
+                }
+            }
+
+            model_filter.set_visible_column (7);
             (listmodel as Gtk.TreeSortable).set_sort_func (0, compare_int);
             var path = new Gtk.TreePath.from_string ("0");
             tv_experiment.set_cursor (path, null, false);
+        }
+    }
+
+    private void append_experiments () {
+        Gtk.TreeIter iter;
+
+        var experiments = log.get_experiment_entries ();
+        if (experiments.size > 0) {
+            var n = listmodel.iter_n_children (null);
+            if (experiments.size > n) {
+                var experiment = experiments.get (n++);
+                message ("Adding `%d' to experiment list", experiment.id);
+
+                var model = tv_experiment.model as Gtk.TreeModelFilter;
+                var store = model.child_model;
+                (store as Gtk.ListStore).append (out iter);
+                (store as Gtk.ListStore).set (iter, 0, experiment.id.to_string (),
+                                                    1, experiment.name,
+                                                    2, experiment.start_date,
+                                                    3, experiment.stop_date,
+                                                    4, experiment.start_time,
+                                                    5, experiment.stop_time,
+                                                    6, experiment.log_rate.to_string (),
+                                                    7, true);
+
+                /*
+                 *list_append (experiment.id.to_string (),
+                 *             experiment.name,
+                 *             experiment.start_date,
+                 *             experiment.stop_date,
+                 *             experiment.start_time,
+                 *             experiment.stop_time,
+                 *             experiment.log_rate.to_string (),
+                 *             true);
+                 */
+            }
         }
     }
 
@@ -283,6 +325,8 @@ private class Dactl.CsvExport : Gtk.Box {
         var app = Dactl.UI.Application.get_default ();
         var logs = app.model.ctx.get_object_map (typeof (Cld.SqliteLog));
 
+        message (" > Mapped CSV export");
+
         if (logs.size > 1) {
             if (first_open) {
                 foreach (var object in logs.values) {
@@ -294,11 +338,16 @@ private class Dactl.CsvExport : Gtk.Box {
             }
             log_selector.show ();
         } else {
+            var arr = logs.values.to_array ();
+            log = arr[0] as Cld.SqliteLog;
+
+            message ("   - Received %d logs - showing the first", arr.length);
+
             if (first_open) {
-                var arr = logs.values.to_array ();
-                log = arr[0] as Cld.SqliteLog;
                 populate ();
                 first_open = false;
+            } else {
+                append_experiments ();
             }
         }
     }
@@ -319,6 +368,7 @@ private class Dactl.CsvExport : Gtk.Box {
                 /* FIXME: clearing doesn't work */
                 //listmodel.clear ();
                 populate ();
+
                 log_selector.hide ();
                 break;
         }
@@ -326,23 +376,29 @@ private class Dactl.CsvExport : Gtk.Box {
 
     [GtkCallback]
     private void entry_filename_activate_cb () {
-        export_filename = (log as Cld.Log).path;
+/*
+ *        export_filename = (log as Cld.Log).path;
+ *
+ *        if (!(export_filename.has_suffix ("/"))) {
+ *            export_filename = "%s%s".printf ((log as Cld.Log).path, "/");
+ *        }
+ *
+ *        export_filename = "%s%s%s%s%s%s%s".printf (
+ *                                export_filename,
+ *                                (log as Cld.Log).file.replace (".","_"),
+ *                                "_",
+ *                                start.to_string (),
+ *                                "_",
+ *                                stop.to_string (),
+ *                                ".csv"
+ *                            );
+ */
 
-        if (!(export_filename.has_suffix ("/"))) {
-            export_filename = "%s%s".printf ((log as Cld.Log).path, "/");
-        }
+        /*
+         *entry_filename.set_text (export_filename);
+         */
 
-        export_filename = "%s%s%s%s%s%s%s".printf (
-                                export_filename,
-                                (log as Cld.Log).file.replace (".","_"),
-                                "_",
-                                start.to_string (),
-                                "_",
-                                stop.to_string (),
-                                ".csv"
-                            );
-
-        entry_filename.set_text (export_filename);
+        export_filename = entry_filename.text;
     }
 
     [GtkCallback]
@@ -393,31 +449,40 @@ private class Dactl.CsvExport : Gtk.Box {
         GLib.List<Gtk.TreePath> path_list;
         unowned GLib.List<Gtk.TreePath>? path;
 
-        path_list = selection.get_selected_rows (out model);
+        //if (listmodel.get_iter_first (out iter) == true) {
 
-        /* Get beginning table information */
-        path = path_list.first ();
-        model.get_iter (out iter, path.data);
-        model.get (iter, 0, out select_begin.id);
-        model.get (iter, 1, out select_begin.name);
-        model.get (iter, 2, out select_begin.start_date);
-        model.get (iter, 3, out select_begin.stop_date);
-        model.get (iter, 4, out select_begin.start_time);
-        model.get (iter, 5, out select_begin.stop_time);
-        model.get (iter, 6, out select_begin.log_rate);
+            path_list = selection.get_selected_rows (out model);
 
-        /* Get ending table information */
-        path = path_list.last ();
-        model.get_iter (out iter, path.data);
-        model.get (iter, 0, out select_end.id);
-        model.get (iter, 1, out select_end.name);
-        model.get (iter, 2, out select_end.start_date);
-        model.get (iter, 3, out select_end.stop_date);
-        model.get (iter, 4, out select_end.start_time);
-        model.get (iter, 5, out select_end.stop_time);
-        model.get (iter, 6, out select_end.log_rate);
+            /* Get beginning table information */
+            path = path_list.first ();
+            model.get_iter (out iter, path.data);
+            model.get (iter, 0, out select_begin.id);
+            model.get (iter, 1, out select_begin.name);
+            model.get (iter, 2, out select_begin.start_date);
+            model.get (iter, 3, out select_begin.stop_date);
+            model.get (iter, 4, out select_begin.start_time);
+            model.get (iter, 5, out select_begin.stop_time);
+            model.get (iter, 6, out select_begin.log_rate);
+            debug ("%s || %s || %s ||  %s || %s ||  %s || %s",
+                    select_begin.id, select_begin.name, select_begin.start_date, select_begin.stop_date,
+                    select_begin.start_time, select_begin.stop_time, select_begin.log_rate);
 
-        update_values ();
+            /* Get ending table information */
+            path = path_list.last ();
+            model.get_iter (out iter, path.data);
+            model.get (iter, 0, out select_end.id);
+            model.get (iter, 1, out select_end.name);
+            model.get (iter, 2, out select_end.start_date);
+            model.get (iter, 3, out select_end.stop_date);
+            model.get (iter, 4, out select_end.start_time);
+            model.get (iter, 5, out select_end.stop_time);
+            model.get (iter, 6, out select_end.log_rate);
+            debug ("%s || %s || %s ||  %s || %s ||  %s || %s",
+                    select_end.id, select_end.name, select_end.start_date, select_end.stop_date,
+                    select_end.start_time, select_end.stop_time, select_end.log_rate);
+        //}
+
+        update_time ();
     }
 
     [GtkCallback]
@@ -458,5 +523,52 @@ private class Dactl.CsvExport : Gtk.Box {
 
     [GtkCallback]
     private void btn_export_clicked_cb () {
+        export_filepath = entry_filepath.text;
+        adj_step.changed ();
+        single_header = btn_single_header.get_active ();
+
+        if (!(export_filepath.has_suffix ("/")))
+            export_filepath += "/";
+
+        var filename = "%s%s".printf (export_filepath, export_filename);
+        var output = true;
+
+        if (FileUtils.test (filename, FileTest.EXISTS)) {
+            var prompt = @"The file $filename exists.\nOverwrite?";
+            var window = (this as Gtk.Widget).get_toplevel () as Gtk.Window;
+            var dialog = new Gtk.MessageDialog (window,
+                                                Gtk.DialogFlags.MODAL,
+                                                Gtk.MessageType.WARNING,
+                                                Gtk.ButtonsType.YES_NO,
+                                                prompt);
+            dialog.response.connect ((response_id) => {
+                switch (response_id) {
+                    case Gtk.ResponseType.YES:
+                        output = true;
+                        break;
+                    case Gtk.ResponseType.NO:
+                        output = false;
+                        break;
+                    case Gtk.ResponseType.DELETE_EVENT:
+                        output = false;
+                        break;
+                }
+
+                dialog.destroy();
+            });
+
+            dialog.modal = true;
+            dialog.show ();
+        }
+
+        if (output) {
+            (log as Cld.SqliteLog).export_csv (filename,
+                                               int.parse (select_begin.id),
+                                               int.parse (select_end.id),
+                                               start,
+                                               stop,
+                                               step,
+                                               single_header);
+        }
     }
 }

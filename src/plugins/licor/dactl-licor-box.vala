@@ -12,7 +12,6 @@ public class LicorModuleBox : Gtk.Box {
     private Cld.Module module;
     private Gee.Map<string, Cld.Object> vchannels;
 
-
     construct {
         builder = new Gtk.Builder ();
         try {
@@ -111,18 +110,6 @@ public class LicorModuleBox : Gtk.Box {
                    }
                }
        });
-
-        (module as LicorModule).diagnostic_event.connect (() => {
-            var img_diag = builder.get_object ("img_diag");
-            (img_diag as Gtk.Image).icon_name = "package-broken";
-        });
-
-        (module as LicorModule).diagnostic_reset.connect (() => {
-            var img_diag = builder.get_object ("img_diag");
-            (img_diag as Gtk.Image).icon_name = "package-installed-updated";
-        });
-    }
-}
 
         (module as LicorModule).diagnostic_event.connect (() => {
             var img_diag = builder.get_object ("img_diag");

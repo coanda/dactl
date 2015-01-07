@@ -111,6 +111,12 @@
                 </child>
 
                 <child>
+                  <object class="DactlLoader" id="loader">
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+
+                <child>
                   <object class="DactlConfigurationEditor" id="configuration">
                     <property name="visible">True</property>
                   </object>

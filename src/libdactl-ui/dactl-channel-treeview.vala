@@ -1,5 +1,7 @@
 public class Dactl.ChannelTreeEntry : GLib.Object, Dactl.Object, Dactl.Buildable {
 
+    private Xml.Node* _node;
+
     private string _xml = """
         <object id=\"ai-ctl0\" type=\"ai\" ref=\"cld://ai0\"/>
     """;
@@ -11,6 +13,18 @@ public class Dactl.ChannelTreeEntry : GLib.Object, Dactl.Object, Dactl.Buildable
           <xs:attribute name="ref" type="xs:string" use="required"/>
         </xs:element>
     """;
+
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual Xml.Node* node {
+        get {
+            return _node;
+        }
+        set {
+            _node = value;
+        }
+    }
 
     private weak Cld.Channel _channel;
 
@@ -89,6 +103,8 @@ public class Dactl.ChannelTreeEntry : GLib.Object, Dactl.Object, Dactl.Buildable
 
 public class Dactl.ChannelTreeCategory : GLib.Object, Dactl.Object, Dactl.Buildable, Dactl.Container {
 
+    private Xml.Node* _node;
+
     private string _xml = """
         <object id=\"ai-ctl0\" type=\"ai\" ref=\"cld://ai0\"/>
     """;
@@ -100,6 +116,18 @@ public class Dactl.ChannelTreeCategory : GLib.Object, Dactl.Object, Dactl.Builda
           <xs:attribute name="ref" type="xs:string" use="required"/>
         </xs:element>
     """;
+
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual Xml.Node* node {
+        get {
+            return _node;
+        }
+        set {
+            _node = value;
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -193,13 +221,33 @@ public class Dactl.ChannelTreeCategory : GLib.Object, Dactl.Object, Dactl.Builda
 [GtkTemplate (ui = "/org/coanda/libdactl/ui/channel-tree.ui")]
 public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
 
+    private Gee.List<int> columns;
+    private int hidden_id;
+
     public enum Columns {
         //CATEGORY,
         TAG,
-        VALUE,
-        UNITS,
         DESCRIPTION,
-        HIDDEN_ID
+        VALUE,
+        AVG,
+        SSDEV,
+        UNITS,
+        SSIZE,
+        HIDDEN_ID;
+
+        public string to_string () {
+            switch (this) {
+                case TAG:           return "Tag";
+                case DESCRIPTION:   return "Description";
+                case VALUE:         return "Value";
+                case AVG:           return "Average";
+                case SSDEV:         return "σ";
+                case UNITS:         return "Units";
+                case SSIZE:         return "Samples";
+                case HIDDEN_ID:     return "Hidden ID";
+                default: assert_not_reached ();
+            }
+        }
     }
 
     private string _xml = """
@@ -245,8 +293,13 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     public bool show_header { get; set; default = true; }
 
+    private int width = 200;
+
     [GtkChild]
     private Gtk.TreeView treeview;
+
+    [GtkChild]
+    private Gtk.ScrolledWindow scrolledwindow;
 
     //[GtkChild]
     //private Gtk.TreeSelection selection;
@@ -261,6 +314,7 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
     construct {
         id = "tree0";
         objects = new Gee.TreeMap<string, Dactl.Object> ();
+        columns = new Gee.ArrayList<int> ();
     }
 
     /**
@@ -293,6 +347,10 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
             for (Xml.Node *iter = node->children; iter != null; iter = iter->next) {
                 if (iter->name == "property") {
                     switch (iter->get_prop ("name")) {
+                        case "width-request":
+                            var value = iter->get_content ();
+                            width = int.parse (value);
+                            break;
                         case "show-header":
                             var value = iter->get_content ();
                             show_header = bool.parse (value);
@@ -304,6 +362,41 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
                         case "fill":
                             var value = iter->get_content ();
                             fill = bool.parse (value);
+                            break;
+                        case "show-tag":
+                            var value = iter->get_content ();
+                            if (bool.parse (value));
+                                columns.add (Columns.TAG);
+                            break;
+                        case "show-desc":
+                            var value = iter->get_content ();
+                            if (bool.parse (value));
+                                columns.add (Columns.DESCRIPTION);
+                            break;
+                        case "show-value":
+                            var value = iter->get_content ();
+                            if (bool.parse (value));
+                                columns.add (Columns.VALUE);
+                            break;
+                        case "show-avg":
+                            var value = iter->get_content ();
+                            if (bool.parse (value));
+                                columns.add (Columns.AVG);
+                            break;
+                        case "show-sample-sdev":
+                            var value = iter->get_content ();
+                            if (bool.parse (value));
+                                columns.add (Columns.SSDEV);
+                            break;
+                        case "show-sample-size":
+                            var value = iter->get_content ();
+                            if (bool.parse (value));
+                                columns.add (Columns.SSIZE);
+                            break;
+                        case "show-units":
+                            var value = iter->get_content ();
+                            if (bool.parse (value));
+                                columns.add (Columns.UNITS);
                             break;
                         default:
                             break;
@@ -320,6 +413,7 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
                 }
             }
         }
+        columns.add (Columns.HIDDEN_ID);
     }
 
     /**
@@ -384,57 +478,142 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
      * Constructions the Gtk data model for the tree/list store.
      */
     private void create_treeview () {
-        int n = get_object_map (typeof (Dactl.ChannelTreeCategory)).size;
-        bool has_categories = (n > 0) ? true : false;
 
-        /* XXX currently default to 5 column headers but will likely control
-         *     which are added through configuration in the future */
-        n = (n > 0) ? n / n + 5 : 5;
-        GLib.Type[] column_types = new GLib.Type[n];
-        for (int i = 0; i < n; i++)
-            column_types[i] = typeof (string);
+        GLib.Type[] column_types = new GLib.Type[columns.size];
+        int i = 0;
+
+        foreach (var column in columns) {
+            switch (column) {
+                case Columns.TAG:
+                    column_types[i] = typeof (string);
+                    break;
+                case Columns.DESCRIPTION:
+                    column_types[i] = typeof (string);
+                    break;
+                case Columns.VALUE:
+                    column_types[i] = typeof (string);
+                    break;
+                case Columns.AVG:
+                    column_types[i] = typeof (string);
+                    break;
+                case Columns.SSDEV:
+                    column_types[i] = typeof (string);
+                    break;
+                case Columns.SSIZE:
+                    column_types[i] = typeof (string);
+                    break;
+                case Columns.UNITS:
+                    column_types[i] = typeof (string);
+                    break;
+                case Columns.HIDDEN_ID:
+                    column_types[i] = typeof (string);
+                    /* This should be the last column */
+                    hidden_id = i;
+                    break;
+                default:
+                    break;
+            }
+
+            message ("Column %d: %s type: %s",
+                     i, ((Columns)column).to_string (), column_types[i].name ());
+            i++;
+        }
 
         var treemodel = new Gtk.TreeStore.newv (column_types);
-
         treeview.headers_visible = show_header;
         treeview.set_model (treemodel);
 
-        treeview.insert_column_with_attributes (-1, "Tag", new Gtk.CellRendererText (), "text", Columns.TAG);
-        treeview.insert_column_with_attributes (-1, "Value", new Gtk.CellRendererText (), "text", Columns.VALUE);
-        treeview.insert_column_with_attributes (-1, "Units", new Gtk.CellRendererText (), "text", Columns.UNITS);
-        treeview.insert_column_with_attributes (-1, "Description", new Gtk.CellRendererText (), "text", Columns.DESCRIPTION);
+        i = 0;
+        foreach (var column in columns) {
+            if (i != hidden_id) {
+                var cell = new Gtk.CellRendererText ();
+                if (column == Columns.SSDEV || column == Columns.AVG)
+                    cell.xalign = 0.5f;
 
-        foreach (var category in get_object_map (typeof (Dactl.ChannelTreeCategory)).values) {
+                var treeview_column = new Gtk.TreeViewColumn.with_attributes (((Columns)column).to_string (),
+                                                                              cell,
+                                                                              "text",
+                                                                              i);
+                if (column == Columns.SSDEV || column == Columns.AVG)
+                    treeview_column.alignment = 0.5f;
+
+                treeview.append_column (treeview_column);
+            }
+            i++;
+        }
+
+        var categories = get_object_map (typeof (Dactl.ChannelTreeCategory));
+        foreach (var category in categories.values) {
             Gtk.TreeIter iter;
-            debug ("create_treeview adding `%s'", category.id);
+
+            message ("TreeView `%s' adding category `%s'", id, category.id);
             treemodel.append (out iter, null);
-            treemodel.set (iter, Columns.TAG, (category as Dactl.ChannelTreeCategory).title,
-                                 Columns.VALUE, null,
-                                 Columns.UNITS, null,
-                                 Columns.DESCRIPTION, null,
-                                 Columns.HIDDEN_ID, null);
 
-            foreach (var entry in (category as Dactl.Container).get_object_map (typeof (Dactl.ChannelTreeEntry)).values) {
-                debug ("create_treeview adding `%s'", entry.id);
+            for (i = 0; i <= columns.size; i++) {
+                if (i == 0)
+                    treemodel.set (iter, i, (category as Dactl.ChannelTreeCategory).title, -1);
+                else
+                    treemodel.set (iter, i, null, -1);
+            }
+
+            var entries = (category as Dactl.Container).get_object_map (typeof (Dactl.ChannelTreeEntry));
+            foreach (var entry in entries.values) {
                 Gtk.TreeIter child_iter;
-                char[] buf = new char[double.DTOSTR_BUF_SIZE];
-                string scaled_as_string;
-
                 var channel = (entry as Dactl.ChannelTreeEntry).channel;
-                debug ("create_treeview adding `%s'", channel.id);
+                message ("TreeView `%s' adding channel `%s' to `%s'", id, channel.id, entry.id);
+
                 if (channel is Cld.ScalableChannel) {
                     var cal = (channel as Cld.ScalableChannel).calibration;
-                    scaled_as_string = ((channel as Cld.ScalableChannel).scaled_value).format (buf, "%.3f");
                     treemodel.append (out child_iter, iter);
-                    treemodel.set (child_iter, Columns.TAG, (channel as Cld.Channel).tag,
-                                               Columns.VALUE, scaled_as_string,
-                                               Columns.UNITS, (cal as Cld.Calibration).units,
-                                               Columns.DESCRIPTION, (channel as Cld.Channel).desc,
-                                               Columns.HIDDEN_ID, entry.id);
+                    i= 0;
+                    foreach (var column in columns) {
+                        switch (column) {
+                            case Columns.TAG:
+                                var value =  (channel as Cld.Channel).tag;
+                                treemodel.set (child_iter, i, value);
+                                break;
+                            case Columns.DESCRIPTION:
+                                var value = (channel as Cld.Channel).desc;
+                                treemodel.set (child_iter, i, value);
+                                break;
+                            case Columns.VALUE:
+                                var value = "%5.3f".printf (
+                                        (channel as Cld.ScalableChannel).scaled_value);
+                                treemodel.set (child_iter, i, value);
+                                break;
+                            case Columns.AVG:
+                                var calibration =
+                                    (channel as Cld.ScalableChannel).calibration;
+                                var value = "%5.3f".printf (calibration.apply (
+                                        (channel as Cld.AChannel).avg_value));
+                                treemodel.set (child_iter, i, value);
+                                break;
+                            case Columns.SSDEV:
+                                var value = "%5.3f".printf (
+                                        (channel as Cld.AChannel).ssdev_value);
+                                treemodel.set (child_iter, i, value);
+                                break;
+                            case Columns.SSIZE:
+                                var value = (channel as Cld.AIChannel).raw_value_list_size;
+                                treemodel.set (child_iter, i, "%5d".printf (value));
+                                break;
+                            case Columns.UNITS:
+                                var value = (cal as Cld.Calibration).units;
+                                treemodel.set (child_iter, i, value);
+                                break;
+                            case Columns.HIDDEN_ID:
+                                var value = entry.id;
+                                treemodel.set (child_iter, i, value);
+                                break;
+                            default:
+                                break;
+                        }
+                        i++;
+                    }
                 }
             }
         }
-
+        scrolledwindow.width_request = width;
         /* FIXME: allow setting to be controlled using configuration */
         treeview.expand_all ();
     }
@@ -447,9 +626,8 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
 
         var selection = (treeview as Gtk.TreeView).get_selection ();
         selection.get_selected (out model, out iter);
-        model.get (iter, Columns.HIDDEN_ID, out selection_id);
-
-        debug ("Selected: %s", selection_id);
+        model.get (iter, hidden_id, out selection_id);
+        message ("Selected: %s", selection_id);
 
         var entry = get_object (selection_id) as Dactl.ChannelTreeEntry;
         channel_selected (entry.ch_ref);
@@ -472,23 +650,65 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
                              Gtk.TreeIter iter) {
         string id;
         char[] buf = new char[double.DTOSTR_BUF_SIZE];
-        string value = "0.0";
+        string val = "0.0";
         Cld.Object? cal = null;
 
-        treemodel.get (iter, Columns.HIDDEN_ID, out id);
+        treemodel.get (iter, hidden_id, out id);
         if (id != null) {
             var entry = get_object (id);
             var channel = (entry as Dactl.ChannelTreeEntry).channel;
             if (channel is Cld.ScalableChannel) {
-                value = ((channel as Cld.ScalableChannel).scaled_value).format (buf, "%.3f");
+                val = ((channel as Cld.ScalableChannel).scaled_value).format (buf, "%.3f");
                 cal = (channel as Cld.ScalableChannel).calibration;
-
-                //message ("Entry: %s / Channel: %s - %s", entry.id, channel.id, value);
             }
 
-            (treemodel as Gtk.TreeStore).set (iter, Columns.VALUE, value,
-                                              Columns.UNITS, (cal as Cld.Calibration).units,
-                                              -1);
+            int i= 0;
+            foreach (var column in columns) {
+                switch (column) {
+                    case Columns.TAG:
+                        var value =  (channel as Cld.Channel).tag;
+                        (treemodel as Gtk.TreeStore).set (iter, i, value);
+                        break;
+                    case Columns.DESCRIPTION:
+                        var value = (channel as Cld.Channel).desc;
+                        (treemodel as Gtk.TreeStore).set (iter, i, value);
+                        break;
+                    case Columns.VALUE:
+                        var value = "%5.3f".printf (
+                                (channel as Cld.ScalableChannel).scaled_value);
+                        (treemodel as Gtk.TreeStore).set (iter, i, value);
+                        break;
+                    case Columns.AVG:
+                        var calibration =
+                            (channel as Cld.ScalableChannel).calibration;
+                        var value = "%5.3f".printf (calibration.apply (
+                                (channel as Cld.AChannel).avg_value));
+                        (treemodel as Gtk.TreeStore).set (iter, i, value);
+                        break;
+                    case Columns.SSDEV:
+                        var value = "%5.3f".printf (
+                                (channel as Cld.AChannel).ssdev_value);
+                        (treemodel as Gtk.TreeStore).set (iter, i, value);
+                        break;
+                    case Columns.SSIZE:
+                        var value = (channel as Cld.AIChannel).
+                                                    raw_value_list_size;
+                        (treemodel as Gtk.TreeStore).set (iter, i, "%5d".printf (value));
+                        break;
+                    case Columns.UNITS:
+                        var value = (cal as Cld.Calibration).units;
+                        (treemodel as Gtk.TreeStore).set (iter, i, value);
+                        break;
+                    case Columns.HIDDEN_ID:
+                        var value = entry.id;
+                        (treemodel as Gtk.TreeStore).set (iter, i, value);
+                        break;
+                    default:
+                        break;
+                }
+                i++;
+            }
+
         }
 
         return false;

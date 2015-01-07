@@ -103,15 +103,6 @@ public class Dactl.DioViewerDialog : Gtk.Dialog {
                 key = ("btn_" + count.to_string ());
                 do_buttons.set (key, btn);
                 /* TODO: Set the button properties */
-        }
-        stdout.printf ("\n");
-        foreach (var channel in data.channels.values) {
-            if (channel is DOChannel) {
-                Cld.debug ("%s ", channel.id);
-                count++;
-
-                if (count > do_channels.size)
-                    break;
 
                 (outbox as Gtk.Container).add_with_properties (btn);
 
@@ -177,22 +168,5 @@ public class Dactl.DioViewerDialog : Gtk.Dialog {
 
             count++;
         }
-
-        (tog as Gtk.ToggleButton).toggled.connect (() => {
-            message ("tog Toggled!");
-        });
-
-        foreach (var button in do_buttons.values) {
-            if (button is Gtk.ToggleButton) message ("Yup, it is!");
-            (button as Gtk.ToggleButton).set_active (true);
-            (button as Gtk.ToggleButton).set_active (false);
-            (button as Gtk.ToggleButton).set_active (true);
-            (button as Gtk.ToggleButton).set_active (false);
-
-            (button as Gtk.ToggleButton).toggled.connect (() => {
-                message ("Toggled");
-            });
-        }
->>>>>>> d4b4c30... Button responds to a signal from channel but still not working.
     }
 }

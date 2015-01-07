@@ -590,9 +590,6 @@ public class Dactl.ApplicationSettingsDialog : Dialog {
             case ("CldHeidolphModule"):
                 add_serial_port_settings (module as Cld.Module);
                 break;
-            case ("CldHeidolphModule"):
-                add_serial_port_settings (module as Module);
-                break;
             default:
                 break;
         }

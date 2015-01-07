@@ -76,6 +76,20 @@ public class Dactl.ApplicationConfig : GLib.Object {
         return nodes->item (0);
     }
 
+    public Xml.XPath.NodeSet * get_xml_nodeset (string xpath) throws Dactl.ConfigError {
+        obj = ctx->eval_expression (xpath);
+        if (obj == null) {
+            throw new Dactl.ConfigError.INVALID_XPATH_EXPR (
+                "The XPath expression %s is invalid.", xpath
+            );
+        }
+
+        /* XXX add error checking for a set that's > 1 in length */
+        Xml.XPath.NodeSet *nodes = obj->nodesetval;
+
+        return nodes;
+    }
+
     private int depth = 0;
     private int indent = 0;
 
