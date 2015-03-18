@@ -6,6 +6,7 @@ AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/libdactl-core/dactl-object.vala])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_SUBDIRS([deps/libcld])
 
 AC_PROG_CC
 AM_PROG_CC_STDC
@@ -27,7 +28,7 @@ dnl Disable the generation of static libraries
 LT_PREREQ([2.2.6])
 LT_INIT([dlopen disable-static])
 
-GOBJECT_INTROSPECTION_REQUIRE([1.33.4])
+GOBJECT_INTROSPECTION_REQUIRE([0.9.0])
 
 dnl Enable silent rules is available
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
@@ -240,6 +241,7 @@ AC_CONFIG_FILES([
 	data/icons/scalable/Makefile
 	data/mime/Makefile
 	data/schemas/Makefile
+    deps/Makefile
 	po/Makefile.in
 	src/Makefile
 	src/dactl/Makefile

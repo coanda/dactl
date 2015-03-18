@@ -1,0 +1,3 @@
+[submodule "deps/libcld"]
+	path = deps/libcld
+	url = git://github.com/geoffjay/libcld.git

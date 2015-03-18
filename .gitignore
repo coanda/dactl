@@ -40,7 +40,8 @@ data/schemas/org.coanda.dactl.gschema.valid
 
 data/mime/dactl.xml
 
-docs/dactl-uml.dia.autosave
+!docs/Makefile
+docs/build
 
 examples/.libs/
 examples/box

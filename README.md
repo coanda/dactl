@@ -1,23 +1,13 @@
-## Data Acquisition and Control Application (dactl)
+# Data Acquisition and Control Application [![Documentation Status](https://readthedocs.org/projects/dactl/badge/?version=latest)](https://readthedocs.org/projects/dactl/?badge=latest) [![Build Status](https://travis-ci.org/coanda/dactl.svg)](https://travis-ci.org/coanda/dactl) [![Issues Status](https://badge.waffle.io/coanda/dactl.png?label=ready&title=Ready)](https://waffle.io/coanda/dactl)
 
-### Description
+## Description
 
-Dactl is a configurations based application for doing data acquisition and
-control systems in the GNOME desktop environment.
+Dactl is a configurations based application for creating custom data acquisition and control systems in the GNOME desktop environment.
 
-#### Version 0.3
+### Release 0.3
 
-The current development release is 0.3 and has been refactored from 0.2 to be
-separated into libraries for the core and UI components, which also include GIR
-output for use in other languages.
+The current public release brings many bug fixes and has separated out as libraries the core and UI components. These libraries include GIR output for use in other languages, the support of which is still a work in progress.
 
-#### Dependencies:
+### Installation Instructions:
 
-- vala-0.22
-- libcld-0.3 - _develop_ branch from github.com/geoffjay/libcld
-- libgee-0.8
-- libxml-2.0
-- gtk+-3.0
-- librsvg-2.0
-- gtksourceview-3.0
-- clutter-1.0 & clutter-gtk-1.0 [@deprecated]
+Instructions for installing dactl and it's dependencies can be read at https://dactl.readthedocs.org/en/latest/setup.html.

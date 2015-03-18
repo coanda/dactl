@@ -1,0 +1,3 @@
+SUBDIRS = libcld
+
+MAINTAINERCLEANFILES = Makefile.in

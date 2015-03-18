@@ -18,11 +18,3 @@ EXTRA_DIST = \
 	$(gresource_file) \
 	$(resource_files) \
 	$(desktop_in_files)
-
-# This should be fixed to use variables that can be set for the user and group
-# when ./configure is run, perhaps --with-conf-user and --with-conf-group
-
-install-data-hook:
-	chown -R crdc.$(id -gn crdc) $(sysconfdir)/@PACKAGE@ && \
-	chmod -R g+w $(sysconfdir)/@PACKAGE@ && \
-	chmod +x $(desktopdir)/@PACKAGE@.desktop
