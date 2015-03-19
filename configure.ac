@@ -1,12 +1,14 @@
-dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.64])
-AC_INIT([dactl], m4_esyscmd([build-aux/git-version-gen .tarball-version]))
 
+AC_INIT([dactl],
+        [m4_esyscmd(build-aux/git-version-gen .tarball-version)],,
+        [dactl],
+        [https://github.com/coanda/dactl])
+
+AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([src/libdactl-core/dactl-object.vala])
-AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_SUBDIRS([deps/libcld])
 
 AC_PROG_CC
 AM_PROG_CC_STDC
@@ -24,7 +26,6 @@ AM_INIT_AUTOMAKE([1.11.1 foreign no-dist-gzip dist-xz -Wno-portability])
 AM_MAINTAINER_MODE([enable])
 
 dnl Initialize libtool
-dnl Disable the generation of static libraries
 LT_PREREQ([2.2.6])
 LT_INIT([dlopen disable-static])
 
@@ -87,6 +88,17 @@ PKG_CHECK_MODULES([DACTL_DEPS], [$DACTL_COMMON_MODULES gio-2.0 gmodule-2.0])
 DACTL_DEPS_VALAFLAGS="$DACTL_COMMON_MODULES_VALAFLAGS --pkg gio-2.0 --pkg gmodule-2.0"
 AC_SUBST([DACTL_DEPS_VALAFLAGS])
 
+PKG_CHECK_MODULES([DACTL_UI_DEPS], [gtk+-3.0 librsvg-2.0 gtksourceview-3.0])
+DACTL_UI_MODULES="gtk+-3.0 librsvg-2.0 gtksourceview-3.0"
+DACTL_UI_DEPS_VALAFLAGS="--pkg gtk+-3.0 --pkg cogl-1.0 --pkg librsvg-2.0 --pkg gtksourceview-3.0"
+AC_SUBST([DACTL_UI_DEPS_VALAFLAGS])
+DACTL_PLUGIN_COMMON_VALAFLAGS="$DACTL_PLUGIN_COMMON_VALAFLAGS $DACTL_UI_DEPS_VALAFLAGS"
+
+PKG_CHECK_MODULES([LIBDACTL_UI_DEPS], [$DACTL_BASE_MODULES $DACTL_UI_MODULES])
+LIBDACTL_UI_DEPS_VALAFLAGS="$DACTL_BASE_MODULES_VALAFLAGS $DACTL_UI_DEPS_VALAFLAGS"
+AS_IF([test "x$try_cld" = "xyes"], [LIBDACTL_UI_DEPS_VALAFLAGS="$LIBDACTL_UI_DEPS_VALAFLAGS $DACTL_CLD_DEPS_VALAFLAGS"])
+AC_SUBST([LIBDACTL_UI_DEPS_VALAFLAGS])
+
 dnl Header checks
 AC_CHECK_HEADERS(stdlib.h)
 AC_CHECK_LIB(m, floor, PACKAGE_LIBS="$PACKAGE_LIBS -lm",)
@@ -114,34 +126,23 @@ AS_IF([test "x$try_cld" = "xyes"],
 
 AM_CONDITIONAL(USE_CLD, test "x$HAVE_CLD" = "xyes")
 
-dnl Check if building UI support was requested
-dnl XXX considering dactl is a UI application this seems unnecessary, really
-dnl     just carry over from an idea
-AC_ARG_WITH(ui,
-    AS_HELP_STRING([--without-ui], [Do not build in UI support]),
-    [try_ui=$withval], [try_ui=yes])
-
-HAVE_CLUTTER_GTK=no
-AS_IF([test "x$try_ui" = "xyes"],
-      [PKG_CHECK_MODULES([DACTL_UI_DEPS], [gtk+-3.0 clutter-1.0 clutter-gtk-1.0 librsvg-2.0 gtksourceview-3.0],
-	    [
-           DACTL_UI_MODULES="gtk+-3.0 clutter-1.0 clutter-gtk-1.0 librsvg-2.0 gtksourceview-3.0"
-           DACTL_UI_DEPS_VALAFLAGS="--pkg gtk+-3.0 --pkg clutter-1.0 --pkg clutter-gtk-1.0 --pkg cogl-1.0 --pkg librsvg-2.0 --pkg gtksourceview-3.0"
-           AC_SUBST([DACTL_UI_DEPS_VALAFLAGS])
-           DACTL_CHECK_PACKAGES([$DACTL_UI_MODULES], [HAVE_CLUTTER_GTK=yes])
-	       DACTL_PLUGIN_COMMON_VALAFLAGS="$DACTL_PLUGIN_COMMON_VALAFLAGS $DACTL_UI_DEPS_VALAFLAGS"
-
-           PKG_CHECK_MODULES([LIBDACTL_UI_DEPS], [$DACTL_BASE_MODULES $DACTL_UI_MODULES])
-           LIBDACTL_UI_DEPS_VALAFLAGS="$DACTL_BASE_MODULES_VALAFLAGS $DACTL_UI_DEPS_VALAFLAGS"
-           AS_IF([test "x$try_cld" = "xyes"], [LIBDACTL_UI_DEPS_VALAFLAGS="$LIBDACTL_UI_DEPS_VALAFLAGS $DACTL_CLD_DEPS_VALAFLAGS"])
-           AC_SUBST([LIBDACTL_UI_DEPS_VALAFLAGS])
-        ],
-        [
-          AC_MSG_WARN([UI dependencies not found.])
-          AC_MSG_WARN([UI support will not be built.])
-        ])])
-
-AM_CONDITIONAL(BUILD_UI, test "x$HAVE_CLUTTER_GTK" = "xyes")
+dnl Check if the user chose to build using an installed version of libcld instead
+dnl of the git submodule version in deps/libcld
+dnl AC_ARG_WITH(installed_libcld,
+dnl     AS_HELP_STRING([--without-installed-libcld], [Build using local CLD]),
+dnl     [try_installed_cld=$withval], [try_installed_cld=yes])
+dnl
+dnl HAVE_INSTALLED_CLD=no
+dnl AS_IF([test "x$try_installed_cld" = "xyes"],
+dnl       [
+dnl         HAVE_INSTALLED_CLD="$HAVE_CLD"
+dnl       ],
+dnl       [
+dnl         AC_CONFIG_SUBDIRS([deps/libcld])
+dnl       ]
+dnl      )
+dnl
+dnl AM_CONDITIONAL(USE_INSTALLED_CLD, test "x$HAVE_INSTALLED_CLD" = "xyes")
 
 dnl Build plugin support
 DACTL_ADD_PLUGIN([brabender],[CLD Brabender plugin],[yes])
@@ -189,28 +190,35 @@ DACTL_CHECK_VALA([$VALA_REQUIRED],)
 dnl Build Options
 AC_ARG_ENABLE(debug,
     AS_HELP_STRING([--enable-debug],[Enable debugging (default: disabled)]),,
-        [enable_debug=no])
-AS_IF([test "x$enable_debug" != "xno"],
-      [AC_DEFINE(DEBUG, [1], ["Enable debugging support"])]
-      [CFLAGS="$CFLAGS -O0 -g"]
-      [DACTL_DEBUG_VALAFLAGS="-g -D DEBUG"]
-      [AS_IF([test "x$GCC" = xyes],
-             [CC_CHECK_FLAG([-g])])])
+    enable_debug=no)
+
+#AS_IF([test "x$enable_debug" = "xyes"],
+  #[
+if test "x$enable_debug" = "xyes"; then
+    AC_DEFINE(DEBUG, [1], ["Enable debugging support"])
+    CFLAGS="$CFLAGS -O0 -ggdb3"
+    DACTL_DEBUG_VALAFLAGS="-g -D DEBUG"
+    CC_CHECK_FLAG([-Wall])
+    CC_CHECK_FLAG([-Wextra])
+    CC_CHECK_FLAG([-Wno-deprecated-declarations])
+    CC_CHECK_FLAG([-Wmissing-prototypes])
+    CC_CHECK_FLAG([-Wshadow])
+    CC_CHECK_FLAG([-Wpointer-arith])
+    CC_CHECK_FLAG([-Wstrict-prototypes])
+    CC_CHECK_FLAG([-Wcast-qual])
+    CC_CHECK_FLAG([-Wwrite-strings])
+    CC_CHECK_FLAG([-pedantic])
+fi
+  #])
 
 AC_SUBST(DACTL_DEBUG_VALAFLAGS)
 
-dnl Build flags
-AS_IF([test "x$GCC" != "xno"],
-      [CC_CHECK_FLAG([-Wall])]
-      [CC_CHECK_FLAG([-Wextra])]
-      [CC_CHECK_FLAG([-Wno-deprecated-declarations])]
-      [CC_CHECK_FLAG([-Wmissing-prototypes])]
-      [CC_CHECK_FLAG([-Wshadow])]
-      [CC_CHECK_FLAG([-Wpointer-arith])]
-      [CC_CHECK_FLAG([-Wstrict-prototypes])]
-      [CC_CHECK_FLAG([-Wcast-qual])]
-      [CC_CHECK_FLAG([-Wwrite-strings])]
-      [CC_CHECK_FLAG([-pedantic])])
+dnl Strict compiler
+AC_ARG_ENABLE([strict-cc],
+  AS_HELP_STRING([--enable-strict-cc],[Enable strict C compiler]))
+
+AS_IF([test "x$enable_strict_cc" = "xyes"], [CFLAGS="$CFLAGS -Wall -Werror"],
+      [CFLAGS="$CFLAGS -w"])
 
 dnl GOptions requires gettext for i18n
 ALL_LINGUAS=""
@@ -252,6 +260,7 @@ AC_CONFIG_FILES([
 	dactl-core-0.3.pc
 	dactl-ui-0.3.pc
 ])
+
 AC_OUTPUT
 
 dnl Generate build report
