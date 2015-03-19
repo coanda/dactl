@@ -8,15 +8,18 @@ notifications:
 before_install:
   - sudo add-apt-repository ppa:vala-team/ppa -y
   - sudo apt-get update -qq
-  - sudo apt-get install -qq gnome-common gobject-introspection valac-0.22
+  - sudo apt-get install -qq git gnome-common gobject-introspection valac-0.22
   - sudo apt-get install -qq libglib2.0-dev libjson-glib-dev libgee-0.8-dev
     libvala-0.22-dev libgsl0-dev libsqlite0-dev libxml2-dev libmatheval-dev
     libmodbus-dev libcomedi-dev librsvg2-dev libgirepository1.0-dev
-    libgtk-3-dev libclutter-1.0-dev libclutter-gtk-1.0-dev
+    libgtk-3-dev libgtksourceview-3.0-dev
 
 script:
   - cd deps/libcld
   - git checkout v0.3.1
-  - cd ../..
   - PKG_CONFIG_PATH=./deps ./autogen.sh
+  - make
+  - cp cld/cld-0.3.vapi ../../vapi/
+  - cd ../..
+  - PKG_CONFIG_PATH=./deps/libcld ./autogen.sh
   - make

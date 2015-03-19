@@ -1,3 +1,5 @@
-SUBDIRS = libcld
+#if !USE_INSTALLED_CLD
+#SUBDIRS = libcld
+#endif
 
 MAINTAINERCLEANFILES = Makefile.in
