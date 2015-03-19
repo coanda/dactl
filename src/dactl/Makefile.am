@@ -4,40 +4,10 @@ bin_PROGRAMS = dactl
 
 gresource_file = $(top_srcdir)/data/dactl.gresource.xml
 
-# FIXME: this flag is totally unnecessary now, the application is UI only
-if BUILD_UI
-UI_SOURCES = \
-	dactl-acquisition-settings.vala \
-	dactl-application-menu.vala \
-	dactl-application-toolbar.vala \
-	dactl-configuration-editor.vala \
-	dactl-configuration-toolbar.vala \
-	dactl-csv-export.vala \
-	dactl-csv-export-toolbar.vala \
-	dactl-control-settings.vala \
-	dactl-general-settings.vala \
-	dactl-loader.vala \
-	dactl-loader-toolbar.vala \
-	dactl-log-settings.vala \
-	dactl-plugin-settings.vala \
-	dactl-settings.vala \
-	dactl-settings-sidebar.vala \
-	dactl-settings-toolbar.vala \
-	dactl-chart-settings.vala \
-	dactl-chart-settings-page.vala \
-	dactl-sidebar.vala \
-	dactl-topbar.vala \
-	dactl-ui-application.vala \
-	dactl-ui-application-view.vala \
-	dactl-ui-settings.vala \
-	dactl-ux-manager.vala
-endif
-
 dactl_VALAFLAGS = \
 	--enable-experimental --target-glib=2.38 --gresources $(gresource_file) \
 	-H $(srcdir)/libdactl.h -C -c --thread \
 	--vapidir=$(top_srcdir)/vapi \
-	-X -g -X -pg -X -w \
 	--pkg posix \
 	--pkg linux \
 	$(DACTL_DEPS_VALAFLAGS) \
@@ -73,6 +43,32 @@ resources.c: $(gresource_file) $(resource_files)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/data --generate-source $<
 
 BUILT_SOURCES = resources.c
+
+UI_SOURCES = \
+	dactl-acquisition-settings.vala \
+	dactl-application-menu.vala \
+	dactl-application-toolbar.vala \
+	dactl-configuration-editor.vala \
+	dactl-configuration-toolbar.vala \
+	dactl-csv-export.vala \
+	dactl-csv-export-toolbar.vala \
+	dactl-control-settings.vala \
+	dactl-general-settings.vala \
+	dactl-loader.vala \
+	dactl-loader-toolbar.vala \
+	dactl-log-settings.vala \
+	dactl-plugin-settings.vala \
+	dactl-settings.vala \
+	dactl-settings-sidebar.vala \
+	dactl-settings-toolbar.vala \
+	dactl-chart-settings.vala \
+	dactl-chart-settings-page.vala \
+	dactl-sidebar.vala \
+	dactl-topbar.vala \
+	dactl-ui-application.vala \
+	dactl-ui-application-view.vala \
+	dactl-ui-settings.vala \
+	dactl-ux-manager.vala
 
 dactl_SOURCES = \
 	$(BUILT_SOURCES) \
