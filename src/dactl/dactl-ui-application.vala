@@ -691,7 +691,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
             "Stephen Roy <stephen.roy@coanda.ca>"
         };
 
-        string comments = N_("dactl is an application for data acquisition and control for the GNOME Desktop");
+        string comments = "dactl is an application for data acquisition and control for the GNOME Desktop";
 
         Gdk.Pixbuf? logo = null;
         try {
@@ -700,17 +700,27 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
             warning (error.message);
         }
 
-        Gtk.show_about_dialog (window,
-                               "program-name", ("Dactl"),
-                               "authors", authors,
-                               "comments", _(comments),
-                               "copyright", ("Copyright © 2012-2014 Coanda"),
-                               "license", Gtk.License.UNKNOWN,
-                               "documenters", documenters,
-                               "logo", logo,
-                               "version", Config.PACKAGE_VERSION,
-                               "website", "http://www.coanda.ca",
-                               "website-label", ("Coanda Research and Development"));
+         Gtk.AboutDialog dialog = new Gtk.AboutDialog ();
+         dialog.set_destroy_with_parent (true);
+         dialog.set_transient_for (window);
+         dialog.set_modal (true);
+         dialog.authors = authors;
+         dialog.comments = comments;
+         dialog.copyright = "Copyright © 2012-2014 Coanda";
+         dialog.set_license_type (Gtk.License.MIT_X11);
+         dialog.documenters = documenters;
+         dialog.logo = logo;
+         dialog.version = Config.PACKAGE_VERSION;
+         dialog.website = "http://www.coanda.ca";
+         dialog.website_label = "Coanda Research and Development";
+
+         dialog.response.connect ((response_id) => {
+            if (response_id == Gtk.ResponseType.CANCEL || response_id == Gtk.ResponseType.DELETE_EVENT) {
+                dialog.hide_on_delete ();
+            }
+         });
+
+        dialog.present ();
     }
 
     /**
