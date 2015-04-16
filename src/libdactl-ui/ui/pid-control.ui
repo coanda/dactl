@@ -283,13 +283,9 @@
                             </child>
 
                             <child>
-                              <object class="GtkComboBoxText" id="combo_input">
+                              <object class="GtkLabel" id="lbl_input">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <items>
-                                  <item translatable="yes">ai00</item>
-                                </items>
-                                <signal name="changed" handler="combo_input_changed_cb" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -300,13 +296,9 @@
                             </child>
 
                             <child>
-                              <object class="GtkComboBoxText" id="combo_output">
+                              <object class="GtkLabel" id="lbl_output">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <items>
-                                  <item translatable="yes">ao00</item>
-                                </items>
-                                <signal name="changed" handler="combo_output_changed_cb" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -431,21 +423,21 @@
   <!-- Adjustments of spin controls -->
 
   <object class="GtkAdjustment" id="adjustment_kd">
-    <property name="upper">100</property>
+    <property name="upper">10000</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
     <signal name="value-changed" handler="adjustment_kd_value_changed_cb" swapped="no"/>
   </object>
 
   <object class="GtkAdjustment" id="adjustment_ki">
-    <property name="upper">100</property>
+    <property name="upper">10000</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
     <signal name="value-changed" handler="adjustment_ki_value_changed_cb" swapped="no"/>
   </object>
 
   <object class="GtkAdjustment" id="adjustment_kp">
-    <property name="upper">100</property>
+    <property name="upper">10000</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
     <signal name="value-changed" handler="adjustment_kp_value_changed_cb" swapped="no"/>
@@ -459,7 +451,7 @@
   </object>
 
   <object class="GtkAdjustment" id="adjustment_sp">
-    <property name="upper">100</property>
+    <property name="upper">10000</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
     <signal name="value-changed" handler="adjustment_sp_value_changed_cb" swapped="no"/>

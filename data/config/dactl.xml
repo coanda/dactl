@@ -5,9 +5,10 @@
   - 2014-12-10
   -->
 <dactl xmlns:cld="urn:libcld" xmlns:ui="urn:libdactl-ui">
-  <property name="app">UOHRTDA</property>
+  <property name="app">TEST</property>
   <property name="admin">false</property>
   <property name="startup-page">pg0</property>
+  <property name="dark-theme">true</property>
 
   <!-- Not implemented yet -->
   <!-- Comma separated list of domain:level pairs to specify log level
@@ -24,7 +25,9 @@
   <!-- Plugin configuration -->
   <plugins>
     <plugin id="velmex0" type="velmex">
-      <ui:object id="velmex-ctl0" type="plugin-control" parent="box0-0" ref="/vm0"/>
+      <!--
+         -<ui:object id="velmex-ctl0" type="plugin-control" parent="box0-0" ref="/vm0"/>
+         -->
     </plugin>
   </plugins>
 
@@ -49,6 +52,8 @@
           <ui:object id="log-ctl0" type="log" ref="/logctl0/log0"/>
           <ui:object id="tree0" type="tree">
             <ui:property name="show-header">true</ui:property>
+            <ui:property name="show-tag">true</ui:property>
+            <ui:property name="show-value">true</ui:property>
             <ui:object id="cat0" type="tree-category">
               <ui:property name="title">Measurements</ui:property>
               <ui:object id="cat0ent00" type="tree-entry" chref="/daqctl0/dev0/ai00"/>
@@ -67,8 +72,11 @@
               <ui:object id="cat0ent13" type="tree-entry" chref="/daqctl0/dev0/ai13"/>
               <ui:object id="cat0ent14" type="tree-entry" chref="/daqctl0/dev0/ai14"/>
               <ui:object id="cat0ent15" type="tree-entry" chref="/daqctl0/dev0/ai15"/>
+              <ui:object id="cat0ent16" type="tree-entry" chref="/daqctl0/dev0/ao00"/>
             </ui:object>
           </ui:object>
+          <ui:object id="ai-ctl0" type="ai" ref="/daqctl0/dev0/ai00"/>
+          <ui:object id="pid-ctl0" type="pid" ref="/atmctl0/PID00"/>
         </ui:object>
 
         <ui:object id="box0-1" type="box">
@@ -79,7 +87,6 @@
           <ui:property name="margin-right">5</ui:property>
           <ui:property name="margin-bottom">5</ui:property>
           <ui:property name="margin-left">5</ui:property>
-
           <ui:object id="box0-1-0" type="box">
             <ui:property name="homogeneous">true</ui:property>
             <ui:property name="orientation">vertical</ui:property>
@@ -87,75 +94,81 @@
               <ui:property name="title">Example Chart</ui:property>
               <ui:property name="height-min">100</ui:property>
               <ui:property name="width-min">100</ui:property>
+              <ui:property name="points-per-second">100</ui:property>
               <ui:object id="ax0" type="chart-axis">
                 <ui:property name="label">Time [s]</ui:property>
                 <ui:property name="orientation">horizontal</ui:property>
-                <ui:property name="min">0</ui:property>
-                <ui:property name="max">50</ui:property>
+                <ui:property name="min">0.000000</ui:property>
+                <ui:property name="max">50.000000</ui:property>
                 <ui:property name="div-major">10</ui:property>
                 <ui:property name="div-minor">5</ui:property>
               </ui:object>
               <ui:object id="ax1" type="chart-axis">
                 <ui:property name="label">Volts [V]</ui:property>
                 <ui:property name="orientation">vertical</ui:property>
-                <ui:property name="min">-10</ui:property>
-                <ui:property name="max">10</ui:property>
+                <ui:property name="min">0.000000</ui:property>
+                <ui:property name="max">10.000000</ui:property>
                 <ui:property name="div-major">10</ui:property>
                 <ui:property name="div-minor">5</ui:property>
               </ui:object>
-              <ui:object id="tr0" type="chart-trace" ref="/daqctl0/dev0/ai00">
-                <ui:property name="buffer-size">500</ui:property>
+              <ui:object id="tr0" type="chart-trace" ref="/daqctl0/dev0/ai02">
+                <ui:property name="buffer-size">5000</ui:property>
                 <ui:property name="color">red</ui:property>
-                <ui:property name="line-weight">1.0</ui:property>
+                <ui:property name="line-weight">1</ui:property>
                 <ui:property name="draw-type">line</ui:property>
-                <ui:property name="window-size">100</ui:property>
+                <ui:property name="window-size">1000</ui:property>
                 <ui:property name="stride">5</ui:property>
               </ui:object>
-              <ui:object id="tr1" type="chart-trace" ref="/daqctl0/dev0/ai01">
-                <ui:property name="buffer-size">500</ui:property>
-                <ui:property name="color">green</ui:property>
-                <ui:property name="line-weight">1.0</ui:property>
-                <ui:property name="draw-type">line</ui:property>
-                <ui:property name="window-size">100</ui:property>
-                <ui:property name="stride">5</ui:property>
-              </ui:object>
+              <!--
+                 -<ui:object id="tr1" type="chart-trace" ref="/daqctl0/dev0/ai01">
+                 -  <ui:property name="buffer-size">5000</ui:property>
+                 -  <ui:property name="color">green</ui:property>
+                 -  <ui:property name="line-weight">1</ui:property>
+                 -  <ui:property name="draw-type">line</ui:property>
+                 -  <ui:property name="window-size">1000</ui:property>
+                 -  <ui:property name="stride">5</ui:property>
+                 -</ui:object>
+                 -->
             </ui:object>
             <ui:object id="chart1" type="stripchart">
               <ui:property name="title">Example Chart</ui:property>
               <ui:property name="height-min">100</ui:property>
               <ui:property name="width-min">100</ui:property>
+              <ui:property name="points-per-second">100</ui:property>
               <ui:object id="ax0" type="chart-axis">
                 <ui:property name="label">Time [s]</ui:property>
                 <ui:property name="orientation">horizontal</ui:property>
-                <ui:property name="min">0</ui:property>
-                <ui:property name="max">60</ui:property>
+                <ui:property name="min">0.000000</ui:property>
+                <ui:property name="max">50.000000</ui:property>
                 <ui:property name="div-major">10</ui:property>
-                <ui:property name="div-minor">6</ui:property>
+                <ui:property name="div-minor">5</ui:property>
               </ui:object>
               <ui:object id="ax1" type="chart-axis">
                 <ui:property name="label">Volts [V]</ui:property>
                 <ui:property name="orientation">vertical</ui:property>
-                <ui:property name="min">-10</ui:property>
-                <ui:property name="max">10</ui:property>
+                <ui:property name="min">0.000000</ui:property>
+                <ui:property name="max">100.000000</ui:property>
                 <ui:property name="div-major">10</ui:property>
                 <ui:property name="div-minor">5</ui:property>
               </ui:object>
-              <ui:object id="tr0" type="chart-trace" ref="/daqctl0/dev0/ai02">
-                <ui:property name="buffer-size">600</ui:property>
-                <ui:property name="color">rgba(141,166,86,0.5)</ui:property>
-                <ui:property name="line-weight">1.0</ui:property>
+              <ui:object id="tr0" type="chart-trace" ref="/daqctl0/dev0/ao00">
+                <ui:property name="buffer-size">5000</ui:property>
+                <ui:property name="color">black</ui:property>
+                <ui:property name="line-weight">3</ui:property>
                 <ui:property name="draw-type">line</ui:property>
-                <ui:property name="window-size">100</ui:property>
-                <ui:property name="stride">6</ui:property>
+                <ui:property name="window-size">1000</ui:property>
+                <ui:property name="stride">5</ui:property>
               </ui:object>
-              <ui:object id="tr1" type="chart-trace" ref="/daqctl0/dev0/ai03">
-                <ui:property name="buffer-size">600</ui:property>
-                <ui:property name="color">rgba(242,178,155,0.5)</ui:property>
-                <ui:property name="line-weight">2.0</ui:property>
-                <ui:property name="draw-type">line</ui:property>
-                <ui:property name="window-size">100</ui:property>
-                <ui:property name="stride">6</ui:property>
-              </ui:object>
+              <!--
+                 -<ui:object id="tr1" type="chart-trace" ref="/daqctl0/dev0/ai00">
+                 -  <ui:property name="buffer-size">5000</ui:property>
+                 -  <ui:property name="color">red</ui:property>
+                 -  <ui:property name="line-weight">1</ui:property>
+                 -  <ui:property name="draw-type">line</ui:property>
+                 -  <ui:property name="window-size">1000</ui:property>
+                 -  <ui:property name="stride">5</ui:property>
+                 -</ui:object>
+                 -->
             </ui:object>
           </ui:object>
         </ui:object>
@@ -168,18 +181,17 @@
   <!-- Data acquisition configuration -->
   <cld:objects>
 
-    <cld:object id="daqctl0" type="controller" ctype="acquisition">-->
+    <cld:object id="daqctl0" type="controller" ctype="acquisition">
       <cld:object id="dev0" type="device" driver="comedi">
         <cld:property name="hardware">PCI-1710</cld:property>
         <cld:property name="type">input</cld:property>
-        <cld:property name="filename">/dev/comedi1</cld:property>
+        <cld:property name="filename">/dev/comedi0</cld:property>
         <cld:object id="tk0" type="task" ttype="comedi">
           <cld:property name="exec-type">polling</cld:property>
           <cld:property name="devref">/daqctl0/dev0</cld:property>
           <cld:property name="subdevice">0</cld:property>
           <cld:property name="direction">read</cld:property>
-          <cld:property name="interval-ms">100</cld:property>
-          <cld:property name="data-source">channel</cld:property>
+          <cld:property name="interval-ms">10</cld:property>
           <cld:property name="chref">/daqctl0/dev0/ai00</cld:property>
           <cld:property name="chref">/daqctl0/dev0/ai01</cld:property>
           <cld:property name="chref">/daqctl0/dev0/ai02</cld:property>
@@ -312,6 +324,22 @@
           <cld:property name="calref">/cal0</cld:property>
           <cld:property name="range">4</cld:property>
         </cld:object>
+        <cld:object id="tk1" type="task" ttype="comedi">
+          <cld:property name="exec-type">polling</cld:property>
+          <cld:property name="devref">/daqctl0/dev0</cld:property>
+          <cld:property name="subdevice">1</cld:property>
+          <cld:property name="direction">write</cld:property>
+          <cld:property name="interval-ms">10</cld:property>
+          <cld:property name="chref">/daqctl0/dev0/ao00</cld:property>
+        </cld:object>
+        <cld:object id="ao00" type="channel" ref="/daqctl0/dev0" ctype="analog" direction="output">
+          <cld:property name="tag">OUT00</cld:property>
+          <cld:property name="desc">Output 0</cld:property>
+          <cld:property name="num">0</cld:property>
+          <cld:property name="subdevnum">1</cld:property>
+          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="range">1</cld:property>
+        </cld:object>
       </cld:object>
     </cld:object>
 
@@ -342,18 +370,25 @@ I1M-300
 
     <cld:object id="ds00" type="dataseries">
         <cld:property name="length">10</cld:property>
-        <cld:property name="chref">/daqctl0/dev0/ai00</cld:property>
+        <cld:property name="chref">/daqctl0/dev0/ai02</cld:property>
     </cld:object>
     <cld:object id="ds01" type="dataseries">
         <cld:property name="length">10</cld:property>
-        <cld:property name="chref">/daqctl0/dev0/ai01</cld:property>
-    </cld:object>
-    <cld:object id="ds02" type="dataseries">
-        <cld:property name="length">10</cld:property>
-        <cld:property name="chref">/daqctl0/dev0/ai02</cld:property>
+        <cld:property name="chref">/daqctl0/dev0/ao00</cld:property>
     </cld:object>
 
-
+    <cld:object id="atmctl0" type="controller" ctype="automation">
+      <cld:object id="PID00" type="pid-2">
+        <cld:property name="desc">PID00</cld:property>
+        <cld:property name="dt">10</cld:property>
+        <cld:property name="sp">4.9841269841269851</cld:property>
+        <cld:property name="kp">25</cld:property>
+        <cld:property name="ki">250</cld:property>
+        <cld:property name="kd">0</cld:property>
+        <cld:object id="pv0" type="process_value2" dsref="/ds00" direction="input"/>
+        <cld:object id="pv1" type="process_value2" dsref="/ds01" direction="output"/>
+      </cld:object>
+    </cld:object>
 
     <cld:object id="cal0" type="calibration">
       <cld:property name="units">Volts</cld:property>
@@ -386,7 +421,7 @@ I1M-300
         <cld:property name="file">log.csv</cld:property>
         <cld:property name="format">%F-%T</cld:property>
         <cld:property name="time-stamp">open</cld:property>
-        <cld:property name="rate">10.000</cld:property>
+        <cld:property name="rate">100</cld:property>
         <cld:property name="data-source">channel</cld:property>
         <cld:object id="col00" type="column" chref="/daqctl0/dev0/ai00"/>
         <cld:object id="col01" type="column" chref="/daqctl0/dev0/ai01"/>
