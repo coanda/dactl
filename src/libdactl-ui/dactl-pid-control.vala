@@ -47,10 +47,10 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
     private Gtk.SpinButton btn_kd;
 
     [GtkChild]
-    private Gtk.ComboBoxText combo_input;
+    private Gtk.Label lbl_input;
 
     [GtkChild]
-    private Gtk.ComboBoxText combo_output;
+    private Gtk.Label lbl_output;
 
     [GtkChild]
     private Gtk.Revealer settings;
@@ -194,14 +194,15 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
         if (object.uri == pid_ref) {
             pid = (object as Cld.Pid2);
             lbl_id.label = pid.id;
-            satisfied = true;
-
             var mv = pid.get_object (pid.mv_id);
+            satisfied = true;
             adjustment_output.value = ((mv as Cld.DataSeries).channel as Cld.ScalableChannel).scaled_value;
             adjustment_sp.value = pid.sp;
             adjustment_kp.value = pid.kp;
             adjustment_ki.value = pid.ki;
             adjustment_kd.value = pid.kd;
+             lbl_input.set_text (pid.pv.uri);
+             lbl_output.set_text (pid.mv.uri);
         }
     }
 
@@ -243,14 +244,6 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
     }
 
     [GtkCallback]
-    private void combo_input_changed_cb () {
-    }
-
-    [GtkCallback]
-    private void combo_output_changed_cb () {
-    }
-
-    [GtkCallback]
     private void adjustment_output_value_changed_cb () {
         var mv = pid.get_object (pid.mv_id);
         /* FIXME: shouldn't be this specific with Cld.AOChannel */
@@ -264,17 +257,17 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     [GtkCallback]
     private void adjustment_kp_value_changed_cb () {
-        pid.kp = adjustment_sp.value;
+        pid.kp = adjustment_kp.value;
     }
 
     [GtkCallback]
     private void adjustment_ki_value_changed_cb () {
-        pid.ki = adjustment_sp.value;
+        pid.ki = adjustment_ki.value;
     }
 
     [GtkCallback]
     private void adjustment_kd_value_changed_cb () {
-        pid.kd = adjustment_sp.value;
+        pid.kd = adjustment_kd.value;
     }
 
     /**
