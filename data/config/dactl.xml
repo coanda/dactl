@@ -107,7 +107,7 @@
                 <ui:property name="label">Volts [V]</ui:property>
                 <ui:property name="orientation">vertical</ui:property>
                 <ui:property name="min">0.000000</ui:property>
-                <ui:property name="max">10.000000</ui:property>
+                <ui:property name="max">100.000000</ui:property>
                 <ui:property name="div-major">10</ui:property>
                 <ui:property name="div-minor">5</ui:property>
               </ui:object>
@@ -337,7 +337,7 @@
           <cld:property name="desc">Output 0</cld:property>
           <cld:property name="num">0</cld:property>
           <cld:property name="subdevnum">1</cld:property>
-          <cld:property name="calref">/cal0</cld:property>
+          <cld:property name="calref">/cal1</cld:property>
           <cld:property name="range">1</cld:property>
         </cld:object>
       </cld:object>
@@ -381,9 +381,9 @@ I1M-300
       <cld:object id="PID00" type="pid-2">
         <cld:property name="desc">PID00</cld:property>
         <cld:property name="dt">10</cld:property>
-        <cld:property name="sp">4.9841269841269851</cld:property>
-        <cld:property name="kp">25</cld:property>
-        <cld:property name="ki">250</cld:property>
+        <cld:property name="sp">50.012210012210019</cld:property>
+        <cld:property name="kp">2.5</cld:property>
+        <cld:property name="ki">25</cld:property>
         <cld:property name="kd">0</cld:property>
         <cld:object id="pv0" type="process_value2" dsref="/ds00" direction="input"/>
         <cld:object id="pv1" type="process_value2" dsref="/ds01" direction="output"/>
@@ -398,7 +398,7 @@ I1M-300
       </cld:object>
       <cld:object id="cft1" type="coefficient">
         <cld:property name="n">1</cld:property>
-        <cld:property name="value">1.000</cld:property>
+        <cld:property name="value">10</cld:property>
       </cld:object>
     </cld:object>
 
@@ -406,11 +406,11 @@ I1M-300
       <cld:property name="units">Volts</cld:property>
       <cld:object id="cft0" type="coefficient">
         <cld:property name="n">0</cld:property>
-        <cld:property name="value">0.000</cld:property>
+        <cld:property name="value">0</cld:property>
       </cld:object>
       <cld:object id="cft1" type="coefficient">
         <cld:property name="n">1</cld:property>
-        <cld:property name="value">1.000</cld:property>
+        <cld:property name="value">1</cld:property>
       </cld:object>
     </cld:object>
 
