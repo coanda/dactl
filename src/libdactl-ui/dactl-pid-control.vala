@@ -196,7 +196,7 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
             lbl_id.label = pid.id;
             var mv = pid.get_object (pid.mv_id);
             satisfied = true;
-            adjustment_output.value = ((mv as Cld.DataSeries).channel as Cld.ScalableChannel).scaled_value;
+            adjustment_output.value = ((mv as Cld.DataSeries).channel as Cld.AOChannel).raw_value;
             adjustment_sp.value = pid.sp;
             adjustment_kp.value = pid.kp;
             adjustment_ki.value = pid.ki;
@@ -224,7 +224,7 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
         /* XXX PID object should throw error on failed start */
         var pv = pid.get_object (pid.pv_id);
         adjustment_sp.value = ((pv as Cld.DataSeries).channel as Cld.ScalableChannel).scaled_value;
-        message ("Start - SP: %.3f", ((pv as Cld.DataSeries).channel as Cld.ScalableChannel).scaled_value);
+        message ("process variable scaled_value: %.3f", ((pv as Cld.DataSeries).channel as Cld.ScalableChannel).scaled_value);
         pid.start ();
     }
 
@@ -234,7 +234,8 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
 
         /* XXX PID object should throw error on failed stop */
         var mv = pid.get_object (pid.mv_id);
-        adjustment_output.value = ((mv as Cld.DataSeries).channel as Cld.ScalableChannel).scaled_value;
+        adjustment_output.value = ((mv as Cld.DataSeries).channel as Cld.AOChannel).raw_value;
+        message ("manipulated variable raw_value: %.3f", ((mv as Cld.DataSeries).channel as Cld.AOChannel).raw_value);
         pid.stop ();
     }
 
