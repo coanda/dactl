@@ -15,14 +15,49 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
      */
     public bool active { get; set; default = false; }
 
+    /* A name for the configuration */
+    public string name {
+        get { return _name; }
+        set {
+            _name = value;
+            lock (config) {
+                config.set_string_property ("app", value);
+            }
+        }
+    }
+
     /* Allow administrative functionality */
-    public bool admin { get; set; default = false; }
+    public bool admin {
+        get { return _admin; }
+        set {
+            _admin = value;
+            lock (config) {
+                config.set_boolean_property ("admin", value);
+            }
+        }
+    }
 
     /* Which page to load on startup */
-    public string startup_page { get; set; default = "pg0"; }
+    public string startup_page {
+        get { return _startup_page; }
+        set {
+            _startup_page = value;
+            lock (config) {
+                config.set_string_property ("startup-page", value);
+            }
+        }
+    }
 
     /* Whether or not to use the dark theme */
-    public bool dark_theme { get; set; default = true; }
+    public bool dark_theme {
+        get { return _dark_theme; }
+        set {
+            _dark_theme = value;
+            lock (config) {
+                config.set_boolean_property ("dark-theme", value);
+            }
+        }
+    }
 
     /* Basic output verbosity, should use an integer to allow for -vvv */
     public bool verbose { get; set; default = false; }
@@ -38,11 +73,17 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
     public Settings settings { get; private set; }
 
     private bool _def_enabled = false;
+    private string _name = "Untitled";
+    private bool _admin = false;
+    private string _startup_page = "pg0";
+    private bool _dark_theme = true;
+
     /* Flag to set if user has set the calibrations to <default> */
     public bool def_enabled {
         get { return _def_enabled; }
         set { _def_enabled = value; }
     }
+
 
     private Gee.Map<string, Dactl.Object> _objects;
     /**
@@ -112,6 +153,7 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
         config.property_changed.connect (config_property_changed_cb);
 
         /* Property loading */
+        name = config.get_string_property ("app");
         admin = config.get_boolean_property ("admin");
         startup_page = config.get_string_property ("startup-page");
         dark_theme = config.get_boolean_property ("dark-theme");

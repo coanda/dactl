@@ -20,6 +20,7 @@
     <file preprocess="xml-stripblanks">ui/loader-toolbar.ui</file>
     <file preprocess="xml-stripblanks">ui/sidebar.ui</file>
     <file preprocess="xml-stripblanks">ui/settings.ui</file>
+    <file preprocess="xml-stripblanks">ui/settings-dialog.ui</file>
     <file preprocess="xml-stripblanks">ui/settings-toolbar.ui</file>
     <file preprocess="xml-stripblanks">ui/settings-sidebar.ui</file>
     <file preprocess="xml-stripblanks">ui/general-settings.ui</file>

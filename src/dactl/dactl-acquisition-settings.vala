@@ -306,8 +306,10 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
                 (-1, "ID", new Gtk.CellRendererText (), "text", ChanColumns.ID);
             treeview_ai.insert_column_with_attributes
                 (-1, "Num", new Gtk.CellRendererText (), "text", ChanColumns.NUM);
+            var renderer_tag = new Gtk.CellRendererText ();
+            renderer_tag.editable = true;
             treeview_ai.insert_column_with_attributes
-                (-1, "Tag", new Gtk.CellRendererText (), "text", ChanColumns.TAG);
+                (-1, "Tag", renderer_tag, "text", ChanColumns.TAG);
             treeview_ai.insert_column_with_attributes
                 (-1, "Description", new Gtk.CellRendererText (), "text", ChanColumns.DESCRIPTION);
             treeview_ai.insert_column_with_attributes
@@ -354,6 +356,7 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
                 ChanColumns.DEVICE, (channel as Cld.AIChannel).devref,
                 ChanColumns.URI, (channel as Cld.AIChannel).uri);
         }
+
     }
 
     private void create_coefficient_treeview_ai () {
@@ -433,6 +436,18 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     private void entry_tag_ai_activate_cb () {
         ai_selected.tag = entry_tag_ai.get_text ();
         refresh_ai_treeview ();
+        /**
+         * XXX FIXME This is how all the values should be edited ie. make changes
+         * to the list model data only. The settings dialog for the application
+         * should handle updating the Cld objects after confirmation by the user.
+         */
+/*
+ *        Gtk.TreeModel model;
+ *        Gtk.TreeIter iter;
+ *        treeview_selection_ai.get_selected (out model, out iter);
+ *
+ *        liststore_ai_chan.set (iter, ChanColumns.TAG, entry_tag_ai.get_text ());
+ */
     }
 
     [GtkCallback]
@@ -645,7 +660,6 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
 
     [GtkCallback]
     private void entry_tag_ao_activate_cb () {
-        message ("yqweuiyqweuirwuiqery");
         ao_selected.tag = entry_tag_ao.get_text ();
         message ("entry tag ao: %s %s", ao_selected.tag, entry_tag_ao.get_text ());
         refresh_ao_treeview ();
@@ -1208,5 +1222,61 @@ private class Dactl.AcquisitionSettings : Gtk.Box {
     private void spinbutton_length_ds_value_changed_cb () {
         ds_selected.length = (int) spinbutton_length_ds.get_value ();
         refresh_ds_treeview ();
+    }
+
+    public void update_preferences () {
+        update_ai_preferences ();
+        update_ao_preferences ();
+        update_di_preferences ();
+        update_do_preferences ();
+        update_math_preferences ();
+        update_ds_preferences ();
+    }
+
+    private void update_ai_preferences () {
+        string str;
+        int i;
+        Gtk.TreeIter iter;
+        Cld.AIChannel chan;
+        Gtk.TreePath path = new Gtk.TreePath.first ();
+
+        var app = Dactl.UI.Application.get_default ();
+        liststore_ai_chan.get_iter (out iter, path);
+        /* Analog input */
+        do {
+            liststore_ai_chan.get (iter, ChanColumns.URI, out str);
+            chan = app.model.ctx.get_object_from_uri (str) as Cld.AIChannel;
+            liststore_ai_chan.get (iter, ChanColumns.NUM, out i);
+            chan.num = i;
+            liststore_ai_chan.get (iter, ChanColumns.TAG, out str);
+            chan.tag = str;
+            message ("tag for %s is %s", chan.uri, chan.tag);
+            liststore_ai_chan.get (iter, ChanColumns.DESCRIPTION, out str);
+            chan.desc = str;
+            liststore_ai_chan.get (iter, ChanColumns.CALIBRATION, out str);
+            chan.calref = str;
+            liststore_ai_chan.get (iter, ChanColumns.AVERAGE, out i);
+            chan.raw_value_list_size = i;
+        } while (liststore_ai_chan.iter_next (ref iter));
+    }
+
+    private void update_ao_preferences () {
+
+    }
+
+    private void update_di_preferences () {
+
+    }
+
+    private void update_do_preferences () {
+
+    }
+
+    private void update_math_preferences () {
+
+    }
+
+    private void update_ds_preferences () {
+
     }
 }

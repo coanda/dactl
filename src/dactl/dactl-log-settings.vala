@@ -115,6 +115,10 @@ private class Dactl.LogSettings : Gtk.Box {
         }
     }
 
+    public void update_preferences () {
+        /* XXX TBD */
+    }
+
     private void refresh_logs_treeview () {
         var app = Dactl.UI.Application.get_default ();
         var logs = app.model.ctx.get_object_map (typeof (Cld.Log));

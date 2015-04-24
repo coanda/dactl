@@ -173,9 +173,14 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         }
 
         //menu.append_section (null, settings_menu);
-        menu.append ("Help", "app.help");
-        menu.append ("About Dactl", "app.about");
-        menu.append ("Quit", "app.quit");
+        var preferences_section = new GLib.Menu ();
+        preferences_section.append ("Preferences", "app.settings");
+        menu.append_section (null, preferences_section);
+        var other_section = new GLib.Menu ();
+        other_section.append ("Help", "app.help");
+        other_section.append ("About Dactl", "app.about");
+        other_section.append ("Quit", "app.quit");
+        menu.append_section (null, other_section);
         app_menu = menu;
     }
 
@@ -465,7 +470,26 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      * Action callback for settings.
      */
     private void settings_activated_cb (SimpleAction action, Variant? parameter) {
-        (view as Dactl.UI.ApplicationView).layout_change_page ("settings");
+        GLib.message ("Settings: Dialog activated.");
+        int x, y, wp, hp, ws, hs;
+        //(view as Dactl.UI.ApplicationView).layout_change_page ("settings");
+        (view as Gtk.Window).get_position (out x, out y);
+        (view as Gtk.Window).get_size (out wp, out hp);
+        var settings = new Dactl.SettingsDialog ();
+        settings.delete_event.connect ((settings as Gtk.Widget).hide_on_delete);
+        settings.get_size (out ws, out hs);
+
+        settings.title = "Settings";
+        settings.parent = view as Dactl.UI.ApplicationView;
+        settings.set_default_size (320, 240);
+        settings.modal = true;
+        settings.transient_for = settings.parent as Dactl.UI.ApplicationView;
+        settings.type_hint = Gdk.WindowTypeHint.DIALOG;
+        settings.window_position = Gtk.WindowPosition.CENTER_ON_PARENT;
+        /* A move is required to center on parent (??) */
+        settings.move (x + wp / 2 - ws / 2, y + hp / 2 - hs / 2);
+
+        settings.show_all ();
     }
 
     /**
