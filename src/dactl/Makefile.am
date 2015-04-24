@@ -59,6 +59,7 @@ UI_SOURCES = \
 	dactl-log-settings.vala \
 	dactl-plugin-settings.vala \
 	dactl-settings.vala \
+	dactl-settings-dialog.vala \
 	dactl-settings-sidebar.vala \
 	dactl-settings-toolbar.vala \
 	dactl-chart-settings.vala \

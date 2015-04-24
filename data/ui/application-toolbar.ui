@@ -13,7 +13,9 @@
       <object class="GtkButton" id="btn_settings">
         <property name="visible">True</property>
         <property name="valign">center</property>
-        <property name="action_name">app.settings</property>
+        <!--
+           -<property name="action_name">app.settings</property>
+           -->
         <style>
           <class name="image-button"/>
         </style>
