@@ -50,7 +50,6 @@ public class Dactl.Settings : Gtk.Stack {
     }
 
     private void page_changed_cb () {
-
         visible_child_name = page.to_string ();
 
         /* XXX don't have much reason to check page yet, probably will though */
@@ -69,5 +68,16 @@ public class Dactl.Settings : Gtk.Stack {
             default:
                 break;
         }
+    }
+
+    public void update_preferences () {
+        general.update_preferences ();
+        /* XXX TBD Update should only happen after confirmation by the user */
+        /*
+         *acquisition.update_preferences ();
+         *control.update_preferences ();
+         *log.update_preferences ();
+         *plugin.update_preferences ();
+         */
     }
 }

@@ -217,7 +217,6 @@ public class Dactl.ApplicationConfig : GLib.Object {
         } catch (Dactl.ConfigError e) {
             GLib.error ("Configuration error: %s", e.message);
         }
-        property_changed (property);
     }
 
     public void set_string_property (string property, string value) {
@@ -229,7 +228,6 @@ public class Dactl.ApplicationConfig : GLib.Object {
         } catch (Dactl.ConfigError e) {
             GLib.error ("Configuration error: %s", e.message);
         }
-        property_changed (property);
     }
 
     public void set_int_property (string property, int value) {
@@ -241,7 +239,6 @@ public class Dactl.ApplicationConfig : GLib.Object {
         } catch (Dactl.ConfigError e) {
             GLib.error ("Configuration error: %s", e.message);
         }
-        property_changed (property);
     }
 
     public void set_double_property (string property, double value) {
@@ -253,7 +250,6 @@ public class Dactl.ApplicationConfig : GLib.Object {
         } catch (Dactl.ConfigError e) {
             GLib.error ("Configuration error: %s", e.message);
         }
-        property_changed (property);
     }
 
     public void set_float_property (string property, float value) {
@@ -265,7 +261,6 @@ public class Dactl.ApplicationConfig : GLib.Object {
         } catch (Dactl.ConfigError e) {
             GLib.error ("Configuration error: %s", e.message);
         }
-        property_changed (property);
     }
 
     /* XXX not sure how this should be done yet, possibly read the current
