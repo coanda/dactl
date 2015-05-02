@@ -82,6 +82,19 @@ DactlLogControl .stop-button {
                                     to (shade(shade(@dactl_alert_color, 1.02), 0.97)));
 }
 
+DactlPropertyBox {
+    padding: 10px;
+}
+
+DactlPropertyBox #nickname {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+DactlPropertyBox #blurb {
+    font-size: 8px;
+}
+
 .sidebar GtkTreeView:selected {
     background-color: @dactl_selected_color;
     border-width: 2px 8px 2px 0;

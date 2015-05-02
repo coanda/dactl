@@ -23,7 +23,7 @@ private class Dactl.Topbar : Gtk.Stack {
     public Dactl.CsvExportToolbar export_toolbar;
 
     [GtkChild]
-    public Dactl.SettingsToolbar settings_toolbar;
+    //public Dactl.SettingsToolbar settings_toolbar;
 
     construct {
         // FIXME: doesn't work from .ui file

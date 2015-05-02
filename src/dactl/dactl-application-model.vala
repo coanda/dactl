@@ -174,7 +174,7 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
      * pieces of the application.
      */
     private void config_property_changed_cb (string property) {
-        message ("Property '%s' was changed.\n", property);
+        //message ("Property '%s' was changed.\n", property);
     }
 
     /**
@@ -305,7 +305,7 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
             if (!(device as Cld.ComediDevice).is_open)
                 error ("Failed to open Comedi device: %s", device.id);
 
-            foreach (var task in (device as Cld.Container).objects.values) {
+            foreach (var task in (device as Cld.Container).get_objects ().values) {
                 if (task is Cld.ComediTask) {
                     if ((task as Cld.ComediTask).direction == "write")
                         (task as Cld.ComediTask).run ();
@@ -321,7 +321,7 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
         var devices = ctx.get_object_map (typeof (Cld.Device));
         foreach (var device in devices.values) {
             message ("Stopping tasks for: %s", device.id);
-            foreach (var task in (device as Cld.Container).objects.values) {
+            foreach (var task in (device as Cld.Container).get_objects ().values) {
                 if (task is Cld.ComediTask) {
                     if ((task as Cld.ComediTask).direction == "write") {
                         message ("  Stopping task: %s", task.id);
