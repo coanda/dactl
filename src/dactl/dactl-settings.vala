@@ -1,4 +1,4 @@
-public enum Dactl.SettingsPage {
+public enum Dactl.SettingsStackPage {
     GENERAL,
     ACQUISITION,
     CONTROL,
@@ -17,7 +17,7 @@ public enum Dactl.SettingsPage {
         }
     }
 
-    public static SettingsPage[] all () {
+    public static SettingsStackPage[] all () {
         return { GENERAL, ACQUISITION, CONTROL, LOG, PLUGIN };
     }
 }
@@ -26,21 +26,21 @@ public enum Dactl.SettingsPage {
 public class Dactl.Settings : Gtk.Stack {
 
     [GtkChild]
-    private Dactl.GeneralSettings general;
+    public Dactl.GeneralSettings general;
 
     [GtkChild]
-    private Dactl.AcquisitionSettings acquisition;
+    public Dactl.AcquisitionSettings acquisition;
 
     [GtkChild]
-    private Dactl.ControlSettings control;
+    public Dactl.ControlSettings control;
 
     [GtkChild]
-    private Dactl.LogSettings log;
+    public Dactl.LogSettings log;
 
     [GtkChild]
     private Dactl.PluginSettings plugin;
 
-    public Dactl.SettingsPage page { get; set; }
+    public Dactl.SettingsStackPage page { get; set; }
 
     construct {
         notify["page"].connect (page_changed_cb);
@@ -54,30 +54,18 @@ public class Dactl.Settings : Gtk.Stack {
 
         /* XXX don't have much reason to check page yet, probably will though */
         switch (page) {
-            case Dactl.SettingsPage.GENERAL:
+            case Dactl.SettingsStackPage.GENERAL:
                 break;
-            case Dactl.SettingsPage.ACQUISITION:
+            case Dactl.SettingsStackPage.ACQUISITION:
                 break;
-            case Dactl.SettingsPage.CONTROL:
+            case Dactl.SettingsStackPage.CONTROL:
                 break;
-            case Dactl.SettingsPage.LOG:
-                log.populate_logs_treeview ();
+            case Dactl.SettingsStackPage.LOG:
                 break;
-            case Dactl.SettingsPage.PLUGIN:
+            case Dactl.SettingsStackPage.PLUGIN:
                 break;
             default:
                 break;
         }
-    }
-
-    public void update_preferences () {
-        general.update_preferences ();
-        /* XXX TBD Update should only happen after confirmation by the user */
-        /*
-         *acquisition.update_preferences ();
-         *control.update_preferences ();
-         *log.update_preferences ();
-         *plugin.update_preferences ();
-         */
     }
 }

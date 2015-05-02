@@ -244,7 +244,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
      * Action callback for settings page selection.
      */
     private void settings_selection_activated_cb (SimpleAction action, Variant? parameter) {
-        (settings_content as Dactl.Settings).page = (Dactl.SettingsPage) parameter;
+        (settings_content as Dactl.Settings).page = (Dactl.SettingsStackPage) parameter;
     }
 
     [GtkCallback]

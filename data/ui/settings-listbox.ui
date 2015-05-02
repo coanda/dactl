@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.16.1 -->
+<interface>
+  <requires lib="gtk+" version="3.10"/>
+  <template class="DactlSettingsListBox" parent="GtkListBox">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+  </template>
+</interface>

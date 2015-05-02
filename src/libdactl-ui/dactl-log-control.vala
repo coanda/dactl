@@ -62,6 +62,7 @@ public class Dactl.LogControl : Dactl.CompositeWidget, Dactl.CldAdapter {
     private Gee.Map<string, Dactl.Object> _objects;
 
     /**
+
      * {@inheritDoc}
      */
     protected override string xml {
@@ -125,9 +126,16 @@ public class Dactl.LogControl : Dactl.CompositeWidget, Dactl.CldAdapter {
             log = (object as Cld.Log);
             satisfied = true;
             lbl_id.label = log.id;
-            lbl_path.label = "%s%s".printf (log.path, log.file);
-            lbl_logging_path.label = "%s%s".printf (log.path, log.file);
+            update_label ();
+            log.notify["gfile"].connect ((s, p) => {
+                update_label ();
+            });
         }
+    }
+
+    private void update_label () {
+        lbl_path.label = "%s".printf (log.gfile.get_path ());
+        lbl_logging_path.label = "%s".printf (log.gfile.get_path ());
     }
 
     /**
@@ -153,15 +161,15 @@ public class Dactl.LogControl : Dactl.CompositeWidget, Dactl.CldAdapter {
         }
 
         /* Test for a valid path */
-        debug ("Testing log path: %s", (log as Cld.Log).path);
-        if (Posix.access ((log as Cld.Log).path, mode) != 0) {
-            warning ("Log `%s' path %s is invalid", log.id, (log as Cld.Log).path);
+        debug ("Testing log path: %s", (log as Cld.Log).gfile.get_parent ().get_path ());
+        if (Posix.access ((log as Cld.Log).gfile.get_parent ().get_path (), mode) != 0) {
+            warning ("Log `%s' path %s is invalid", log.id, (log as Cld.Log).gfile.get_parent ().get_path ());
             var dialog = new Gtk.MessageDialog ((Gtk.Window)window,
                                                 Gtk.DialogFlags.MODAL,
                                                 Gtk.MessageType.WARNING,
                                                 Gtk.ButtonsType.CLOSE,
                                                 "Log path %s is invalid\nlogging will not start",
-                                                (log as Cld.Log).path);
+                                                (log as Cld.Log).gfile.get_parent ().get_path ());
             dialog.response.connect ((response_id) => {
                 switch (response_id) {
                     case Gtk.ResponseType.CLOSE:
