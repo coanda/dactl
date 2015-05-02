@@ -7,6 +7,9 @@ public class Dactl.SettingsDialog : Gtk.Window {
     private Gtk.ListBox listbox_settings;
 
     [GtkChild]
+    private Gtk.Box box1;
+
+    [GtkChild]
     private Gtk.Box box3;
 
     [GtkChild]
@@ -24,15 +27,37 @@ public class Dactl.SettingsDialog : Gtk.Window {
     [GtkChild]
     private Gtk.ListBoxRow listboxrow_plugin;
 
+    private Cld.Context cld_ctx;
+
+    private Dactl.SettingsData data;
+
     construct {
+        cld_ctx = Dactl.UI.Application.get_default ().model.ctx;
+        data = new Dactl.SettingsData.from_object (cld_ctx);
         stack_settings = new Dactl.Settings ();
+        Gee.ArrayList<Dactl.SettingsData> list = new Gee.ArrayList<Dactl.SettingsData> ();
+        //list.add (stack_settings.general.data);
+        list.add (stack_settings.acquisition.data);
+        list.add (stack_settings.control.data);
+        list.add (stack_settings.log.data);
+        //list.add (stack_settings.plugin.data);
+
+        foreach (var page_data in list) {
+            page_data.new_data.connect ((source, uri, spec, value) => {
+                data.uri_selected = uri;
+                data.set_value (spec, value);
+            });
+        }
+
+        var header = new Dactl.SettingsHeaderBar ();
+        box1.pack_start (header);
         box3.pack_end (stack_settings, true, true, 0);
         //listbox_settings.set_header_func (_update_header);
 
         /* XXX FIXME There are no separators visible in the ListBox */
         int n = 0;
         foreach (var row in listbox_settings.get_children ()) {
-            var sep = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+            var sep = new Gtk.Separator (Gtk.Orientation.VERTICAL);
             //row.set_header (separator);
             sep.set_visible (true);
             var color = new Gdk.RGBA ();
@@ -59,19 +84,19 @@ public class Dactl.SettingsDialog : Gtk.Window {
     private void listbox_settings_row_activated_cb (Gtk.ListBoxRow row) {
         if (row == listboxrow_general) {
             message ("GENERAL");
-            stack_settings.page = Dactl.SettingsPage.GENERAL;
+            stack_settings.page = Dactl.SettingsStackPage.GENERAL;
         } else if (row == listboxrow_acquisition) {
             message ("ACQ");
-            stack_settings.page = Dactl.SettingsPage.ACQUISITION;
+            stack_settings.page = Dactl.SettingsStackPage.ACQUISITION;
         } else if (row == listboxrow_control) {
             message ("CONTROL");
-            stack_settings.page = Dactl.SettingsPage.CONTROL;
+            stack_settings.page = Dactl.SettingsStackPage.CONTROL;
         } else if (row == listboxrow_log) {
             message ("LOG");
-            stack_settings.page = Dactl.SettingsPage.LOG;
+            stack_settings.page = Dactl.SettingsStackPage.LOG;
         }else if (row == listboxrow_plugin) {
             message ("PLUGIN");
-            stack_settings.page = Dactl.SettingsPage.PLUGIN;
+            stack_settings.page = Dactl.SettingsStackPage.PLUGIN;
         } else {
             message ("Unexpected row selection");
         }
@@ -79,8 +104,47 @@ public class Dactl.SettingsDialog : Gtk.Window {
 
     [GtkCallback]
     private void btn_ok_clicked_cb () {
-        stack_settings.update_preferences ();
-        close ();
+        /* Copy settings values to objects in the Cld context */
+        foreach (var uri in data.keys) {
+            var object = cld_ctx.get_object_from_uri (uri);
+            if (object != null) {
+                var svalues = data.get (uri);
+                foreach (var spec in svalues.keys) {
+                    var name = spec.get_name ();
+                    var value = svalues.get (spec).value;
+                    bool writable = (spec.flags & GLib.ParamFlags.WRITABLE) ==
+                                                       GLib.ParamFlags.WRITABLE;
+                    bool is_cld_object = value.type ().is_a (Type.from_name ("CldObject"));
+                    if (writable && !is_cld_object) {
+                        /*
+                         *message (
+                         *        "%s:%s  %s:%s",
+                         *        uri,
+                         *        object.get_type ().name (),
+                         *        name,
+                         *        value.type ().name ()
+                         *        );
+                         */
+                        object.set_property (name, value);
+                    } else if (!writable) {
+                        /*
+                         *message (
+                         *        "%s:%s  %s:%s is not writable",
+                         *        uri,
+                         *        object.get_type ().name (),
+                         *        name,
+                         *        value.type ().name ()
+                         *        );
+                         */
+                    } else if (writable && is_cld_object) {
+                        object.set_object_property (name, (Cld.Object)value);
+                    }
+                }
+            }
+        }
+        stack_settings.general.update_preferences ();
+
+        destroy ();
     }
 
     [GtkCallback]

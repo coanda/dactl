@@ -45,23 +45,24 @@ resources.c: $(gresource_file) $(resource_files)
 BUILT_SOURCES = resources.c
 
 UI_SOURCES = \
-	dactl-acquisition-settings.vala \
 	dactl-application-menu.vala \
 	dactl-application-toolbar.vala \
 	dactl-configuration-editor.vala \
 	dactl-configuration-toolbar.vala \
 	dactl-csv-export.vala \
 	dactl-csv-export-toolbar.vala \
-	dactl-control-settings.vala \
 	dactl-general-settings.vala \
 	dactl-loader.vala \
 	dactl-loader-toolbar.vala \
-	dactl-log-settings.vala \
-	dactl-plugin-settings.vala \
 	dactl-settings.vala \
+	dactl-settings-data.vala \
 	dactl-settings-dialog.vala \
+	dactl-settings-listbox.vala \
+	dactl-settings-page.vala \
+	dactl-settings-propertybox.ui \
 	dactl-settings-sidebar.vala \
-	dactl-settings-toolbar.vala \
+	dactl-settings-headerbar.vala \
+	dactl-settings-treeview.vala \
 	dactl-chart-settings.vala \
 	dactl-chart-settings-page.vala \
 	dactl-sidebar.vala \

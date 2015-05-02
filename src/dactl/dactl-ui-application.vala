@@ -313,9 +313,9 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         settings_action.activate.connect (settings_activated_cb);
         this.add_action (settings_action);
 
-        var settings_back_action = new SimpleAction ("settings-back", null);
-        settings_back_action.activate.connect (settings_back_activated_cb);
-        this.add_action (settings_back_action);
+        var settings_ok_action = new SimpleAction ("settings-ok", null);
+        settings_ok_action.activate.connect (settings_ok_activated_cb);
+        this.add_action (settings_ok_action);
 
         /* Handling some of the actions at the view level to reduce the need to
          * make public a lot of widget content. */
@@ -493,10 +493,10 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     }
 
     /**
-     * Action callback for going back to previous page from settings.
+     * Action callback to apply application settings.
      */
-    private void settings_back_activated_cb (SimpleAction action, Variant? parameter) {
-        (view as Dactl.UI.ApplicationView).layout_back_page ();
+    private void settings_ok_activated_cb (SimpleAction action, Variant? parameter) {
+        message ("The OK button was pressed in the Settings Dialog.");
     }
 
     /**
