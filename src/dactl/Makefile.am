@@ -61,10 +61,9 @@ UI_SOURCES = \
 	dactl-settings-page.vala \
 	dactl-settings-propertybox.ui \
 	dactl-settings-sidebar.vala \
-	dactl-settings-headerbar.vala \
+	dactl-settings-topbar.vala \
+	dactl-settings-toolbar.vala \
 	dactl-settings-treeview.vala \
-	dactl-chart-settings.vala \
-	dactl-chart-settings-page.vala \
 	dactl-sidebar.vala \
 	dactl-topbar.vala \
 	dactl-ui-application.vala \

@@ -10,7 +10,7 @@
     </style>
 
     <child>
-      <object class="GtkButton" id="btn_settings">
+      <object class="GtkMenuButton" id="btn_settings">
         <property name="visible">True</property>
         <property name="valign">center</property>
         <!--

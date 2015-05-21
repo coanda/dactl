@@ -110,8 +110,6 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
         message (" > Finished constructing the controller");
 
-        add_app_menu ();
-
         //var menu = Dactl.ApplicationMenu.get_default () as GLib.Menu;
         //(menu as Dactl.ApplicationMenu).show_admin = model.admin;
         //this.app_menu = menu;
@@ -144,26 +142,18 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      */
     protected override void startup () {
         base.startup ();
+
+        add_app_menu ();
     }
 
     private void add_app_menu () {
-        /* Add some actions to the app menu */
-        var file_menu = new GLib.Menu ();
-        file_menu.append ("Save", "app.save");
-        file_menu.append ("Export", "app.export");
-
-        var view_menu = new GLib.Menu ();
-        view_menu.append ("Data", "app.data");
-        view_menu.append ("Configuration", "app.configuration");
+        //var view_menu = new GLib.Menu ();
+        //view_menu.append ("Data", "app.data");
+        //view_menu.append ("Configuration", "app.configuration");
         //view_menu.append ("Recent", "app.recent");
         //view_menu.append ("Digital I/O", "app.digio");
 
-        //var settings_menu = new GLib.Menu ();
-        //settings_menu.append ("Settings", "app.settings");
-
         var menu = new GLib.Menu ();
-        menu.append_submenu ("File", file_menu);
-        menu.append_submenu ("View", view_menu);
 
         if (model.admin) {
             message ("Adding a menu for admin functionality");
@@ -181,7 +171,8 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         other_section.append ("About Dactl", "app.about");
         other_section.append ("Quit", "app.quit");
         menu.append_section (null, other_section);
-        app_menu = menu;
+
+        set_app_menu (menu);
     }
 
     private void connect_signals () {
@@ -237,6 +228,11 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      *     if possible make the application a composite
      */
     private void add_actions () {
+        if (model.admin) {
+            var admin_action = new SimpleAction ("admin", null);
+            add_action (admin_action);
+        }
+
         /* file menu actions */
         var save_action = new SimpleAction ("save", null);
         save_action.activate.connect (save_activated_cb);
@@ -408,8 +404,6 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
     public override void open (GLib.File[] files, string hint) {
 
-        add_app_menu ();
-
         var tmp = File.new_for_path ("/tmp/dactl.out");
         var ios = tmp.create_readwrite (FileCreateFlags.PRIVATE);
         var os = ios.output_stream;
@@ -480,13 +474,9 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         settings.get_size (out ws, out hs);
 
         settings.title = "Settings";
-        settings.parent = view as Dactl.UI.ApplicationView;
         settings.set_default_size (320, 240);
         settings.modal = true;
-        settings.transient_for = settings.parent as Dactl.UI.ApplicationView;
-        settings.type_hint = Gdk.WindowTypeHint.DIALOG;
-        settings.window_position = Gtk.WindowPosition.CENTER_ON_PARENT;
-        /* A move is required to center on parent (??) */
+        settings.transient_for = view as Gtk.Window;
         settings.move (x + wp / 2 - ws / 2, y + hp / 2 - hs / 2);
 
         settings.show_all ();
@@ -504,6 +494,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      */
     private void configuration_action_activated_cb (SimpleAction action, Variant? parameter) {
         (view as Dactl.UI.ApplicationView).layout_change_page ("configuration");
+
     }
 
     /**
@@ -732,7 +723,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
          dialog.set_modal (true);
          dialog.authors = authors;
          dialog.comments = comments;
-         dialog.copyright = "Copyright © 2012-2014 Coanda";
+         dialog.copyright = "Copyright © 2012-2015 Coanda";
          dialog.set_license_type (Gtk.License.MIT_X11);
          dialog.documenters = documenters;
          dialog.logo = logo;

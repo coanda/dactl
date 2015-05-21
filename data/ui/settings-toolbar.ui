@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.10"/>
+  <template class="DactlSettingsToolbar" parent="GtkHeaderBar">
+    <property name="visible">True</property>
+    <property name="show-close-button">False</property>
+    <style>
+      <class name="titlebar"/>
+    </style>
+
+    <child>
+      <object class="GtkButton" id="btn_ok">
+        <property name="label" translatable="yes">OK</property>
+        <property name="visible">True</property>
+        <property name="valign">center</property>
+        <signal name="clicked" handler="btn_ok_clicked_cb" swapped="no"/>
+        <!--<property name="action_name">set.ok</property>-->
+
+        <!--
+           -<style>
+           -  <class name="image-button"/>
+           -</style>
+           -->
+
+        <child internal-child="accessible">
+          <object class="AtkObject" id="a11y-button3">
+            <property name="accessible-name" translatable="yes">OK</property>
+          </object>
+        </child>
+      </object>
+
+      <packing>
+        <property name="pack-type">end</property>
+      </packing>
+    </child>
+
+    <child>
+      <object class="GtkButton" id="btn_cancel">
+        <property name="label" translatable="yes">Cancel</property>
+        <property name="visible">True</property>
+        <property name="valign">center</property>
+        <signal name="clicked" handler="btn_cancel_clicked_cb" swapped="no"/>
+        <!--<property name="action_name">set.cancel</property>-->
+
+        <!--
+           -<style>
+           -  <class name="image-button"/>
+           -</style>
+           -->
+
+        <child internal-child="accessible">
+          <object class="AtkObject" id="a11y-button4">
+            <property name="accessible-name" translatable="yes">Cancel</property>
+          </object>
+        </child>
+      </object>
+    </child>
+
+  </template>
+</interface>

@@ -50,10 +50,12 @@
                           <object class="GtkEntry" id="entry_name">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <signal name="activate" handler="entry_name_activate_cb" swapped="no"/>
-                            <signal name="button-press-event" handler="entry_name_button_press_event_cb" swapped="no"/>
-                            <signal name="changed" handler="entry_name_changed_cb" swapped="no"/>
-                            <signal name="editing-done" handler="entry_name_editing_done_cb" swapped="no"/>
+                            <!--
+                               -<signal name="activate" handler="entry_name_activate_cb" swapped="no"/>
+                               -<signal name="button-press-event" handler="entry_name_button_press_event_cb" swapped="no"/>
+                               -<signal name="changed" handler="entry_name_changed_cb" swapped="no"/>
+                               -<signal name="editing-done" handler="entry_name_editing_done_cb" swapped="no"/>
+                               -->
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -94,7 +96,9 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="active">True</property>
-                            <signal name="activate" handler="switch_dark_theme_activate_cb" swapped="no"/>
+                            <!--
+                               -<signal name="activate" handler="switch_dark_theme_activate_cb" swapped="no"/>
+                               -->
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -133,7 +137,7 @@
                           <object class="GtkSwitch" id="switch_admin">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <signal name="activate" handler="switch_admin_activate_cb" swapped="no"/>
+                            <!--<signal name="activate" handler="switch_admin_activate_cb" swapped="no"/>-->
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -177,7 +181,7 @@
                               <item id="pg0" translatable="yes">pg0</item>
                               <item id="pg1" translatable="yes">pg1</item>
                             </items>
-                            <signal name="changed" handler="comboboxtext_startup_page_changed_cb" swapped="no"/>
+                            <!--<signal name="changed" handler="comboboxtext_startup_page_changed_cb" swapped="no"/>-->
                           </object>
                           <packing>
                             <property name="expand">False</property>
