@@ -22,8 +22,6 @@ public class Dactl.GeneralSettings : Gtk.Box {
     [GtkChild]
     Gtk.Entry entry_name;
 
-    private bool ready = false;
-
     construct {
         app = Dactl.UI.Application.get_default ();
         var pages = app.model.get_object_map (typeof (Dactl.Page));
@@ -35,12 +33,13 @@ public class Dactl.GeneralSettings : Gtk.Box {
         }
         comboboxtext_startup_page.set_active_id (app.model.startup_page);
 
-        ui_settings = new Dactl.UISettings ();
-        ui_settings.transition_duration = 400;
-        ui_settings.transition_type = Gtk.StackTransitionType.CROSSFADE;
-        //switcher.set_stack (ui_settings as Gtk.Stack);
-
-//        alignment_ui.add (ui_settings);
+        /*
+         *ui_settings = new Dactl.UISettings ();
+         *ui_settings.transition_duration = 400;
+         *ui_settings.transition_type = Gtk.StackTransitionType.CROSSFADE;
+         *switcher.set_stack (ui_settings as Gtk.Stack);
+         *alignment_ui.add (ui_settings);
+         */
         switch_dark_theme.set_active (app.model.dark_theme);
         switch_dark_theme.notify["active"].connect ((s, p) => {
             GLib.message ("Activate dark theme: %s", switch_dark_theme.get_active ().to_string ());
@@ -50,19 +49,6 @@ public class Dactl.GeneralSettings : Gtk.Box {
         switch_admin.notify["active"].connect ((s, p) => {
             GLib.message ("Activate administrator mode: %s", switch_admin.get_active ().to_string ());
         });
-        ready = true;
-    }
-
-    [GtkCallback]
-    private void entry_name_activate_cb () {
-        GLib.message ("entry_name_activate_cb");
-    }
-
-    [GtkCallback]
-    private void comboboxtext_startup_page_changed_cb () {
-        GLib.message ("ID: %s", comboboxtext_startup_page.get_active_id ());
-        if (ready) {
-        }
     }
 
     public void update_preferences () {

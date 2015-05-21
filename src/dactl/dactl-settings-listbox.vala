@@ -7,36 +7,25 @@ public class Dactl.SettingsListBox : Gtk.ListBox {
 
     public signal void request_data (string uri);
 
-    construct {
-
-    }
-
     public void populate (Dactl.SettingValues svalues) {
-
         foreach (var row in get_children ())
             remove (row);
 
         foreach (GLib.ParamSpec spec in svalues.keys) {
             Value value = svalues.get (spec).value;
-            /*
-             *message ("%s: %s %s nick: %s\n", spec.get_name (),
-             *                                      spec.value_type.name (),
-             *                                      value.strdup_contents (),
-             *                                      spec.get_nick ());
-             */
+            debug ("%s: %s %s nick: %s\n", spec.get_name (),
+                                                  spec.value_type.name (),
+                                                  value.strdup_contents (),
+                                                  spec.get_nick ());
             var box = new Dactl.PropertyBox.from_data (spec, value);
             box.request_choices.connect ((source, type) => {
                 request_choices (box, type);
             });
-
             box.notify["value"].connect (() => {
-                message ("%s %s", box.spec.get_name (), box.value.type ().name ());
+                debug ("%s %s", box.spec.get_name (), box.value.type ().name ());
                 new_data (box.spec, box.value);
             });
-
             box.request_choices (value.type ());
-
-
             var row = new Gtk.ListBoxRow ();
             row.add (box);
             add (row);
@@ -89,11 +78,7 @@ public class Dactl.PropertyBox : Gtk.Box {
         this.spacing = 0;
         lbl_nick.set_text (spec.get_nick ());
         lbl_blurb.set_text (spec.get_blurb ());
-        /*
-         *Gtk.Box box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-         *box.pack_start (lbl_nick);
-         *box.pack_start (lbl_blurb);
-         */
+        Gtk.Box box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         pack_start (box);
         var type = value.type ();
         if (type.is_a (typeof (string))) {
@@ -112,12 +97,13 @@ public class Dactl.PropertyBox : Gtk.Box {
             make_gfile ();
         } else if (type.is_enum ()) {
             make_enum ();
+        } else if (type.is_a (typeof (Gdk.RGBA))) {
+            make_rgba ();
         } else {
             Gtk.Entry entry = new Gtk.Entry ();
             entry.set_text (type.name ());
             pack_start (entry);
         }
-
         bool writable = (spec.flags & GLib.ParamFlags.WRITABLE) ==
                                                        GLib.ParamFlags.WRITABLE;
         if (!writable)
@@ -130,7 +116,7 @@ public class Dactl.PropertyBox : Gtk.Box {
 
         entry.changed.connect (() => {
             value = entry.get_text ();
-            message ("%s", value.dup_string ());
+            debug ("%s", value.dup_string ());
         });
 
         pack_start (entry);
@@ -147,7 +133,7 @@ public class Dactl.PropertyBox : Gtk.Box {
 
         entry.changed.connect (() => {
             value = double.parse (entry.get_text ());
-            message ("%s", value.get_double ().to_string ());
+            debug ("%s", value.get_double ().to_string ());
         });
 
         entry.activate.connect (() => {
@@ -170,7 +156,7 @@ public class Dactl.PropertyBox : Gtk.Box {
         spinbutton.set_value (val);
         spinbutton.value_changed.connect (() => {
             value =  (int)spinbutton.get_value ();
-            message ("%d", value.get_int());
+            debug ("%d", value.get_int());
         });
 
         pack_start (spinbutton);
@@ -184,7 +170,7 @@ public class Dactl.PropertyBox : Gtk.Box {
         spinbutton.set_value (val);
         spinbutton.value_changed.connect (() => {
             value =  (int)spinbutton.get_value ();
-            message ("%d", value.get_int());
+            debug ("%d", value.get_int());
         });
 
         pack_start (spinbutton);
@@ -233,7 +219,7 @@ public class Dactl.PropertyBox : Gtk.Box {
             value = val;
             Value uri;
             store.get_value (iter, 0, out uri);
-            message ("%s %s",(string) uri, ((Cld.Object)value).uri);
+            debug ("%s %s",(string) uri, ((Cld.Object)value).uri);
         });
 
         pack_start (combo);
@@ -263,7 +249,7 @@ public class Dactl.PropertyBox : Gtk.Box {
             if (dialog.get_uri () == null)
                 dialog.set_current_name (file.get_basename ());
 
-            message ("file: %s folder: %s", file.get_uri (), dialog.get_uri ());
+            debug ("file: %s folder: %s", file.get_uri (), dialog.get_uri ());
             dialog.set_do_overwrite_confirmation (true);
             (dialog as Gtk.Dialog).set_modal (true);
             (dialog as Gtk.Dialog).set_destroy_with_parent (true);
@@ -271,10 +257,10 @@ public class Dactl.PropertyBox : Gtk.Box {
             var response = (dialog as Gtk.Dialog).run ();
             switch (response) {
                 case Gtk.ResponseType.CANCEL:
-                    message ("CANCEL");
+                    debug ("CANCEL");
                     break;
                 case Gtk.ResponseType.ACCEPT:
-                    message ("ACCEPT");
+                    debug ("ACCEPT");
                     if (dialog.get_file () == null)
                         file = dialog.get_current_folder_file ();
                     file = dialog.get_file ();
@@ -285,7 +271,7 @@ public class Dactl.PropertyBox : Gtk.Box {
 
             dialog.set_file (file);
             button.set_label (file.get_basename ());
-            message ("file: %s folder: %s", file.get_uri (), dialog.get_uri ());
+            debug ("file: %s folder: %s", file.get_uri (), dialog.get_uri ());
             value = file;
             (dialog as Gtk.Dialog).destroy ();
         });
@@ -295,7 +281,7 @@ public class Dactl.PropertyBox : Gtk.Box {
         dialog.selection_changed.connect (() => {
             GLib.File f = dialog.get_file ();
             value = f;
-            message ("File chosen: %s %s", f.get_parent ().get_path (), f.get_basename ());
+            debug ("File chosen: %s %s", f.get_parent ().get_path (), f.get_basename ());
             f.unref ();
         });
 
@@ -323,18 +309,31 @@ public class Dactl.PropertyBox : Gtk.Box {
             value = val;
             Value uri;
             store.get_value (iter, 0, out uri);
-            message ("%s %s",(string) uri, ((Cld.Object)value).uri);
+            debug ("%s %s",(string) uri, ((Cld.Object)value).uri);
         });
         for (int i = 0; i < enumc.n_values; i++) {
 
             nick = enumc.values[i].value_nick;
             var val = enumc.get_value_by_nick (nick).value;
-            message ("%s %d", nick, val);
+            debug ("%s %d", nick, val);
             store.append (out iter);
             store.set (iter, 0, nick, 1, val);
         }
 
         pack_start (combo);
+    }
+
+    private void make_rgba () {
+        Gdk.RGBA rgba = (Gdk.RGBA)value;
+        Gtk.ColorButton button = new Gtk.ColorButton.with_rgba (rgba);
+
+        button.set_title ("Color");
+        button.set_use_alpha (true);
+        button.color_set.connect (() => {
+            uint16 alpha = button.get_alpha ();
+            value = button.rgba;
+        });
+        pack_start (button, true, true, 0);
     }
 
     public void set_cld_object_choices (Gee.Map<string, Cld.Object> map) {
@@ -344,6 +343,16 @@ public class Dactl.PropertyBox : Gtk.Box {
         foreach (var object in map.values) {
             store.append (out iter);
             store.set (iter, 0, object.uri, 1, object);
+        }
+    }
+
+    public void set_dactl_object_choices (Gee.Map<string, Dactl.Object> map) {
+        Gtk.TreeIter iter;
+        Gtk.ListStore store = combo.get_model () as Gtk.ListStore;
+
+        foreach (var object in map.values) {
+            store.append (out iter);
+            store.set (iter, 0, object.id, 1, object);
         }
     }
 

@@ -4,6 +4,7 @@ public enum Dactl.SettingsStackPage {
     CONTROL,
     LOG,
     PLUGIN,
+    CHART,
     NONE;
 
     public string to_string () {
@@ -13,6 +14,7 @@ public enum Dactl.SettingsStackPage {
             case CONTROL:     return "control";
             case LOG:         return "log";
             case PLUGIN:      return "plugin";
+            case CHART:      return "chart";
             default: assert_not_reached ();
         }
     }
@@ -38,14 +40,17 @@ public class Dactl.Settings : Gtk.Stack {
     public Dactl.LogSettings log;
 
     [GtkChild]
-    private Dactl.PluginSettings plugin;
+    public Dactl.PluginSettings plugin;
+
+    [GtkChild]
+    public Dactl.ChartSettings chart;
 
     public Dactl.SettingsStackPage page { get; set; }
 
     construct {
         notify["page"].connect (page_changed_cb);
 
-        transition_type = Gtk.StackTransitionType.SLIDE_UP_DOWN;
+        transition_type = Gtk.StackTransitionType.SLIDE_DOWN;
         transition_duration = 400;
     }
 
@@ -63,6 +68,8 @@ public class Dactl.Settings : Gtk.Stack {
             case Dactl.SettingsStackPage.LOG:
                 break;
             case Dactl.SettingsStackPage.PLUGIN:
+                break;
+            case Dactl.SettingsStackPage.CHART:
                 break;
             default:
                 break;

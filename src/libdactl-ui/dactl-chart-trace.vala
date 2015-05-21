@@ -154,13 +154,22 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
 
     private double initial_line_weight = 1.0;
 
-    /* FIXME: Couldn't use a Gdk.RGBA here for some unknown reason */
     /**
      * Textual representation of the color to use, could be anything from
      * the file rgb.txt, a hexadecimal value as eg. #FFF/#FF00FF/#FF00FF00,
      * or decimal value as eg. rgb(255,0,255)/rgba(255,0,255,0.0).
      */
-    public string color_spec { get; set; default = "black"; }
+    private string color_spec { get; set; default = "black"; }
+
+    private Gdk.RGBA _color;
+
+    public Gdk.RGBA color  {
+        get { return _color; }
+        set {
+            _color = value;
+            color_spec = color.to_string ();
+        }
+    }
 
     private Gee.List<Dactl.Point> _window = null;
     /**
@@ -251,6 +260,10 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
     /**
      * Default construction.
      */
+    construct {
+        _color = Gdk.RGBA ();
+    }
+
     public Trace () {
         buffer = new double[buffer_size];
         connect_signals ();
@@ -294,6 +307,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
                             break;
                         case "color":
                             color_spec = iter->get_content ();
+                            _color.parse (color_spec);
                             break;
                         case "stride":
                             stride = int.parse (iter->get_content ());

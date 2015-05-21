@@ -1,27 +1,14 @@
 [GtkTemplate (ui = "/org/coanda/dactl/ui/application-toolbar.ui")]
 private class Dactl.ApplicationToolbar : Gtk.HeaderBar {
 
-    /*
-     *[GtkChild]
-     *private Gtk.Button btn_log;
-     */
-
     [GtkChild]
-    private Gtk.Button btn_settings;
+    private Gtk.MenuButton btn_settings;
 
     [GtkChild]
     private Gtk.Button btn_previous;
 
     [GtkChild]
     private Gtk.Button btn_next;
-
-    /*
-     *[GtkChild]
-     *private Gtk.Image img_log;
-     */
-
-    [GtkChild]
-    private Gtk.Image img_settings;
 
     [GtkChild]
     private Gtk.Image img_previous;
@@ -30,16 +17,17 @@ private class Dactl.ApplicationToolbar : Gtk.HeaderBar {
     private Gtk.Image img_next;
 
     construct {
-        title = "Dactl";
-    }
+        var app = Dactl.UI.Application.get_default ();
+        var model = app.model;
 
-    /*
-     *public void set_log_state (bool state) {
-     *    if (state) {
-     *        img_log.icon_name = "media-playback-stop-symbolic";
-     *    } else {
-     *        img_log.icon_name = "media-record-symbolic";
-     *    }
-     *}
-     */
+        title = "Data Acquisition and Control";
+        subtitle = model.config_filename;
+
+        btn_settings.menu_model = (GLib.MenuModel) Dactl.load_ui ("application-menu.ui")
+                                                        .get_object ("app-menu");
+
+        btn_settings.use_popover = true;
+        btn_settings.relief = Gtk.ReliefStyle.NONE;
+        btn_settings.show ();
+    }
 }

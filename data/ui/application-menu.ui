@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.10"/>
+  <!--<template class="DactlApplicationMenu" parent="GtkPopover">-->
+
+  <menu id="app-menu">
+    <section>
+      <attribute name="display-hint">horizontal-buttons</attribute>
+      <item>
+        <attribute name="label" translatable="yes">_Reload</attribute>
+        <attribute name="action">win.revert</attribute>
+        <attribute name="verb-icon">view-refresh-symbolic</attribute>
+        <attribute name="sensitive">false</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Print…</attribute>
+        <attribute name="action">win.print</attribute>
+        <attribute name="verb-icon">printer-symbolic</attribute>
+        <attribute name="sensitive">false</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Fullscreen</attribute>
+        <attribute name="action">win.fullscreen</attribute>
+        <attribute name="verb-icon">view-fullscreen-symbolic</attribute>
+      </item>
+    </section>
+
+    <section>
+      <attribute name="id">application-section</attribute>
+      <item>
+        <attribute name="label" translatable="yes">_Open</attribute>
+        <attribute name="action">app.open</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Save</attribute>
+        <attribute name="action">app.save</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Save As…</attribute>
+        <attribute name="action">app.save-as</attribute>
+      </item>
+    </section>
+
+    <section>
+      <submenu>
+        <attribute name="label">Admin</attribute>
+        <attribute name="action">app.admin</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+        <section>
+          <attribute name="id">admin-section</attribute>
+          <item>
+            <attribute name="label" translatable="yes">_Defaults</attribute>
+            <attribute name="action">app.defaults</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+
+    <section>
+      <submenu>
+        <attribute name="label">Data</attribute>
+        <section>
+          <attribute name="id">data-section</attribute>
+          <item>
+            <attribute name="label" translatable="yes">E_xport</attribute>
+            <attribute name="action">app.export</attribute>
+            <attribute name="hidden-when">action-disabled</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+
+    <section>
+      <submenu>
+        <attribute name="label">View</attribute>
+        <section>
+          <attribute name="id">view-section</attribute>
+          <item>
+            <attribute name="label" translatable="yes">_Configuration</attribute>
+            <attribute name="action">app.configuration</attribute>
+            <attribute name="hidden-when">action-disabled</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+
+    <!--
+       -<child>
+       -  <object class="GtkMenuItem" id="file_section">
+       -    <property name="visible">True</property>
+       -    <property name="can_focus">False</property>
+       -    <property name="tooltip_text" translatable="yes">The file operations for configurations</property>
+       -    <property name="label" translatable="yes">_File</property>
+       -    <property name="use_underline">True</property>
+       -    <child type="submenu">
+       -      <object class="GtkMenu" id="menu2">
+       -        <property name="visible">True</property>
+       -        <property name="can_focus">False</property>
+       -        <child>
+       -          <object class="GtkMenuItem" id="file_save_item">
+       -            <property name="visible">True</property>
+       -            <property name="can_focus">False</property>
+       -            <property name="label" translatable="yes">menuitem1</property>
+       -            <property name="use_underline">True</property>
+       -          </object>
+       -        </child>
+       -        <child>
+       -          <object class="GtkMenuItem" id="menuitem2">
+       -            <property name="visible">True</property>
+       -            <property name="can_focus">False</property>
+       -            <property name="label" translatable="yes">menuitem2</property>
+       -            <property name="use_underline">True</property>
+       -          </object>
+       -        </child>
+       -      </object>
+       -    </child>
+       -  </object>
+       -</child>
+       -->
+
+  <!--</template>-->
+</interface>
