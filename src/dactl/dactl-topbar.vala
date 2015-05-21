@@ -22,7 +22,7 @@ private class Dactl.Topbar : Gtk.Stack {
     [GtkChild]
     public Dactl.CsvExportToolbar export_toolbar;
 
-    [GtkChild]
+    //[GtkChild]
     //public Dactl.SettingsToolbar settings_toolbar;
 
     construct {

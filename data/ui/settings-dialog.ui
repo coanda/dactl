@@ -1,65 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.16.1 -->
+<!-- Generated with glade 3.18.3 -->
 <interface domain="lugin">
   <requires lib="gtk+" version="3.10"/>
   <template class="DactlSettingsDialog" parent="GtkWindow">
+
+  <!--
+     -<template class="GtkWindow" parent="GtkWindow">
+     -->
     <property name="width_request">1200</property>
     <property name="height_request">800</property>
     <property name="can_focus">False</property>
-    <property name="hide_titlebar_when_maximized">True</property>
     <property name="decorated">False</property>
+
     <child>
-      <object class="GtkBox" id="box1">
+      <object class="GtkBox" id="box_main">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
+        <!--
+           -<child type="titlebar">
+           -->
         <child>
-          <placeholder/>
-        </child>
-        <child>
-          <object class="GtkBox" id="box2">
+          <object class="DactlSettingsTopbar" id="settings_topbar">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <child>
-              <object class="GtkButton" id="btn_ok">
-                <property name="label">gtk-ok</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <signal name="clicked" handler="btn_ok_clicked_cb" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="btn_cancel">
-                <property name="label">gtk-cancel</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <signal name="clicked" handler="btn_cancel_clicked_cb" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="pack_type">end</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkBox" id="box3">
+          <object class="GtkBox" id="box_stack_settings">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
@@ -121,7 +88,7 @@
                     <property name="height_request">80</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="activate" handler="listboxrow_control_activate_cb" swapped="no"/>
+                    <!--<signal name="activate" handler="listboxrow_control_activate_cb" swapped="no"/>-->
                     <child>
                       <object class="GtkLabel" id="label4">
                         <property name="visible">True</property>
@@ -144,6 +111,22 @@
                         <property name="can_focus">False</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Plugin</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkListBoxRow" id="listboxrow_chart">
+                    <property name="width_request">100</property>
+                    <property name="height_request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <child>
+                      <object class="GtkLabel" id="label6">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Chart</property>
                       </object>
                     </child>
                   </object>
@@ -175,5 +158,6 @@
         </child>
       </object>
     </child>
+
   </template>
 </interface>

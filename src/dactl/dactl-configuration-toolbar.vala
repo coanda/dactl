@@ -8,7 +8,11 @@ private class Dactl.ConfigurationToolbar : Gtk.HeaderBar {
     private Gtk.Image back_image;
 
     construct {
+        var app = Dactl.UI.Application.get_default ();
+        var model = app.model;
+
         title = "Configuration";
+        subtitle = model.config_filename;
 
         back_image.icon_name = "go-previous-symbolic";
     }

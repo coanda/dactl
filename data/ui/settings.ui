@@ -3,7 +3,10 @@
   <requires lib="gtk+" version="3.10"/>
   <template class="DactlSettings" parent="GtkStack">
     <property name="visible">True</property>
-    <property name="transition-type">slide-up-down</property>
+    <!--
+       -<property name="transition-type">slide-up-down</property>
+       -->
+    <property name="transition-type">slide-down</property>
     <property name="transition-duration">400</property>
 
     <!-- General -->
@@ -60,6 +63,18 @@
         <property name="name">plugin</property>
       </packing>
     </child>
+
+    <!-- Charts -->
+    <child>
+      <object class="DactlChartSettings" id="chart">
+        <property name="visible">True</property>
+      </object>
+
+      <packing>
+        <property name="name">chart</property>
+      </packing>
+    </child>
+
   </template>
 
 </interface>

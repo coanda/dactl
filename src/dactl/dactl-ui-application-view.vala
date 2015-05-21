@@ -82,7 +82,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         /* FIXME: Load previous window size and fullscreen state using settings. */
         set_default_size (1280, 720);
 
-        topbar.application_toolbar.title = this.title;
+        topbar.application_toolbar.title = title;
         topbar.application_toolbar.subtitle = model.config_filename;
 
         setup ();
@@ -115,6 +115,10 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         /* sidebar actions */
         sidebar.settings_selection_action.activate.connect (settings_selection_activated_cb);
         this.add_action (sidebar.settings_selection_action);
+
+        var fullscreen_action = new SimpleAction ("fullscreen", null);
+        fullscreen_action.activate.connect (fullscreen_action_activated_cb);
+        this.add_action (fullscreen_action);
     }
 
     /**
@@ -245,6 +249,14 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
      */
     private void settings_selection_activated_cb (SimpleAction action, Variant? parameter) {
         (settings_content as Dactl.Settings).page = (Dactl.SettingsStackPage) parameter;
+    }
+
+    /**
+     * Action callback to set fullscreen window mode.
+     */
+    private void fullscreen_action_activated_cb (SimpleAction action, Variant? parameter) {
+        (this as Gtk.Window).fullscreen ();
+        state = Dactl.UI.State.FULLSCREEN;
     }
 
     [GtkCallback]

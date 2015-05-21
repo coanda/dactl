@@ -216,8 +216,9 @@ private class Dactl.StripChartCanvas : Dactl.Canvas {
                                                     (y_axis.max - y_axis.min)));
             }
 
-            var color = Gdk.RGBA ();
-            color.parse ((trace as Dactl.Trace).color_spec);
+            /*var color = Gdk.RGBA ();*/
+            /*color.parse ((trace as Dactl.Trace).color_spec);*/
+            var color = (trace as Dactl.Trace).color;
 
             switch ((trace as Dactl.Trace).draw_type) {
                 case Dactl.TraceDrawType.BAR:
@@ -533,7 +534,7 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
 
         foreach (ParamSpec spec in ocl.list_properties ()) {
             notify[spec.get_name ()].connect ((s, p) => {
-            message ("type: %s spec: %s", type.name (), spec.get_name ());
+            debug ("type: %s spec: %s", type.name (), spec.get_name ());
                 update_node ();
             });
         }

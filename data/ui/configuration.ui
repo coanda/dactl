@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.16.1 -->
+<!-- Generated with glade 3.18.3 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
   <template class="DactlConfigurationEditor" parent="GtkBox">
@@ -11,6 +11,7 @@
     <property name="margin_top">5</property>
     <property name="margin_bottom">5</property>
     <property name="orientation">vertical</property>
+    <signal name="key-press-event" handler="key_pressed_cb" swapped="no"/>
     <child>
       <object class="GtkScrolledWindow" id="sw_config_view">
         <property name="width_request">100</property>
@@ -32,6 +33,7 @@
       <object class="GtkBox" id="box2">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="margin_top">5</property>
         <child>
           <object class="GtkLabel" id="label1">
             <property name="visible">True</property>
@@ -57,6 +59,26 @@
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkMenuButton" id="btn_styles">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="receives_default">False</property>
+            <property name="valign">center</property>
+            <child>
+              <placeholder/>
+            </child>
+            <style>
+              <class name="image-button"/>
+            </style>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>

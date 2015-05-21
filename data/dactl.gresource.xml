@@ -10,6 +10,7 @@
     <file>icons/dactl-gray.png</file>
     <!-- Glade UI files -->
     <file preprocess="xml-stripblanks">ui/topbar.ui</file>
+    <file preprocess="xml-stripblanks">ui/application-menu.ui</file>
     <file preprocess="xml-stripblanks">ui/application-view.ui</file>
     <file preprocess="xml-stripblanks">ui/application-toolbar.ui</file>
     <file preprocess="xml-stripblanks">ui/configuration.ui</file>
@@ -24,9 +25,11 @@
     <file preprocess="xml-stripblanks">ui/settings-listbox.ui</file>
     <file preprocess="xml-stripblanks">ui/settings-page.ui</file>
     <file preprocess="xml-stripblanks">ui/settings-propertybox.ui</file>
-    <file preprocess="xml-stripblanks">ui/settings-headerbar.ui</file>
+    <!--<file preprocess="xml-stripblanks">ui/settings-headerbar.ui</file>-->
     <file preprocess="xml-stripblanks">ui/settings-treeview.ui</file>
     <file preprocess="xml-stripblanks">ui/settings-sidebar.ui</file>
+    <file preprocess="xml-stripblanks">ui/settings-topbar.ui</file>
+    <file preprocess="xml-stripblanks">ui/settings-toolbar.ui</file>
     <file preprocess="xml-stripblanks">ui/general-settings.ui</file>
     <file preprocess="xml-stripblanks">ui/control-settings.ui</file>
     <file preprocess="xml-stripblanks">ui/log-settings.ui</file>
