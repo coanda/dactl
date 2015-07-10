@@ -1,14 +1,17 @@
 [GtkTemplate (ui = "/org/coanda/dactl/ui/settings-page.ui")]
 public class Dactl.SettingsPage : Gtk.Box {
-    protected Cld.Context cld_ctx;
-    protected Dactl.SettingsTreeView treeview;
-    protected Dactl.SettingsListBox listbox;
 
     [GtkChild]
     protected Gtk.Box box_treeview;
 
     [GtkChild]
     protected Gtk.Box box_listbox;
+
+    protected Cld.Context cld_ctx;
+
+    protected Dactl.SettingsTreeView treeview;
+
+    protected Dactl.SettingsListBox listbox;
 
     construct {
         cld_ctx = Dactl.UI.Application.get_default ().model.ctx;

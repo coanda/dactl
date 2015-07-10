@@ -240,6 +240,7 @@ AC_CONFIG_FILES([
 	data/dactl.desktop
 	data/Makefile
 	data/config/Makefile
+	data/glade/Makefile
 	data/icons/Makefile
 	data/icons/16x16/Makefile
 	data/icons/22x22/Makefile

@@ -16,11 +16,9 @@
         <signal name="clicked" handler="btn_ok_clicked_cb" swapped="no"/>
         <!--<property name="action_name">set.ok</property>-->
 
-        <!--
-           -<style>
-           -  <class name="image-button"/>
-           -</style>
-           -->
+        <style>
+          <class name="action-button"/>
+        </style>
 
         <child internal-child="accessible">
           <object class="AtkObject" id="a11y-button3">
@@ -41,12 +39,6 @@
         <property name="valign">center</property>
         <signal name="clicked" handler="btn_cancel_clicked_cb" swapped="no"/>
         <!--<property name="action_name">set.cancel</property>-->
-
-        <!--
-           -<style>
-           -  <class name="image-button"/>
-           -</style>
-           -->
 
         <child internal-child="accessible">
           <object class="AtkObject" id="a11y-button4">

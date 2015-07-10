@@ -74,6 +74,7 @@
                 <signal name="clicked" handler="btn_start_clicked_cb" swapped="no"/>
                 <style>
                   <class name="start-button"/>
+                  <class name="suggested-action"/>
                 </style>
               </object>
               <packing>
@@ -136,6 +137,7 @@
                 <signal name="clicked" handler="btn_stop_clicked_cb" swapped="no"/>
                 <style>
                   <class name="stop-button"/>
+                  <class name="selection-mode"/>
                 </style>
               </object>
               <packing>

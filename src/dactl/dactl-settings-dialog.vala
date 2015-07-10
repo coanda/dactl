@@ -1,36 +1,26 @@
 [GtkTemplate (ui = "/org/coanda/dactl/ui/settings-dialog.ui")]
 public class Dactl.SettingsDialog : Gtk.Window {
-    private Dactl.Settings stack_settings;
 
     [GtkChild]
     private Dactl.SettingsTopbar settings_topbar;
 
     [GtkChild]
-    private Gtk.ListBox listbox_settings;
+    private Dactl.GeneralSettings general;
 
     [GtkChild]
-    private Gtk.Box box_main;
+    private Dactl.AcquisitionSettings acquisition;
 
     [GtkChild]
-    private Gtk.Box box_choices;
+    private Dactl.ControlSettings control;
 
     [GtkChild]
-    private Gtk.ListBoxRow listboxrow_general;
+    private Dactl.LogSettings log;
 
     [GtkChild]
-    private Gtk.ListBoxRow listboxrow_acquisition;
+    private Dactl.PluginSettings plugin;
 
     [GtkChild]
-    private Gtk.ListBoxRow listboxrow_control;
-
-    [GtkChild]
-    private Gtk.ListBoxRow listboxrow_log;
-
-    [GtkChild]
-    private Gtk.ListBoxRow listboxrow_plugin;
-
-    [GtkChild]
-    private Gtk.ListBoxRow listboxrow_chart;
+    private Dactl.ChartSettings chart;
 
     private Cld.Context cld_ctx;
 
@@ -41,17 +31,17 @@ public class Dactl.SettingsDialog : Gtk.Window {
     private Dactl.NativeSettingsData dactl_data;
 
     construct {
-        /* Build data objects for Cld and Dactl (ie. native) namespaces */
+        /* Build data objects for CLD and Dactl (ie. native) namespaces */
         model = Dactl.UI.Application.get_default ().model;
         cld_ctx = model.ctx;
 
-        /* Cld */
+        /* Configurable CLD data */
         cld_data = new Dactl.CldSettingsData.from_object (cld_ctx);
-        stack_settings = new Dactl.Settings ();
         Gee.ArrayList<Dactl.CldSettingsData> cld_list = new Gee.ArrayList<Dactl.CldSettingsData> ();
-        cld_list.add (stack_settings.acquisition.data);
-        cld_list.add (stack_settings.control.data);
-        cld_list.add (stack_settings.log.data);
+        cld_list.add (acquisition.data);
+        cld_list.add (control.data);
+        cld_list.add (log.data);
+
         /* Update the data object when a value changes */
         foreach (var page_data in cld_list) {
             page_data.new_data.connect ((source, uri, spec, value) => {
@@ -60,12 +50,11 @@ public class Dactl.SettingsDialog : Gtk.Window {
             });
         }
 
-        /* Dactl */
-
+        /* Configurable Dactl data */
         dactl_data = new Dactl.NativeSettingsData.from_map (model.objects);
-
         Gee.ArrayList<Dactl.NativeSettingsData> dactl_list = new Gee.ArrayList<Dactl.NativeSettingsData> ();
-        dactl_list.add (stack_settings.chart.data);
+        dactl_list.add (chart.data);
+
         /* Update the data object when a value changes */
         foreach (var page_data in dactl_list) {
             page_data.new_data.connect ((source, object, spec, value) => {
@@ -74,55 +63,8 @@ public class Dactl.SettingsDialog : Gtk.Window {
             });
         }
 
-        /* XXX FIXME Add plugin settings */
-        //list.add (stack_settings.plugin.data);
-
-        box_stack_settings.pack_start (stack_settings, true, true, 0);
-        //listbox_settings.set_header_func (_update_header);
-
-        /* XXX FIXME There are no separators visible in the ListBox */
-        int n = 0;
-        foreach (var row in listbox_settings.get_children ()) {
-            var sep = new Gtk.Separator (Gtk.Orientation.VERTICAL);
-            //row.set_header (separator);
-            sep.set_visible (true);
-            var color = new Gdk.RGBA ();
-            color.red = 255;
-            color.green = 255;
-            color.blue = 255;
-            color.alpha = 1.0;
-            sep.override_color (Gtk.StateFlags.NORMAL, color);
-            listbox_settings.insert (sep, 2 * n + 1);
-            n++;
-        }
-
         settings_topbar.ok.connect (ok);
         settings_topbar.cancel.connect (cancel);
-    }
-
-    [GtkCallback]
-    private void listbox_settings_row_activated_cb (Gtk.ListBoxRow row) {
-        if (row == listboxrow_general) {
-            stack_settings.page = Dactl.SettingsStackPage.GENERAL;
-            settings_topbar.set_subtitle ("General");
-        } else if (row == listboxrow_acquisition) {
-            stack_settings.page = Dactl.SettingsStackPage.ACQUISITION;
-            settings_topbar.set_subtitle ("Acquisition");
-        } else if (row == listboxrow_control) {
-            stack_settings.page = Dactl.SettingsStackPage.CONTROL;
-            settings_topbar.set_subtitle ("Control");
-        } else if (row == listboxrow_log) {
-            stack_settings.page = Dactl.SettingsStackPage.LOG;
-            settings_topbar.set_subtitle ("Log");
-        }else if (row == listboxrow_plugin) {
-            stack_settings.page = Dactl.SettingsStackPage.PLUGIN;
-            settings_topbar.set_subtitle ("Plugin");
-        }else if (row == listboxrow_chart) {
-            stack_settings.page = Dactl.SettingsStackPage.CHART;
-            settings_topbar.set_subtitle ("Chart");
-        } else {
-            message ("Unexpected row selection");
-        }
     }
 
     private void ok () {
@@ -206,7 +148,8 @@ public class Dactl.SettingsDialog : Gtk.Window {
                 }
             }
         }
-        stack_settings.general.update_preferences ();
+
+        general.update_preferences ();
 
         destroy ();
     }

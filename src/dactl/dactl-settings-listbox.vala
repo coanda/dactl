@@ -1,6 +1,9 @@
 [GtkTemplate (ui = "/org/coanda/dactl/ui/settings-listbox.ui")]
 public class Dactl.SettingsListBox : Gtk.ListBox {
 
+    [GtkChild]
+    private Gtk.SizeGroup size_group;
+
     public signal void request_choices (Dactl.PropertyBox box, GLib.Type type);
 
     public signal void new_data (GLib.ParamSpec spec, GLib.Value value);
@@ -13,18 +16,24 @@ public class Dactl.SettingsListBox : Gtk.ListBox {
 
         foreach (GLib.ParamSpec spec in svalues.keys) {
             Value value = svalues.get (spec).value;
+
             debug ("%s: %s %s nick: %s\n", spec.get_name (),
                                                   spec.value_type.name (),
                                                   value.strdup_contents (),
                                                   spec.get_nick ());
+
             var box = new Dactl.PropertyBox.from_data (spec, value);
             box.request_choices.connect ((source, type) => {
                 request_choices (box, type);
             });
+
             box.notify["value"].connect (() => {
                 debug ("%s %s", box.spec.get_name (), box.value.type ().name ());
                 new_data (box.spec, box.value);
             });
+
+            size_group.add_widget (box.box_labels);
+
             box.request_choices (value.type ());
             var row = new Gtk.ListBoxRow ();
             row.add (box);
@@ -54,7 +63,7 @@ public class Dactl.SettingsListBox : Gtk.ListBox {
 [GtkTemplate (ui = "/org/coanda/dactl/ui/settings-propertybox.ui")]
 public class Dactl.PropertyBox : Gtk.Box {
     [GtkChild]
-    public Gtk.Box box;
+    public Gtk.Box box_labels;
 
     [GtkChild]
     public Gtk.Label lbl_nick;
@@ -75,11 +84,15 @@ public class Dactl.PropertyBox : Gtk.Box {
         _spec = spec;
         this.value = value;
         this.orientation = Gtk.Orientation.HORIZONTAL;
-        this.spacing = 0;
+        this.spacing = 20;
         lbl_nick.set_text (spec.get_nick ());
         lbl_blurb.set_text (spec.get_blurb ());
-        Gtk.Box box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-        pack_start (box);
+
+        /*
+         *Gtk.Box box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+         *pack_start (box);
+         */
+
         var type = value.type ();
         if (type.is_a (typeof (string))) {
             make_string ();

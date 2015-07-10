@@ -37,13 +37,15 @@ private class Dactl.SettingsSidebar : Gtk.Box {
     }
 
     private void populate () {
-        foreach (var page in Dactl.SettingsStackPage.all ()) {
-            message ("Adding %s to settings sidebar", page.to_string ());
-            // Capitalize
-            var name = page.to_string ();
-            name.data[0] -= 0x20;
-            list_append (name, true);
-        }
+        /*
+         *foreach (var page in Dactl.SettingsStackPage.all ()) {
+         *    message ("Adding %s to settings sidebar", page.to_string ());
+         *    // Capitalize
+         *    var name = page.to_string ();
+         *    name.data[0] -= 0x20;
+         *    list_append (name, true);
+         *}
+         */
     }
 
     [GtkCallback]
@@ -52,6 +54,6 @@ private class Dactl.SettingsSidebar : Gtk.Box {
         model_filter.get_iter (out filter_iter, path);
         model_filter.convert_iter_to_child_iter (out iter, filter_iter);
 
-        selection_action.activate ((Dactl.SettingsStackPage) listmodel.get_path (iter).get_indices ()[0]);
+        //selection_action.activate ((Dactl.SettingsStackPage) listmodel.get_path (iter).get_indices ()[0]);
     }
 }

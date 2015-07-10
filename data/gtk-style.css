@@ -1,22 +1,44 @@
+/* Tango colors */
+@define-color butter1 #fce94f;
+@define-color butter2 #edd400;
+@define-color butter3 #c4a000;
+
+@define-color orange1 #fcaf3e;
+@define-color orange2 #f57900;
+@define-color orange3 #ce5c00;
+
+@define-color chocolate1 #e9b96e;
+@define-color chocolate2 #c17d11;
+@define-color chocolate3 #8f5902;
+
+@define-color chameleon1 #8ae234;
+@define-color chameleon2 #73d216;
+@define-color chameleon3 #4e9a06;
+
+@define-color skyblue1 #729fcf;
+@define-color skyblue2 #3465a4;
+@define-color skyblue3 #204a87;
+
+@define-color plum1 #ad7fa8;
+@define-color plum2 #75507b;
+@define-color plum3 #5c3566;
+
+@define-color scarletred1 #ef2929;
+@define-color scarletred2 #cc0000;
+@define-color scarletred3 #a40000;
+
+@define-color aluminium1 #eeeeec;
+@define-color aluminium2 #d3d7cf;
+@define-color aluminium3 #babdb6;
+@define-color aluminium4 #888a85;
+@define-color aluminium5 #555753;
+@define-color aluminium6 #2e3436;
+
+/* Application colors */
 @define-color dactl_bg_color shade (@theme_bg_color, 0.5);
 @define-color dactl_bg2_color mix (@theme_bg_color, @dactl_bg_color, 0.5);
-@define-color dactl_selected_color #3465a4;
-@define-color dactl_alert_color #d7702f;
-
-@define-color tango_sky_blue1 #729fcf;
-@define-color tango_sky_blue2 #3465a4;
-@define-color tango_sky_blue3 #204a87;
-@define-color tango_chameleon1 #8ae234;
-@define-color tango_chameleon2 #73d216;
-@define-color tango_chameleon3 #4e9a06;
-@define-color tango_plum1 #ad7fa8;
-@define-color tango_plum2 #75507b;
-@define-color tango_plum3 #5c3566;
-@define-color tango_scarlet_red1 #ef2929;
-@define-color tango_scarlet_red2 #cc0000;
-@define-color tango_scarlet_red3 #a40000;
-@define-color tango_aluminum2 #d3d7cf;
-@define-color tango_aluminum3 #babdb6;
+@define-color dactl_selected_color @skyblue2;
+@define-color dactl_alert_color @scarletred2;
 
 .readout {
     border-width: 2px;
@@ -39,61 +61,95 @@ DactlChannelTreeView:selected {
 }
 
 .page {
-    /*background-color: @tango_scarlet_red3;*/
+    /*background-color: @scarlet_red3;*/
 }
 
 .test0 {
-    background-color: @tango_sky_blue1;
+    background-color: @sky_blue1;
 }
 
 .test1 {
-    background-color: @tango_sky_blue2;
+    background-color: @sky_blue2;
 }
 
 .test2 {
-    background-color: @tango_sky_blue3;
+    background-color: @sky_blue3;
 }
 
 DactlChannelTreeView {
-    /*background-color: @tango_plum1;*/
+    /*background-color: @plum1;*/
 }
 
 DactlPnid {
-    background-color: @tango_aluminum2;
+    background-color: @aluminum2;
 }
 
 DactlChartCanvas {
-    background-color: @tango_aluminum2;
+    background-color: @aluminum2;
 }
 
 DactlStripChartCanvas {
-    background-color: @tango_aluminum2;
+    background-color: @aluminum2;
 }
 
 DactlLogControl .start-button {
-    background-image: -gtk-gradient(linear, left top, left bottom,
-                                    from (shade(shade(@dactl_selected_color, 1.02), 1.05)),
-                                    to (shade(shade(@dactl_selected_color, 1.02), 0.97)));
+    /*
+     *background-image: -gtk-gradient(linear, left top, left bottom,
+     *                                from (shade(shade(@dactl_selected_color, 1.02), 1.05)),
+     *                                to (shade(shade(@dactl_selected_color, 1.02), 0.97)));
+     */
 }
 
 DactlLogControl .stop-button {
-    background-image: -gtk-gradient(linear, left top, left bottom,
-                                    from (shade(shade(@dactl_alert_color, 1.02), 1.05)),
-                                    to (shade(shade(@dactl_alert_color, 1.02), 0.97)));
+    /*
+     *background-image: -gtk-gradient(linear, left top, left bottom,
+     *                                from (shade(shade(@dactl_alert_color, 1.02), 1.05)),
+     *                                to (shade(shade(@dactl_alert_color, 1.02), 0.97)));
+     */
 }
 
-DactlPropertyBox {
-    padding: 10px;
+/***************************/
+.destructive-action.button {
+    background-image: linear-gradient(to bottom,
+                                      @destructive_action_button_a,
+                                      @destructive_action_button_b);
+
+    color: @destructive_action_button_fg;
 }
 
-DactlPropertyBox #nickname {
-    font-size: 10px;
-    font-weight: bold;
+.destructive-action.button:hover {
+    background-image: linear-gradient(to bottom,
+                                      shade(@destructive_action_button_a, 1.10),
+                                      shade(@destructive_action_button_b, 1.05));
 }
 
-DactlPropertyBox #blurb {
-    font-size: 8px;
+.destructive-action.button:active,
+.destructive-action.button:hover:active {
+    background-image: linear-gradient(to bottom,
+                                      @destructive_action_button_b,
+                                      @destructive_action_button_a);
+
+    color: @destructive_action_button_fg;
 }
+
+.destructive-action.button {
+    text-shadow: 0 1px @destructive_action_button_shadow;
+    icon-shadow: 0 1px @destructive_action_button_shadow;
+}
+
+.destructive-action.button:active,
+.destructive-action.button:hover:active {
+    text-shadow: 0 1px shade(@destructive_action_button_shadow, 1.15);
+    icon-shadow: 0 1px shade(@destructive_action_button_shadow, 1.15);
+}
+
+.destructive-action.button:backdrop {
+    background-image: none;
+    text-shadow: none;
+    icon-shadow: none;
+    color: @theme_unfocused_text_color;
+}
+/***************************/
 
 .sidebar GtkTreeView:selected {
     background-color: @dactl_selected_color;
@@ -216,4 +272,27 @@ DactlPropertyBox #blurb {
 
 .dactl-empty-details-label {
     color: #555753;
+}
+
+/* Settings window styles */
+GtkListBoxRow {
+    padding: 10px;
+}
+
+GtkBox .property-descriptions {
+    padding: 10px;
+}
+
+DactlPropertyBox {
+    padding: 10px;
+}
+
+DactlPropertyBox .property-nickname {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+DactlPropertyBox .property-blurb {
+    font-size: 8px;
+    color: @theme_unfocused_fg_color;
 }
