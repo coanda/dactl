@@ -8,11 +8,15 @@ private class Dactl.SettingsToolbar : Gtk.HeaderBar {
     private Gtk.Button btn_cancel;
 
     public signal void ok ();
+
     public signal void cancel ();
 
     construct {
         title = "Settings";
-        subtitle = "General";
+        //subtitle = "General";
+
+        var ctx = btn_ok.get_style_context ();
+        ctx.add_class ("suggested-action");
     }
 
     [GtkCallback]

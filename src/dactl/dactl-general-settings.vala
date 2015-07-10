@@ -1,15 +1,6 @@
 [GtkTemplate (ui = "/org/coanda/dactl/ui/general-settings.ui")]
 public class Dactl.GeneralSettings : Gtk.Box {
 
-//    [GtkChild]
-//    private Gtk.Alignment alignment_ui;
-
-    private Gtk.StackSwitcher switcher;
-
-    private Dactl.UISettings ui_settings;
-
-    private Dactl.UI.Application app;
-
     [GtkChild]
     private Gtk.Switch switch_dark_theme;
 
@@ -20,7 +11,11 @@ public class Dactl.GeneralSettings : Gtk.Box {
     private Gtk.Switch switch_admin;
 
     [GtkChild]
-    Gtk.Entry entry_name;
+    private Gtk.Entry entry_name;
+
+    private Gtk.StackSwitcher switcher;
+
+    private Dactl.UI.Application app;
 
     construct {
         app = Dactl.UI.Application.get_default ();
@@ -33,13 +28,6 @@ public class Dactl.GeneralSettings : Gtk.Box {
         }
         comboboxtext_startup_page.set_active_id (app.model.startup_page);
 
-        /*
-         *ui_settings = new Dactl.UISettings ();
-         *ui_settings.transition_duration = 400;
-         *ui_settings.transition_type = Gtk.StackTransitionType.CROSSFADE;
-         *switcher.set_stack (ui_settings as Gtk.Stack);
-         *alignment_ui.add (ui_settings);
-         */
         switch_dark_theme.set_active (app.model.dark_theme);
         switch_dark_theme.notify["active"].connect ((s, p) => {
             GLib.message ("Activate dark theme: %s", switch_dark_theme.get_active ().to_string ());

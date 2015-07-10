@@ -104,7 +104,7 @@ public class Dactl.PnidElement : GLib.Object, Dactl.Object, Dactl.Buildable {
         build_from_xml_node (node);
 
         notify["sensor-isset"].connect (() => {
-            message ("sensor-isset: `%s'", sensor_isset.to_string ());
+            debug ("sensor-isset: `%s'", sensor_isset.to_string ());
         });
     }
 
@@ -184,8 +184,8 @@ private class Dactl.PnidCanvas : Dactl.Canvas {
             error ("%s", err.message);
         }
 
-        GLib.message ("Loaded SVG file `%s'", image_file);
-        GLib.message ("SVG dimensions: %dx%d", svg.width, svg.height);
+        message ("Loaded SVG file `%s'", image_file);
+        message ("SVG dimensions: %dx%d", svg.width, svg.height);
 
         set_size_request (svg.width, svg.height);
 

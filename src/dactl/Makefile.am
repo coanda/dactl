@@ -54,7 +54,6 @@ UI_SOURCES = \
 	dactl-general-settings.vala \
 	dactl-loader.vala \
 	dactl-loader-toolbar.vala \
-	dactl-settings.vala \
 	dactl-settings-data.vala \
 	dactl-settings-dialog.vala \
 	dactl-settings-listbox.vala \
@@ -68,7 +67,6 @@ UI_SOURCES = \
 	dactl-topbar.vala \
 	dactl-ui-application.vala \
 	dactl-ui-application-view.vala \
-	dactl-ui-settings.vala \
 	dactl-ux-manager.vala
 
 dactl_SOURCES = \

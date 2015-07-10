@@ -1,5 +1,6 @@
 SUBDIRS = \
 	config \
+	glade \
 	icons \
 	mime \
 	schemas

@@ -16,9 +16,7 @@
      |     |        |    |
      |     |        |    |-> sidebar = new Dactl.Sidebar ();
      |     |        |    |
-     |     |        |    |-> settings_stack = Gtk.Stack ();
-     |     |        |        |
-     |     |        |        |-> settings_content = new Dactl.Settings ();
+     |     |        |    |-> ...
      |     |        |
      |     |        |-> configuration = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
      |     |        |
@@ -73,7 +71,7 @@
                 <property name="vexpand">True</property>
 
                 <child>
-                  <object class="GtkBox" id="settings">
+                  <object class="GtkBox" id="sidebar-container">
                     <property name="visible">True</property>
                     <property name="orientation">horizontal</property>
                     <property name="halign">fill</property>
@@ -88,22 +86,6 @@
                       </object>
                     </child>
 
-                    <child>
-                      <object class="GtkStack" id="settings_stack">
-                        <property name="visible">True</property>
-                        <property name="homogeneous">True</property>
-                        <property name="transition-type">slide-left-right</property>
-                        <property name="transition-duration">400</property>
-                        <property name="hexpand">True</property>
-                        <property name="vexpand">True</property>
-
-                        <child>
-                          <object class="DactlSettings" id="settings_content">
-                            <property name="visible">True</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
                   </object>
                   <packing>
                     <property name="name">layout-hbox</property>

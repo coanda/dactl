@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.16.1 -->
+<!-- Generated with glade 3.18.3 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
   <template class="DactlPropertyBox" parent="GtkBox">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <child>
-      <object class="GtkBox" id="box">
+      <object class="GtkBox" id="box_labels">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="margin_left">5</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel" id="lbl_nick">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="halign">start</property>
             <property name="label" translatable="yes">nick</property>
+            <style>
+              <class name="property-nickname"/>
+            </style>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -26,7 +31,11 @@
           <object class="GtkLabel" id="lbl_blurb">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="halign">start</property>
             <property name="label" translatable="yes">blurb</property>
+            <style>
+              <class name="property-blurb"/>
+            </style>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -34,6 +43,9 @@
             <property name="position">1</property>
           </packing>
         </child>
+        <style>
+          <class name="property-descriptions"/>
+        </style>
       </object>
       <packing>
         <property name="expand">False</property>
