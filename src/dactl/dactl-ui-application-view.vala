@@ -35,13 +35,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     private Dactl.Topbar topbar;
 
     [GtkChild]
-    private Dactl.Sidebar sidebar;
-
-    [GtkChild]
     private Gtk.Stack layout;
-
-    [GtkChild]
-    private Gtk.Box settings;
 
     [GtkChild]
     private Dactl.Loader loader;
@@ -51,9 +45,6 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
 
     [GtkChild]
     private Dactl.CsvExport export;
-
-    [GtkChild]
-    private Dactl.Settings settings_content;
 
     private uint configure_id;
 
@@ -112,10 +103,6 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     }
 
     public void add_actions () {
-        /* sidebar actions */
-        sidebar.settings_selection_action.activate.connect (settings_selection_activated_cb);
-        this.add_action (sidebar.settings_selection_action);
-
         var fullscreen_action = new SimpleAction ("fullscreen", null);
         fullscreen_action.activate.connect (fullscreen_action_activated_cb);
         this.add_action (fullscreen_action);
@@ -164,26 +151,17 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
                 previous_page = layout.visible_child_name;
                 layout.visible_child = loader;
                 topbar.set_visible_child_name (id);
-                sidebar.page = Dactl.SidebarPage.NONE;
             } else if (id == "configuration" && layout.visible_child != configuration) {
                 previous_page = layout.visible_child_name;
                 layout.visible_child = configuration;
                 topbar.set_visible_child_name (id);
-                sidebar.page = Dactl.SidebarPage.NONE;
             } else if (id == "export" && layout.visible_child != export) {
                 previous_page = layout.visible_child_name;
                 layout.visible_child = export;
                 topbar.set_visible_child_name (id);
-                sidebar.page = Dactl.SidebarPage.NONE;
-            } else if (id == "settings" && layout.visible_child != settings) {
-                previous_page = layout.visible_child_name;
-                layout.visible_child = settings;
-                topbar.set_visible_child_name (id);
-                sidebar.page = Dactl.SidebarPage.SETTINGS;
             } else {
                 layout.set_visible_child_name (id);
                 topbar.set_visible_child_name ("application");
-                sidebar.page = Dactl.SidebarPage.NONE;
             }
         }
     }
@@ -242,13 +220,6 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         foreach (var chart in charts.values) {
             (chart as Dactl.StripChart).highlight_trace (id);
         }
-    }
-
-    /**
-     * Action callback for settings page selection.
-     */
-    private void settings_selection_activated_cb (SimpleAction action, Variant? parameter) {
-        (settings_content as Dactl.Settings).page = (Dactl.SettingsStackPage) parameter;
     }
 
     /**

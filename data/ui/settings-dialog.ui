@@ -4,9 +4,6 @@
   <requires lib="gtk+" version="3.10"/>
   <template class="DactlSettingsDialog" parent="GtkWindow">
 
-  <!--
-     -<template class="GtkWindow" parent="GtkWindow">
-     -->
     <property name="width_request">1200</property>
     <property name="height_request">800</property>
     <property name="can_focus">False</property>
@@ -14,148 +11,358 @@
 
     <child>
       <object class="GtkBox" id="box_main">
+
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
-        <!--
-           -<child type="titlebar">
-           -->
+        <property name="expand">True</property>
+
+        <!-- Settings toolbar -->
         <child>
           <object class="DactlSettingsTopbar" id="settings_topbar">
             <property name="visible">True</property>
           </object>
         </child>
+
+        <!-- Notebook for settings pages -->
         <child>
-          <object class="GtkBox" id="box_stack_settings">
+          <object class="GtkNotebook" id="settings_notebook">
+            <property name="name">settings-notebook</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can_focus">True</property>
+            <property name="expand">True</property>
+
+            <!-- General settings page -->
             <child>
-              <object class="GtkListBox" id="listbox_settings">
+              <object class="GtkBox" id="box_general">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <signal name="row-activated" handler="listbox_settings_row_activated_cb" swapped="no"/>
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkListBoxRow" id="listboxrow_general">
-                    <property name="width_request">100</property>
-                    <property name="height_request">80</property>
+                  <object class="DactlGeneralSettings" id="general">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <child>
-                      <object class="GtkLabel" id="label1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">General</property>
-                      </object>
-                    </child>
+                    <property name="expand">True</property>
                   </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow" id="listboxrow_acquisition">
-                    <property name="width_request">100</property>
-                    <property name="height_request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <child>
-                      <object class="GtkLabel" id="label2">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Acquisition</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow" id="listboxrow_log">
-                    <property name="width_request">100</property>
-                    <property name="height_request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <child>
-                      <object class="GtkLabel" id="label3">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Log</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow" id="listboxrow_control">
-                    <property name="width_request">100</property>
-                    <property name="height_request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <!--<signal name="activate" handler="listboxrow_control_activate_cb" swapped="no"/>-->
-                    <child>
-                      <object class="GtkLabel" id="label4">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Control</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow" id="listboxrow_plugin">
-                    <property name="width_request">100</property>
-                    <property name="height_request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <child>
-                      <object class="GtkLabel" id="label5">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Plugin</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow" id="listboxrow_chart">
-                    <property name="width_request">100</property>
-                    <property name="height_request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <child>
-                      <object class="GtkLabel" id="label6">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Chart</property>
-                      </object>
-                    </child>
-                  </object>
+
+                  <packing>
+                    <property name="name">general</property>
+                  </packing>
                 </child>
               </object>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="lbl_general">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">General</property>
+              </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
+                <property name="tab_fill">False</property>
               </packing>
             </child>
+
+            <!-- Acquisition settings page -->
             <child>
-              <object class="GtkSeparator" id="separator2">
+              <object class="GtkBox" id="box_acquisition">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="DactlAcquisitionSettings" id="acquisition">
+                    <property name="visible">True</property>
+                    <property name="expand">True</property>
+                  </object>
+
+                  <packing>
+                    <property name="name">acquisition</property>
+                  </packing>
+                </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
+            <child type="tab">
+              <object class="GtkLabel" id="lbl_acquisition">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Acquisition</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+
+            <!-- Control settings page -->
+            <child>
+              <object class="GtkBox" id="box_control">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="DactlControlSettings" id="control">
+                    <property name="visible">True</property>
+                    <property name="expand">True</property>
+                  </object>
+
+                  <packing>
+                    <property name="name">control</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="lbl_control">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Control</property>
+              </object>
+              <packing>
+                <property name="position">2</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+
+            <!-- Logging settings page -->
+            <child>
+              <object class="GtkBox" id="box_log">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="DactlLogSettings" id="log">
+                    <property name="visible">True</property>
+                    <property name="expand">True</property>
+                  </object>
+
+                  <packing>
+                    <property name="name">log</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="lbl_log">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Log</property>
+              </object>
+              <packing>
+                <property name="position">3</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+
+            <!-- Plugin settings page -->
+            <child>
+              <object class="GtkBox" id="box_plugin">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="DactlPluginSettings" id="plugin">
+                    <property name="visible">True</property>
+                    <property name="expand">True</property>
+                  </object>
+
+                  <packing>
+                    <property name="name">plugin</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">4</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="lbl_plugin">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Plugin</property>
+              </object>
+              <packing>
+                <property name="position">4</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+
+            <!-- Charts settings page -->
+            <child>
+              <object class="GtkBox" id="box_charts">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="DactlChartSettings" id="chart">
+                    <property name="visible">True</property>
+                    <property name="expand">True</property>
+                  </object>
+
+                  <packing>
+                    <property name="name">chart</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">5</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel" id="lbl_charts">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Charts</property>
+              </object>
+              <packing>
+                <property name="position">5</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
+
+        <!-- Old stack -->
+        <!--
+           -<child>
+           -  <object class="GtkBox" id="box_stack_settings">
+           -    <property name="visible">True</property>
+           -    <property name="can_focus">False</property>
+           -    <child>
+           -      <object class="GtkListBox" id="listbox_settings">
+           -        <property name="visible">True</property>
+           -        <property name="can_focus">False</property>
+           -        <signal name="row-activated" handler="listbox_settings_row_activated_cb" swapped="no"/>
+           -        <child>
+           -          <object class="GtkListBoxRow" id="listboxrow_general">
+           -            <property name="width_request">100</property>
+           -            <property name="height_request">80</property>
+           -            <property name="visible">True</property>
+           -            <property name="can_focus">True</property>
+           -            <child>
+           -              <object class="GtkLabel" id="label1">
+           -                <property name="visible">True</property>
+           -                <property name="can_focus">False</property>
+           -                <property name="xalign">0</property>
+           -                <property name="label" translatable="yes">General</property>
+           -              </object>
+           -            </child>
+           -          </object>
+           -        </child>
+           -        <child>
+           -          <object class="GtkListBoxRow" id="listboxrow_acquisition">
+           -            <property name="width_request">100</property>
+           -            <property name="height_request">80</property>
+           -            <property name="visible">True</property>
+           -            <property name="can_focus">True</property>
+           -            <child>
+           -              <object class="GtkLabel" id="label2">
+           -                <property name="visible">True</property>
+           -                <property name="can_focus">False</property>
+           -                <property name="xalign">0</property>
+           -                <property name="label" translatable="yes">Acquisition</property>
+           -              </object>
+           -            </child>
+           -          </object>
+           -        </child>
+           -        <child>
+           -          <object class="GtkListBoxRow" id="listboxrow_log">
+           -            <property name="width_request">100</property>
+           -            <property name="height_request">80</property>
+           -            <property name="visible">True</property>
+           -            <property name="can_focus">True</property>
+           -            <child>
+           -              <object class="GtkLabel" id="label3">
+           -                <property name="visible">True</property>
+           -                <property name="can_focus">False</property>
+           -                <property name="xalign">0</property>
+           -                <property name="label" translatable="yes">Log</property>
+           -              </object>
+           -            </child>
+           -          </object>
+           -        </child>
+           -        <child>
+           -          <object class="GtkListBoxRow" id="listboxrow_control">
+           -            <property name="width_request">100</property>
+           -            <property name="height_request">80</property>
+           -            <property name="visible">True</property>
+           -            <property name="can_focus">True</property>
+           -            [><signal name="activate" handler="listboxrow_control_activate_cb" swapped="no"/><]
+           -            <child>
+           -              <object class="GtkLabel" id="label4">
+           -                <property name="visible">True</property>
+           -                <property name="can_focus">False</property>
+           -                <property name="xalign">0</property>
+           -                <property name="label" translatable="yes">Control</property>
+           -              </object>
+           -            </child>
+           -          </object>
+           -        </child>
+           -        <child>
+           -          <object class="GtkListBoxRow" id="listboxrow_plugin">
+           -            <property name="width_request">100</property>
+           -            <property name="height_request">80</property>
+           -            <property name="visible">True</property>
+           -            <property name="can_focus">True</property>
+           -            <child>
+           -              <object class="GtkLabel" id="label5">
+           -                <property name="visible">True</property>
+           -                <property name="can_focus">False</property>
+           -                <property name="xalign">0</property>
+           -                <property name="label" translatable="yes">Plugin</property>
+           -              </object>
+           -            </child>
+           -          </object>
+           -        </child>
+           -        <child>
+           -          <object class="GtkListBoxRow" id="listboxrow_chart">
+           -            <property name="width_request">100</property>
+           -            <property name="height_request">80</property>
+           -            <property name="visible">True</property>
+           -            <property name="can_focus">True</property>
+           -            <child>
+           -              <object class="GtkLabel" id="label6">
+           -                <property name="visible">True</property>
+           -                <property name="can_focus">False</property>
+           -                <property name="xalign">0</property>
+           -                <property name="label" translatable="yes">Chart</property>
+           -              </object>
+           -            </child>
+           -          </object>
+           -        </child>
+           -      </object>
+           -      <packing>
+           -        <property name="expand">False</property>
+           -        <property name="fill">True</property>
+           -        <property name="position">0</property>
+           -      </packing>
+           -    </child>
+           -    <child>
+           -      <object class="GtkSeparator" id="separator2">
+           -        <property name="visible">True</property>
+           -        <property name="can_focus">False</property>
+           -      </object>
+           -      <packing>
+           -        <property name="expand">False</property>
+           -        <property name="fill">True</property>
+           -        <property name="position">1</property>
+           -      </packing>
+           -    </child>
+           -  </object>
+           -  <packing>
+           -    <property name="expand">True</property>
+           -    <property name="fill">True</property>
+           -    <property name="position">2</property>
+           -  </packing>
+           -</child>
+           -->
       </object>
     </child>
 

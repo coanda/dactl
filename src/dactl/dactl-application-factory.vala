@@ -100,7 +100,6 @@ private class Dactl.ApplicationFactory : GLib.Object, Dactl.Factory {
                 default:
                     throw new Dactl.FactoryError.TYPE_NOT_FOUND (
                         _("The type requested is not a known Dactl type."));
-                    break;
             }
         }
 
@@ -132,7 +131,6 @@ private class Dactl.ApplicationFactory : GLib.Object, Dactl.Factory {
                     default:
                         throw new Dactl.FactoryError.TYPE_NOT_FOUND (
                             _("The type requested is not a known Dactl type."));
-                        break;
                 }
             }
         }
