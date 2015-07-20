@@ -1,3 +1,5 @@
+SUBDIRS = extensions
+
 include $(top_srcdir)/common.am
 include $(srcdir)/filelist.am
 
