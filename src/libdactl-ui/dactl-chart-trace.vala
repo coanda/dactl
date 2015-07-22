@@ -411,8 +411,10 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
         /**
          * show the averaged value if flag is set
           */
-        if (((channel.get_type ()).is_a (typeof (Cld.AChannel))) && show_avg)
-            value = (channel as Cld.AChannel).avg_value;
+        if (((channel.get_type ()).is_a (typeof (Cld.AChannel))) && show_avg) {
+            var calibration = (channel as Cld.ScalableChannel).calibration;
+            value = calibration.apply ((channel as Cld.AChannel).avg_value);
+        }
 
         if (channel_isset) {
             /* Simple rotate left by one value */
