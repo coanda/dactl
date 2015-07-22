@@ -229,6 +229,15 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
      */
     private double[] buffer;
 
+    private bool _show_avg = false;
+    /**
+     * Plot the averaged value if true
+     */
+    public bool show_avg {
+        get { return _show_avg; }
+        set { _show_avg = value; }
+    }
+
     /**
      * Emitted when the trace view window has been resized.
      */
@@ -270,6 +279,9 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
             for (Xml.Node *iter = node->children; iter != null; iter = iter->next) {
                 if (iter->name == "property") {
                     switch (iter->get_prop ("name")) {
+                        case "show-avg":
+                            _show_avg = bool.parse (iter->get_content ());
+                            break;
                         case "buffer-size":
                             buffer_size = int.parse (iter->get_content ());
                             break;
@@ -355,6 +367,9 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
                  iter = iter->next) {
                 if (iter->name == "property") {
                     switch (iter->get_prop ("name")) {
+                        case "show-avg":
+                            iter->set_content ("%s".printf (show_avg.to_string ()));
+                            break;
                         case "buffer-size":
                             iter->set_content ("%d".printf (buffer_size));
                             break;
@@ -393,6 +408,12 @@ public class Dactl.Trace : GLib.Object, Dactl.Object, Dactl.Buildable {
     }
 
     private void new_value_cb (string id, double value) {
+        /**
+         * show the averaged value if flag is set
+          */
+        if (((channel.get_type ()).is_a (typeof (Cld.AChannel))) && show_avg)
+            value = (channel as Cld.AChannel).avg_value;
+
         if (channel_isset) {
             /* Simple rotate left by one value */
             lock (buffer) {
