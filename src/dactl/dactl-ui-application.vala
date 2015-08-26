@@ -191,33 +191,35 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      */
     public void register_plugin (Dactl.Plugin plugin) {
         if (plugin.has_factory) {
-            Dactl.Object control;
+            /*Dactl.Object control;*/
 
             /* Get the node to use from the configuration */
             try {
                 string name = plugin.name;
-                var xpath = @"//plugin[@type=\"$name\"]/ui:object";
-                /**
-                 * FIXME: Should iterate over an entire nodeset to allow for
-                 *        multiple plugin controls.
-                 */
+                var xpath = @"//plugin[@type=\"$name\"]";
+
                 message ("Searching for the node at: %s", xpath);
                 Xml.Node *node = model.config.get_xml_node (xpath);
                 if (node != null) {
-                    control = plugin.factory.make_object_from_node (node);
-                    model.add_child (control);
+                    /* Iterate through node children */
+                    for (Xml.Node *iter = node->children; iter != null; iter = iter->next) {
+                        if (iter->name == "object") {
+                            var control = plugin.factory.make_object_from_node (iter);
+                            model.add_child (control);
 
-                    message ("Connecting plugin control to CLD data for `%s'", plugin.name);
-                    (control as Dactl.CldAdapter).request_object.connect ((uri) => {
-                        var object = model.ctx.get_object_from_uri (uri);
-                        message ("Offering object `%s' to `%s'",
-                                    object.id, (control as Dactl.Object).id);
-                        (control as Dactl.CldAdapter).offer_cld_object (object);
-                    });
+                            message ("Connecting plugin control to CLD data for `%s'", plugin.name);
+                            (control as Dactl.CldAdapter).request_object.connect ((uri) => {
+                                var object = model.ctx.get_object_from_uri (uri);
+                                message ("Offering object `%s' to `%s'",
+                                            object.id, (control as Dactl.Object).id);
+                                (control as Dactl.CldAdapter).offer_cld_object (object);
+                            });
 
-                    message ("Attempting to add the plugin control to the layout");
-                    var parent = model.get_object ((control as Dactl.PluginControl).parent_ref);
-                    (parent as Dactl.Box).add_child (control);
+                            message ("Attempting to add the plugin control to the layout");
+                            var parent = model.get_object ((control as Dactl.PluginControl).parent_ref);
+                            (parent as Dactl.Box).add_child (control);
+                        }
+                    }
                 }
             } catch (GLib.Error e) {
                 GLib.error (e.message);
