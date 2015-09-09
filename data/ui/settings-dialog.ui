@@ -193,20 +193,20 @@
               </packing>
             </child>
 
-            <!-- Charts settings page -->
+            <!-- Widgets settings page -->
             <child>
-              <object class="GtkBox" id="box_charts">
+              <object class="GtkBox" id="box_widgets">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="DactlChartSettings" id="chart">
+                  <object class="DactlWidgetSettings" id="widget">
                     <property name="visible">True</property>
                     <property name="expand">True</property>
                   </object>
 
                   <packing>
-                    <property name="name">chart</property>
+                    <property name="name">widget</property>
                   </packing>
                 </child>
               </object>
@@ -215,10 +215,10 @@
               </packing>
             </child>
             <child type="tab">
-              <object class="GtkLabel" id="lbl_charts">
+              <object class="GtkLabel" id="lbl_widgets">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Charts</property>
+                <property name="label" translatable="yes">Widgets</property>
               </object>
               <packing>
                 <property name="position">5</property>

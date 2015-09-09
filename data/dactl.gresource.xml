@@ -31,8 +31,8 @@
     <file preprocess="xml-stripblanks">ui/general-settings.ui</file>
     <file preprocess="xml-stripblanks">ui/control-settings.ui</file>
     <file preprocess="xml-stripblanks">ui/log-settings.ui</file>
-    <file preprocess="xml-stripblanks">ui/chart-settings-page.ui</file>
-    <file preprocess="xml-stripblanks">ui/chart-settings.ui</file>
+    <file preprocess="xml-stripblanks">ui/widget-settings-page.ui</file>
+    <file preprocess="xml-stripblanks">ui/widget-settings.ui</file>
     <!-- XXX deprecated dialog files -->
     <file preprocess="xml-stripblanks">ui/recent-files-dialog.ui</file>
     <file preprocess="xml-stripblanks">ui/log-settings-dialog.ui</file>

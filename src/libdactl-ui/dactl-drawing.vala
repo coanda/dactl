@@ -1,3 +1,122 @@
+/**
+ * An object that can be drawn in a Cairo context
+ */
+public interface Dactl.Drawable : GLib.Object {
+
+    /**
+     * The data points to be rendered
+     */
+    public abstract Dactl.Point[] raw_data { get; set; }
+
+    /**
+     * The interpolated data scaled to fit the chart
+     */
+    /*private abstract Dactl.Point[] pixel_data { get; set; }*/
+    private abstract Gee.List<Dactl.Point> pixel_data { get; set; }
+
+    /**
+     * A surface to draw into
+     */
+    public abstract Cairo.ImageSurface image_surface { get; set; }
+
+    /**
+     * Generate the pixelated data by interpolating the raw data and scaling it
+     * to the chart dimensions and axis limits.
+     *
+     * @param w Width of the drawing area
+     * @param h Height of the drawing area
+     * @param x_min Minimum value of the X axis
+     * @param x_max Maximum value of the X axis
+     * @param y_min Minimum value of the Y axis
+     * @param y_max Maximum value of the Y axis
+     */
+    public abstract void generate (int w, int h,
+                                   double x_min, double x_max,
+                                   double y_min, double y_max);
+
+    /**
+     * Draw into the given context
+     *
+     * @param cr The context to be altered
+     */
+    public abstract void draw (Cairo.Context cr);
+}
+
+/**
+ * FIXME Strip chart should use a generic ChartGrid instead of StripChartGrid. This is here to allow for
+ * code refactoring without breaking StripChart.
+ */
+[Compact]
+private class Dactl.StripChartGrid : Cairo.Context {
+
+    public StripChartGrid (Cairo.Surface target) {
+        base (target);
+    }
+
+    public void draw (Dactl.Axis x_axis, Dactl.Axis y_axis, Gdk.RGBA color, int w, int h) {
+        double w_major = (double)w / x_axis.div_major;
+        double w_minor = w_major / x_axis.div_minor;
+        double h_major = (double)h / y_axis.div_major;
+        double h_minor = h_major / y_axis.div_minor;
+
+        /* X axis */
+        double x_major = w_major;
+        double x_minor = w_minor;
+        for (var i = 0; i < x_axis.div_major; i++) {
+
+            set_dash ({3, 5}, 0);
+            set_source_rgba (color.red, color.green, color.blue, 3 * color.alpha / 4);
+            for (var j = 1; j < x_axis.div_minor; j++) {
+                move_to (x_minor, 0);
+                line_to (x_minor, h);
+                set_line_width (0.5);
+                stroke ();
+                x_minor += w_minor;
+            }
+            set_dash (null, 0);
+
+            x_minor = (w_major * (i + 1)) + w_minor;
+
+            if (i > 0) {
+                set_source_rgba (color.red, color.green, color.blue, color.alpha);
+                move_to (x_major, 0);
+                line_to (x_major, h);
+                set_line_width (1.0);
+                stroke ();
+                x_major += w_major;
+            }
+        }
+
+        /* Y axis */
+        double y_major = h_major;
+        double y_minor = h_minor;
+        for (var i = 0; i < y_axis.div_major; i++) {
+
+            set_dash ({3, 5}, 0);
+            set_source_rgba (color.red, color.green, color.blue, 3 * color.alpha / 4);
+            for (var j = 1; j < y_axis.div_minor; j++) {
+                move_to (0, y_minor);
+                line_to (w, y_minor);
+                set_line_width (0.5);
+                stroke ();
+                y_minor += h_minor;
+            }
+            set_dash (null, 0);
+
+            y_minor = (h_major * (i + 1)) + h_minor;
+
+            if (i > 0) {
+                set_source_rgba (color.red, color.green, color.blue, color.alpha);
+                move_to (0, y_major);
+                line_to (w, y_major);
+                set_line_width (1.0);
+                stroke ();
+                y_major += h_major;
+            }
+        }
+    }
+}
+
 [Compact]
 private class Dactl.ChartGrid : Cairo.Context {
 
@@ -82,11 +201,13 @@ private class Dactl.Line : Cairo.Context {
             var p1 = data[i];
             var p2 = data[i + 1];
 
-            //stdout.printf ("%d of %d - %.3f : %.3f - %.3f : %.3f\n", i + 1, data.length, p1.x, p1.y, p2.x, p2.y);
+            if (!((p1 == null) || (p2 == null))) {
+                /*stdout.printf ("%d of %d - %.3f : %.3f - %.3f : %.3f\n", i + 1, data.length, p1.x, p1.y, p2.x, p2.y);*/
 
-            /* Draw the line segment */
-            move_to (p1.x, p1.y);
-            line_to (p2.x, p2.y);
+                /* Draw the line segment */
+                move_to (p1.x, p1.y);
+                line_to (p2.x, p2.y);
+            }
         }
 
         stroke ();
@@ -111,6 +232,7 @@ private class Dactl.Polyline : Cairo.Context {
             var point = data[i];
             x = point.x;
             y = point.y;
+            debug ("x: %.3f y: %.3f", x, y);
 
             if ((i != 0) && (i != data.length - 1)) {
                 // calculate left hand point data

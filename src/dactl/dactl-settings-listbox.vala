@@ -17,27 +17,31 @@ public class Dactl.SettingsListBox : Gtk.ListBox {
         foreach (GLib.ParamSpec spec in svalues.keys) {
             Value value = svalues.get (spec).value;
 
-            debug ("%s: %s %s nick: %s\n", spec.get_name (),
-                                                  spec.value_type.name (),
-                                                  value.strdup_contents (),
-                                                  spec.get_nick ());
+            if (spec.owner_type.name ().contains ("Cld" ) ||
+                spec.owner_type.name ().contains ("Dactl")) {
 
-            var box = new Dactl.PropertyBox.from_data (spec, value);
-            box.request_choices.connect ((source, type) => {
-                request_choices (box, type);
-            });
+                debug ("%s: %s %s nick: %s\n", spec.get_name (),
+                                                    spec.value_type.name (),
+                                                    value.strdup_contents (),
+                                                    spec.get_nick ());
 
-            box.notify["value"].connect (() => {
-                debug ("%s %s", box.spec.get_name (), box.value.type ().name ());
-                new_data (box.spec, box.value);
-            });
+                var box = new Dactl.PropertyBox.from_data (spec, value);
+                box.request_choices.connect ((source, type) => {
+                    request_choices (box, type);
+                });
 
-            size_group.add_widget (box.box_labels);
+                box.notify["value"].connect (() => {
+                    debug ("%s %s", box.spec.get_name (), box.value.type ().name ());
+                    new_data (box.spec, box.value);
+                });
 
-            box.request_choices (value.type ());
-            var row = new Gtk.ListBoxRow ();
-            row.add (box);
-            add (row);
+                size_group.add_widget (box.box_labels);
+
+                box.request_choices (value.type ());
+                var row = new Gtk.ListBoxRow ();
+                row.add (box);
+                add (row);
+            }
         }
 
         /* Sorts rows by sensitivity then alphabetically */
@@ -94,6 +98,7 @@ public class Dactl.PropertyBox : Gtk.Box {
          */
 
         var type = value.type ();
+        debug ("%s", type.name ());
         if (type.is_a (typeof (string))) {
             make_string ();
         } else if (type.is_a (typeof (double))) {
@@ -110,6 +115,8 @@ public class Dactl.PropertyBox : Gtk.Box {
             make_gfile ();
         } else if (type.is_enum ()) {
             make_enum ();
+        } else if (type.is_flags ()) {
+            make_flags ();
         } else if (type.is_a (typeof (Gdk.RGBA))) {
             make_rgba ();
         } else {
@@ -334,6 +341,34 @@ public class Dactl.PropertyBox : Gtk.Box {
         }
 
         pack_start (combo);
+    }
+
+    private void make_flags () {
+        /* FlagsClass has a bug that is fixed by FlagsClass2 */
+        GLib.FlagsClass2 flagsc = (FlagsClass2)value.type ().class_ref ();
+        Gtk.ButtonBox box = new Gtk.ButtonBox (Gtk.Orientation.VERTICAL);
+        box.set_layout (Gtk.ButtonBoxStyle.START);
+        var type = value.type ();
+        GLib.Value val = Value (type);
+
+        foreach (var flags_value in flagsc.values) {
+            var button = new Gtk.CheckButton.with_label (flags_value.value_name);
+            if ((value.get_flags () & flags_value.value) == flags_value.value)
+                button.set_active (true);
+            button.toggled.connect (() => {
+
+                if (button.get_active ()) {
+                    val.set_flags (value.get_flags () | flags_value.value);
+                } else {
+                    val.set_flags (value.get_flags () & ~flags_value.value);
+                }
+
+                value = val;
+            });
+            box.add (button);
+        }
+
+        pack_start (box);
     }
 
     private void make_rgba () {

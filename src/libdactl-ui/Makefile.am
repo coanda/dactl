@@ -22,6 +22,7 @@ libdactl_ui_0_3_la_SOURCES = \
 
 libdactl_ui_0_3_la_VALAFLAGS = \
 	--target-glib=2.38 --gresources $(gresource_file) \
+	--vapidir=$(top_srcdir)/vapi \
 	-H dactl-ui.h -C --library=dactl-ui-0.3 \
 	--gir=Dactl-0.3.gir --pkg posix \
 	$(LIBDACTL_UI_DEPS_VALAFLAGS) \

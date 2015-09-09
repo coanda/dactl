@@ -71,7 +71,7 @@ VALAFLAGS="--enable-deprecated --target-glib=2.38 $VALAFLAGS"
 
 dnl Need to work these in to simplify checking
 DACTL_BASE_MODULES="gee-0.8 libxml-2.0"
-DACTL_BASE_MODULES_VALAFLAGS="--pkg gee-0.8 --pkg libxml-2.0"
+DACTL_BASE_MODULES_VALAFLAGS="--pkg gee-0.8 --pkg libxml-2.0 --pkg glib-extra"
 
 PKG_CHECK_MODULES([LIBDACTL_CORE_DEPS], [$DACTL_BASE_MODULES gio-2.0 gmodule-2.0])
 LIBDACTL_CORE_DEPS_VALAFLAGS="$DACTL_BASE_MODULES_VALAFLAGS --pkg gio-2.0 --pkg gmodule-2.0"

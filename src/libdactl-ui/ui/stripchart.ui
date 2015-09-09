@@ -77,7 +77,7 @@
         <property name="transition_type">slide-left</property>
         <property name="transition_duration">400</property>
         <child>
-          <object class="GtkScrolledWindow" id="scrolledwindow1">
+          <object class="GtkScrolledWindow" id="_settings_menu">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hscrollbar_policy">never</property>

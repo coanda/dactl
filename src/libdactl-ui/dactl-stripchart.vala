@@ -1,3 +1,415 @@
+/**
+ * @deprecated [0.4.0]
+ *
+ * Changed name from Trace to StripChartTrace while refactoring
+ */
+public class Dactl.StripChartTrace : GLib.Object, Dactl.Object, Dactl.Buildable {
+
+    private Xml.Node* _node;
+
+    private string _xml = """
+        <object id=\"ai-ctl0\" type=\"ai\" ref=\"cld://ai0\"/>
+    """;
+
+    private string _xsd = """
+        <xs:element name="object">
+          <xs:attribute name="id" type="xs:string" use="required"/>
+          <xs:attribute name="type" type="xs:string" use="required"/>
+          <xs:attribute name="ref" type="xs:string" use="required"/>
+        </xs:element>
+    """;
+
+    /**
+     * {@inheritDoc}
+     */
+    public string id { get; set; default = "trace0"; }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual string xml {
+        get { return _xml; }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual string xsd {
+        get { return _xsd; }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual Xml.Node* node {
+        get {
+            return _node;
+        }
+        set {
+            _node = value;
+        }
+    }
+
+    public string ch_ref { get; set; }
+
+    private weak Cld.Channel _channel;
+    public Cld.Channel channel {
+        get { return _channel; }
+        set {
+            if ((value as Cld.Object).uri == ch_ref) {
+                _channel = value;
+                channel_isset = true;
+
+                /* Wait for channel requirement to be satisfied */
+                (_channel as Cld.ScalableChannel).new_value.connect (new_value_cb);
+            }
+        }
+    }
+
+    //public bool channel_isset { get; private set; default = false; }
+
+    public bool channel_isset { get; private set; default = false; }
+
+    public bool highlight { get; set; default = false; }
+
+    /**
+     * Timeout in milliseconds duration to accumulate values over.
+     * XXX FIXME Is this needed for anything???
+     */
+    public int duration { get; set; default = 10; }
+
+    private int _buffer_size = 11;
+    /**
+     * Size of the buffer in samples.
+     * XXX: buffer resize is completely untested
+     */
+    public int buffer_size {
+        get { return _buffer_size - 1; }
+        set {
+            int n = value + 1;
+            if (value != _buffer_size) {
+                lock (buffer) {
+                    /* Resizing the buffer involves repositioning the elements */
+                    if (n < _buffer_size) {
+                        for (int i = 0; i < n - 1; i++)
+                            buffer[i] = buffer[i + 1];
+                        buffer.resize (n - 1);
+                    } else {
+                        //buffer.resize (n - 1);
+                        buffer.resize (n);
+                        for (int i = n - 1; i > n - _buffer_size - 1; i--) {
+                            buffer [i] = buffer [i - (n - _buffer_size)];
+                        }
+                        for (int i = 0; i < (n - buffer_size); i++) {
+                            buffer [i] = 0;
+                        }
+                        buffer.resize (n - 1);
+                    }
+                }
+                _buffer_size = n;
+                buffer_size_changed (_buffer_size);
+            }
+        }
+    }
+    /**
+     * Which simple drawing type to use to display the trace data.
+     */
+    public Dactl.TraceDrawType draw_type { get; set; default = Dactl.TraceDrawType.BAR; }
+
+    /**
+     * Line width to use for drawing.
+     */
+    public double line_weight { get; set; default = 1.0; }
+
+    private double initial_line_weight = 1.0;
+
+    /**
+     * Textual representation of the color to use, could be anything from
+     * the file rgb.txt, a hexadecimal value as eg. #FFF/#FF00FF/#FF00FF00,
+     * or decimal value as eg. rgb(255,0,255)/rgba(255,0,255,0.0).
+     */
+    private string color_spec { get; set; default = "black"; }
+
+    private Gdk.RGBA _color;
+
+    public Gdk.RGBA color  {
+        get { return _color; }
+        set {
+            _color = value;
+            color_spec = color.to_string ();
+        }
+    }
+
+    private Gee.List<Dactl.Point> _window = null;
+    /**
+     * Window of data to draw.
+     */
+    public Gee.List<Dactl.Point> window {
+        get {
+            /* Set default data whenever the window has be nullified */
+            if (_window == null) {
+                _window = new Gee.ArrayList<Dactl.Point> ();
+                for (int i = 0; i < _window_size; i++)
+                    _window.add (new Dactl.Point (0.0, 0.0));
+            }
+            return _window;
+        }
+        private set { _window = value; }
+    }
+
+    /* FIXME: add a n_division property for public access, window_size should
+     *        for internal use */
+
+    private int _window_size = 11;
+    /**
+     * Number of samples to use for the window.
+     * FIXME: setting the window size should resize the window
+     */
+    public int window_size {
+        get { return _window_size - 1; }
+        set {
+            int n = value + 1;
+            /* XXX Removed this to fix chart resizing problem */
+//            if (value != _window_size) {
+                lock (window) {
+                    /* Resizing is just dropping elements at the head */
+                    if (n < _window_size) {
+                        for (int i = 0; i < _window_size - n; i++)
+                            _window.remove_at (0);
+                    } else {
+                        for (int i = 0; i < n - _window_size; i++)
+                            _window.add (new Dactl.Point (0.0, 0.0));
+                    }
+                }
+//            }
+            _window_size = n;
+            window_size_changed (_window_size);
+        }
+    }
+
+    private int _stride = 1;
+    /**
+     * Data sampling stride for the buffer - window.
+     */
+    public int stride {
+        get { return _stride; }
+        set {
+            lock (window) {
+                _stride = (value > 0) ? value : 1;
+            }
+        }
+    }
+
+    private int nth_sample = 0;
+
+    /**
+     * Measured data from the connect channel.
+     */
+    private double[] buffer;
+
+    /**
+     * Emitted when the trace view window has been resized.
+     */
+    public signal void window_size_changed (int size);
+
+    /**
+     * Emitted when the buffer has been resized.
+     */
+    public signal void buffer_size_changed (int size);
+
+    /**
+     * Default construction.
+     */
+    construct {
+        _color = Gdk.RGBA ();
+    }
+
+    public StripChartTrace () {
+        buffer = new double[buffer_size];
+        connect_signals ();
+    }
+
+    /**
+     * Construction using an XML node.
+     */
+    public StripChartTrace.from_xml_node (Xml.Node *node) {
+        build_from_xml_node (node);
+        buffer = new double[buffer_size];
+        connect_signals ();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void build_from_xml_node (Xml.Node *node) {
+        if (node->type == Xml.ElementType.ELEMENT_NODE &&
+            node->type != Xml.ElementType.COMMENT_NODE) {
+            id = node->get_prop ("id");
+            ch_ref = node->get_prop ("ref");
+            this.node = node;
+
+            /* Iterate through node children */
+            for (Xml.Node *iter = node->children; iter != null; iter = iter->next) {
+                if (iter->name == "property") {
+                    switch (iter->get_prop ("name")) {
+                        case "buffer-size":
+                            buffer_size = int.parse (iter->get_content ());
+                            break;
+                        case "draw-type":
+                            draw_type = Dactl.TraceDrawType.parse (iter->get_content ());
+                            break;
+                        case "line-weight":
+                            line_weight = double.parse (iter->get_content ());
+                            initial_line_weight = line_weight;
+                            break;
+                        case "color":
+                            color_spec = iter->get_content ();
+                            _color.parse (color_spec);
+                            break;
+                        case "stride":
+                            stride = int.parse (iter->get_content ());
+                            break;
+                        case "window-size":
+                            window_size = int.parse (iter->get_content ());
+                            break;
+                        case "duration":
+                            var value = iter->get_content ();
+                            var regex = /^([0-9]*)([a-zA-Z]*)$/;
+                            GLib.MatchInfo match;
+                            regex.match (value, 0, out match);
+                            var time = match.fetch (1);
+                            var units = match.fetch (2);
+                            var multiplier = 1;
+
+                            if (units != "") {
+                                switch (units.down ()) {
+                                    case "ms":
+                                        multiplier = 1;
+                                        break;
+                                    case "s":
+                                        multiplier = 1000;
+                                        break;
+                                    case "m":
+                                        multiplier = 60000;
+                                        break;
+                                    case "h":
+                                        multiplier = 3600000;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+
+                            duration = int.parse (time) * multiplier;
+
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        connect_notify_signals ();
+    }
+
+    /**
+     * Connect all notify signals to update node
+     */
+    protected void connect_notify_signals () {
+        Type type = get_type ();
+        ObjectClass ocl = (ObjectClass)type.class_ref ();
+
+        foreach (ParamSpec spec in ocl.list_properties ()) {
+            notify[spec.get_name ()].connect ((s, p) => {
+                update_node ();
+            });
+        }
+    }
+
+    /**
+     * Update the XML Node for this object.
+     */
+    private void update_node () {
+        if (node->type == Xml.ElementType.ELEMENT_NODE &&
+            node->type != Xml.ElementType.COMMENT_NODE) {
+            /* iterate through node children */
+            for (Xml.Node *iter = node->children;
+                 iter != null;
+                 iter = iter->next) {
+                if (iter->name == "property") {
+                    switch (iter->get_prop ("name")) {
+                        case "buffer-size":
+                            iter->set_content ("%d".printf (buffer_size));
+                            break;
+                        case "draw-type":
+                            iter->set_content (draw_type.to_string ());
+                            break;
+                        case "line-weight":
+                            iter->set_content (line_weight.to_string ());
+                            break;
+                        case "color":
+                            iter->set_content (color_spec);
+                            break;
+                        case "stride":
+                            /* XXX FIXME Saving this causes problem with charts */
+                            //iter->set_content ("%d".printf (stride));
+                            break;
+                        case "window-size":
+                            /* XXX FIXME Saving this causes problem with charts */
+                            //iter->set_content ("%d".printf (window_size));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void connect_signals () {
+        this.notify["highlight"].connect (() => {
+            if (highlight)
+                line_weight = initial_line_weight * 3.0;
+            else
+                line_weight = initial_line_weight;
+        });
+    }
+
+    private void new_value_cb (string id, double value) {
+        if (channel_isset) {
+            /* Simple rotate left by one value */
+            lock (buffer) {
+                for (var i = 0; i < _buffer_size - 1; i++) {
+
+                    buffer[i] = buffer[i + 1];
+                }
+                buffer[_buffer_size - 1] = value;
+            }
+
+            nth_sample++;
+
+            /* Update the window with the required data */
+            if (nth_sample >= stride) {
+
+                lock (window) {
+                    for (int i = 0; i < window.size; i++) {
+                        int pos = buffer.length - (i * stride);
+                        var point = _window.get ((window.size - 1) - i);
+                        point.y = buffer[pos];
+                    }
+//                    int x = buffer.length - ((window.size - 1) * stride);
+//                    stdout.printf ("buffer [%d] %.3f buffer [%d], %.3f\n",
+//                                        buffer.length,
+//                                        buffer[buffer.length],
+//                                        buffer.length - 1,
+//                                        buffer[buffer.length -1]);
+                }
+                nth_sample = 0;
+            }
+        }
+    }
+}
+
 private class Dactl.StripChartCanvas : Dactl.Canvas {
 
     public weak Dactl.Axis t_axis { get; set; }
@@ -31,7 +443,7 @@ private class Dactl.StripChartCanvas : Dactl.Canvas {
 
         set_size_request (320, 240);
 
-        _traces = new Gee.TreeMap<string, Dactl.Trace> ();
+        _traces = new Gee.TreeMap<string, Dactl.StripChartTrace> ();
     }
 
     public StripChartCanvas () {
@@ -96,7 +508,11 @@ private class Dactl.StripChartCanvas : Dactl.Canvas {
                 blue = 0.5,
                 alpha = 1.0
             };
-            var grid = new Dactl.ChartGrid (grid_surface);
+            /**
+             * FIXME Strip chart should use a generic ChartGrid instead of StripChartGrid. This is here to allow for
+             * code refactoring without breaking StripChart.
+             */
+            var grid = new Dactl.StripChartGrid (grid_surface);
 
             if ((parent as Dactl.StripChart).flags.is_set (Dactl.ChartFlag.DRAW_GRID_BORDER)) {
                 grid.set_source_rgba (grid_color.red, grid_color.green, grid_color.blue, grid_color.alpha);
@@ -193,11 +609,11 @@ private class Dactl.StripChartCanvas : Dactl.Canvas {
                                                     allocation.height);
         foreach (var trace in traces.values) {
 
-            //var data = (trace as Dactl.Trace).window.to_array ();
-            Dactl.Point[] data = new Dactl.Point[(trace as Dactl.Trace).window_size + 1];
+            //var data = (trace as Dactl.StripChartTrace).window.to_array ();
+            Dactl.Point[] data = new Dactl.Point[(trace as Dactl.StripChartTrace).window_size + 1];
             //for (var i = 0; i < data.length - 1; i++) {
             for (var i = 0; i < data.length; i++) {
-                var point = (trace as Dactl.Trace).window.get (i);
+                var point = (trace as Dactl.StripChartTrace).window.get (i);
                 data[i] = new Dactl.Point (0.0, point.y);
             }
 
@@ -217,13 +633,13 @@ private class Dactl.StripChartCanvas : Dactl.Canvas {
             }
 
             /*var color = Gdk.RGBA ();*/
-            /*color.parse ((trace as Dactl.Trace).color_spec);*/
-            var color = (trace as Dactl.Trace).color;
+            /*color.parse ((trace as Dactl.StripChartTrace).color_spec);*/
+            var color = (trace as Dactl.StripChartTrace).color;
 
-            switch ((trace as Dactl.Trace).draw_type) {
+            switch ((trace as Dactl.StripChartTrace).draw_type) {
                 case Dactl.TraceDrawType.BAR:
                     var stencil = new Dactl.Bar (trace_surface);
-                    stencil.set_line_width ((trace as Dactl.Trace).line_weight);
+                    stencil.set_line_width ((trace as Dactl.StripChartTrace).line_weight);
                     stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
                     var y_origin = grid_h * (1 - ((0 - y_axis.min) /
                                                     (y_axis.max - y_axis.min)));
@@ -238,7 +654,7 @@ private class Dactl.StripChartCanvas : Dactl.Canvas {
                     break;
                 case Dactl.TraceDrawType.LINE:
                     var stencil = new Dactl.Line (trace_surface);
-                    stencil.set_line_width ((trace as Dactl.Trace).line_weight);
+                    stencil.set_line_width ((trace as Dactl.StripChartTrace).line_weight);
                     stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
                     stencil.draw (data);
                     cr.set_operator (Cairo.Operator.OVER);
@@ -247,7 +663,7 @@ private class Dactl.StripChartCanvas : Dactl.Canvas {
                     break;
                 case Dactl.TraceDrawType.POLYLINE:
                     var stencil = new Dactl.Polyline (trace_surface);
-                    stencil.set_line_width ((trace as Dactl.Trace).line_weight);
+                    stencil.set_line_width ((trace as Dactl.StripChartTrace).line_weight);
                     stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
                     stencil.draw (data);
                     cr.set_operator (Cairo.Operator.OVER);
@@ -256,7 +672,7 @@ private class Dactl.StripChartCanvas : Dactl.Canvas {
                     break;
                 case Dactl.TraceDrawType.SCATTER:
                     var stencil = new Dactl.Scatter (trace_surface);
-                    stencil.set_line_width ((trace as Dactl.Trace).line_weight);
+                    stencil.set_line_width ((trace as Dactl.StripChartTrace).line_weight);
                     stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
                     stencil.draw (data);
                     cr.set_operator (Cairo.Operator.OVER);
@@ -398,7 +814,6 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     [GtkChild]
     private Gtk.SpinButton spinbutton_t_minor;
-
     /**
      * Common object construction.
      */
@@ -512,8 +927,8 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
                     if (type == "chart-axis") {
                         var axis = new Dactl.Axis.from_xml_node (iter);
                         this.add_child (axis);
-                    } else if (type == "chart-trace") {
-                        var trace = new Dactl.Trace.from_xml_node (iter);
+                    } else if (type == "stripchart-trace") {
+                        var trace = new Dactl.StripChartTrace.from_xml_node (iter);
                         this.add_child (trace);
                     }
                 }
@@ -579,13 +994,13 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
      * {@inheritDoc}
      */
     public virtual void offer_cld_object (Cld.Object object) {
-        var traces = get_object_map (typeof (Dactl.Trace));
+        var traces = get_object_map (typeof (Dactl.StripChartTrace));
         foreach (var trace in traces.values) {
-            if ((trace as Dactl.Trace).ch_ref == object.uri) {
+            if ((trace as Dactl.StripChartTrace).ch_ref == object.uri) {
                 message ("Assigning channel `%s' to `%s'", object.uri, trace.id);
-                (trace as Dactl.Trace).channel = (object as Cld.Channel);
+                (trace as Dactl.StripChartTrace).channel = (object as Cld.Channel);
             }
-            satisfied = (trace as Dactl.Trace).channel_isset;
+            satisfied = (trace as Dactl.StripChartTrace).channel_isset;
         }
 
         message ("Chart `%s' requirements satisfied: %s", id, satisfied.to_string ());
@@ -605,12 +1020,12 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
     }
 
     public void highlight_trace (string id) {
-        var traces = get_object_map (typeof (Dactl.Trace));
+        var traces = get_object_map (typeof (Dactl.StripChartTrace));
         foreach (var trace in traces.values) {
-            (trace as Dactl.Trace).highlight = false;
-            if ((trace as Dactl.Trace).ch_ref == id) {
+            (trace as Dactl.StripChartTrace).highlight = false;
+            if ((trace as Dactl.StripChartTrace).ch_ref == id) {
                 debug ("Chart `%s' highlighting `%s'", this.id, id);
-                (trace as Dactl.Trace).highlight = true;
+                (trace as Dactl.StripChartTrace).highlight = true;
             }
         }
     }
@@ -624,7 +1039,7 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
                 canvas.y_axis = axis as Dactl.Axis;
         }
 
-        var traces = get_object_map (typeof (Dactl.Trace));
+        var traces = get_object_map (typeof (Dactl.StripChartTrace));
         canvas.traces = traces;
     }
 
@@ -633,10 +1048,10 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
      */
     protected async void request_data () {
         while (!satisfied) {
-            var traces = get_object_map (typeof (Dactl.Trace));
+            var traces = get_object_map (typeof (Dactl.StripChartTrace));
             foreach (var trace in traces.values) {
-                if (!(trace as Dactl.Trace).channel_isset)
-                    request_object ((trace as Dactl.Trace).ch_ref);
+                if (!(trace as Dactl.StripChartTrace).channel_isset)
+                    request_object ((trace as Dactl.StripChartTrace).ch_ref);
             }
             // Try again in a second
             yield nap (1000);
@@ -676,13 +1091,13 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
     private void refresh () {
         update_max_min ();
 
-        var traces = get_children (typeof (Dactl.Trace));
+        var traces = get_children (typeof (Dactl.StripChartTrace));
         foreach (var trace in traces.values) {
-            (trace as Dactl.Trace).window_size = window_size_max;
-            if ((trace as Dactl.Trace).buffer_size < (window_size_max * stride_min)) {
-                (trace as Dactl.Trace).buffer_size = window_size_max * stride_min;
+            (trace as Dactl.StripChartTrace).window_size = window_size_max;
+            if ((trace as Dactl.StripChartTrace).buffer_size < (window_size_max * stride_min)) {
+                (trace as Dactl.StripChartTrace).buffer_size = window_size_max * stride_min;
             }
-            (trace as Dactl.Trace).stride = stride_min;
+            (trace as Dactl.StripChartTrace).stride = stride_min;
         }
 
             entry_title.set_text (title);
@@ -702,13 +1117,13 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
         window_size_max = 0;
         stride_min = int.MAX;
 
-        var traces = get_children (typeof (Dactl.Trace));
+        var traces = get_children (typeof (Dactl.StripChartTrace));
         foreach (var trace in traces.values) {
-            if ((trace as Dactl.Trace).window_size > window_size_max) {
-                window_size_max = (trace as Dactl.Trace).window_size;
+            if ((trace as Dactl.StripChartTrace).window_size > window_size_max) {
+                window_size_max = (trace as Dactl.StripChartTrace).window_size;
             }
-            if ((trace as Dactl.Trace).stride < stride_min) {
-                stride_min = (trace as Dactl.Trace).stride;
+            if ((trace as Dactl.StripChartTrace).stride < stride_min) {
+                stride_min = (trace as Dactl.StripChartTrace).stride;
             }
         }
     }
@@ -781,11 +1196,11 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
 
         stride_new = stride_new < 1 ? 1 : stride_new;
         canvas.t_axis.max = canvas.t_axis.min + window_size_max * stride_new / pps;
-        var traces = get_children (typeof (Dactl.Trace));
+        var traces = get_children (typeof (Dactl.StripChartTrace));
         foreach (var trace in traces.values) {
-            (trace as Dactl.Trace).stride = stride_new;
-            if ((trace as Dactl.Trace).buffer_size < (window_size_max * stride_new)) {
-                (trace as Dactl.Trace).buffer_size = window_size_max * stride_new;
+            (trace as Dactl.StripChartTrace).stride = stride_new;
+            if ((trace as Dactl.StripChartTrace).buffer_size < (window_size_max * stride_new)) {
+                (trace as Dactl.StripChartTrace).buffer_size = window_size_max * stride_new;
             }
         }
         spinbutton_delta_t.set_value (canvas.t_axis.max - canvas.t_axis.min);
@@ -802,9 +1217,9 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
         pts = pts <=0 ? 1 : pts;
         win_buf = window_size_max * stride_min;
 
-        var traces = get_children (typeof (Dactl.Trace));
+        var traces = get_children (typeof (Dactl.StripChartTrace));
         foreach (var trace in traces.values) {
-            pts_old = (trace as Dactl.Trace).window_size;
+            pts_old = (trace as Dactl.StripChartTrace).window_size;
             if (pts > win_buf) {
                 pts = win_buf;
             }
@@ -835,8 +1250,8 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
 
             pts = win_buf / num;
             spinbutton_points.set_value (pts);
-            (trace as Dactl.Trace).stride = (int) ((double) win_buf / (double) pts);
-            (trace as Dactl.Trace).window_size = pts;
+            (trace as Dactl.StripChartTrace).stride = (int) ((double) win_buf / (double) pts);
+            (trace as Dactl.StripChartTrace).window_size = pts;
         }
     }
 }

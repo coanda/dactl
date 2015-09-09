@@ -1,13 +1,14 @@
 [Flags]
 public enum Dactl.AxisFlag {
-    DRAW_LABEL          = 0x01,
-    DRAW_MINOR_TICKS    = 0x02,
-    DRAW_MAJOR_TICKS    = 0x04,
-    DRAW_MINOR_LABELS   = 0x08,
-    DRAW_MAJOR_LABELS   = 0x10,
-    DRAW_START_LABEL    = 0x20,
-    DRAW_END_LABEL      = 0x40,
-    ROTATE_LABEL        = 0x80;
+    DRAW_LABEL          = 0x001,
+    DRAW_MINOR_TICKS    = 0x002,
+    DRAW_MAJOR_TICKS    = 0x004,
+    DRAW_MINOR_LABELS   = 0x008,
+    DRAW_MAJOR_LABELS   = 0x010,
+    DRAW_START_LABEL    = 0x020,
+    DRAW_END_LABEL      = 0x040,
+    ROTATE_LABEL        = 0x080,
+    REVERSE_ORDER       = 0x100;
 
     public Dactl.AxisFlag set (Dactl.AxisFlag flag) {
         return (this | flag);
@@ -22,7 +23,7 @@ public enum Dactl.AxisFlag {
     }
 }
 
-public class Dactl.Axis : Gtk.Widget, Dactl.Buildable, Dactl.Object {
+public class Dactl.Axis : Dactl.Canvas, Dactl.Buildable, Dactl.Object {
 
     private Xml.Node* _node;
 
@@ -50,10 +51,17 @@ public class Dactl.Axis : Gtk.Widget, Dactl.Buildable, Dactl.Object {
         }
     }
 
-    public string id { get; set; }
-
     /* Axis label */
-    public string label { get; set; default = "Axis"; }
+    private string _label;
+    public string label {
+        get {
+            return _label;
+        }
+        set {
+            _label = value;
+        }
+        default = "Axis";
+    }
 
     public Dactl.AxisFlag flags { get; set; }
 
@@ -62,9 +70,27 @@ public class Dactl.Axis : Gtk.Widget, Dactl.Buildable, Dactl.Object {
     /* Orientation of the axis */
     public Dactl.Orientation orientation { get; set; default = Dactl.Orientation.HORIZONTAL; }
 
-    public double min { get; set; default = 0.0; }
+    private double _min = 0;
+    public double min {
+        get {
+            return _min;
+        }
+        set {
+            if (value < max)
+                _min = value;
+        }
+    }
 
-    public double max { get; set; default = 100.0; }
+    public double _max = 100;
+    public double max {
+        get {
+            return _max;
+        }
+        set {
+            if (value > min)
+                _max = value;
+        }
+    }
 
     public int div_major { get; set; default = 10; }
 
@@ -89,6 +115,8 @@ public class Dactl.Axis : Gtk.Widget, Dactl.Buildable, Dactl.Object {
     private double start_drag_x;
 
     private double start_drag_y;
+
+    private bool reversed = false;
 
     /**
      * {@inheritDoc}
@@ -237,6 +265,7 @@ public class Dactl.Axis : Gtk.Widget, Dactl.Buildable, Dactl.Object {
                 }
             }
         }
+        do_flags ();
         connect_notify_signals ();
     }
 
@@ -250,8 +279,17 @@ public class Dactl.Axis : Gtk.Widget, Dactl.Buildable, Dactl.Object {
         foreach (ParamSpec spec in ocl.list_properties ()) {
             notify[spec.get_name ()].connect ((s, p) => {
                 update_node ();
+                queue_draw ();
             });
         }
+
+        notify["flags"].connect ((s, p) => {
+            do_flags ();
+        });
+    }
+
+    private void do_flags () {
+
     }
 
     /**
@@ -284,6 +322,38 @@ public class Dactl.Axis : Gtk.Widget, Dactl.Buildable, Dactl.Object {
                         case "div-minor":
                             iter->set_content ("%d".printf (div_minor));
                             break;
+                        case "show-label":
+                            iter->set_content ("%s".printf (flags.is_set (
+                                      Dactl.AxisFlag.DRAW_LABEL).to_string ()));
+                            break;
+                        case "show-minor-ticks":
+                            iter->set_content ("%s".printf (flags.is_set (
+                                Dactl.AxisFlag.DRAW_MINOR_TICKS).to_string ()));
+                            break;
+                        case "show-major-ticks":
+                            iter->set_content ("%s".printf (flags.is_set (
+                                Dactl.AxisFlag.DRAW_MAJOR_TICKS).to_string ()));
+                            break;
+                        case "show-minor-labels":
+                            iter->set_content ("%s".printf (flags.is_set (
+                               Dactl.AxisFlag.DRAW_MINOR_LABELS).to_string ()));
+                            break;
+                        case "show-major-labels":
+                            iter->set_content ("%s".printf (flags.is_set (
+                               Dactl.AxisFlag.DRAW_MAJOR_LABELS).to_string ()));
+                            break;
+                        case "show-start-label":
+                            iter->set_content ("%s".printf (flags.is_set (
+                                Dactl.AxisFlag.DRAW_START_LABEL).to_string ()));
+                            break;
+                        case "show-end-label":
+                            iter->set_content ("%s".printf (flags.is_set (
+                                  Dactl.AxisFlag.DRAW_END_LABEL).to_string ()));
+                            break;
+                        case "rotate-label":
+                            iter->set_content ("%s".printf (flags.is_set (
+                                    Dactl.AxisFlag.ROTATE_LABEL).to_string ()));
+                            break;
                         default:
                             break;
                     }
@@ -295,33 +365,136 @@ public class Dactl.Axis : Gtk.Widget, Dactl.Buildable, Dactl.Object {
     /**
      * Draw callback.
      */
+    public override bool draw (Cairo.Context cr) {
+        var w = get_allocated_width ();
+        var h = get_allocated_height ();
+
+        int major_tick_height = 8;
+        int minor_tick_height = 5;
+
+        // ticks
+        var x = 0;
+        var y = 0;
+
+        GLib.List<Pango.Layout> tick_layout_list = new GLib.List<Pango.Layout> ();
+
+        for (var i = 0; i <= div_major; i++) {
+            string tick_label;
+            if (this.flags.is_set (Dactl.AxisFlag.REVERSE_ORDER)) {
+                tick_label = "%.1f".printf (min);
+                if (i > 0)
+                    tick_label = "%.1f".printf (min + (((max - min) / div_major) * i));
+            } else {
+
+                tick_label = "%.1f".printf (max);
+                if (i > 0)
+                    tick_label = "%.1f".printf (max - (((max - min) / div_major) * i));
+            }
+            var layout = create_pango_layout (tick_label);
+            /*
+             *var context = layout.get_context ();
+             *if (flags.is_set (Dactl.AxisFlag.ROTATE_LABEL))
+             *    context.set_base_gravity (Pango.Gravity.SOUTH);
+             *else {
+             *    context.set_base_gravity (Pango.Gravity.WEST);
+             *    message (">>>>>>>>");
+             *}
+             */
+
+            var desc = Pango.FontDescription.from_string ("Normal 100");
+            layout.set_font_description (desc);
+            string markup = "<span font='8'>%s</span>".printf (tick_label);
+            layout.set_markup (markup, -1);
+            tick_layout_list.append (layout);
+        }
+
+        cr.set_source_rgba (1.0, 1.0, 1.0, 1.0);
+        if (orientation == Dactl.Orientation.HORIZONTAL) {
+            for (var i = 0; i <= div_major; i++) {
+                x = i * w / div_major;
+                /* Shift the first one over a bit */
+                if (i == 0) {
+                    x += 1;
+                }
+
+                if (this.flags.is_set (Dactl.AxisFlag.DRAW_MAJOR_TICKS)) {
+                    cr.move_to (x, y);
+                    cr.line_to (x, major_tick_height);
+                    cr.set_line_width (1);
+                    cr.stroke ();
+                }
+
+                /* Draw label */
+                if (flags.is_set (Dactl.AxisFlag.DRAW_MAJOR_LABELS)) {
+                    int fontw, fonth;
+                    var layout = tick_layout_list.nth_data (div_major - i);
+                    layout.get_pixel_size (out fontw, out fonth);
+                    if (i == div_major)
+                        cr.move_to (x - fontw, y + major_tick_height + 2);
+                    else
+                        cr.move_to (x, y + major_tick_height + 2);
+                    Pango.cairo_update_layout (cr, layout);
+                    Pango.cairo_show_layout (cr, layout);
+                }
+            }
+
+            /* Draw minor ticks */
+            if (this.flags.is_set (Dactl.AxisFlag.DRAW_MINOR_TICKS)) {
+                for (var i = 0; i <= (div_major * div_minor); i++) {
+                    x = i * w / (div_major * div_minor);
+                    cr.move_to (x, y);
+                    cr.line_to (x, minor_tick_height);
+                    cr.set_line_width (0.5);
+                    cr.stroke ();
+                }
+            }
+        } else if (orientation == Dactl.Orientation.VERTICAL) {
+            x = w - major_tick_height;
+            for (var i = 0; i <= div_major; i++) {
+                y = i * h / div_major;
+                /* Shift the first one over a bit */
+                if (i == 0) {
+                    y += 1;
+                }
+
+                if (this.flags.is_set (Dactl.AxisFlag.DRAW_MAJOR_TICKS)) {
+                    cr.move_to (x, y);
+                    cr.line_to (w, y);
+                    cr.set_line_width (1);
+                    cr.stroke ();
+                }
+
+                /* Draw label */
+                if (flags.is_set (Dactl.AxisFlag.DRAW_MAJOR_LABELS)) {
+                    int fontw, fonth;
+                    /*var layout = tick_layout_list.nth_data (div_major - i);*/
+                    var layout = tick_layout_list.nth_data (i);
+                    layout.get_pixel_size (out fontw, out fonth);
+                    if (i == div_major)
+                        cr.move_to (0, y - fonth);
+                    else if (i == 0)
+                        cr.move_to (0, y);
+                    else
+                        cr.move_to (0, y - (fonth / 2));
+                    Pango.cairo_update_layout (cr, layout);
+                    Pango.cairo_show_layout (cr, layout);
+                }
+            }
+
+            /* Draw minor ticks */
+            if (this.flags.is_set (Dactl.AxisFlag.DRAW_MINOR_TICKS)) {
+                x = w - minor_tick_height;
+                for (var i = 0; i <= (div_major * div_minor); i++) {
+                    y = i * h / (div_major * div_minor);
+                    cr.move_to (x, y);
+                    cr.line_to (w, y);
+                    cr.set_line_width (0.5);
+                    cr.stroke ();
+                }
+            }
+        }
+
 /*
- *    public override bool draw (Cairo.Context cr) {
- *        var w = get_allocated_width ();
- *        var h = get_allocated_height ();
- *
- *        int major_tick_height = 8;
- *        int minor_tick_height = 5;
- *
- *        // ticks
- *        var x = 0;
- *        var y = 0;
- *
- *        GLib.List<Pango.Layout> tick_layout_list = new GLib.List<Pango.Layout> ();
- *
- *        for (var i = 0; i <= div_major; i++) {
- *            string tick_label = "%.1f".printf (min);
- *            if (i > 0)
- *                tick_label = "%.1f".printf (min + (((max - min) / div_major) * i));
- *            var layout = create_pango_layout (tick_label);
- *            var desc = Pango.FontDescription.from_string ("Normal 100");
- *            layout.set_font_description (desc);
- *            string markup = "<span font='8'>%s</span>".printf (tick_label);
- *            layout.set_markup (markup, -1);
- *            tick_layout_list.append (layout);
- *        }
- *
- *        //cr.set_source_rgba (0.0, 0.0, 0.0, 1.0);
  *
  *        for (var i = 0; i <= div_major; i++) {
  *            if (orientation == Dactl.Orientation.HORIZONTAL) {
@@ -392,9 +565,9 @@ public class Dactl.Axis : Gtk.Widget, Dactl.Buildable, Dactl.Object {
  *            }
  *        }
  *
- *        return false;
- *    }
  */
+        return false;
+    }
 
 /*
  *    public override bool scroll_event (Gdk.EventScroll event) {
