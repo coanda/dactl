@@ -172,6 +172,9 @@ public class Dactl.Box : Dactl.CompositeWidget {
                         case "chart":
                             object = new Dactl.Chart.from_xml_node (iter);
                             break;
+                        case "rt-chart":
+                            object = new Dactl.RTChart.from_xml_node (iter);
+                            break;
                         case "stripchart":
                             object = new Dactl.StripChart.from_xml_node (iter);
                             break;

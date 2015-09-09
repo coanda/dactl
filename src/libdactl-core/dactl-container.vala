@@ -17,10 +17,20 @@ public interface Dactl.Container : GLib.Object {
     /**
      * Add a object to the array list of objects
      *
-     * @param object object object to add to the list
+     * @param object object to add to the list
      */
     public virtual void add_child (Dactl.Object object) {
         objects.set (object.id, object);
+    }
+
+    /**
+     * Remove an object to the array list of objects
+     *
+     * @param object object to remove from the list
+     */
+    public virtual void remove_child (Dactl.Object object) {
+        GLib.Value value;
+        objects.unset (object.id, out value);
     }
 
     /**
