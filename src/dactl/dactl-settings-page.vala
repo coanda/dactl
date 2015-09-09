@@ -158,9 +158,9 @@ public class Dactl.PluginSettings : Dactl.CldSettingsPage {
     }
 }
 
-public class Dactl.ChartSettings : Dactl.NativeSettingsPage {
+public class Dactl.WidgetSettings : Dactl.NativeSettingsPage {
     construct {
-        var charts = app.model.get_object_map (typeof (Dactl.StripChart));
+        var charts = app.model.get_object_map (typeof (Dactl.CompositeWidget));
         (treeview as Dactl.NativeSettingsTreeView).generate (charts, 0);
         data = new Dactl.NativeSettingsData.from_map (charts);
 

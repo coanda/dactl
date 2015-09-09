@@ -8,6 +8,7 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-chart-axis.vala \
     dactl-chart-trace.vala \
     dactl-chart-widget.vala \
+    dactl-dataseries.vala \
     dactl-exec-control.vala \
     dactl-log-control.vala \
     dactl-grid.vala \
@@ -15,6 +16,8 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-pid-control.vala \
     dactl-plugin-control.vala \
     dactl-pnid.vala \
+    dactl-rt-chart.vala \
+    dactl-settable.vala \
     dactl-stripchart.vala \
     dactl-ui-factory.vala \
     dactl-video-processor.vala \

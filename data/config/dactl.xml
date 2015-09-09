@@ -91,7 +91,7 @@
             <ui:property name="homogeneous">true</ui:property>
             <ui:property name="orientation">vertical</ui:property>
             <ui:object id="chart0" type="stripchart">
-              <ui:property name="title">Example Chart</ui:property>
+              <ui:property name="title">Chart 1</ui:property>
               <ui:property name="height-min">100</ui:property>
               <ui:property name="width-min">100</ui:property>
               <ui:property name="points-per-second">100</ui:property>
@@ -111,7 +111,7 @@
                 <ui:property name="div-major">10</ui:property>
                 <ui:property name="div-minor">5</ui:property>
               </ui:object>
-              <ui:object id="tr0" type="chart-trace" ref="/daqctl0/dev0/ai02">
+              <ui:object id="tr0" type="chart-trace" ref="/daqctl0/dev0/ai00">
                 <ui:property name="buffer-size">5000</ui:property>
                 <ui:property name="color">red</ui:property>
                 <ui:property name="line-weight">1</ui:property>
@@ -131,7 +131,7 @@
                  -->
             </ui:object>
             <ui:object id="chart1" type="stripchart">
-              <ui:property name="title">Example Chart</ui:property>
+              <ui:property name="title">Chart 2</ui:property>
               <ui:property name="height-min">100</ui:property>
               <ui:property name="width-min">100</ui:property>
               <ui:property name="points-per-second">100</ui:property>
@@ -185,7 +185,7 @@
       <cld:object id="dev0" type="device" driver="comedi">
         <cld:property name="hardware">PCI-1710</cld:property>
         <cld:property name="type">input</cld:property>
-        <cld:property name="filename">/dev/comedi0</cld:property>
+        <cld:property name="filename">/dev/comedi1</cld:property>
         <cld:object id="tk0" type="task" ttype="comedi">
           <cld:property name="exec-type">polling</cld:property>
           <cld:property name="devref">/daqctl0/dev0</cld:property>

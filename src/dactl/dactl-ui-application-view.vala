@@ -38,6 +38,9 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     private Gtk.Stack layout;
 
     [GtkChild]
+    private Gtk.Revealer settings;
+
+    [GtkChild]
     private Dactl.Loader loader;
 
     [GtkChild]
@@ -45,6 +48,12 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
 
     [GtkChild]
     private Dactl.CsvExport export;
+
+    [GtkChild]
+    private Gtk.Box main_vbox;
+
+    [GtkChild]
+    private Gtk.Overlay overlay;
 
     private uint configure_id;
 
@@ -75,6 +84,8 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
 
         topbar.application_toolbar.title = title;
         topbar.application_toolbar.subtitle = model.config_filename;
+
+        settings.set_transition_type (Gtk.RevealerTransitionType.SLIDE_LEFT);
 
         setup ();
         load_style ();
@@ -207,6 +218,30 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         foreach (var treeview in treeviews.values) {
             (treeview as Dactl.ChannelTreeView).channel_selected.connect (treeview_channel_selected_cb);
         }
+
+        var settables = model.get_object_map (typeof (Dactl.Settable));
+        foreach (var settable in settables.values) {
+            (settable as Dactl.Settable).reveal_menu.connect ((settings_menu) => {
+                var style = settings_menu.get_style_context ();
+                style.add_class ("background");
+
+                if (settings_menu.parent == null) {
+                    settings.add (settings_menu);
+                }
+
+                /* Reveal the settings if hidden */
+                settings.set_reveal_child (!settings.get_reveal_child ());
+                if (settings.get_child () == settings_menu) {
+
+                } else {
+                    settings.remove (settings.get_child ());
+                    if (settings == null) message ("settings is null");
+                    if (settings_menu == null) message ("settings menu is null");
+                    settings_menu.reparent (settings);
+                    /*settings.add (settings_menu);*/
+                }
+            });
+        }
     }
 
     private void treeview_channel_selected_cb (string id) {
@@ -279,6 +314,8 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
             return true;
         } else if (event.keyval == Gdk.Key.Escape) {    // ESC -> cancel
             //topbar.click_cancel_button ();
+            /* Hide the revealed widget settings */
+            settings.set_reveal_child (false);
         }
 
         return false;
