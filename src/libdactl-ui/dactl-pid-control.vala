@@ -53,6 +53,9 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
     private Gtk.Label lbl_output;
 
     [GtkChild]
+    private Gtk.Label lbl_units_on;
+
+    [GtkChild]
     private Gtk.Revealer settings;
 
     [GtkChild]
@@ -149,7 +152,26 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
         build_from_xml_node (node);
 
         // Request CLD data
-        request_data.begin ();
+        request_data.begin ((obj, res) => {
+            var style_context = btn_sp.get_style_context ();
+            pid.notify["sp-channel-connected"].connect (() => {
+                if (pid.sp_channel_connected) {
+                    style_context.add_class ("readout");
+                } else {
+                    style_context.remove_class ("readout");
+                    /* Bump the control to get it to signal a value change */
+                    adjustment_sp.set_value (double.parse (btn_sp.get_text ()));
+                }
+            });
+
+            /* Update the setpoint button if the pid is running with the setpoint channel as input */
+            GLib.Timeout.add (300, () => {
+                if (pid.sp_channel_connected && pid.running)
+                    btn_sp.set_text ("%.3f".printf (pid.sp));
+
+                return true;
+            });
+        });
     }
 
     /**
@@ -201,10 +223,25 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
             adjustment_kp.value = pid.kp;
             adjustment_ki.value = pid.ki;
             adjustment_kd.value = pid.kd;
-             lbl_input.set_text (pid.pv.uri);
-             lbl_output.set_text (pid.mv.uri);
+            lbl_input.set_text (pid.pv.uri);
+            lbl_output.set_text (pid.mv.uri);
+            lbl_units_on.set_text (pid.mv.channel.calibration.units);
+            pid.mv.channel.calibration.bind_property ("units",
+                               lbl_units_on, "label", GLib.BindingFlags.DEFAULT);
         }
     }
+
+    /**
+     * Use methods to emulate an operator initated shutdown of the PID output
+     */
+    public void shutdown () {
+        if (pid.sp_channel_connected)
+            pid.disconnect_sp_channel ();
+        adjustment_output.value = 0;
+        adjustment_output_value_changed_cb ();
+        btn_control_stop_clicked_cb ();
+    }
+
 
     /**
      * {@inheritDoc}
@@ -224,7 +261,7 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
         /* XXX PID object should throw error on failed start */
         var pv = pid.get_object (pid.pv_id);
         adjustment_sp.value = ((pv as Cld.DataSeries).channel as Cld.ScalableChannel).scaled_value;
-        message ("process variable scaled_value: %.3f", ((pv as Cld.DataSeries).channel as Cld.ScalableChannel).scaled_value);
+        debug ("process variable scaled_value: %.3f", ((pv as Cld.DataSeries).channel as Cld.ScalableChannel).scaled_value);
         pid.start ();
     }
 
@@ -235,7 +272,7 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
         /* XXX PID object should throw error on failed stop */
         var mv = pid.get_object (pid.mv_id);
         adjustment_output.value = ((mv as Cld.DataSeries).channel as Cld.AOChannel).raw_value;
-        message ("manipulated variable raw_value: %.3f", ((mv as Cld.DataSeries).channel as Cld.AOChannel).raw_value);
+        debug ("manipulated variable raw_value: %.3f", ((mv as Cld.DataSeries).channel as Cld.AOChannel).raw_value);
         pid.stop ();
     }
 
@@ -253,7 +290,8 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     [GtkCallback]
     private void adjustment_sp_value_changed_cb () {
-        pid.sp = adjustment_sp.value;
+        if (!pid.sp_channel_connected)
+            pid.sp = adjustment_sp.value;
     }
 
     [GtkCallback]
