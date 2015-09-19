@@ -18,6 +18,14 @@
 @define-color tango_aluminum2 #d3d7cf;
 @define-color tango_aluminum3 #babdb6;
 
+.readout {
+    border-width: 2px;
+    border-color: @tango_aluminum2;
+    border-style: solid;
+    background-color: @tango_aluminum3;
+    color: @tango_scarlet_red3;
+}
+
 .separator {
     -GtkWidget-wide-separators: true;
     -GtkWidget-separator-height: 1;
