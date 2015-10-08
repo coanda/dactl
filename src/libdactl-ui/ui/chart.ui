@@ -21,8 +21,8 @@
         <property name="can_focus">False</property>
         <child>
           <object class="DactlChartCanvas" id="canvas">
-            <property name="width_request">400</property>
-            <property name="height_request">400</property>
+            <property name="width_request">-1</property>
+            <property name="height_request">-1</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="hexpand">True</property>
