@@ -139,6 +139,7 @@ public class Dactl.RTChart : Dactl.Chart, Dactl.Settable {
     private void connect_notify_signals () {
         Type type = get_type ();
         ObjectClass ocl = (ObjectClass)type.class_ref ();
+        var menu = settings_menu as Dactl.RTChartSettings;
 
         foreach (ParamSpec spec in ocl.list_properties ()) {
             notify[spec.get_name ()].connect ((s, p) => {
@@ -149,6 +150,25 @@ public class Dactl.RTChart : Dactl.Chart, Dactl.Settable {
         notify["refresh-ms"].connect (() => {
             start_timer ();
         });
+
+        menu.notify["x-axis-label"].connect (() => {
+            lbl_x_axis.set_text (menu.x_axis_label);
+        });
+
+        menu.notify["y-axis-label"].connect (() => {
+            lbl_y_axis.set_text (menu.y_axis_label);
+        });
+    }
+
+    public void highlight_trace (string id) {
+        var traces = get_object_map (typeof (Dactl.RTTrace));
+        foreach (var trace in traces.values) {
+            (trace as Dactl.RTTrace).highlight = false;
+            if ((trace as Dactl.RTTrace).dataseries.ch_ref == id) {
+                debug ("Chart `%s' highlighting `%s'", this.id, id);
+                (trace as Dactl.RTTrace).highlight = true;
+            }
+        }
     }
 
     /**
