@@ -255,6 +255,11 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         foreach (var chart in charts.values) {
             (chart as Dactl.StripChart).highlight_trace (id);
         }
+
+        charts = model.get_object_map (typeof (Dactl.RTChart));
+        foreach (var chart in charts.values) {
+            (chart as Dactl.RTChart).highlight_trace (id);
+        }
     }
 
     /**

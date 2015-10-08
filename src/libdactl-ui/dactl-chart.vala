@@ -111,12 +111,10 @@ protected class Dactl.ChartCanvas : Dactl.Canvas {
             return;
         }
 
-        var region = window.get_clip_region ();
+        /*var region = window.get_clip_region ();*/
         // Redraw the cairo canvas completely by exposing it
-        window.invalidate_region (region, true);
-        /*
-         *window.process_updates (true);
-         */
+        /*window.invalidate_region (region, true);*/
+        queue_draw ();
     }
 }
 
@@ -241,6 +239,11 @@ public class Dactl.Chart : Dactl.CompositeWidget {
         build_from_xml_node (node);
         canvas.id = "%s-canvas0".printf (id);
         update_layout ();
+
+        drawables = get_object_map (typeof (Dactl.Drawable));
+        do_flags ();
+        connect_notify_signals ();
+
         show_all ();
     }
 
@@ -352,10 +355,6 @@ public class Dactl.Chart : Dactl.CompositeWidget {
                 }
             }
         }
-
-        drawables = get_object_map (typeof (Dactl.Drawable));
-        do_flags ();
-        connect_notify_signals ();
     }
 
     /**
@@ -415,10 +414,10 @@ public class Dactl.Chart : Dactl.CompositeWidget {
         flags.is_set (Dactl.ChartFlag.DRAW_GRID_BORDER)
         ? canvas.draw_grid_border = true : canvas.draw_grid_border = false;
 
+        var parent = lbl_x_axis.get_parent ();
         if (flags.is_set (Dactl.ChartFlag.DRAW_X_AXIS_LABEL)) {
             grid.attach (lbl_x_axis, 0, 2, 1, 1);
         } else {
-            var parent = lbl_x_axis.get_parent ();
             parent.remove (lbl_x_axis);
         }
 
@@ -428,10 +427,10 @@ public class Dactl.Chart : Dactl.CompositeWidget {
             lbl_x_axis.set_angle (0);
         }
 
+        parent = lbl_y_axis.get_parent ();
         if (flags.is_set (Dactl.ChartFlag.DRAW_Y_AXIS_LABEL)) {
             grid.attach (lbl_y_axis, 2, 4, 1, 1);
         } else {
-            var parent = lbl_y_axis.get_parent ();
             parent.remove (lbl_y_axis);
         }
 
@@ -537,10 +536,10 @@ public class Dactl.Chart : Dactl.CompositeWidget {
         var h = canvas.get_allocated_height ();
         var x_min = x_axis.min;
         var x_max = x_axis.max;
-        lbl_x_axis.set_text (x_axis.label);
+        /*lbl_x_axis.set_text (x_axis.label);*/
         var y_min = y_axis.min;
         var y_max = y_axis.max;
-        lbl_y_axis.set_text (y_axis.label);
+        /*lbl_y_axis.set_text (y_axis.label);*/
         var image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, w, h);
 
         foreach (var drawable in drawables.values) {

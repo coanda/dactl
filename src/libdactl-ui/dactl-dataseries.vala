@@ -228,13 +228,6 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
         debug ("id: %10s  x: %10.3f   y: %10.3f    sum: %10lld", id, point.x, point.y, sum);
         lock (data_primary) {
             (data_primary as Gee.Deque<Dactl.Point>).offer_head (point);
-
-            /*
-             *if (data_primary.size > delay_count) {
-             *    var dat = (int64)data_primary.get (data_primary.size - delay_count).x;
-             *    sum -= dat;
-             *}
-             */
             /* Trim the queue. */
             if (data_primary.size == (buffer_size + 1))
                 (data_primary as Gee.Deque<Dactl.Point>).poll_tail ();

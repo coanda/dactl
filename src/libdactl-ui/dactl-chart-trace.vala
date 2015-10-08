@@ -447,9 +447,10 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
  */
 public class Dactl.RTTrace : Dactl.Trace, Dactl.Container {
 
-    private int buffer_size;
     private Gee.Map<string, Dactl.Object> _objects;
-    private Dactl.DataSeries dataseries;
+    public Dactl.DataSeries dataseries { get; private set; }
+    public bool highlight { get; set; default = false; }
+
 
     /**
      * {@inheritDoc}
@@ -461,6 +462,7 @@ public class Dactl.RTTrace : Dactl.Trace, Dactl.Container {
 
     construct {
         objects = new Gee.TreeMap<string, Dactl.Object> ();
+        connect_signals ();
     }
 
     public RTTrace (Xml.Ns* ns,
@@ -526,6 +528,16 @@ public class Dactl.RTTrace : Dactl.Trace, Dactl.Container {
             }
         }
     }
+
+    private void connect_signals () {
+        this.notify["highlight"].connect (() => {
+            if (highlight)
+                line_weight = initial_line_weight * 3.0;
+            else
+                line_weight = initial_line_weight;
+        });
+    }
+
     /**
      * Update the data and redraw the trace
      */
