@@ -64,7 +64,8 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
                                                Dactl.Buildable, Dactl.Drawable {
 
     private Xml.Node* _node;
-    private Dactl.Point[] _raw_data;
+    /*private Dactl.Drawable.XYPoint[] _raw_data;*/
+    private Dactl.SimplePoint[] _raw_data;
     protected Gee.List<Dactl.Point> _pixel_data;
     private double x_min;
     private double x_max;
@@ -118,7 +119,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
     /**
      * {@inheritDoc}
      */
-    protected virtual Dactl.Point[] raw_data {
+    protected virtual Dactl.SimplePoint[] raw_data {
         get {
             return _raw_data;
         }
@@ -294,20 +295,19 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
         this.y_max = y_max;
         width = w;
         height = h;
-        if (raw_data != null)
+        if (raw_data.length > 2) {
             update ();
+        }
     }
 
     /**
      * Update the chart data array
      */
-    public void update () {
+    private void update () {
         /* scale the raw data to non-integer pixel values */
         double[] scaled_xdata = new double[raw_data.length];
         double[] scaled_ydata = new double[raw_data.length];
-        double[] tdata = new double[raw_data.length];
 
-        debug ("width: %d\theight: %d", width, height);
         /**
          * XXX FIXME It would be more efficient to only scale the data for the
          * points that are needed by the graph
@@ -315,27 +315,14 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
         for (int i = 0; i < raw_data.length; i++) {
             scaled_xdata[i] = width * (raw_data[i].x - x_min) / (x_max - x_min);
             scaled_ydata[i] = height * (1 - (raw_data[i].y - y_min) / (y_max - y_min));
-            tdata[i] =  i;
-            /*
-             *message ("t: %.3f  x:%.3f: %.3f   y:%.3f: %.3f",tdata[i], raw_data[i].x,
-             *                                    scaled_xdata[i],
-             *                                    raw_data[i].y,
-             *                                    scaled_ydata[i]);
-             */
         }
 
         /* Interpolate the scaled data */
+
         Gsl.InterpAccel accel = new Gsl.InterpAccel ();
         /* XXX Make sure the prototype in the Gsl vapi uses a pointer for argument 1 */
-        /*Gsl.Interp interp_x = new Gsl.Interp (Gsl.InterpTypes.linear, raw_data.length);*/
         Gsl.Interp interp_y = new Gsl.Interp (Gsl.InterpTypes.linear, raw_data.length);
-        /*interp_x.init (tdata, scaled_xdata, raw_data.length);*/
         interp_y.init (scaled_xdata, scaled_ydata, raw_data.length);
-        /*interp_y.init (tdata, scaled_ydata, raw_data.length);*/
-        /*
-         *Gsl.Spline spline = new Gsl.Spline (Gsl.InterpTypes.cspline, raw_data.length);
-         *spline.init (scaled_xdata, scaled_ydata, raw_data.length);
-         */
 
         /* Compute new pixel data */
         lock (pixel_data) {
@@ -348,16 +335,6 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
                 var t =(double)t1 * (1 + (x - x1)/(x2 - x1));
                 var deque = pixel_data as Gee.Deque<Dactl.Point>;
                 var point = new Dactl.Point (0, 0);
-/*
- *                if ((t <= tdata[0]) || (t >= tdata[raw_data.length - 1])) {
- *                    deque.offer_tail (null);
- *                } else {
- *
- *                    point.x = (int)interp_x.eval (tdata, scaled_xdata, t, accel);
- *                    point.y = (int)interp_y.eval (tdata, scaled_ydata, t, accel);
- *                    deque.offer_tail (point);
- *                }
- */
                 /* Check if x value is inside the x range of the raw data */
                 if ((x <= scaled_xdata[0]) || (x >= scaled_xdata[raw_data.length - 1])) {
                     deque.offer_tail (null);
@@ -367,13 +344,9 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
                     else
                         point.x = x;
 
-                    debug ("x: %d scaled x: %.3f -> %.3f", x, scaled_xdata[0]
-                                           , scaled_xdata[raw_data.length - 1]);
-                    /*point.y = (int)spline.eval (point.x, accel_y);*/
                     point.y = (int)interp_y.eval (scaled_xdata, scaled_ydata, x, accel);
                     deque.offer_tail (point);
                 }
-                debug ("%d/%d: t: %.3f  x: %.3f y: %.3f", i + 1, points, t, point.x, point.y);
             }
         }
     }
@@ -382,11 +355,14 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
      * {@inheritDoc}
      */
     public void draw (Cairo.Context cr) {
-        /*
-         *var trace_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32,
-         *                                                         width, height);
-         */
         var data = pixel_data.to_array ();
+        /* XXX FIXME Should not need to do this (remove the first non null data point) */
+        for (int i = 0; i < data.length; i++) {
+            if ((data[i] == null) && (i > 2)) {
+                data[i - 1] = null;
+                break;
+            }
+        }
 
         switch (draw_type) {
             /*
@@ -450,7 +426,7 @@ public class Dactl.RTTrace : Dactl.Trace, Dactl.Container {
     private Gee.Map<string, Dactl.Object> _objects;
     public Dactl.DataSeries dataseries { get; private set; }
     public bool highlight { get; set; default = false; }
-
+    private Dactl.SimplePoint [] points_array;
 
     /**
      * {@inheritDoc}
@@ -496,6 +472,11 @@ public class Dactl.RTTrace : Dactl.Trace, Dactl.Container {
     public RTTrace.from_xml_node (Xml.Node *node) {
         base.from_xml_node (node);
         build_from_xml_node (node);
+        /* Create a points array for improved performance */
+        points_array = new Dactl.SimplePoint[dataseries.buffer_size + 1];
+        for (int i = 0; i < dataseries.buffer_size + 1; i++) {
+            points_array [i] = Dactl.SimplePoint () { x = 0, y = 0 };
+        }
     }
 
     /**
@@ -543,34 +524,26 @@ public class Dactl.RTTrace : Dactl.Trace, Dactl.Container {
      */
     public void refresh () {
         double sum = 0;
-
         var ds_array = dataseries.to_array ();
-        var _raw = new Dactl.Point[ds_array.length];
-        double total = 0;
-        /*
-         *foreach (var point in ds_array) {
-         *    total += point.x;
-         *}
-         *var dx = 1e-6 * total / ds_array.length;
-         */
+        if (ds_array.length <= 2)
+          return;
+
+        var _raw = new Dactl.SimplePoint[ds_array.length];
         /* offset the x value by 2 samples to allow for end point interpolation */
-        if (ds_array.length > 2)
+        if (ds_array.length > 2 ) {
             sum = -1 * (ds_array[0].x + ds_array[1].x) / 1e6;
+        }
+
         for (int t = 0; t < ds_array.length; t++) {
             var x = ds_array[t].x / 1e6;
             /* Convert to seconds and accumulate */
-            var test = sum;
             sum = sum + x;
             var y = ds_array[t].y;
-            /*debug ("%.3f   %.3f", x, y);*/
-            var point = new Dactl.Point (sum, y);
-            _raw[t] = point;
+            points_array [t].x = sum;
+            points_array [t].y = y;
+            _raw[t] = points_array [t];
         }
-        debug ("raw length: %d", raw_data.length);
-
-        if (_raw.length > 5) {
-            raw_data = _raw;
-        }
+        raw_data = _raw;
     }
 
     /**
