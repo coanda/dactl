@@ -7,13 +7,12 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
 
     private Xml.Node* _node;
     private int _buffer_size;
-    private Gee.List<Dactl.Point> data_primary;
-    private Gee.List<Dactl.Point> data_secondary;
+    private Dactl.SimplePoint [] data;
+    private Dactl.SimplePoint [] array;
     private weak Cld.Channel _channel;
     private int64 then;
-    private int delay_count = 500;
-    private int64 sum = 0;
-    private int delay_time_us;
+    private int start = 0;
+    private int end = 1;
 
     public string ch_ref { get; set; }
 
@@ -24,18 +23,15 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
                 _channel = value;
                 satisfied = true;
                 (_channel as Cld.ScalableChannel).new_value.connect (new_value_cb);
-                /*transfer_data.begin ();*/
             }
         }
     }
 
     public int buffer_size {
         get { return _buffer_size; }
-        set {
-            lock (data_primary) {
-                data_primary.clear ();
-            }
-            _buffer_size = value;
+        private set {
+            /* Extend buffer for end point interpolation */
+            _buffer_size = value + 3;
         }
     }
 
@@ -89,8 +85,6 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
     protected bool satisfied { get; set; default = false; }
 
     construct {
-        data_primary = new Gee.LinkedList<Dactl.Point> ();
-        data_secondary = new Gee.LinkedList<Dactl.Point> ();
     }
 
     public DataSeries.from_xml_node (Xml.Node *node) {
@@ -113,6 +107,10 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
                     switch (iter->get_prop ("name")) {
                         case "buffer-size":
                             buffer_size = int.parse (iter->get_content ());
+                            /* create an empty slot */
+                            var point = new Dactl.SimplePoint ()
+                                             { x = double.NAN, y = double.NAN };
+                            data += point;
                             break;
                         default:
                             break;
@@ -128,8 +126,8 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
      */
     public void offer_cld_object (Cld.Object object) {
         if (ch_ref == object.uri) {
-            channel = (object as Cld.Channel);
             then = GLib.get_monotonic_time ();
+            channel = (object as Cld.Channel);
         }
     }
 
@@ -144,110 +142,49 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
         }
     }
 
-    /**
-     * XXX TBD Something like this could be used in a digital phase locked loop
-     * for retiming the output.
-     */
-/*
- *    private async void transfer_data () {
- *        GLib.SourceFunc callback = transfer_data.callback;
- *        bool first_pass = true;
- *        int j = 0;
- *
- *        GLib.Thread<int> thread = new GLib.Thread<int>.try ("bg_device_watch",  () => {
- *
- *            while (satisfied) {
- *                if ((data_primary.size <= (2 * buffer_size)) && first_pass) {
- *                    [> Copy an entry from primary to secondary <]
- *                    (data_secondary as Gee.Deque<Dactl.Point>).offer_tail (
- *                        (data_primary as Gee.Deque<Dactl.Point>).peek_head ());
- *
- *                } else if ((data_primary.size >= (2 * buffer_size)) && first_pass) {
- *                    [> Trim the queue. First pass is done <]
- *                    for (int i  =  0; i < (data_primary.size - buffer_size); i++) {
- *                        (data_primary as Gee.Deque<Dactl.Point>).poll_head ();
- *                        first_pass = false;
- *                    }
- *                } else if ((data_primary.size > buffer_size) && !first_pass) {
- *                    message ("2 %d %d %d", data_primary.size, data_secondary.size, delay_time_us);
- *                    [> Transfer an entry from the primary to the secondary queue <]
- *                    (data_secondary as Gee.Deque<Dactl.Point>).offer_tail (
- *                            (data_primary as Gee.Deque<Dactl.Point>).poll_head ());
- *                }
- *
- *                if (data_secondary.size > buffer_size) {
- *                    (data_primary as Gee.Deque<Dactl.Point>).poll_head ();
- *                }
- *
- *                [>GLib.Thread.usleep (delay_time_us);<]
- *            }
- *
- *            Idle.add ((owned) callback);
- *            return 0;
- *        });
- *    }
- */
-
-/*
- *    private void transfer_data () {
- *        bool first_pass = true;
- *
- *        if (satisfied) {
- *            if ((data_primary.size <= (2 * buffer_size)) && first_pass) {
- *                [> Copy an entry from primary to secondary <]
- *                (data_secondary as Gee.Deque<Dactl.Point>).offer_tail (
- *                    (data_primary as Gee.Deque<Dactl.Point>).peek_head ());
- *
- *            } else if ((data_primary.size >= (2 * buffer_size)) && first_pass) {
- *                [> Trim the queue. First pass is done <]
- *                for (int i  =  0; i < (data_primary.size - buffer_size); i++) {
- *                    (data_primary as Gee.Deque<Dactl.Point>).poll_head ();
- *                    first_pass = false;
- *                }
- *            } else if ((data_primary.size > buffer_size) && !first_pass) {
- *                message ("2 %d %d %d", data_primary.size, data_secondary.size, delay_time_us);
- *                [> Transfer an entry from the primary to the secondary queue <]
- *                (data_secondary as Gee.Deque<Dactl.Point>).offer_tail (
- *                        (data_primary as Gee.Deque<Dactl.Point>).poll_head ());
- *            }
- *
- *            if (data_secondary.size > buffer_size) {
- *                (data_primary as Gee.Deque<Dactl.Point>).poll_head ();
- *            }
- *        }
- *    }
- */
-
     private void new_value_cb (string id, double value) {
+        /* XXX FIXME Consider using absolute rather than differential timing */
         var now = GLib.get_monotonic_time ();
-
         var dt = now - then;
-        sum += dt;
         then = now;
-        var point = new Dactl.Point (dt, value);
-        debug ("id: %10s  x: %10.3f   y: %10.3f    sum: %10lld", id, point.x, point.y, sum);
-        lock (data_primary) {
-            (data_primary as Gee.Deque<Dactl.Point>).offer_head (point);
-            /* Trim the queue. */
-            if (data_primary.size == (buffer_size + 1))
-                (data_primary as Gee.Deque<Dactl.Point>).poll_tail ();
-            else if (data_primary.size > buffer_size) {
-                /* Buffer size must have changed. Trim multiple entries */
-                for (int i = 0; i < (data_primary.size - buffer_size); i++) {
-                    (data_primary as Gee.Deque<Dactl.Point>).poll_tail ();
-                }
+        var point = new Dactl.SimplePoint () { x = dt, y = value };
+
+        lock (data) {
+            if (end == buffer_size)
+                end = 0;
+
+            if (data.length < buffer_size) {
+                data += point;
+            } else {
+                start ++;
+                if (start == buffer_size)
+                    start = 0;
+                data [end] = point;
             }
         }
-        /*delay_time_us = (int)sum / delay_count;*/
-        /*transfer_data ();*/
+        end++;
     }
 
-    public Dactl.Point[] to_array () {
-        Dactl.Point[] array;
-        lock (data_primary) {
-            array = data_primary.to_array ();
-        }
+    public Dactl.SimplePoint[] to_array () {
+        int j = 0;
+        lock (data) {
+            for (int i = 0; i < data.length - 1; i++) {
+                j = (end - i - 1);
 
-        return array;
+                if (j < 0) {
+                    j = data.length + j;
+                }
+
+                if (array.length < data.length) {
+                    array += data [j];
+                    array [i] = data [j];
+                } else {
+                    array [i] = data [j];
+                }
+
+            }
+
+            return array;
+        }
     }
 }

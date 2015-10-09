@@ -80,6 +80,11 @@ DactlChannelTreeView {
     /*background-color: @plum1;*/
 }
 
+DactlPage GtkViewport {
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
 DactlPnid {
     background-color: @aluminum2;
 }
