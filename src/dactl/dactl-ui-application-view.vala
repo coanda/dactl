@@ -225,21 +225,14 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
                 var style = settings_menu.get_style_context ();
                 style.add_class ("background");
 
-                if (settings_menu.parent == null) {
-                    settings.add (settings_menu);
-                }
-
-                /* Reveal the settings if hidden */
-                settings.set_reveal_child (!settings.get_reveal_child ());
-                if (settings.get_child () == settings_menu) {
-
-                } else {
+                if (settings.get_child () != settings_menu) {
                     settings.remove (settings.get_child ());
-                    if (settings == null) message ("settings is null");
-                    if (settings_menu == null) message ("settings menu is null");
-                    settings_menu.reparent (settings);
-                    /*settings.add (settings_menu);*/
-                }
+                    settings.add (settings_menu);
+                    settings.set_reveal_child (true);
+                } else {
+
+                    /* Reveal the settings if hidden */
+                    settings.set_reveal_child (!settings.get_reveal_child ());
             });
         }
     }

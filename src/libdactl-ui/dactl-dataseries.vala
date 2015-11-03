@@ -7,6 +7,7 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
 
     private Xml.Node* _node;
     private int _buffer_size;
+    private int _stride = 1;
     private Dactl.SimplePoint [] data;
     private Dactl.SimplePoint [] array;
     private weak Cld.Channel _channel;
@@ -47,6 +48,14 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
           <xs:attribute name="ref" type="xs:string" use="required"/>
         </xs:element>
     """;
+
+    /**
+     * The number of channel data samples between buffer entries
+     */
+    public int stride {
+        get {return _stride; }
+        private set { _stride = value; }
+    }
 
     /**
      * {@inheritDoc}
@@ -112,6 +121,9 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
                                              { x = double.NAN, y = double.NAN };
                             data += point;
                             break;
+                        case "stride":
+                            stride = int.parse (iter->get_content ());
+                            break;
                         default:
                             break;
                     }
@@ -142,27 +154,32 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
         }
     }
 
+    int count = 0;
     private void new_value_cb (string id, double value) {
         /* XXX FIXME Consider using absolute rather than differential timing */
-        var now = GLib.get_monotonic_time ();
-        var dt = now - then;
-        then = now;
-        var point = new Dactl.SimplePoint () { x = dt, y = value };
+        count++;
+        if (count == stride) {
+            lock (data) {
+                var now = GLib.get_monotonic_time ();
+                var dt = now - then;
+                then = now;
+                var point = new Dactl.SimplePoint () { x = dt, y = value };
 
-        lock (data) {
-            if (end == buffer_size)
-                end = 0;
+                if (end == buffer_size)
+                    end = 0;
 
-            if (data.length < buffer_size) {
-                data += point;
-            } else {
-                start ++;
-                if (start == buffer_size)
-                    start = 0;
-                data [end] = point;
+                if (data.length < buffer_size) {
+                    data += point;
+                } else {
+                    start ++;
+                    if (start == buffer_size)
+                        start = 0;
+                    data [end] = point;
+                }
             }
+            end++;
+            count = 0;
         }
-        end++;
     }
 
     public Dactl.SimplePoint[] to_array () {
