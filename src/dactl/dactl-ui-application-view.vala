@@ -233,6 +233,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
 
                     /* Reveal the settings if hidden */
                     settings.set_reveal_child (!settings.get_reveal_child ());
+                }
             });
         }
     }
