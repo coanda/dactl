@@ -28,6 +28,7 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-rt-chart.vala \
     dactl-rt-chart-trace.vala \
     dactl-rt-multichannel-trace.vala \
+    dactl-rich-content-view.vala \
     dactl-settable.vala \
     dactl-stripchart.vala \
     dactl-ui-factory.vala \

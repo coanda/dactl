@@ -14,7 +14,7 @@ libdactl_core_0_3_la_SOURCES = \
 libdactl_core_0_3_la_VALAFLAGS = \
 	-H dactl-core.h -C --library=dactl-core-0.3 \
 	--gir=Dactl-0.3.gir \
-	--vapidir=$(srcdir) \
+	--vapidir=$(top_srcdir)/vapi \
 	--pkg posix \
 	--pkg linux \
 	$(LIBDACTL_CORE_DEPS_VALAFLAGS) \

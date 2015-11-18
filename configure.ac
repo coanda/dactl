@@ -185,9 +185,9 @@ PKG_CHECK_MODULES([DACTL_DEPS], [$DACTL_COMMON_MODULES gio-2.0 gmodule-2.0])
 DACTL_DEPS_VALAFLAGS="$DACTL_COMMON_MODULES_VALAFLAGS --pkg gio-2.0 --pkg gmodule-2.0"
 AC_SUBST([DACTL_DEPS_VALAFLAGS])
 
-PKG_CHECK_MODULES([DACTL_UI_DEPS], [gtk+-3.0 librsvg-2.0 gtksourceview-3.0 webkit2gtk-4.0 webkit2gtk-web-extension-4.0])
-DACTL_UI_MODULES="gtk+-3.0 librsvg-2.0 gtksourceview-3.0 webkit2gtk-4.0 webkit2gtk-web-extension-4.0"
-DACTL_UI_DEPS_VALAFLAGS="--pkg gtk+-3.0 --pkg cogl-1.0 --pkg librsvg-2.0 --pkg gtksourceview-3.0 --pkg webkit2gtk-4.0 --pkg webkit2gtk-web-extension-4.0"
+PKG_CHECK_MODULES([DACTL_UI_DEPS], [gtk+-3.0 librsvg-2.0 gtksourceview-3.0 webkitgtk-3.0 libsoup-2.4])
+DACTL_UI_MODULES="gtk+-3.0 librsvg-2.0 gtksourceview-3.0 webkitgtk-3.0 libsoup-2.4"
+DACTL_UI_DEPS_VALAFLAGS="--pkg gtk+-3.0 --pkg cogl-1.0 --pkg librsvg-2.0 --pkg gtksourceview-3.0 --pkg webkitgtk-3.0 --pkg libsoup-2.4"
 AC_SUBST([DACTL_UI_DEPS_VALAFLAGS])
 DACTL_PLUGIN_COMMON_VALAFLAGS="$DACTL_PLUGIN_COMMON_VALAFLAGS $DACTL_UI_DEPS_VALAFLAGS"
 

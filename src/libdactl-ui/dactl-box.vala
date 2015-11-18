@@ -208,6 +208,9 @@ public class Dactl.Box : Dactl.CompositeWidget {
                         case "video":
                             object = new Dactl.VideoProcessor.from_xml_node (iter);
                             break;
+                        case "rich-content":
+                            object = new Dactl.RichContentView.from_xml_node (iter);
+                            break;
                         default:
                             object = null;
                             break;
@@ -264,6 +267,8 @@ public class Dactl.Box : Dactl.CompositeWidget {
         if (object is Dactl.Box) {
             //child_set_property (object as Gtk.Widget, "expand", true);
             child_set_property (object as Gtk.Widget, "fill", true);
+        } else if (object is Dactl.RichContentView) {
+            child_set_property (object as Gtk.Widget, "expand", true);
         }
 
         show_all ();
