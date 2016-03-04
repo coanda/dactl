@@ -61,12 +61,9 @@ public class Dactl.PnidElement : GLib.Object, Dactl.Object, Dactl.Buildable {
         get { return _sensor; }
         set {
             var tokens = cld_ref.split (":");
-            message ("Waaaa! `%s' `%s'", (value as Cld.Object).uri, tokens[0]);
             if ((value as Cld.Object).uri == tokens[0]) {
                 _sensor = value;
                 sensor_isset = true;
-                if (sensor_isset)
-                    message ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             }
         }
     }
@@ -76,9 +73,16 @@ public class Dactl.PnidElement : GLib.Object, Dactl.Object, Dactl.Buildable {
      */
     public string svg_ref { get; set; }
 
+    public string format { get; set; }
+
     public double value { get; private set; }
 
     public bool sensor_isset { get; private set; default = false; }
+
+    public string ptype { get; set; }
+
+    construct {
+    }
 
     /**
      * Default construction.
@@ -111,8 +115,10 @@ public class Dactl.PnidElement : GLib.Object, Dactl.Object, Dactl.Buildable {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
             id = node->get_prop ("id");
+            ptype = node->get_prop ("type");
             cld_ref = node->get_prop ("cld-ref");
             svg_ref = node->get_prop ("svg-ref");
+            format = node->get_prop ("format");
         }
     }
 
@@ -206,24 +212,58 @@ private class Dactl.PnidCanvas : Dactl.Canvas {
          */
 
         foreach (var element in elements.values) {
-            try {
-                var xpath = "//svg:text[@id=\"%s\"]/svg:tspan".printf ((element as Dactl.PnidElement).svg_ref);
-                obj = ctx->eval_expression (xpath);
-                var nodes = obj->nodesetval;
-                var node = nodes->item (0);
+            if ((element as Dactl.PnidElement).ptype == "pnid-text") {
+                try {
+                    var xpath = "//svg:text[@id=\"%s\"]/svg:tspan".printf ((element as Dactl.PnidElement).svg_ref);
+                    obj = ctx->eval_expression (xpath);
+                    var nodes = obj->nodesetval;
+                    var node = nodes->item (0);
 
-                var tokens = (element as Dactl.PnidElement).cld_ref.split (":");
-                var prop = (tokens.length > 1) ? tokens[1] : "value";
-                debug (" > %s : %d", (element as Dactl.PnidElement).cld_ref, tokens.length);
+                    var tokens = (element as Dactl.PnidElement).cld_ref.split (":");
+                    var prop = (tokens.length > 1) ? tokens[1] : "value";
+                    debug (" > %s : %d", (element as Dactl.PnidElement).cld_ref, tokens.length);
 
-                /* Check if a property was requested, use the channel scaled value if not */
-                double fval;
-                (element as Dactl.PnidElement).sensor.get (prop, out fval);
-                var value = "%.2f".printf (fval);
-                debug ("%s - %s value: %s", tokens[0], prop, value);
-                node->set_content (value);
-            } catch (Cld.XmlError e) {
-                warning (e.message);
+                    /* Check if a property was requested, use the channel scaled value if not */
+                    double fval;
+                    (element as Dactl.PnidElement).sensor.get (prop, out fval);
+                    string val ="";
+
+                    if ((element as Dactl.PnidElement).format == null) {
+                        val = "%.2f".printf (fval);
+                    } else {
+                        val = (element as Dactl.PnidElement).format.printf (fval);
+                    }
+                    var value = val;
+
+                    debug ("%s - %s value: %s", tokens[0], prop, val);
+                    node->set_content (value);
+                } catch (Cld.XmlError e) {
+                    warning (e.message);
+                }
+            } else if ((element as Dactl.PnidElement).ptype == "pnid-rect") {
+
+                // Change the backgound color if in range
+                var sp = (element as Dactl.PnidElement).sensor.threshold_sp;
+                if (sp != double.NAN) {
+                    try {
+                        var xpath = "//svg:rect[@id=\"%s\"]".printf ("rect-"+(element as Dactl.PnidElement).svg_ref);
+                        obj = ctx->eval_expression (xpath);
+                        var nodes = obj->nodesetval;
+                        var node = nodes->item (0);
+                        var style = node->get_prop ("style");
+                        Regex regex = new Regex ("fill:#......");
+                        if ((element as Dactl.PnidElement).sensor.threshold_alarm_state) {
+                            debug ("1) alarm state: %s", (element as Dactl.PnidElement).sensor.threshold_alarm_state.to_string());
+                            style = regex.replace (style, style.length, 0, "fill:#00ff00");
+                        } else {
+                            debug ("2) alarm state: %s", (element as Dactl.PnidElement).sensor.threshold_alarm_state.to_string());
+                            style = regex.replace (style, style.length, 0, "fill:#ffffff");
+                        }
+                        node->set_prop ("style", style);
+                    } catch (Cld.XmlError e) {
+                        warning (e.message);
+                    }
+                }
             }
         }
 
@@ -447,6 +487,9 @@ public class Dactl.Pnid : Dactl.CompositeWidget, Dactl.CldAdapter {
                     if (type == "pnid-text") {
                         var text = new PnidElement.from_xml_node (iter);
                         add_child (text);
+                    } else if (type == "pnid-rect") {
+                        var rect = new PnidElement.from_xml_node (iter);
+                        add_child (rect);
                     }
                 }
             }
