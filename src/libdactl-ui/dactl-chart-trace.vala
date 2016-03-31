@@ -67,12 +67,12 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
     /*private Dactl.Drawable.XYPoint[] _raw_data;*/
     private Dactl.SimplePoint[] _raw_data;
     protected Gee.List<Dactl.Point> _pixel_data;
-    private double x_min;
-    private double x_max;
-    private double y_min;
-    private double y_max;
-    private int width = 100;
-    private int height = 100;
+    protected double x_min;
+    protected double x_max;
+    protected double y_min;
+    protected double y_max;
+    protected int width = 100;
+    protected int height = 100;
 
     private string _xml = """
         <ui:object id=\"trace-0\" type=\"chart-trace\" ttype=\"xy\"/>
@@ -296,7 +296,10 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
         width = w;
         height = h;
         if (raw_data.length > 2) {
-            update ();
+            if (this is Dactl.RTMultiChannelTrace)
+                (this as Dactl.RTMultiChannelTrace).update ();
+            else
+                update ();
         }
     }
 
@@ -312,16 +315,25 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
          * XXX FIXME It would be more efficient to only scale the data for the
          * points that are needed by the graph
          */
+        bool strictly_increasing = false;
         for (int i = 0; i < raw_data.length; i++) {
             scaled_xdata[i] = width * (raw_data[i].x - x_min) / (x_max - x_min);
+            if ((i == 0) || (scaled_xdata[i] > scaled_xdata[i - 1])) {
+                strictly_increasing = true;
+            } else {
+                strictly_increasing = false;
+            }
             scaled_ydata[i] = height * (1 - (raw_data[i].y - y_min) / (y_max - y_min));
         }
+        if (!strictly_increasing)
+            return;
 
         /* Interpolate the scaled data */
 
         Gsl.InterpAccel accel = new Gsl.InterpAccel ();
         /* XXX Make sure the prototype in the Gsl vapi uses a pointer for argument 1 */
         Gsl.Interp interp_y = new Gsl.Interp (Gsl.InterpTypes.linear, raw_data.length);
+
         interp_y.init (scaled_xdata, scaled_ydata, raw_data.length);
 
         /* Compute new pixel data */
@@ -357,12 +369,14 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
     public void draw (Cairo.Context cr) {
         var data = pixel_data.to_array ();
         /* XXX FIXME Should not need to do this (remove the first non null data point) */
-        for (int i = 0; i < data.length; i++) {
-            if ((data[i] == null) && (i > 2)) {
-                data[i - 1] = null;
-                break;
-            }
-        }
+        /*
+         *for (int i = 0; i < data.length; i++) {
+         *    if ((data[i] == null) && (i > 2)) {
+         *        data[i - 1] = null;
+         *        break;
+         *    }
+         *}
+         */
 
         switch (draw_type) {
             /*
@@ -415,141 +429,5 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
                 assert_not_reached ();
         }
 
-    }
-}
-
-/**
- * A chart trace that accesses a dataseries
- */
-public class Dactl.RTTrace : Dactl.Trace, Dactl.Container {
-
-    private Gee.Map<string, Dactl.Object> _objects;
-    public Dactl.DataSeries dataseries { get; private set; }
-    public bool highlight { get; set; default = false; }
-    private Dactl.SimplePoint [] points_array;
-
-    /**
-     * {@inheritDoc}
-     */
-    public Gee.Map<string, Dactl.Object> objects {
-        get { return _objects; }
-        set { update_objects (value); }
-    }
-
-    construct {
-        objects = new Gee.TreeMap<string, Dactl.Object> ();
-        connect_signals ();
-    }
-
-    public RTTrace (Xml.Ns* ns,
-                    string id,
-                    int points,
-                    Dactl.TraceDrawType draw_type,
-                    int line_weight,
-                    Gdk.RGBA color) {
-
-        this.id = id;
-        this.points = points;
-        this.draw_type = draw_type;
-        this.line_weight = line_weight;
-        this.color = color;
-
-        this.node = new Xml.Node (ns, id);
-        node->new_prop ("id", id);
-        node->new_prop ("type", "trace");
-        node->new_prop ("ttype", "real-time");
-
-        Xml.Node* color_node = new Xml.Node (ns, "property");
-        color_node->new_prop ("name", "color");
-        color_node->add_content (color.to_string ());
-
-        node->add_child (color_node);
-    }
-
-    /**
-     * Construction using an XML node.
-     */
-    public RTTrace.from_xml_node (Xml.Node *node) {
-        base.from_xml_node (node);
-        build_from_xml_node (node);
-        /* Create a points array for improved performance */
-        points_array = new Dactl.SimplePoint[dataseries.buffer_size + 1];
-        for (int i = 0; i < dataseries.buffer_size + 1; i++) {
-            points_array [i] = Dactl.SimplePoint () { x = 0, y = 0 };
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void build_from_xml_node (Xml.Node *node) {
-        if (node->type == Xml.ElementType.ELEMENT_NODE &&
-            node->type != Xml.ElementType.COMMENT_NODE) {
-            this.node = node;
-            id = node->get_prop ("id");
-            /* Iterate through node children */
-            for (Xml.Node *iter = node->children; iter != null; iter = iter->next) {
-                if (iter->name == "property") {
-                    switch (iter->get_prop ("name")) {
-                        /* XXX TBD */
-                        /*
-                         *case "":
-                         *    break;
-                         */
-                        default:
-                            break;
-                    }
-                } else if (iter->name == "object") {
-                    var type = iter->get_prop ("type");
-                    if (type == "dataseries") {
-                        dataseries = new Dactl.DataSeries.from_xml_node (iter);
-                        this.add_child (dataseries);
-                    }
-                }
-            }
-        }
-    }
-
-    private void connect_signals () {
-        this.notify["highlight"].connect (() => {
-            if (highlight)
-                line_weight = initial_line_weight * 3.0;
-            else
-                line_weight = initial_line_weight;
-        });
-    }
-
-    /**
-     * Update the data and redraw the trace
-     */
-    public void refresh () {
-        double sum = 0;
-        var ds_array = dataseries.to_array ();
-        if (ds_array.length <= 2)
-          return;
-
-        var _raw = new Dactl.SimplePoint[ds_array.length];
-        /* offset the x value by 2 samples to allow for end point interpolation */
-        if (ds_array.length > 2 ) {
-            sum = -1 * (ds_array[0].x + ds_array[1].x) / 1e6;
-        }
-
-        for (int t = 0; t < ds_array.length; t++) {
-            var x = ds_array[t].x / 1e6;
-            /* Convert to seconds and accumulate */
-            sum = sum + x;
-            var y = ds_array[t].y;
-            points_array [t].x = sum;
-            points_array [t].y = y;
-            _raw[t] = points_array [t];
-        }
-        raw_data = _raw;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void update_objects (Gee.Map<string, Dactl.Object> val) {
-        _objects = val;
     }
 }

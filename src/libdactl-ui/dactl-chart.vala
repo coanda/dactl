@@ -350,6 +350,9 @@ public class Dactl.Chart : Dactl.CompositeWidget {
                         } else if (ttype == "real-time") {
                             var trace = new Dactl.RTTrace.from_xml_node (iter);
                             this.add_child (trace);
+                        } else if (ttype == "multichannel") {
+                            var trace = new Dactl.RTMultiChannelTrace.from_xml_node (iter);
+                            this.add_child (trace);
                         }
                     }
                 }

@@ -119,13 +119,17 @@ public class Dactl.RTChart : Dactl.Chart, Dactl.Settable {
     }
 
     private void start_timer () {
-        var traces = get_object_map (typeof (Dactl.RTTrace));
+        var traces = get_object_map (typeof (Dactl.Trace));
 
         if (timer_id != 0)
             GLib.Source.remove (timer_id);
         timer_id = GLib.Timeout.add (refresh_ms, () => {
+            /* XXX This is ugly */
             foreach (var trace in traces.values) {
-                (trace as Dactl.RTTrace).refresh ();
+                if (trace is Dactl.RTTrace)
+                    (trace as Dactl.RTTrace).refresh ();
+                else if (trace is Dactl.RTMultiChannelTrace)
+                    (trace as Dactl.RTMultiChannelTrace).refresh ();
             }
             canvas.redraw ();
 
@@ -163,10 +167,12 @@ public class Dactl.RTChart : Dactl.Chart, Dactl.Settable {
     public void highlight_trace (string id) {
         var traces = get_object_map (typeof (Dactl.RTTrace));
         foreach (var trace in traces.values) {
-            (trace as Dactl.RTTrace).highlight = false;
-            if ((trace as Dactl.RTTrace).dataseries.ch_ref == id) {
-                debug ("Chart `%s' highlighting `%s'", this.id, id);
-                (trace as Dactl.RTTrace).highlight = true;
+            if (trace is Dactl.RTTrace) {
+                (trace as Dactl.RTTrace).highlight = false;
+                if ((trace as Dactl.RTTrace).dataseries.ch_ref == id) {
+                    debug ("Chart `%s' highlighting `%s'", this.id, id);
+                    (trace as Dactl.RTTrace).highlight = true;
+                }
             }
         }
     }
