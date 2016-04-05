@@ -11,48 +11,122 @@ public class Dactl.HeatMap : GLib.Object, Dactl.Object, Dactl.Container,
     /* compute grid */
 
     private string _xml = """
-        <ui:object id=\"surf1-0\" type=\"surface\" ttype=\"heatmap\">
-            <ui:property name=\"min-color\">rgb(256,0,0)</ui:property>
-            <ui:property name=\"max-color\">rgb(0,0,256)</ui:property>
-            <ui:property name=\"zmin\">-10</ui:property>
-            <ui:property name=\"zmax\">10</ui:property>
-            <ui:property name=\"ymin\">-10</ui:property>
-            <ui:property name=\"ymax\">10</ui:property>
-            <ui:property name=\"xmin\">-10</ui:property>
-            <ui:property name=\"xmax\">10</ui:property>
-            <ui:property name=\"interpolation-type\">none</ui:property>
-            <ui:property name=\"rows\">4</ui:property>
-            <ui:property name=\"columns\">4</ui:property>
+        <ui:object id=\"hmap-0\" type=\"heatmap\">
+          <ui:property name=\"xmin\">0</ui:property>
+          <ui:property name=\"xmax\">10</ui:property>
+          <ui:property name=\"ymin\">0</ui:property>
+          <ui:property name=\"ymax\">10</ui:property>
+          <ui:property name=\"zmin\">0</ui:property>
+          <ui:property name=\"zmax\">10</ui:property>
+          <ui:property name=\"min-color\">rgba(114,159,207,0.8)</ui:property>
+          <ui:property name=\"max-color\">rgba(239,41,41,0.8)</ui:property>
+          <ui:property name=\"interpolation-type\">none</ui:property>
+          <ui:property name=\"rows\">4</ui:property>
+          <ui:property name=\"columns">4</ui:property>
+          <ui:object id=\"ary-0\" type=\"channel-matrix\">
 
-            <ui:object id=\"hmap-0\" type=\"heatmap\">
-                <ui:property name=\"min-color\">rgba(256,0,0,1)</ui:property>
-                <ui:property name=\"max-color\">rgba(0,0,256,1)</ui:property>
-                <ui:property name=\"min\">-10</ui:property>
-                <ui:property name=\"max\">10</ui:property>
-                <ui:property name=\"interpolation-type\">none</ui:property>
-                <ui:property name=\"grid-rows\">4</ui:property>
-                <ui:property name=\"grid-columns\">4</ui:property>
-                <ui:object id=\"ary-0" type="channel-matrix\">
-
-                    <ui:object id=\"pg1chart0tr0ary0p00\" type=\"channel-matrix-element\">
-                        <ui:property name=\"x\">0.900</ui:property>
-                        <ui:property name=\"y\">1.00</ui:property>
-                        <ui:property name=\"chref\">/daqctl0/dev0/ai00</ui:property>
-                    </ui:object>
-
-                    <ui:object id=\"pg1chart0tr0ary0p01\" type=\"channel-matrix-element\">
-                        <ui:property name=\"x\">1.00</ui:property>
-                        <ui:property name=\"y\">2.00</ui:property>
-                        <ui:property name=\"chref\">/daqctl0/dev0/ai01</ui:property>
-                    </ui:object>
-                </ui:object>
+            <ui:object id=\"pg1chart0tr0ary0p00\" type="\channel-matrix-element\">
+              <ui:property name=\"x\">0.0</ui:property>
+              <ui:property name=\"y\">0.0"</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai00</ui:property>
             </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p01\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">2.5</ui:property>
+              <ui:property name=\"y\">0.0</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai01</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p02\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">5.0</ui:property>
+              <ui:property name=\"y\">0.0</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai02</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p03\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">7.5</ui:property>
+              <ui:property name=\"y\">0.0</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai03</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p04\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">0.00</ui:property>
+              <ui:property name=\"y\">2.50</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai04</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p05\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">2.5</ui:property>
+              <ui:property name=\"y\">2.5</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai05</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p06\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">5.00</ui:property>
+              <ui:property name=\"y\">2.50</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai06</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p07\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">7.50</ui:property>
+              <ui:property name=\"y\">2.50</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai07</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p08\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">0.00</ui:property>
+              <ui:property name=\"y\">5.00</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai08</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p09\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">2.50</ui:property>
+              <ui:property name=\"y\">5.00</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai09</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p10\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">5.00</ui:property>
+              <ui:property name=\"y\">5.00</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai10</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p11\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">7.50</ui:property>
+              <ui:property name=\"y\">5.00</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai11</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p12\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">0.00</ui:property>
+              <ui:property name=\"y\">7.50</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai12</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p13\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">2.50</ui:property>
+              <ui:property name=\"y\">7.50</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai13</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p14\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">5.00</ui:property>
+              <ui:property name=\"y\">7.50</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai14</ui:property>
+            </ui:object>
+
+            <ui:object id=\"pg1chart0tr0ary0p15\" type=\"channel-matrix-element\">
+              <ui:property name=\"x\">7.50</ui:property>
+              <ui:property name=\"y\">7.50</ui:property>
+              <ui:property name=\"chref\">/daqctl0/dev0/ai15</ui:property>
+            </ui:object>
+          </ui:object>
         </ui:object>
     """;
 
     private string _xsd = """
-        <xs:element name="object">
-          <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:element name="object\">
+          <xs:attribute name="id\" type="xs:string" use="required"/>
           <xs:attribute name="type" type="xs:string" use="required"/>
           <xs:attribute name="ref" type="xs:string" use="required"/>
         </xs:element>
@@ -236,7 +310,7 @@ public class Dactl.HeatMap : GLib.Object, Dactl.Object, Dactl.Container,
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < columns; j++) {
                     add ({ i, j,
-                           Dactl.TriplePoint () { x = 0, y = 0, z = 0 },
+                           Dactl.TriplePoint () { a = 0, b = 0, c = 0 },
                            Gdk.RGBA (),
                            Cairo.Rectangle (),
                            ""});
@@ -372,11 +446,11 @@ public class Dactl.HeatMap : GLib.Object, Dactl.Object, Dactl.Container,
         message ("Heatmap Cell Coordinates");
         for (int i = 0; i < data.size; i++) {
             var cell = data.get (i);
-            var x = xmin + (xmax - xmin) * cell.column / (double)data.columns;
-            var y = ymin + (ymax - ymin) * cell.row / (double)data.rows;
-            cell.point = { x, y, 0 };
+            var a = xmin + (xmax - xmin) * cell.column / (double)data.columns;
+            var b = ymin + (ymax - ymin) * cell.row / (double)data.rows;
+            cell.point = { a, b, 0 };
             data.set (i, cell);
-            message ("  r c x y %d %d %.3f %.3f", cell.row, cell.column, x, y);
+            message ("  r c a b %d %d %.3f %.3f", cell.row, cell.column, a, b);
         }
 
         quantize.begin ();
@@ -395,10 +469,10 @@ public class Dactl.HeatMap : GLib.Object, Dactl.Object, Dactl.Container,
             foreach (var key in channel_matrix.data.keys) {
                 var point = channel_matrix.data.get (key);
 
-                if ((point.x < (cell.point.x + data.cell_width / 2)) &&
-                       (point.x >= (cell.point.x - data.cell_width / 2)) &&
-                       (point.y < (cell.point.y + data.cell_height / 2)) &&
-                       (point.y >= (cell.point.y - data.cell_height / 2))) {
+                if ((point.a < (cell.point.a + data.cell_width / 2)) &&
+                       (point.a >= (cell.point.a - data.cell_width / 2)) &&
+                       (point.b < (cell.point.b + data.cell_height / 2)) &&
+                       (point.b >= (cell.point.b - data.cell_height / 2))) {
                     cell.chref = key;
                     data.set (i, cell);
                 }
@@ -437,7 +511,7 @@ public class Dactl.HeatMap : GLib.Object, Dactl.Object, Dactl.Container,
             var cell = data.get (i);
             var point = cell.point;
             /* scale the value */
-            var value = point.z;
+            var value = point.c;
             if (value > zmax)
                 value = zmax;
             if (value < zmin)
@@ -481,7 +555,7 @@ public class Dactl.HeatMap : GLib.Object, Dactl.Object, Dactl.Container,
             var cell = data.get (i);
             var point = cell.point;
             if (channel_matrix.data.has_key (cell.chref)) {
-                point.z = channel_matrix.data.get (cell.chref).z;
+                point.c = channel_matrix.data.get (cell.chref).c;
             }
             /*point.z = 0.5;*/
             cell.point = point;
@@ -509,8 +583,8 @@ public class Dactl.HeatMap : GLib.Object, Dactl.Object, Dactl.Container,
             var width = xslope * data.cell_width;
             var height = yslope * data.cell_height;
 
-            var x = xslope * (cell.point.x - x_min);
-            var y = h - height - yslope * (cell.point.y - y_min);
+            var x = xslope * (cell.point.a - x_min);
+            var y = h - height - yslope * (cell.point.b - y_min);
             cell.rect = { x, y, width, height };
             data.set (i, cell);
             /*
@@ -528,7 +602,7 @@ public class Dactl.HeatMap : GLib.Object, Dactl.Object, Dactl.Container,
      * {@inheritDoc}
      */
     public void draw (Cairo.Context cr) {
-        var stencil = new Dactl.HeatMapContext (image_surface);
+        var stencil = new Dactl.HeatMapView (image_surface);
         stencil.draw (data.colors, data.rectangles);
         cr.set_operator (Cairo.Operator.OVER);
         cr.set_source_surface (stencil.get_target (), 0, 0);

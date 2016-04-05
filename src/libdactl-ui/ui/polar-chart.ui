@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.18.3 -->
+<!-- Generated with glade 3.19.0 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
   <requires lib="" version="3.10"/>
   <requires lib="dactl" version="3.14"/>
-  <!--<template class="DactlChart" parent="GtkBox">-->
-  <template class="DactlChart" parent="DactlCompositeWidget">
+  <!--<template class="DactlPolarChart" parent="GtkBox">-->
+  <template class="DactlPolarChart" parent="DactlCompositeWidget">
     <property name="name">chart</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -19,34 +19,6 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="DactlChartCanvas" id="canvas">
-            <property name="width_request">-1</property>
-            <property name="height_request">-1</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">True</property>
-            <property name="id">canvas0</property>
-          </object>
-          <packing>
-            <property name="left_attach">2</property>
-            <property name="top_attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="lbl_y_axis">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Y Axis Label Left</property>
-            <property name="ellipsize">end</property>
-            <property name="angle">90</property>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">1</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkLabel" id="lbl_title">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -58,11 +30,38 @@
           </packing>
         </child>
         <child>
+          <object class="DactlPolarChartCanvas" id="canvas">
+            <property name="width_request">-1</property>
+            <property name="height_request">-1</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="draw_grid">True</property>
+            <property name="draw_grid_border">True</property>
+          </object>
+          <packing>
+            <property name="left_attach">2</property>
+            <property name="top_attach">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="lbl_c_axis">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Color Axis</property>
+            <property name="angle">90</property>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">1</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkLabel" id="lbl_x_axis">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="yalign">0</property>
-            <property name="label" translatable="yes">X Axis Label</property>
+            <property name="label" translatable="yes">X Axis</property>
           </object>
           <packing>
             <property name="left_attach">2</property>

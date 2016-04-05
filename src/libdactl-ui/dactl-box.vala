@@ -199,6 +199,9 @@ public class Dactl.Box : Dactl.CompositeWidget {
                         case "log":
                             object = new Dactl.LogControl.from_xml_node (iter);
                             break;
+                        case "polar-chart":
+                            object = new Dactl.PolarChart.from_xml_node (iter);
+                            break;
                         case "video":
                             object = new Dactl.VideoProcessor.from_xml_node (iter);
                             break;

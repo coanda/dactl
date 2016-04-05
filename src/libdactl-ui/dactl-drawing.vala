@@ -183,6 +183,250 @@ private class Dactl.ChartGrid : Cairo.Context {
 }
 
 [Compact]
+public class Dactl.PolarChartGrid : Cairo.Context {
+
+    const double PI = GLib.Math.PI;
+
+    public PolarChartGrid (Cairo.Surface target) {
+        base (target);
+    }
+
+    public void limits (Dactl.PolarAxis mag_axis,
+                                     Dactl.PolarAxis angle_axis, int w, int h,
+                                     out double x_max, out double x_min,
+                                     out double y_max, out double y_min) {
+
+        Gsl.Vector x = new Gsl.Vector (4);
+        Gsl.Vector y = new Gsl.Vector (4);
+        /* Find the graphical boundaries that will contain the axis limits */
+        var t1 = Dactl.degrees_to_radians (angle_axis.min);
+        var t2 = Dactl.degrees_to_radians (angle_axis.max);
+
+        x.set (0, mag_axis.min * GLib.Math.cos (t1));
+        x.set (1, mag_axis.min * GLib.Math.cos (t2));
+        x.set (2, mag_axis.max * GLib.Math.cos (t1));
+        x.set (3, mag_axis.max * GLib.Math.cos (t2));
+
+        y.set (0, mag_axis.min * GLib.Math.sin (t1));
+        y.set (1, mag_axis.min * GLib.Math.sin (t2));
+        y.set (2, mag_axis.max * GLib.Math.sin (t1));
+        y.set (3, mag_axis.max * GLib.Math.sin (t2));
+
+        x_max = x.max ();
+        x_min = x.min ();
+        y_max = y.max ();
+        y_min = y.min ();
+
+        /* Grid spans 1st and 2nd quadrants */
+        if (t1 < t2) {
+            if ((t1 < PI / 2) && (t2 > PI / 2)) {
+                y_max = mag_axis.max;
+            }
+        } else {
+            if ((t1 < PI / 2) || (t2 > PI / 2)) {
+                y_max = mag_axis.max;
+            }
+        }
+
+        /* Grid spans 2nd and 3rd quadrants */
+        if (t1 < t2) {
+            if ((t1 < PI) && (t2 > PI)) {
+                x_min = -1 * mag_axis.max;
+            }
+        } else {
+            if ((t1 < PI) || (t2 > PI)) {
+                x_min = -1 * mag_axis.max;
+            }
+        }
+
+        /* Grid spans 3rd and 4th quadrants */
+        if (t1 < t2) {
+            if ((t1 < 3 * PI / 2) && (t2 > 3 * PI / 2)) {
+                y_min = -1 * mag_axis.max;
+            }
+        } else {
+            if ((t1 < 3 * PI / 2) || (t2 > 3 * PI / 2)) {
+                y_min = -1 * mag_axis.max;
+            }
+        }
+
+        /* Grid spans 4th and 1st quadrants */
+        if (t1 < t2) {
+            if ((t1 < 0) && (t2 > 0)) {
+                x_max = mag_axis.max;
+            }
+        } else {
+            x_max = mag_axis.max;
+        }
+
+        /*
+         *message ("x_max, x_min, y_max, y_min %.3f %.3f %.3f %.3f",
+         *                                            x_max, x_min, y_max, y_min);
+         */
+    }
+
+    public void draw (Dactl.PolarAxis mag_axis, Dactl.PolarAxis angle_axis,
+                                                 int w, int h, double zoom) {
+        double x_max, x_min, y_max, y_min;
+        double scale; // the number of pixels per unit magnitude
+
+        limits (mag_axis, angle_axis, w, h,
+                                    out x_max, out x_min, out y_max, out y_min);
+
+        var t1 = Dactl.degrees_to_radians (angle_axis.min);
+        var t2 = Dactl.degrees_to_radians (angle_axis.max);
+
+        /* scale the reference plane from magnitude units to pixels */
+        var scale_x = (double)w / (x_max - x_min);
+        var scale_y = (double)h / (y_max - y_min);
+        scale = scale_x < scale_y ? scale_x : scale_y;
+        scale = scale * zoom;
+        var d = w < h ? w : h;
+        /* reposition it in the center of the window */
+        var dx = (w - scale * (x_max - x_min)) / 2;
+        var dy = (h - scale * (y_max - y_min)) / 2;
+
+        this.translate (dx, dy);
+        /*
+         *message ("scaled: x_max, x_min, y_max, y_min %.3f %.3f %.3f %.3f",
+         *                    x_max/scale, x_min/scale, y_max/scale, y_min/scale);
+         */
+
+        var xc = -1 * scale * x_min;
+        var yc = scale * y_max;
+        /*message ("w h xc yc %.3f %.3f %.3f %.3f", w, h, xc, yc);*/
+        var rmin = scale * mag_axis.min;
+        var rmax = scale * mag_axis.max;
+        /*var rstep_major = (rmax - rmin) / (mag_axis.div_major - 1);*/
+        var rstep_major = (rmax - rmin) / (mag_axis.div_major);
+        var rstep_minor = rstep_major / mag_axis.div_minor;
+        var t1a = 2 * PI - t1;
+        var t2a = 2 * PI - t2;
+
+        /* draw circles */
+        /*for (int i = 0; i < mag_axis.div_major; i++) {*/
+        for (int i = 0; i <= mag_axis.div_major; i++) {
+            set_dash ({3, 5}, 0);
+            set_source_rgba (
+                            mag_axis.color.red,
+                            mag_axis.color.green,
+                            mag_axis.color.blue,
+                            mag_axis.color.alpha * 0.75
+                            );
+
+            var r1 = rmin + i * rstep_major;
+
+
+            for (var j = 1; j < mag_axis.div_minor; j++) {
+                if (i < mag_axis.div_major) {
+                    var r2 = r1 + j * rstep_minor;
+                    /*message ("r2 = %.3f", r2 / scale);*/
+                    arc (xc, yc, r2, t2a, t1a);
+                    set_line_width (0.5);
+                    stroke ();
+                }
+            }
+
+            set_dash (null, 0);
+            set_source_rgba (
+                            mag_axis.color.red,
+                            mag_axis.color.green,
+                            mag_axis.color.blue,
+                            mag_axis.color.alpha
+                            );
+
+            /*message ("r1 = %.3f", r1 / scale);*/
+            set_line_width (1.0);
+            arc (xc, yc, r1, t2a, t1a);
+            stroke ();
+        }
+
+        /* draw radial lines */
+        double tj, p1x, p1y, p2x, p2y;
+        if (t1 > t2) {
+            t1 = t1 - 2 * PI;
+        }
+        var tstep_major = (t2 - t1) / (angle_axis.div_major);
+        var tstep_minor = tstep_major / angle_axis.div_minor;
+
+        for (int i = 0; i < angle_axis.div_major + 1; i++) {
+            /*set_dash ({3, 5}, 0);*/
+            set_dash (null, 0);
+            set_source_rgba (
+                            angle_axis.color.red,
+                            angle_axis.color.green,
+                            angle_axis.color.blue,
+                            angle_axis.color.alpha * 0.75
+                            );
+            var ti = t1 + i * tstep_major;
+            for (int j = 0; j < angle_axis.div_minor; j++) {
+                if (i < angle_axis.div_major) {
+                    tj = ti + j * tstep_minor;
+                    p1x = xc + rmin * GLib.Math.cos (tj);
+                    p1y = yc - rmin * GLib.Math.sin (tj);
+                    p2x = xc + rmax * GLib.Math.cos (tj);
+                    p2y = yc - rmax * GLib.Math.sin (tj);
+                    move_to (p1x, p1y);
+                    line_to (p2x, p2y);
+                    set_line_width (0.5);
+                    stroke ();
+                    /*message ("tj p1x p1y p2x p2y %.3f %.3f %.3f %.3f %.3f", tj * 180 / PI, p1x,p1y,p2x,p2y);*/
+                }
+            }
+            set_dash (null, 0);
+            set_source_rgba (
+                            angle_axis.color.red,
+                            angle_axis.color.green,
+                            angle_axis.color.blue,
+                            angle_axis.color.alpha
+                            );
+
+            p1x = xc + rmin * GLib.Math.cos (ti);
+            p1y = yc - rmin * GLib.Math.sin (ti);
+            p2x = xc + rmax * GLib.Math.cos (ti);
+            p2y = yc - rmax * GLib.Math.sin (ti);
+            /*message ("ti p1x p1y p2x p2y %.3f %.3f %.3f %.3f %.3f >>>", ti * 180 / PI, p1x,p1y,p2x,p2y);*/
+            set_line_width (1.0);
+            move_to (p1x, p1y);
+            line_to (p2x, p2y);
+            stroke ();
+        }
+
+
+        /* XXX TBD axial ticks */
+        /* XXX TBD radial labels */
+        for (int i = 0; i <= angle_axis.div_major; i++) {
+            set_dash (null, 0);
+            set_source_rgba (
+                            angle_axis.color.red,
+                            angle_axis.color.green,
+                            angle_axis.color.blue,
+                            angle_axis.color.alpha
+                            );
+            var ti = 2 * PI - (t1 + i * tstep_major);
+            set_dash (null, 0);
+            set_source_rgba (
+                            angle_axis.color.red,
+                            angle_axis.color.green,
+                            angle_axis.color.blue,
+                            angle_axis.color.alpha
+                            );
+
+            /* Labels are on an offset elipse */
+            var px = xc +  1.1 * rmax * GLib.Math.cos (ti) - 15;
+            var py = yc - (rmax + 10) * GLib.Math.sin (ti) + 4;
+
+            select_font_face ("Normal 100", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
+            set_font_size (8);
+            save ();
+            move_to (px, py);
+            if (ti != 2 * PI)
+                show_text ("%.1f".printf (ti * 180 / PI));
+        }
+    }
+}
+
+[Compact]
 private class Dactl.Line : Cairo.Context {
 
     public Line (Cairo.Surface target) {
@@ -383,9 +627,9 @@ private class Dactl.VectorField : Cairo.Context {
 }
 
 [Compact]
-private class Dactl.HeatMapContext : Cairo.Context {
+private class Dactl.HeatMapView : Cairo.Context {
 
-    public HeatMapContext (Cairo.Surface target) {
+    public HeatMapView (Cairo.Surface target) {
         base (target);
     }
 
@@ -407,6 +651,68 @@ private class Dactl.HeatMapContext : Cairo.Context {
                 set_source_rgba (r, g, b, a);
                 rectangle (x, y, width, height);
                 fill ();
+            }
+        }
+    }
+}
+
+[Compact]
+private class Dactl.PolarHeatMapView : Cairo.Context {
+
+    public PolarHeatMapView (Cairo.Surface target) {
+        base (target);
+    }
+
+    public void draw (Gdk.RGBA[,] colors,
+                                  Dactl.PolarHeatMap.AnnulusSector[,] sectors) {
+        /*set_operator (Cairo.Operator.DEST_OVER);*/
+        for (int i = 0; i < colors.length[0]; i++) {
+            for (int j = 0; j < colors.length[1]; j++) {
+                var r = colors[i,j].red;
+                var g = colors[i,j].green;
+                var b = colors[i,j].blue;
+                var a = colors[i,j].alpha;
+                var xc = sectors[i,j].xc;
+                var yc = sectors[i,j].yc;
+                var x = sectors[i,j].x;
+                var y = sectors[i,j].y;
+                var radius = GLib.Math.sqrt (
+                         GLib.Math.pow (x - xc,  2) + GLib.Math.pow (y - yc, 2));
+                var theta = sectors[i,j].theta;
+                var width = sectors[i,j].width;
+                var sweep = sectors[i,j].sweep;
+                /*message ("%d %d RGB: %.2f %.2f %.2f",i, j, r, g, b);*/
+                /*message ("%d %d arc (%.3f, %.3f, %.3f, %.3f, %.3f)",i, j, xc, yc, radius, theta, theta + sweep);*/
+
+                /* draw annulus sector */
+                /*
+                 *move_to (x, y);
+                 *line_to (x + width * GLib.Math.cos (theta),
+                 *         y + width * GLib.Math.sin (theta));
+                 *arc (xc, yc, radius + width, theta, theta + sweep);
+                 *line_to (xc + radius * GLib.Math.cos (theta + sweep),
+                 *                yc + radius * GLib.Math.sin (theta + sweep));
+                 *arc_negative (xc, yc, radius, theta + sweep, theta);
+                 *close_path ();
+                 *set_source_rgba (r, g, b, a);
+                 *fill ();
+                 */
+
+                /* draw annulus sector */
+                move_to (xc, yc);
+                save ();
+                translate (xc,yc);
+                rotate (-1 * (theta +  sweep / 2));
+                move_to (radius, 0);
+                line_to (radius + width, 0);
+                arc (0, 0, radius + width, 0, sweep);
+                line_to (radius * GLib.Math.cos (sweep),
+                                radius * GLib.Math.sin (sweep));
+                arc_negative (0, 0, radius, sweep, 0);
+                close_path ();
+                set_source_rgba (r, g, b, a);
+                fill ();
+                restore ();
             }
         }
     }
@@ -541,6 +847,5 @@ private class Dactl.AxisView : Cairo.Context {
   *            this.stroke ();
   *        }
   */
-
      }
 }
