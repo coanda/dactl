@@ -8,6 +8,7 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-channel-vector.vala \
     dactl-chart.vala \
     dactl-chart-axis.vala \
+    dactl-chart-colormap.vala \
     dactl-chart-trace.vala \
     dactl-chart-widget.vala \
     dactl-dataseries.vala \
@@ -19,6 +20,10 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-pid-control.vala \
     dactl-plugin-control.vala \
     dactl-pnid.vala \
+    dactl-polar-axis.vala \
+    dactl-polar-canvas.vala \
+    dactl-polar-chart.vala \
+    dactl-polar-heatmap.vala \
     dactl-rt-chart.vala \
     dactl-rt-chart-trace.vala \
     dactl-rt-multichannel-trace.vala \

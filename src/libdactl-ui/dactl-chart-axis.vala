@@ -414,6 +414,7 @@ public class Dactl.Axis : Dactl.Canvas, Dactl.Buildable, Dactl.Object {
             string markup = "<span font='8'>%s</span>".printf (tick_label);
             layout.set_markup (markup, -1);
             var context = layout.get_context ();
+            /* XXX Label rotate does not work */
             if (flags.is_set (Dactl.AxisFlag.ROTATE_LABEL)) {
                 context.set_base_gravity (Pango.Gravity.SOUTH);
             } else {
@@ -499,7 +500,14 @@ public class Dactl.Axis : Dactl.Canvas, Dactl.Buildable, Dactl.Object {
                     else
                         cr.move_to (0, y - (fonth / 2));
                     Pango.cairo_update_layout (cr, layout);
+                    /*XXX This is one way to rotate the text*/
+                    /*
+                     *cr.save ();
+                     *cr.rotate (-1 * GLib.Math.PI/4);
+                     *cr.rel_move_to (- 15, 0);
+                     */
                     Pango.cairo_show_layout (cr, layout);
+                    /*cr.restore ();*/
                 }
             }
 

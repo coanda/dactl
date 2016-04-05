@@ -57,6 +57,7 @@ public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
             case "DactlPid":                    break;
             case "DactlPnid":                   break;
             case "DactlPnidElement":            break;
+            case "DactlPolarChart":             break;
             case "DactlRTChart":                break;
             case "DactlStripChart":             break;
             case "DactlStripChartTrace":        break;
@@ -96,6 +97,7 @@ public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
                     case "pid":             return make_pid (node);
                     case "pnid":            return make_pnid (node);
                     case "pnid-element":    return make_pnid_element (node);
+                    case "polar-chart":     return make_polar_chart (node);
                     case "rt-chart":        return make_rt_chart (node);
                     case "stripchart":      return make_stripchart (node);
                     case "stripchart-trace":return make_stripchart_trace (node);
@@ -162,6 +164,10 @@ public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
 
     private Dactl.Object make_pnid_element (Xml.Node *node) {
         return new Dactl.PnidElement.from_xml_node (node);
+    }
+
+    private Dactl.Object make_polar_chart (Xml.Node *node) {
+        return new Dactl.PolarChart.from_xml_node (node);
     }
 
     private Dactl.Object make_rt_chart (Xml.Node *node) {

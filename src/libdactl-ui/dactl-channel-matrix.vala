@@ -4,8 +4,8 @@ public class Dactl.ChannelMatrixElement : GLib.Object, Dactl.Object, Dactl.Build
 
     private string _xml = """
         <ui:object id=\"pg1chart0tr0ary0p00\" type=\"channel-matrix-element\">
-          <ui:property name=\"x\">0.900</ui:property>
-          <ui:property name=\"y\">1.00</ui:property>
+          <ui:property name=\"a\">0.900</ui:property>
+          <ui:property name=\"b\">1.00</ui:property>
           <ui:property name=\"chref\">/daqctl0/dev0/ai00</ui:property>
         </ui:object>
     """;
@@ -25,18 +25,19 @@ public class Dactl.ChannelMatrixElement : GLib.Object, Dactl.Object, Dactl.Build
         set { _chref = value; }
     }
 
-    /* the associated x value for this */
-    private double _x;
-    public double x {
-        get { return _x; }
-        set { _x = value; }
+    /* the first entry of an ordered pair of data */
+    private double _a;
+    public double a {
+        get { return _a; }
+        set { _a = value; }
     }
 
-    /* the associated y value for this */
-    private double _y;
-    public double y {
-        get { return _y; }
-        set { _y = value; }
+
+    /* the second entry of an ordered pair of data */
+    private double _b;
+    public double b {
+        get { return _b; }
+        set { _b = value; }
     }
 
     /**
@@ -90,11 +91,11 @@ public class Dactl.ChannelMatrixElement : GLib.Object, Dactl.Object, Dactl.Build
                         case "chref":
                             chref = iter->get_content ();
                             break;
-                        case "x":
-                            x = double.parse (iter->get_content ());
+                        case "a":
+                            a = double.parse (iter->get_content ());
                             break;
-                        case "y":
-                            y = double.parse (iter->get_content ());
+                        case "b":
+                            b = double.parse (iter->get_content ());
                             break;
                         default:
                             break;
@@ -128,14 +129,14 @@ public class Dactl.ChannelMatrix : GLib.Object, Dactl.Object,
           <ui:object id=\"ary-0" type="channel-matrix\">
 
             <ui:object id=\"pg1chart0tr0ary0p00\" type=\"channel-matrix-element\">
-              <ui:property name=\"x\">0.900</ui:property>
-              <ui:property name=\"y\">1.00</ui:property>
+              <ui:property name=\"a\">0.900</ui:property>
+              <ui:property name=\"b\">1.00</ui:property>
               <ui:property name=\"chref\">/daqctl0/dev0/ai00</ui:property>
             </ui:object>
 
             <ui:object id=\"pg1chart0tr0ary0p01\" type=\"channel-matrix-element\">
-              <ui:property name=\"x\">1.00</ui:property>
-              <ui:property name=\"y\">2.00</ui:property>
+              <ui:property name=\"a\">1.00</ui:property>
+              <ui:property name=\"b\">2.00</ui:property>
               <ui:property name=\"chref\">/daqctl0/dev0/ai01</ui:property>
             </ui:object>
           </ui:object>
@@ -236,8 +237,8 @@ public class Dactl.ChannelMatrix : GLib.Object, Dactl.Object,
                         child.id = object_id;
                         add_child (child);
                         data.set (child.chref,
-                            new Dactl.TriplePoint () { x = child.x,
-                                                          y = child.y, z = 0 });
+                            new Dactl.TriplePoint () { a = child.a,
+                                                          b = child.b, c = 0 });
                     }
                 }
             }
@@ -288,7 +289,7 @@ public class Dactl.ChannelMatrix : GLib.Object, Dactl.Object,
 
     private void new_value_cb (string uri, double value) {
         var point = data.get (uri);
-        point.z = value;
+        point.c = value;
         data.set (uri, point);
         /*message ("%s %.3f %d", uri, data.get (uri).z, data.size);*/
     }

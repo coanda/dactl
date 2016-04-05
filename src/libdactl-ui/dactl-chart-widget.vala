@@ -279,9 +279,9 @@ public struct Dactl.SimplePoint {
 }
 
 public struct Dactl.TriplePoint {
-    public double x;
-    public double y;
-    public double z;
+    public double a;
+    public double b;
+    public double c;
 }
 
 /* X Axis drawing area class */

@@ -17,6 +17,8 @@
 
     <glade-widget-class name="DactlChartCanvas" generic-name="dactlchartcanvas" title="Dactl Chart Canvas"/>
 
+    <glade-widget-class name="DactlPolarChartCanvas" generic-name="dactlpolarchartcanvas" title="Dactl Polar Chart Canvas"/>
+
     <glade-widget-class name="DactlAxis" generic-name="dactlchartaxis" title="Dactl Axis"/>
 
     <glade-widget-class name="DactlStripChart" generic-name="dactlstripchart" title="Dactl Stipchart"/>
@@ -35,6 +37,7 @@
     <glade-widget-class-ref name="DactlAxis"/>
     <glade-widget-class-ref name="DactlChart"/>
     <glade-widget-class-ref name="DactlChartCanvas"/>
+    <glade-widget-class-ref name="DactlPolarChartCanvas"/>
     <glade-widget-class-ref name="DactlAxis"/>
     <glade-widget-class-ref name="DactlStripChart"/>
     <glade-widget-class-ref name="DactlStripChartCanvas"/>

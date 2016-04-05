@@ -45,6 +45,139 @@ public enum Dactl.Orientation {
     }
 }
 
+/**
+ * PositionType options for the axis.
+ */
+public enum Dactl.PositionType {
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM;
+
+    public Gtk.PositionType to_gtk () {
+        switch (this) {
+            case LEFT: return Gtk.PositionType.LEFT;
+            case RIGHT:   return Gtk.PositionType.RIGHT;
+            case TOP:   return Gtk.PositionType.TOP;
+            case BOTTOM:   return Gtk.PositionType.BOTTOM;
+            default: assert_not_reached ();
+        }
+    }
+
+    public string to_string () {
+        switch (this) {
+            case LEFT: return "left";
+            case RIGHT:   return "right";
+            case TOP:   return "top";
+            case BOTTOM:   return "bottom";
+            default: assert_not_reached ();
+        }
+    }
+
+    public static PositionType[] all () {
+        return {
+            LEFT,
+            RIGHT,
+            TOP,
+            BOTTOM
+        };
+    }
+
+    public static PositionType parse (string value) {
+        try {
+            var regex_left = new Regex ("left", RegexCompileFlags.CASELESS);
+            var regex_right = new Regex ("right", RegexCompileFlags.CASELESS);
+            var regex_top = new Regex ("top", RegexCompileFlags.CASELESS);
+            var regex_bottom = new Regex ("bottom", RegexCompileFlags.CASELESS);
+            if (regex_left.match (value)) {
+                return LEFT;
+            } else if (regex_right.match (value)) {
+                return RIGHT;
+            } else if (regex_top.match (value)) {
+                return TOP;
+            } else if (regex_bottom.match (value)) {
+                return BOTTOM;
+            }
+        } catch (RegexError e) {
+            message ("PositionType regex error: %s", e.message);
+        }
+
+        return LEFT;
+    }
+}
+
+public enum Dactl.PolarAxisType {
+    MAGNITUDE,
+    ANGLE;
+
+    public string to_string () {
+        switch (this) {
+            case MAGNITUDE: return "magnitude";
+            case ANGLE:   return "angle";
+            default: assert_not_reached ();
+        }
+    }
+
+    public static PolarAxisType[] all () {
+        return {
+            MAGNITUDE,
+            ANGLE
+        };
+    }
+
+    public static PolarAxisType parse (string value) {
+        try {
+            var regex_magnitude = new Regex ("magnitude", RegexCompileFlags.CASELESS);
+            var regex_angle = new Regex ("angle", RegexCompileFlags.CASELESS);
+            if (regex_magnitude.match (value)) {
+                return MAGNITUDE;
+            } else if (regex_angle.match (value)) {
+                return ANGLE;
+            }
+        } catch (RegexError e) {
+            message ("PolarAxisType regex error: %s", e.message);
+        }
+
+        return MAGNITUDE;
+    }
+}
+
+public enum Dactl.ColorGradientType {
+    RGB,
+    HSV;
+
+    public string to_string () {
+        switch (this) {
+            case RGB: return "rgb";
+            case HSV:   return "hsv";
+            default: assert_not_reached ();
+        }
+    }
+
+    public static ColorGradientType[] all () {
+        return {
+            RGB,
+            HSV
+        };
+    }
+
+    public static ColorGradientType parse (string value) {
+        try {
+            var regex_rgb = new Regex ("rgb", RegexCompileFlags.CASELESS);
+            var regex_hsv = new Regex ("hsv", RegexCompileFlags.CASELESS);
+            if (regex_rgb.match (value)) {
+                return RGB;
+            } else if (regex_hsv.match (value)) {
+                return HSV;
+            }
+        } catch (RegexError e) {
+            message ("ColorGradientType regex error: %s", e.message);
+        }
+
+        return RGB;
+    }
+}
+
 public interface Dactl.Widget : GLib.Object {
 
     //public abstract bool expand { get; set; }
