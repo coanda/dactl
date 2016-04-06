@@ -192,6 +192,9 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
         }
     }
 
+    construct {
+        _pixel_data = new Gee.LinkedList<Dactl.Point> ();
+    }
     /**
      * Construction using an XML node.
      */
@@ -214,7 +217,6 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
                     switch (iter->get_prop ("name")) {
                         case "points":
                             points = int.parse (iter->get_content ());
-                            _pixel_data = new Gee.LinkedList<Dactl.Point> ();
                         break;
                         case "draw-type":
                             draw_type = Dactl.TraceDrawType.parse (iter->get_content ());

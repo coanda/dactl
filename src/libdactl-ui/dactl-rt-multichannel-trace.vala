@@ -88,6 +88,7 @@ public class Dactl.RTMultiChannelTrace : Dactl.Trace, Dactl.Container {
     public void refresh () {
         raw_data = channel_vector.to_array ();
         for (int i = 0; i < raw_data.length; i++) {
+            debug ("i: %d x: %.3f y: %.3f", i, raw_data[i].x, raw_data[i].y);
         }
     }
 
@@ -101,7 +102,7 @@ public class Dactl.RTMultiChannelTrace : Dactl.Trace, Dactl.Container {
 
         for (int i = 0; i < raw_data.length; i++) {
             scaled_xdata[i] = width * (raw_data[i].x - x_min) / (x_max - x_min);
-            //message ("i: %d rawx: %.3f scaledx: %.3f w: %d", i, raw_data[i].x, scaled_xdata[i], width);
+            debug ("i: %d rawx: %.3f scaledx: %.3f w: %d", i, raw_data[i].x, scaled_xdata[i], width);
             scaled_ydata[i] = height * (1 - (raw_data[i].y - y_min) / (y_max - y_min));
         }
 
@@ -109,7 +110,7 @@ public class Dactl.RTMultiChannelTrace : Dactl.Trace, Dactl.Container {
         pixel_data.clear ();
         for (int i = 0; i < raw_data.length; i++) {
             pixel_data.add (new Dactl.Point (scaled_xdata[i], scaled_ydata[i]));
-            //message ("x: %.3f  y: %.3f", pixel_data[i].x, pixel_data[i].y);
+            debug ("i: %d x: %.3f  y: %.3f", i, pixel_data[i].x, pixel_data[i].y);
         }
     }
 
