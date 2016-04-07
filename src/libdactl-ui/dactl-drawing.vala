@@ -4,17 +4,6 @@
 public interface Dactl.Drawable : GLib.Object {
 
     /**
-     * The data points to be rendered
-     */
-    public abstract Dactl.Point[] raw_data { get; set; }
-
-    /**
-     * The interpolated data scaled to fit the chart
-     */
-    /*private abstract Dactl.Point[] pixel_data { get; set; }*/
-    private abstract Gee.List<Dactl.Point> pixel_data { get; set; }
-
-    /**
      * A surface to draw into
      */
     public abstract Cairo.ImageSurface image_surface { get; set; }
