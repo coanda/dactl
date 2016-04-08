@@ -3,7 +3,7 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-ai-control.vala \
     dactl-ao-control.vala \
     dactl-drawing.vala \
-    dactl-channel-2d-array.vala \
+    dactl-channel-matrix.vala \
     dactl-channel-treeview.vala \
     dactl-channel-vector.vala \
     dactl-chart.vala \

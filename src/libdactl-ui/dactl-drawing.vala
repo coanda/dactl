@@ -24,6 +24,11 @@ public interface Dactl.Drawable : GLib.Object {
                                    double y_min, double y_max);
 
     /**
+     * Update the data
+     */
+    public abstract void update ();
+
+    /**
      * Draw into the given context
      *
      * @param cr The context to be altered
@@ -374,6 +379,36 @@ private class Dactl.VectorField : Cairo.Context {
     }
 
     public void draw () {
+    }
+}
+
+[Compact]
+private class Dactl.HeatMapContext : Cairo.Context {
+
+    public HeatMapContext (Cairo.Surface target) {
+        base (target);
+    }
+
+    public void draw (Gdk.RGBA[,] colors, Cairo.Rectangle[,] rectangles) {
+        for (int i = 0; i < colors.length[0]; i++) {
+            for (int j = 0; j < colors.length[1]; j++) {
+                var r = colors[i,j].red;
+                var g = colors[i,j].green;
+                var b = colors[i,j].blue;
+                var a = colors[i,j].alpha;
+                var x = rectangles[i,j].x;
+                var y = rectangles[i,j].y;
+                var width = rectangles[i,j].width;
+                var height = rectangles[i,j].height;
+                /*
+                 *message ("r g b a x y w h: %-8.3f %-8.3f %-8.3f %-8.3f %-8.3f %-8.3f %-8.3f %-8.3f ",
+                 *                                r,g,b,a,x,y,width,height);
+                 */
+                set_source_rgba (r, g, b, a);
+                rectangle (x, y, width, height);
+                fill ();
+            }
+        }
     }
 }
 

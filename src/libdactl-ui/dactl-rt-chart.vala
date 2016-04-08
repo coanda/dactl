@@ -128,6 +128,8 @@ public class Dactl.RTChart : Dactl.Chart, Dactl.Settable {
                     (drawable as Dactl.RTTrace).refresh ();
                 else if (drawable is Dactl.RTMultiChannelTrace)
                     (drawable as Dactl.RTMultiChannelTrace).refresh ();
+                else if (drawable is Dactl.HeatMap)
+                    (drawable as Dactl.HeatMap).refresh ();
             }
             canvas.redraw ();
 

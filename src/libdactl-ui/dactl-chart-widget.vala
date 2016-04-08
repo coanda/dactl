@@ -278,6 +278,12 @@ public struct Dactl.SimplePoint {
     double y;
 }
 
+public struct Dactl.TriplePoint {
+    public double x;
+    public double y;
+    public double z;
+}
+
 /* X Axis drawing area class */
 public class Dactl.XAxisArea : Gtk.DrawingArea {
 

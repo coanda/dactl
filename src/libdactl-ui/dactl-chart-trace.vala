@@ -306,7 +306,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
     }
 
     /**
-     * Update the chart data array
+     * {@inheritDoc}
      */
     private void update () {
         /* scale the raw data to non-integer pixel values */
@@ -430,6 +430,5 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
             default:
                 assert_not_reached ();
         }
-
     }
 }

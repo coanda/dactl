@@ -354,6 +354,9 @@ public class Dactl.Chart : Dactl.CompositeWidget {
                             var trace = new Dactl.RTMultiChannelTrace.from_xml_node (iter);
                             this.add_child (trace);
                         }
+                    } else if (type == "heatmap") {
+                        var heatmap = new Dactl.HeatMap.from_xml_node (iter);
+                        this.add_child (heatmap);
                     }
                 }
             }
@@ -539,16 +542,15 @@ public class Dactl.Chart : Dactl.CompositeWidget {
         var h = canvas.get_allocated_height ();
         var x_min = x_axis.min;
         var x_max = x_axis.max;
-        /*lbl_x_axis.set_text (x_axis.label);*/
         var y_min = y_axis.min;
         var y_max = y_axis.max;
-        /*lbl_y_axis.set_text (y_axis.label);*/
+        /* XXX can image surface set be put in Dactl.Drawable as virtual */
         var image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, w, h);
 
         foreach (var drawable in drawables.values) {
             (drawable as Dactl.Drawable).image_surface = image_surface;
             (drawable as Dactl.Drawable).generate (w, h, x_min, x_max, y_min, y_max);
-            (drawable as Dactl.Drawable).draw (cr);
+            (drawable as Dactl.Drawable).draw (cr); // XXX put this in drawable too?
         }
         return false;
     }
