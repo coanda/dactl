@@ -205,7 +205,6 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
                             message ("Connecting plugin control to CLD data for `%s'", plugin.name);
                             (control as Dactl.CldAdapter).request_object.connect ((uri) => {
-                                message (">>>>>>>>>>>>");
                                 var object = model.ctx.get_object_from_uri (uri);
                                 message ("Offering object `%s' to `%s'",
                                             object.id, (control as Dactl.Object).id);
