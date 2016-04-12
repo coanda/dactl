@@ -70,25 +70,23 @@ public class Dactl.Axis : Dactl.Canvas, Dactl.Buildable, Dactl.Object {
     /* Orientation of the axis */
     public Dactl.Orientation orientation { get; set; default = Dactl.Orientation.HORIZONTAL; }
 
-    private double _min = 0;
+    private double _min;
     public double min {
         get {
             return _min;
         }
         set {
-            if (value < max)
-                _min = value;
+            _min = value;
         }
     }
 
-    public double _max = 100;
+    public double _max;
     public double max {
         get {
             return _max;
         }
         set {
-            if (value > min)
-                _max = value;
+            _max = value;
         }
     }
 
