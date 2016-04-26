@@ -8,14 +8,56 @@ public abstract class Dactl.SettingsTreeView : Gtk.TreeView {
     //[GtkChild]
     protected Gtk.TreeStore treestore;
 
+    protected Gtk.TreePath active_path;
+
+    /**
+     * true if the selected row's children should expand
+     */
+    protected bool expand_all;
+
+    construct {
+        add_events (Gdk.EventMask.BUTTON_PRESS_MASK |
+                    Gdk.EventMask.BUTTON_RELEASE_MASK |
+                    Gdk.EventMask.POINTER_MOTION_MASK |
+                    Gdk.EventMask.KEY_PRESS_MASK |
+                    Gdk.EventMask.KEY_RELEASE_MASK |
+                    Gdk.EventMask.SCROLL_MASK);
+
+        treeiter = new Gtk.TreeIter[tree_depth];
+    }
+
     [GtkCallback]
     public abstract void cursor_changed_cb ();
 
     [GtkCallback]
-    public abstract void row_activated_cb (Gtk.TreePath path, Gtk.TreeViewColumn column);
+    public virtual void row_activated_cb (Gtk.TreePath path, Gtk.TreeViewColumn column) {
+        active_path = path;
+    }
 
-    construct {
-        treeiter = new Gtk.TreeIter[tree_depth];
+    /**
+     * Use double click to expand the row and ctrl double click to expand all
+     */
+    [GtkCallback]
+    public bool button_press_event_cb (Gdk.EventButton event) {
+        if (event.button == 1) {
+            if ((event.type & Gdk.EventType.DOUBLE_BUTTON_PRESS) ==
+                                            Gdk.EventType.DOUBLE_BUTTON_PRESS) {
+                if ((event.state & Gdk.ModifierType.CONTROL_MASK) ==
+                                            Gdk.ModifierType.CONTROL_MASK) {
+                    expand_all = true;
+                } else {
+                    expand_all = false;
+                }
+
+                if (is_row_expanded (active_path)) {
+                    collapse_row (active_path);
+                } else {
+                    expand_row (active_path, expand_all);
+                }
+            }
+        }
+
+        return false;
     }
 }
 
@@ -58,7 +100,7 @@ public class Dactl.CldSettingsTreeView : Dactl.SettingsTreeView {
                 /** XXX TBD - This will require some restructuring of the
                   * Cld library make it to work properly.
                   *
-                  * Populate only direct descendants if not in administrator mode
+                  * Populate only direct descendants if not in a:dministrator mode
                   *
                   *var admin = Dactl.UI.Application.get_default ().model.admin;
                   *var related = obj.get_parent_uri () == object.uri;
@@ -84,17 +126,8 @@ public class Dactl.CldSettingsTreeView : Dactl.SettingsTreeView {
             GLib.free (uri);
         }
     }
-
-    public override void row_activated_cb (Gtk.TreePath path, Gtk.TreeViewColumn column) {
-        Gtk.TreeIter iterator;
-        treestore.get_iter (out iterator, path);
-        string* uri = "";
-        treestore.get (iterator, Columns.URI, &uri, -1);
-        debug ("selected path: %s column: %s uri: %s", path.to_string (), column.get_title (), uri);
-        select (uri);
-        GLib.free (uri);
-    }
 }
+
 
 public class Dactl.NativeSettingsTreeView : Dactl.SettingsTreeView {
     public enum Columns {
@@ -168,18 +201,6 @@ public class Dactl.NativeSettingsTreeView : Dactl.SettingsTreeView {
             treestore.get (iterator, Columns.OBJECT, &object, -1);
             debug ("object id: %s", (object as Dactl.Object).id);
             select (object as Dactl.Object);
-        }
-    }
-
-    public override void row_activated_cb (Gtk.TreePath path, Gtk.TreeViewColumn column) {
-        Gtk.TreeIter iterator;
-
-        treestore.get_iter (out iterator, path);
-        if (path != null) {
-            void* object = null;
-            treestore.get (iterator, Columns.OBJECT, &object, -1);
-            debug ("object id: %s", (object as Dactl.Object).id);
-            /*select (object as Dactl.Object);*/
         }
     }
 }
