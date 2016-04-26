@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.18.3 -->
+<!-- Generated with glade 3.19.0 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
   <object class="GtkTreeStore" id="treestore">
@@ -17,7 +17,8 @@
     <property name="can_focus">True</property>
     <property name="model">treestore</property>
     <property name="search_column">0</property>
-    <property name="activate_on_single_click">True</property>
+    <property name="level_indentation">4</property>
+    <signal name="button-press-event" handler="button_press_event_cb" swapped="no"/>
     <signal name="cursor-changed" handler="cursor_changed_cb" swapped="no"/>
     <signal name="row-activated" handler="row_activated_cb" swapped="no"/>
     <child internal-child="selection">
