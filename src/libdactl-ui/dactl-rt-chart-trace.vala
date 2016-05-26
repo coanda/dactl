@@ -5,7 +5,6 @@ public class Dactl.RTTrace : Dactl.Trace, Dactl.Container {
 
     private Gee.Map<string, Dactl.Object> _objects;
     public Dactl.DataSeries dataseries { get; private set; }
-    public bool highlight { get; set; default = false; }
     private Dactl.SimplePoint [] points_array;
 
     /**
@@ -18,7 +17,6 @@ public class Dactl.RTTrace : Dactl.Trace, Dactl.Container {
 
     construct {
         objects = new Gee.TreeMap<string, Dactl.Object> ();
-        connect_signals ();
     }
 
     public RTTrace (Xml.Ns* ns,
@@ -88,15 +86,6 @@ public class Dactl.RTTrace : Dactl.Trace, Dactl.Container {
                 }
             }
         }
-    }
-
-    private void connect_signals () {
-        this.notify["highlight"].connect (() => {
-            if (highlight)
-                line_weight = initial_line_weight * 3.0;
-            else
-                line_weight = initial_line_weight;
-        });
     }
 
     /**
