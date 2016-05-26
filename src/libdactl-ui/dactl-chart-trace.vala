@@ -73,6 +73,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
     protected double y_max;
     protected int width = 100;
     protected int height = 100;
+    public bool highlight { get; set; default = false; }
 
     private string _xml = """
         <ui:object id=\"trace-0\" type=\"chart-trace\" ttype=\"xy\"/>
@@ -180,7 +181,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
      * the file rgb.txt, a hexadecimal value as eg. #FFF/#FF00FF/#FF00FF00,
      * or decimal value as eg. rgb(255,0,255)/rgba(255,0,255,0.0).
      */
-    protected string color_spec { get; set; default = "black"; }
+    private string color_spec { get; set; default = "black"; }
 
     protected Gdk.RGBA _color;
 
@@ -369,6 +370,10 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
      * {@inheritDoc}
      */
     public void draw (Cairo.Context cr) {
+        var weight = line_weight;
+        if (highlight)
+            weight = line_weight * 3;
+
         var data = pixel_data.to_array ();
         /* XXX FIXME Should not need to do this (remove the first non null data point) */
         /*
@@ -385,7 +390,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
              * XXX FIXME This code no longer works here.
              *case Dactl.TraceDrawType.BAR:
              *    var stencil = new Dactl.Bar (image_surface);
-             *    stencil.set_line_width (line_weight);
+             *    stencil.set_line_width (weight);
              *    stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
              *    var y_origin = grid_h * (1 - ((0 - y_axis.min) /
              *                                    (y_axis.max - y_axis.min)));
@@ -401,7 +406,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
              */
             case Dactl.TraceDrawType.LINE:
                 var stencil = new Dactl.Line (image_surface);
-                stencil.set_line_width (line_weight);
+                stencil.set_line_width (weight);
                 stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
                 stencil.draw (data);
                 cr.set_operator (Cairo.Operator.OVER);
@@ -411,7 +416,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
             case Dactl.TraceDrawType.POLYLINE:
                 /* XXX FIXME Polyline does not work with X_AXIS_REVERSED */
                 var stencil = new Dactl.Polyline (image_surface);
-                stencil.set_line_width (line_weight);
+                stencil.set_line_width (weight);
                 stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
                 stencil.draw (data);
                 cr.set_operator (Cairo.Operator.OVER);
@@ -420,7 +425,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
                 break;
             case Dactl.TraceDrawType.SCATTER:
                 var stencil = new Dactl.Scatter (image_surface);
-                stencil.set_line_width (line_weight);
+                stencil.set_line_width (weight);
                 stencil.set_source_rgba (color.red, color.green, color.blue, color.alpha);
                 stencil.draw (data);
                 cr.set_operator (Cairo.Operator.OVER);
