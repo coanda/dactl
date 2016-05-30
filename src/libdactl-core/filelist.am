@@ -10,6 +10,7 @@ LIBDACTL_CORE_VAPI_SOURCE_FILES = \
     dactl-object.vala \
     dactl-plugin.vala \
     dactl-plugin-loader.vala \
+    dactl-plugin-manager.vala \
     dactl-view.vala
 
 LIBDACTL_CORE_NONVAPI_SOURCE_FILES = \

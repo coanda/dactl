@@ -1,0 +1,7 @@
+[Plugin]
+Module=dactl-sample
+Loader=C
+Name=Sample
+Description=An example plugin written in Vala.
+Authors=Geoff Johnson <geoff.johnson@coanda.ca>
+Copyright=Copyright © 2014 Geoff Johnson
