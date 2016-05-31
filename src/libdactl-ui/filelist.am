@@ -12,6 +12,7 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-chart-trace.vala \
     dactl-chart-widget.vala \
     dactl-dataseries.vala \
+    dactl-digital-control.vala \
     dactl-exec-control.vala \
     dactl-log-control.vala \
     dactl-grid.vala \

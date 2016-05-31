@@ -65,7 +65,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         unowned string[] args2 = args1;
         Gtk.init (ref args2);
 
-        message ("Application construction");
+        debug ("Application construction");
 
         GLib.Object (application_id: "org.coanda.dactl",
                      flags: ApplicationFlags.HANDLES_COMMAND_LINE |
@@ -82,20 +82,20 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
         Gtk.Window.set_default_icon_name ("dactl");
 
-        message ("Creating application model using file %s", opt_cfgfile);
+        debug ("Creating application model using file %s", opt_cfgfile);
         model = new Dactl.ApplicationModel (opt_cfgfile);
         assert (model != null);
 
         (model as Dactl.Container).print_objects (0);
         Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = model.dark_theme;
 
-        message (" > Finished constructing the model");
+        debug (" > Finished constructing the model");
 
         view = new Dactl.UI.ApplicationView (model);
         assert (view != null);
         (view as Gtk.Window).application = this;
 
-        message (" > Finished constructing the view");
+        debug (" > Finished constructing the view");
 
         /**
          * FIXME: This hides the window and then shows the message box
@@ -108,7 +108,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         controller = new Dactl.ApplicationController (model, view);
         assert (controller != null);
 
-        message (" > Finished constructing the controller");
+        debug (" > Finished constructing the controller");
 
         //var menu = Dactl.ApplicationMenu.get_default () as GLib.Menu;
         //(menu as Dactl.ApplicationMenu).show_admin = model.admin;
@@ -128,12 +128,12 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         add_actions ();
 
         lock (model) {
-            message (" > Starting device acquisition and output tasks");
+            debug (" > Starting device acquisition and output tasks");
             model.start_acquisition ();
             model.start_device_output ();
         }
 
-        message ("Application activation completed");
+        debug ("Application activation completed");
     }
 
     /**
@@ -156,7 +156,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         var menu = new GLib.Menu ();
 
         if (model.admin) {
-            message ("Adding a menu for admin functionality");
+            debug ("Adding a menu for admin functionality");
             var admin_menu = new GLib.Menu ();
             admin_menu.append ("Defaults", "app.defaults");
             menu.append_submenu ("Admin", admin_menu);
@@ -194,7 +194,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
                 string name = plugin.name;
                 var xpath = @"//plugin[@type=\"$name\"]";
 
-                message ("Searching for the node at: %s", xpath);
+                debug ("Searching for the node at: %s", xpath);
                 Xml.Node *node = model.config.get_xml_node (xpath);
                 if (node != null) {
                     /* Iterate through node children */
@@ -203,15 +203,15 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
                             var control = plugin.factory.make_object_from_node (iter);
                             model.add_child (control);
 
-                            message ("Connecting plugin control to CLD data for `%s'", plugin.name);
+                            debug ("Connecting plugin control to CLD data for `%s'", plugin.name);
                             (control as Dactl.CldAdapter).request_object.connect ((uri) => {
                                 var object = model.ctx.get_object_from_uri (uri);
-                                message ("Offering object `%s' to `%s'",
+                                debug ("Offering object `%s' to `%s'",
                                             object.id, (control as Dactl.Object).id);
                                 (control as Dactl.CldAdapter).offer_cld_object (object);
                             });
 
-                            message ("Attempting to add the plugin control to the layout");
+                            debug ("Attempting to add the plugin control to the layout");
                             var parent = model.get_object ((control as Dactl.PluginControl).parent_ref);
                             (parent as Dactl.Box).add_child (control);
                         }
@@ -322,7 +322,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         base.shutdown ();
 
         lock (model) {
-            message ("Stopping device acquisition and output tasks");
+            debug ("Stopping device acquisition and output tasks");
             model.stop_acquisition ();
             //model.stop_device_output ();
         }
@@ -464,7 +464,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      * Action callback for settings.
      */
     private void settings_activated_cb (SimpleAction action, Variant? parameter) {
-        GLib.message ("Settings: Dialog activated.");
+        GLib.debug ("Settings: Dialog activated.");
         int x, y, wp, hp, ws, hs;
         //(view as Dactl.UI.ApplicationView).layout_change_page ("settings");
         (view as Gtk.Window).get_position (out x, out y);
@@ -486,7 +486,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      * Action callback to apply application settings.
      */
     private void settings_ok_activated_cb (SimpleAction action, Variant? parameter) {
-        message ("The OK button was pressed in the Settings Dialog.");
+        debug ("The OK button was pressed in the Settings Dialog.");
     }
 
     /**
@@ -744,26 +744,26 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      * Action callback for help.
      */
     private void help_activated_cb (SimpleAction action, Variant? parameter) {
-        GLib.message ("Help: Documentation viewer activated.");
+        GLib.debug ("Help: Documentation viewer activated.");
     }
 
     /**
      * View menu actions.
      */
     private void view_data_action_activated_cb (SimpleAction action, Variant? parameter) {
-        GLib.message ("View: Data viewer action activated");
+        GLib.debug ("View: Data viewer action activated");
     }
 
     /*
      *private void view_digio_action_activated_cb (SimpleAction action, Variant? parameter) {
-     *    GLib.message ("View: Digital I/O viewer action activated");
+     *    GLib.debug ("View: Digital I/O viewer action activated");
      *    var dialog = new Dactl.DioViewerDialog (model);
      *}
      */
 
     /*
      *private void view_recent_action_activated_cb (SimpleAction action, Variant? parameter) {
-     *    GLib.message ("View: Recent files action activated");
+     *    GLib.debug ("View: Recent files action activated");
      *    var dialog = new Dactl.RecentFilesDialog ();
      *}
      */

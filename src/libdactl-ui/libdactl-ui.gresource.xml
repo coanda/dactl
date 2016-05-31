@@ -7,6 +7,7 @@
     <file preprocess="xml-stripblanks">ui/channel-tree.ui</file>
     <file preprocess="xml-stripblanks">ui/chart.ui</file>
     <file preprocess="xml-stripblanks">ui/chart-widget.ui</file>
+    <file preprocess="xml-stripblanks">ui/digital-control.ui</file>
     <file preprocess="xml-stripblanks">ui/exec-control.ui</file>
     <file preprocess="xml-stripblanks">ui/log-control.ui</file>
     <file preprocess="xml-stripblanks">ui/page.ui</file>

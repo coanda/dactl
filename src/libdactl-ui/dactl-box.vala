@@ -193,6 +193,9 @@ public class Dactl.Box : Dactl.CompositeWidget {
                         case "ao":
                             object = new Dactl.AOControl.from_xml_node (iter);
                             break;
+                        case "digital":
+                            object = new Dactl.DigitalControl.from_xml_node (iter);
+                            break;
                         case "exec":
                             object = new Dactl.ExecControl.from_xml_node (iter);
                             break;
@@ -209,10 +212,9 @@ public class Dactl.Box : Dactl.CompositeWidget {
                             object = null;
                             break;
                     }
-
                     /* no point adding an object type that isn't recognized */
                     if (object != null) {
-                        message ("Loading object of type `%s' with id `%s'", type, object.id);
+                        debug ("Loading object of type `%s' with id `%s'", type, object.id);
                         add_child (object);
                     }
                 }
@@ -232,7 +234,7 @@ public class Dactl.Box : Dactl.CompositeWidget {
 
         var type = (object as GLib.Object).get_type ();
         var type_name = type.name ();
-        message ("Packing object of type `%s' into `%s'", type_name, id);
+        debug ("Packing object of type `%s' into `%s'", type_name, id);
 
         // FIXME: shouldn't have to do this
         if (object is Dactl.ChannelTreeView) {
