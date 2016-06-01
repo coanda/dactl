@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Igor Gnatenko <ignatenko@src.gnome.org> -->
+<component type="desktop">
+  <id>org.coanda.Dactl.desktop</id>
+  <metadata_license>CC0</metadata_license>
+  <project_license>GPL-3.0+ and GPL-2.0+ and LGPL-3.0+ and LGPL-2.0+ and MIT</project_license>
+  <_name>Dactl</_name>
+  <_summary>A Control and Measurement System</_summary>
+
+  <description>
+    <_p>
+      Dactl is a control and measurement platform meant to simplify the
+      development of data acquisition systems.
+    </_p>
+    <_p>Features:</_p>
+    <ul>
+      <_li>Configurable UI through XML</_li>
+      <_li>Configurable data acquisition through XML</_li>
+      <_li>Plugin system to simplify adding support for measurement devices</_li>
+    </ul>
+  </description>
+
+  <screenshots>
+    <screenshot type="default">
+      <image width="1920" height="1080">https://github.com/coanda/dactl/data/appdata/dactl.png</image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://github.com/coanda/dactl</url>
+  <url type="bugtracker">https://github.com/coanda/dactl/issues</url>
+  <project_group>GNOME</project_group>
+
+  <kudos>
+    <kudo>AppMenu</kudo>
+  </kudos>
+
+  <update_contact>geoff.johnson@coanda.ca</update_contact>
+  <translation type="gettext">dactl</translation>
+</component>

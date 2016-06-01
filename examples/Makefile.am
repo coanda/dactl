@@ -59,3 +59,11 @@ pnid_DEPENDENCIES = $(example_DEPENDENCIES)
 pnid_VALAFLAGS = $(example_VALAFLAGS)
 pnid_CPPFLAGS = $(example_CFLAGS)
 pnid_LDADD = $(example_LDADD)
+
+GITIGNOREFILES = \
+	**/*.swp \
+	*.o \
+	*.c \
+	$(NULL)
+
+-include $(top_srcdir)/git.mk

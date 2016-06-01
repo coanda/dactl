@@ -6,16 +6,29 @@ test -z "$srcdir" && srcdir=.
 
 PKG_NAME="dactl"
 
-(test -f $srcdir/configure.ac \
-  && test -f $srcdir/README.md \
-  && test -d $srcdir/src) || {
+(test -f $srcdir/src/dactl/dactl-main.vala) || {
     echo -n "**Error**: Directory "\`$srcdir\'" does not look like the"
     echo " top-level $PKG_NAME directory"
     exit 1
 }
 
-which gnome-autogen.sh || {
-    echo "You need to install gnome-common from the GNOME CVS"
-    exit 1
-}
-REQUIRED_AUTOMAKE_VERSION=1.7 USE_GNOME2_MACROS=1 . gnome-autogen.sh --enable-gtk-doc "$@"
+
+touch ChangeLog
+touch INSTALL
+
+aclocal --install -I build/autotools || exit 1
+glib-gettextize --force --copy || exit 1
+intltoolize --force --copy --automake || exit 1
+autoreconf --force --install -Wno-portability || exit 1
+
+if [ "$NOCONFIGURE" = "" ]; then
+        $srcdir/configure "$@" || exit 1
+
+        if [ "$1" = "--help" ]; then exit 0 else
+                echo "Now type \`make\' to compile" || exit 1
+        fi
+else
+        echo "Skipping configure process."
+fi
+
+set +x
