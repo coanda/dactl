@@ -1,9 +1,9 @@
-gsettings_SCHEMAS = org.coanda.dactl.gschema.xml
-@INTLTOOL_XML_NOMERGE_RULE@
+gsettings_SCHEMAS = \
+	org.coanda.dactl.gschema.valid \
+	$(NULL)
+
+.PRECIOUS: $(gsettings_SCHEMAS)
+
 @GSETTINGS_RULES@
 
-EXTRA_DIST = org.coanda.dactl.gschema.xml.in
-
-DISTCLEANFILES = $(gsettings_SCHEMAS)
-
-MAINTAINERCLEANFILES = org.coanda.dactl.gschema.valid
+-include $(top_srcdir)/git.mk

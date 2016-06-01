@@ -94,3 +94,5 @@ CLEANFILES = \
 EXTRA_DIST = \
 	$(gresource_file) \
 	$(BUILT_SOURCES)
+
+-include $(top_srcdir)/git.mk
