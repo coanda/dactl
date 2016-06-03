@@ -1,8 +1,6 @@
 if ENABLE_VALA_PLUGIN
 
-EXTRA_DIST = \
-	$(plugin_DATA) \
-	vala.plugin.in
+EXTRA_DIST = $(plugin_DATA)
 
 plugindir = $(libdir)/dactl-0.3/plugins
 plugin_LTLIBRARIES = libdactl-vala.la

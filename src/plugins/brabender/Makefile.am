@@ -1,7 +1,9 @@
+if ENABLE_BRABENDER_PLUGIN
+
 include $(top_srcdir)/common.am
 
 plugin_LTLIBRARIES = libdactl-brabender.la
-plugin_DATA = brabender.plugin
+dist_plugin_DATA = brabender.plugin
 
 gresource_file = brabender.gresource.xml
 resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies $(gresource_file))
@@ -49,4 +51,9 @@ MAINTAINERCLEANFILES += $(libdactl_brabender_la_SOURCES:.vala=.c)
 EXTRA_DIST = \
 	$(gresource_file) \
 	$(resource_files) \
-	brabender.plugin.in
+	$(plugin_DATA) \
+	$(NULL)
+
+endif
+
+-include $(top_srcdir)/git.mk

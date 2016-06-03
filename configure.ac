@@ -253,12 +253,12 @@ AM_CONDITIONAL(ENABLE_WEBKIT, [test "x$enable_webkit" = "xyes"])
 dnl ***********************************************************************
 dnl Check for supported plugins
 dnl ***********************************************************************
-DACTL_ADD_PLUGIN([brabender],[CLD Brabender plugin],[yes])
-AS_IF([test "x$enable_brabender_plugin" = "xyes"],
-  [
-    PKG_CHECK_MODULES([DACTL_PLUGIN_BRABENDER_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.3])
-  ])
+#DACTL_ADD_PLUGIN([brabender],[CLD Brabender plugin],[yes])
+#AS_IF([test "x$enable_brabender_plugin" = "xyes"],
+  #[
+    #PKG_CHECK_MODULES([DACTL_PLUGIN_BRABENDER_DEPS],
+                      #[$DACTL_COMMON_MODULES cld-0.3])
+  #])
 
 DACTL_ADD_PLUGIN([heidolph],[CLD Heidolph plugin],[yes])
 AS_IF([test "x$enable_heidolph_plugin" = "xyes"],
@@ -291,6 +291,7 @@ AS_IF([test "x$enable_velmex_plugin" = "xyes"],
 AC_SUBST([DACTL_PLUGIN_LINKER_FLAGS],["-module -avoid-version -Wl,-z,defs"])
 AC_SUBST([DACTL_PLUGIN_DIR],[${libdir}/dactl-0.3/plugins])
 
+m4_include([src/plugins/brabender/configure.ac])
 m4_include([src/plugins/samples/vala/configure.ac])
 m4_include([src/plugins/samples/python/configure.ac])
 
