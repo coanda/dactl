@@ -253,47 +253,16 @@ AM_CONDITIONAL(ENABLE_WEBKIT, [test "x$enable_webkit" = "xyes"])
 dnl ***********************************************************************
 dnl Check for supported plugins
 dnl ***********************************************************************
-#DACTL_ADD_PLUGIN([brabender],[CLD Brabender plugin],[yes])
-#AS_IF([test "x$enable_brabender_plugin" = "xyes"],
-  #[
-    #PKG_CHECK_MODULES([DACTL_PLUGIN_BRABENDER_DEPS],
-                      #[$DACTL_COMMON_MODULES cld-0.3])
-  #])
-
-DACTL_ADD_PLUGIN([heidolph],[CLD Heidolph plugin],[yes])
-AS_IF([test "x$enable_heidolph_plugin" = "xyes"],
-  [
-    PKG_CHECK_MODULES([DACTL_PLUGIN_HEIDOLPH_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.3])
-  ])
-
-DACTL_ADD_PLUGIN([licor],[CLD Licor plugin],[yes])
-AS_IF([test "x$enable_licor_plugin" = "xyes"],
-  [
-    PKG_CHECK_MODULES([DACTL_PLUGIN_LICOR_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.3])
-  ])
-
-DACTL_ADD_PLUGIN([parker],[CLD Parker plugin],[yes])
-AS_IF([test "x$enable_parker_plugin" = "xyes"],
-  [
-    PKG_CHECK_MODULES([DACTL_PLUGIN_PARKER_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.3])
-  ])
-
-DACTL_ADD_PLUGIN([velmex],[CLD Velmex plugin],[yes])
-AS_IF([test "x$enable_velmex_plugin" = "xyes"],
-  [
-    PKG_CHECK_MODULES([DACTL_PLUGIN_VELMEX_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.3])
-  ])
+m4_include([src/plugins/brabender/configure.ac])
+m4_include([src/plugins/heidolph/configure.ac])
+m4_include([src/plugins/licor/configure.ac])
+m4_include([src/plugins/parker/configure.ac])
+m4_include([src/plugins/velmex/configure.ac])
+m4_include([src/plugins/samples/vala/configure.ac])
+m4_include([src/plugins/samples/python/configure.ac])
 
 AC_SUBST([DACTL_PLUGIN_LINKER_FLAGS],["-module -avoid-version -Wl,-z,defs"])
 AC_SUBST([DACTL_PLUGIN_DIR],[${libdir}/dactl-0.3/plugins])
-
-m4_include([src/plugins/brabender/configure.ac])
-m4_include([src/plugins/samples/vala/configure.ac])
-m4_include([src/plugins/samples/python/configure.ac])
 
 dnl This should be called only after all DACTL_CHECK_VALA() and DACTL_ADD_PLUGIN() calls:
 DACTL_CHECK_VALA([$VALA_REQUIRED],)
