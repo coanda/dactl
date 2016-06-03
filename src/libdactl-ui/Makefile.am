@@ -83,5 +83,3 @@ EXTRA_DIST = \
 	$(resource_files) \
 	DactlUI-0.3.gir \
 	Dactl-0.3.gir
-
--include $(top_srcdir)/git.mk

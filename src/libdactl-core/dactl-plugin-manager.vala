@@ -25,9 +25,9 @@ public class Dactl.PluginManager {
 
         GLib.Environment.set_variable ("PEAS_ALLOW_ALL_LOADERS", "1", true);
         engine.enable_loader ("python3");
-        engine.enable_loader ("gjs");
         engine.enable_loader ("lua5.1");
 
+        message ("Loading peas plugins from: %s", Config.PLUGIN_DIR);
         engine.add_search_path (Config.PLUGIN_DIR, null);
 
         /* Our extension set */
@@ -43,9 +43,9 @@ public class Dactl.PluginManager {
         // Load all the plugins found
         foreach (var plug in engine.get_plugin_list ()) {
             if (engine.try_load_plugin (plug)) {
-                warning ("Plugin Loaded: " +plug.get_name ());
+                warning ("Plugin Loaded: " + plug.get_name ());
             } else {
-                warning ("Could not load plugin: " +plug.get_name ());
+                warning ("Could not load plugin: " + plug.get_name ());
             }
         }
 

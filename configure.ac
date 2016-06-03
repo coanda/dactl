@@ -219,24 +219,12 @@ AS_IF([test "x$try_cld" = "xyes"],
 
 AM_CONDITIONAL(USE_CLD, test "x$HAVE_CLD" = "xyes")
 
-dnl Check if the user chose to build using an installed version of libcld instead
-dnl of the git submodule version in deps/libcld
-dnl AC_ARG_WITH(installed_libcld,
-dnl     AS_HELP_STRING([--without-installed-libcld], [Build using local CLD]),
-dnl     [try_installed_cld=$withval], [try_installed_cld=yes])
-dnl
-dnl HAVE_INSTALLED_CLD=no
-dnl AS_IF([test "x$try_installed_cld" = "xyes"],
-dnl       [
-dnl         HAVE_INSTALLED_CLD="$HAVE_CLD"
-dnl       ],
-dnl       [
-dnl         AC_CONFIG_SUBDIRS([deps/libcld])
-dnl       ]
-dnl      )
-dnl
-dnl AM_CONDITIONAL(USE_INSTALLED_CLD, test "x$HAVE_INSTALLED_CLD" = "xyes")
+dnl XXX slowly switching to this as a simpler more sensible method
+m4_define([pygobject_required_version], [3.18.0])
 
+PKG_CHECK_MODULES(PYGOBJECT,[pygobject-3.0 >= pygobject_required_version],
+                            [have_pygobject=yes]
+                            [have_pygobject=no])
 
 dnl ***********************************************************************
 dnl Check if we have WebKit support
@@ -303,54 +291,25 @@ AS_IF([test "x$enable_velmex_plugin" = "xyes"],
 AC_SUBST([DACTL_PLUGIN_LINKER_FLAGS],["-module -avoid-version -Wl,-z,defs"])
 AC_SUBST([DACTL_PLUGIN_DIR],[${libdir}/dactl-0.3/plugins])
 
-DACTL_ADD_PLUGIN([pyhello],[Sample Python3 plugin],[yes])
+m4_include([src/plugins/samples/vala/configure.ac])
+m4_include([src/plugins/samples/python/configure.ac])
 
-DACTL_ADD_PLUGIN([sample],[Sample Peas plugin],[yes])
-AS_IF([test "x$enable_sample_plugin" = "xyes"],
-  [
-    PKG_CHECK_MODULES([DACTL_PLUGIN_SAMPLE_DEPS],
-                      [$DACTL_COMMON_MODULES])
-  ])
-
-# This should be called only after all DACTL_CHECK_VALA() and DACTL_ADD_PLUGIN() calls:
+dnl This should be called only after all DACTL_CHECK_VALA() and DACTL_ADD_PLUGIN() calls:
 DACTL_CHECK_VALA([$VALA_REQUIRED],)
                  #[cld-0.3
                   #gio-2.0
                   #gee-0.8
                   #posix])
 
-dnl Build Options
-AC_ARG_ENABLE(debug,
-    AS_HELP_STRING([--enable-debug],[Enable debugging (default: disabled)]),,
-    enable_debug=no)
 
-#AS_IF([test "x$enable_debug" = "xyes"],
-  #[
-if test "x$enable_debug" = "xyes"; then
-    AC_DEFINE(DEBUG, [1], ["Enable debugging support"])
-    CFLAGS="$CFLAGS -O0 -ggdb3"
-    DACTL_DEBUG_VALAFLAGS="-g -D DEBUG"
-    CC_CHECK_FLAG([-Wall])
-    CC_CHECK_FLAG([-Wextra])
-    CC_CHECK_FLAG([-Wno-deprecated-declarations])
-    CC_CHECK_FLAG([-Wmissing-prototypes])
-    CC_CHECK_FLAG([-Wshadow])
-    CC_CHECK_FLAG([-Wpointer-arith])
-    CC_CHECK_FLAG([-Wstrict-prototypes])
-    CC_CHECK_FLAG([-Wcast-qual])
-    CC_CHECK_FLAG([-Wwrite-strings])
-    CC_CHECK_FLAG([-pedantic])
-fi
-  #])
-
-AC_SUBST(DACTL_DEBUG_VALAFLAGS)
-
+dnl ***********************************************************************
 dnl Lua support for plugins
+dnl ***********************************************************************
 LUA51_REQUIRED=5.1.0
 LUAJIT_REQUIRED=2.0
 
 LGI_MAJOR_VERSION=0
-LGI_MINOR_VERSION=8
+LGI_MINOR_VERSION=9
 LGI_MICRO_VERSION=0
 LGI_REQUIRED=$LGI_MAJOR_VERSION.$LGI_MINOR_VERSION.$LGI_MICRO_VERSION
 AC_DEFINE_UNQUOTED(LGI_MAJOR_VERSION, [$LGI_MAJOR_VERSION], [LGI major version.])
@@ -364,7 +323,7 @@ m4_define([peas_lgi_version_test], [
 #include <lauxlib.h>
 #include <lualib.h>
 
-#include "peas-plugin-loader-lua-utils.c"
+#include "peas-lua-utils.c"
 
 int main(int argc, char **argv)
 {
@@ -410,7 +369,7 @@ else
 
         if test "x$enable_luajit" = "xyes" -a "x$found_lua51" = "xno"; then
             AC_MSG_ERROR([You need to have LuaJIT >= $LUAJIT_REQUIRED
-                          installed to build libpeas])
+                          installed to build Lua support for libpeas plugins])
         fi
     fi
 
@@ -424,7 +383,7 @@ else
 
         if test "x$enable_lua51" = "xyes" -a "x$found_lua51" = "xno"; then
             AC_MSG_ERROR([You need to have Lua 5.1 >= $LUA51_REQUIRED
-                          installed to build libpeas])
+                          installed to build Lua support for libpeas plugins])
         fi
     fi
 
@@ -453,7 +412,7 @@ else
 
         if test "x$enable_lua51" = "xyes" -a "x$found_lua51" = "xno"; then
             AC_MSG_ERROR([You need to have LGI >= $LGI_REQUIRED
-                          installed to build libpeas])
+                          installed to build Lua support for libpeas plugins])
         fi
 
         if test "x$found_lua51" = "xyes"; then
@@ -466,64 +425,83 @@ fi
 
 AM_CONDITIONAL([ENABLE_LUA51], [test "x$found_lua51" = "xyes"])
 
+dnl ***********************************************************************
 dnl Python support for plugins
-PYTHON3_REQUIRED=3.2.0
+dnl ***********************************************************************
+#PYTHON3_REQUIRED=3.2.0
 
-dnl Used by the Python loader to check the PyGObject version at runtime
-PYGOBJECT_MAJOR_VERSION=3
-PYGOBJECT_MINOR_VERSION=0
-PYGOBJECT_MICRO_VERSION=0
-PYGOBJECT_REQUIRED=$PYGOBJECT_MAJOR_VERSION.$PYGOBJECT_MINOR_VERSION.$PYGOBJECT_MICRO_VERSION
-AC_DEFINE_UNQUOTED(PYGOBJECT_MAJOR_VERSION,[$PYGOBJECT_MAJOR_VERSION], [PyGObject major version.])
-AC_DEFINE_UNQUOTED(PYGOBJECT_MINOR_VERSION,[$PYGOBJECT_MINOR_VERSION], [PyGObject minor version.])
-AC_DEFINE_UNQUOTED(PYGOBJECT_MICRO_VERSION,[$PYGOBJECT_MICRO_VERSION], [PyGObject micro version.])
+#dnl Used by the Python loader to check the PyGObject version at runtime
+#PYGOBJECT_MAJOR_VERSION=3
+#PYGOBJECT_MINOR_VERSION=0
+#PYGOBJECT_MICRO_VERSION=0
+#PYGOBJECT_REQUIRED=$PYGOBJECT_MAJOR_VERSION.$PYGOBJECT_MINOR_VERSION.$PYGOBJECT_MICRO_VERSION
+#AC_DEFINE_UNQUOTED(PYGOBJECT_MAJOR_VERSION,[$PYGOBJECT_MAJOR_VERSION], [PyGObject major version.])
+#AC_DEFINE_UNQUOTED(PYGOBJECT_MINOR_VERSION,[$PYGOBJECT_MINOR_VERSION], [PyGObject minor version.])
+#AC_DEFINE_UNQUOTED(PYGOBJECT_MICRO_VERSION,[$PYGOBJECT_MICRO_VERSION], [PyGObject micro version.])
 
-AC_MSG_CHECKING([for Python 3 availability.])
+#AC_MSG_CHECKING([for Python 3 availability.])
 
-AC_ARG_ENABLE(python3,
-    AS_HELP_STRING([--enable-python3],[Enable Python 3 support]),
-    [enable_python3=$enableval],
-    [enable_python3=auto])
+#AC_ARG_ENABLE(python3,
+    #AS_HELP_STRING([--enable-python3],[Enable Python 3 support]),
+    #[enable_python3=$enableval],
+    #[enable_python3=auto])
 
-if test "x$enable_python3" = "xno"; then
-    found_python3="no (disabled, use --enable-python3 to enable)"
-else
-    AM_PATH_PYTHON($PYTHON3_REQUIRED, [
-        AC_PATH_TOOL(PYTHON3_CONFIG, "python3-config")
-        if test -n "${PYTHON3_CONFIG}"; then
-            PKG_CHECK_MODULES(PYGOBJECT, pygobject-3.0 >= $PYGOBJECT_REQUIRED, [
-                found_python3=yes
-                PYTHON3_CFLAGS=`${PYTHON3_CONFIG} --includes`
-                PYTHON3_LIBS=`${PYTHON3_CONFIG} --libs`
-                PYTHON3_LDFLAGS=`${PYTHON3_CONFIG} --ldflags`
-                PYTHON3_PYEXECDIR="${pyexecdir}"
-                AC_SUBST(PYTHON3_CFLAGS)
-                AC_SUBST(PYTHON3_LIBS)
-                AC_SUBST(PYTHON3_LDFLAGS)
-                AC_SUBST(PYTHON3_PYEXECDIR)
-                AC_DEFINE(ENABLE_PYTHON3, 1, [Define to compile with Python 3 support])
-            ], [
-                found_python3="no (PyGObject not found)"
-            ])
-        else
-            found_python3="no (python3-config not found)"
-        fi
-    ], [
-        found_python3="no (python3 not found)"
-    ])
-fi
+#if test "x$enable_python3" = "xno"; then
+    #found_python3="no (disabled, use --enable-python3 to enable)"
+#else
+    #AM_PATH_PYTHON($PYTHON3_REQUIRED, [
+        #AC_PATH_TOOL(PYTHON3_CONFIG, "python3-config")
+        #if test -n "${PYTHON3_CONFIG}"; then
+            #PKG_CHECK_MODULES(PYGOBJECT, pygobject-3.0 >= $PYGOBJECT_REQUIRED, [
+                #found_python3=yes
+                #PYTHON3_CFLAGS=`${PYTHON3_CONFIG} --includes`
+                #PYTHON3_LIBS=`${PYTHON3_CONFIG} --libs`
+                #PYTHON3_LDFLAGS=`${PYTHON3_CONFIG} --ldflags`
+                #PYTHON3_PYEXECDIR="${pyexecdir}"
+                #AC_SUBST(PYTHON3_CFLAGS)
+                #AC_SUBST(PYTHON3_LIBS)
+                #AC_SUBST(PYTHON3_LDFLAGS)
+                #AC_SUBST(PYTHON3_PYEXECDIR)
+                #AC_DEFINE(ENABLE_PYTHON3, 1, [Define to compile with Python 3 support])
+            #], [
+                #found_python3="no (PyGObject not found)"
+            #])
+        #else
+            #found_python3="no (python3-config not found)"
+        #fi
+    #], [
+        #found_python3="no (python3 not found)"
+    #])
+#fi
 
-if test "x$enable_python3" = "xyes" -a "x$found_python3" != "xyes"; then
-    AC_MSG_ERROR([You need to have Python 3 and PyGObject installed to build libpeas])
-fi
-AC_MSG_RESULT([$found_python3])
+#if test "x$enable_python3" = "xyes" -a "x$found_python3" != "xyes"; then
+    #AC_MSG_ERROR([You need to have Python 3 and PyGObject installed to build Python3 support for libpeas plugins])
+#fi
+#AC_MSG_RESULT([$found_python3])
 
-AM_CONDITIONAL([ENABLE_PYTHON3],[test "x$found_python3" = "xyes"])
+#AM_CONDITIONAL([ENABLE_PYTHON3],[test "x$found_python3" = "xyes"])
 
-dnl Strict compiler
-AC_ARG_ENABLE([strict-cc],
-  AS_HELP_STRING([--enable-strict-cc],[Enable strict C compiler]))
->>>>>>> Add Peas plugin loader
+
+dnl ***********************************************************************
+dnl Check for Required Python
+dnl ***********************************************************************
+enable_python_scripting=no
+AS_IF([test "x$have_pygobject" = "xyes"],[
+	AM_PATH_PYTHON([3.2.3])
+	AC_PATH_TOOL(PYTHON3_CONFIG, "python3-config")
+	AS_IF([test -z "${PYTHON3_CONFIG}"],[
+		AC_MSG_RESULT([Failed to locate python3-config.])
+	],[
+		LIBDACTL_CORE_DEPS_CFLAGS="${LIBDACTL_CORE_DEPS_CFLAGS} `${PYTHON3_CONFIG} --includes`"
+		LIBDACTL_CORE_DEPS_LIBS="${LIBDACTL_CORE_DEPS_LIBS} `${PYTHON3_CONFIG} --libs`"
+		LIBDACTL_CORE_DEPS_LDFLAGS="${LIBDACTL_CORE_DEPS_LDFLAGS} `${PYTHON3_CONFIG} --ldflags`"
+		enable_python_scripting=yes
+	])
+
+	pyoverridesdir="\$(pyexecdir)/gi/overrides"
+	AC_SUBST(pyoverridesdir)
+])
+
 
 dnl ***********************************************************************
 dnl Initialize Libtool
@@ -626,6 +604,33 @@ AC_MSG_RESULT([$enable_profiling])
 
 
 dnl ***********************************************************************
+dnl Setup common cflags and ldflags for plugins
+dnl ***********************************************************************
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS -I\$(top_srcdir)/src/libdactl-core"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS -I\$(top_srcdir)/src/libdactl-ui"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS $LIBDACTL_UI_DEPS_CFLAGS"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS $LIBDACTL_CORE_DEPS_CFLAGS"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS $DEBUG_CFLAGS"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS $OPTIMIZE_CFLAGS"
+AC_SUBST(PLUGIN_CFLAGS)
+
+PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS $OPTIMIZE_LDFLAGS"
+PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS -avoid-version"
+PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS -export-symbols-regex peas_register_types"
+PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS -module"
+AC_SUBST(PLUGIN_LDFLAGS)
+
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --target-glib=2.44"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --thread"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-core"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-ui"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-core-0.3"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-ui-0.3"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg libpeas-1.0"
+AC_SUBST(PLUGIN_VALAFLAGS)
+
+
+dnl ***********************************************************************
 dnl Process .in Files
 dnl ***********************************************************************
 AC_CONFIG_FILES([
@@ -659,6 +664,7 @@ AC_CONFIG_FILES([
 	src/libdactl-core/Makefile
 	src/libdactl-ui/Makefile
 	src/plugins/Makefile
+	src/plugins/samples/Makefile
 
 	examples/Makefile
 
@@ -674,32 +680,37 @@ AC_MSG_NOTICE([
 
     Options
 
-     Prefix: .............................. : ${prefix}
-     Libdir: .............................. : ${libdir}
-     Optimized Build ...................... : ${enable_optimizations}
-     WebKit ............................... : ${enable_webkit}
+     Prefix: ...................................... : ${prefix}
+     Libdir: ...................................... : ${libdir}
+     Optimized Build .............................. : ${enable_optimizations}
+     WebKit ....................................... : ${enable_webkit}
 
     Development Options
 
-     CLD support: ......................... : ${with_cld}
-     UI support: .......................... : ${with_ui}
-     Enable Debug: ........................ : ${enable_debug}
-     Enable Tracing ....................... : ${enable_tracing}
-     Enable Profiling (-pg)................ : ${enable_profiling}
-     Build API reference .................. : ${enable_doc}
+     CLD support: ................................. : ${with_cld}
+     UI support: .................................. : ${with_ui}
+     Enable Debug: ................................ : ${enable_debug}
+     Enable Tracing ............................... : ${enable_tracing}
+     Enable Profiling (-pg)........................ : ${enable_profiling}
+     Build API reference .......................... : ${enable_doc}
 
     Plugins:
 
-     Brabender: ........................... : ${enable_brabender_plugin}
-     Heidolph: ............................ : ${enable_heidolph_plugin}
-     Licor: ............................... : ${enable_licor_plugin}
-     Parker: .............................. : ${enable_parker_plugin}
-     Velmex: .............................. : ${enable_velmex_plugin}
+     Brabender: ................................... : ${enable_brabender_plugin}
+     Heidolph: .................................... : ${enable_heidolph_plugin}
+     Licor: ....................................... : ${enable_licor_plugin}
+     Parker: ...................................... : ${enable_parker_plugin}
+     Velmex: ...................................... : ${enable_velmex_plugin}
+
+    Example Plugins:
+
+     Example Vala: ................................ : ${enable_vala_plugin}
+     Example Python: .............................. : ${enable_python_plugin}
 
     Languages support:
 
-        Lua 5.1 support           : ${found_lua51}
-        Python 3 support          : ${found_python3}
+     Lua 5.1 support: ............................. : ${found_lua51}
+     Python 3 support: ............................ : ${enable_python_scripting}
 
     $PACKAGE will be installed in $bindir
 ])

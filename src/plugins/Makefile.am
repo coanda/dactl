@@ -18,18 +18,14 @@ if BUILD_VELMEX_PLUGIN
 VELMEX_PLUGIN = velmex
 endif
 
-SUBDIRS = $(BRABENDER_PLUGIN) \
-		  $(HEIDOLPH_PLUGIN) \
-		  $(LICOR_PLUGIN) \
-		  $(PARKER_PLUGIN) \
-		  $(VELMEX_PLUGIN) \
-		  $(SAMPLE_PLUGIN)
+SUBDIRS = \
+	samples \
+	$(BRABENDER_PLUGIN) \
+	$(HEIDOLPH_PLUGIN) \
+	$(LICOR_PLUGIN) \
+	$(PARKER_PLUGIN) \
+	$(VELMEX_PLUGIN)
 
-if ENABLE_PYTHON3
-SUBDIRS += pyhello
-endif
+EXTRA_DIST = Makefile.plugin
 
-MAINTAINERCLEANFILES = Makefile.in
-
-vala-clean:
-	rm -f `find . -name "*.stamp"`
+-include $(top_srcdir)/git.mk
