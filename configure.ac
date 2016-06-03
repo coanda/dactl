@@ -258,8 +258,8 @@ m4_include([src/plugins/heidolph/configure.ac])
 m4_include([src/plugins/licor/configure.ac])
 m4_include([src/plugins/parker/configure.ac])
 m4_include([src/plugins/velmex/configure.ac])
-m4_include([src/plugins/samples/vala/configure.ac])
 m4_include([src/plugins/samples/python/configure.ac])
+m4_include([src/plugins/samples/vala/configure.ac])
 
 AC_SUBST([DACTL_PLUGIN_LINKER_FLAGS],["-module -avoid-version -Wl,-z,defs"])
 AC_SUBST([DACTL_PLUGIN_DIR],[${libdir}/dactl-0.3/plugins])
@@ -270,186 +270,6 @@ DACTL_CHECK_VALA([$VALA_REQUIRED],)
                   #gio-2.0
                   #gee-0.8
                   #posix])
-
-
-dnl ***********************************************************************
-dnl Lua support for plugins
-dnl ***********************************************************************
-LUA51_REQUIRED=5.1.0
-LUAJIT_REQUIRED=2.0
-
-LGI_MAJOR_VERSION=0
-LGI_MINOR_VERSION=9
-LGI_MICRO_VERSION=0
-LGI_REQUIRED=$LGI_MAJOR_VERSION.$LGI_MINOR_VERSION.$LGI_MICRO_VERSION
-AC_DEFINE_UNQUOTED(LGI_MAJOR_VERSION, [$LGI_MAJOR_VERSION], [LGI major version.])
-AC_DEFINE_UNQUOTED(LGI_MINOR_VERSION, [$LGI_MINOR_VERSION], [LGI minor version.])
-AC_DEFINE_UNQUOTED(LGI_MICRO_VERSION, [$LGI_MICRO_VERSION], [LGI micro version.])
-
-dnl
-dnl Test program for LGI version
-dnl
-m4_define([peas_lgi_version_test], [
-#include <lauxlib.h>
-#include <lualib.h>
-
-#include "peas-lua-utils.c"
-
-int main(int argc, char **argv)
-{
-  lua_State *L;
-  gboolean success;
-
-  L = luaL_newstate ();
-  luaL_openlibs (L);
-
-  success = (peas_lua_utils_require (L, "lgi") &&
-             peas_lua_utils_check_version (L,
-                                           LGI_MAJOR_VERSION,
-                                           LGI_MINOR_VERSION,
-                                           LGI_MICRO_VERSION));
-
-  lua_close (L);
-  return success ? 0 : 1;
-}])
-
-AC_ARG_ENABLE(lua5.1,
-              AS_HELP_STRING([--enable-lua5.1],[Enable Lua 5.1 support]),
-              [enable_lua51=$enableval],
-              [enable_lua51=auto])
-
-AC_ARG_ENABLE(luajit,
-              AS_HELP_STRING([--enable-luajit],[Enable LuaJIT for Lua 5.1 support]),
-              [enable_luajit=$enableval],
-              [enable_luajit=auto])
-
-AC_MSG_CHECKING([for Lua 5.1 availability.])
-
-if test "x$enable_lua51" = "xno"; then
-    found_lua51="no (disabled, use --enable-lua5.1 to enable)"
-    AC_MSG_RESULT([$found_lua51])
-else
-    if test "x$enable_luajit" != "xno"; then
-        PKG_CHECK_EXISTS([luajit >= $LUAJIT_REQUIRED], [
-            found_lua51=yes
-            with_lua51=luajit
-        ], [
-            found_lua51=no
-        ])
-
-        if test "x$enable_luajit" = "xyes" -a "x$found_lua51" = "xno"; then
-            AC_MSG_ERROR([You need to have LuaJIT >= $LUAJIT_REQUIRED
-                          installed to build Lua support for libpeas plugins])
-        fi
-    fi
-
-    if test "x$found_lua51" != "xyes"; then
-        PKG_CHECK_EXISTS([lua5.1 >= $LUA51_REQUIRED], [
-            found_lua51=yes
-            with_lua51=lua5.1
-        ], [
-            found_lua51=no
-        ])
-
-        if test "x$enable_lua51" = "xyes" -a "x$found_lua51" = "xno"; then
-            AC_MSG_ERROR([You need to have Lua 5.1 >= $LUA51_REQUIRED
-                          installed to build Lua support for libpeas plugins])
-        fi
-    fi
-
-    if test "x$found_lua51" != "xyes"; then
-        AC_MSG_RESULT([$found_lua51])
-    else
-        AC_MSG_RESULT([$found_lua51 ($with_lua51)])
-
-        LUA51_CFLAGS=`$PKG_CONFIG --cflags $with_lua51`
-        LUA51_LIBS=`$PKG_CONFIG --libs $with_lua51`
-        AC_SUBST(LUA51_CFLAGS)
-        AC_SUBST(LUA51_LIBS)
-
-        AC_MSG_CHECKING(for LGI availability in Lua 5.1.)
-
-        peas_save_CFLAGS="$CFLAGS"
-        peas_save_LIBS="$LIBS"
-        CFLAGS="$PEAS_CFLAGS $LUA51_CFLAGS -I${srcdir}/loaders/lua5.1"
-        LIBS="$PEAS_LIBS $LUA51_LIBS"
-        AC_TRY_RUN(peas_lgi_version_test(0),
-                   found_lua51=yes,
-                   found_lua51=no,
-                   found_lua51=yes)
-        CFLAGS="$peas_save_CFLAGS"
-        LIBS="$peas_save_LIBS"
-
-        if test "x$enable_lua51" = "xyes" -a "x$found_lua51" = "xno"; then
-            AC_MSG_ERROR([You need to have LGI >= $LGI_REQUIRED
-                          installed to build Lua support for libpeas plugins])
-        fi
-
-        if test "x$found_lua51" = "xyes"; then
-            AC_DEFINE(ENABLE_LUA51, 1, [Define to compile with Lua support])
-        fi
-
-        AC_MSG_RESULT([$found_lua51])
-    fi
-fi
-
-AM_CONDITIONAL([ENABLE_LUA51], [test "x$found_lua51" = "xyes"])
-
-dnl ***********************************************************************
-dnl Python support for plugins
-dnl ***********************************************************************
-#PYTHON3_REQUIRED=3.2.0
-
-#dnl Used by the Python loader to check the PyGObject version at runtime
-#PYGOBJECT_MAJOR_VERSION=3
-#PYGOBJECT_MINOR_VERSION=0
-#PYGOBJECT_MICRO_VERSION=0
-#PYGOBJECT_REQUIRED=$PYGOBJECT_MAJOR_VERSION.$PYGOBJECT_MINOR_VERSION.$PYGOBJECT_MICRO_VERSION
-#AC_DEFINE_UNQUOTED(PYGOBJECT_MAJOR_VERSION,[$PYGOBJECT_MAJOR_VERSION], [PyGObject major version.])
-#AC_DEFINE_UNQUOTED(PYGOBJECT_MINOR_VERSION,[$PYGOBJECT_MINOR_VERSION], [PyGObject minor version.])
-#AC_DEFINE_UNQUOTED(PYGOBJECT_MICRO_VERSION,[$PYGOBJECT_MICRO_VERSION], [PyGObject micro version.])
-
-#AC_MSG_CHECKING([for Python 3 availability.])
-
-#AC_ARG_ENABLE(python3,
-    #AS_HELP_STRING([--enable-python3],[Enable Python 3 support]),
-    #[enable_python3=$enableval],
-    #[enable_python3=auto])
-
-#if test "x$enable_python3" = "xno"; then
-    #found_python3="no (disabled, use --enable-python3 to enable)"
-#else
-    #AM_PATH_PYTHON($PYTHON3_REQUIRED, [
-        #AC_PATH_TOOL(PYTHON3_CONFIG, "python3-config")
-        #if test -n "${PYTHON3_CONFIG}"; then
-            #PKG_CHECK_MODULES(PYGOBJECT, pygobject-3.0 >= $PYGOBJECT_REQUIRED, [
-                #found_python3=yes
-                #PYTHON3_CFLAGS=`${PYTHON3_CONFIG} --includes`
-                #PYTHON3_LIBS=`${PYTHON3_CONFIG} --libs`
-                #PYTHON3_LDFLAGS=`${PYTHON3_CONFIG} --ldflags`
-                #PYTHON3_PYEXECDIR="${pyexecdir}"
-                #AC_SUBST(PYTHON3_CFLAGS)
-                #AC_SUBST(PYTHON3_LIBS)
-                #AC_SUBST(PYTHON3_LDFLAGS)
-                #AC_SUBST(PYTHON3_PYEXECDIR)
-                #AC_DEFINE(ENABLE_PYTHON3, 1, [Define to compile with Python 3 support])
-            #], [
-                #found_python3="no (PyGObject not found)"
-            #])
-        #else
-            #found_python3="no (python3-config not found)"
-        #fi
-    #], [
-        #found_python3="no (python3 not found)"
-    #])
-#fi
-
-#if test "x$enable_python3" = "xyes" -a "x$found_python3" != "xyes"; then
-    #AC_MSG_ERROR([You need to have Python 3 and PyGObject installed to build Python3 support for libpeas plugins])
-#fi
-#AC_MSG_RESULT([$found_python3])
-
-#AM_CONDITIONAL([ENABLE_PYTHON3],[test "x$found_python3" = "xyes"])
 
 
 dnl ***********************************************************************
@@ -609,6 +429,8 @@ AC_CONFIG_FILES([
 	build/Makefile
 	build/autotools/Makefile
 
+	contrib/Makefile
+
 	data/Makefile
 	data/config/Makefile
 	data/glade/Makefile
@@ -622,8 +444,6 @@ AC_CONFIG_FILES([
 	data/mime/Makefile
 	data/schemas/Makefile
 	data/org.coanda.Dactl.desktop.in
-
-	deps/Makefile
 
 	doc/Makefile
 
@@ -674,12 +494,11 @@ AC_MSG_NOTICE([
 
     Example Plugins:
 
-     Example Vala: ................................ : ${enable_vala_plugin}
      Example Python: .............................. : ${enable_python_plugin}
+     Example Vala: ................................ : ${enable_vala_plugin}
 
     Languages support:
 
-     Lua 5.1 support: ............................. : ${found_lua51}
      Python 3 support: ............................ : ${enable_python_scripting}
 
     $PACKAGE will be installed in $bindir

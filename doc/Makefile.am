@@ -7,4 +7,8 @@ EXTRA_DIST = \
 
 endif
 
+GITIGNOREFILES = \
+	build \
+	$(NULL)
+
 -include $(top_srcdir)/git.mk
