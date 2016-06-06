@@ -1,0 +1,7 @@
+[Plugin]
+Module=dactl-vala
+Name=Vala Example Plugin
+Description=An example plugin written in Vala.
+Authors=Geoff Johnson <geoff.johnson@coanda.ca>
+Copyright=Copyright © 2016 Geoff Johnson
+Builtin=true

@@ -6,7 +6,7 @@ dnl Define Versioning Information
 dnl ***********************************************************************
 m4_define([dactl_major_version],[0])
 m4_define([dactl_minor_version],[3])
-m4_define([dactl_micro_version],[2])
+m4_define([dactl_micro_version],[3])
 m4_define([dactl_version],[dactl_major_version.dactl_minor_version.dactl_micro_version])
 m4_define([dactl_interface_age],[0])
 m4_define([dactl_bugreport_url],
@@ -167,8 +167,8 @@ dnl Library checks
 VALAFLAGS="--enable-deprecated --target-glib=2.38 $VALAFLAGS"
 
 dnl Need to work these in to simplify checking
-DACTL_BASE_MODULES="gee-0.8 libxml-2.0"
-DACTL_BASE_MODULES_VALAFLAGS="--pkg gee-0.8 --pkg libxml-2.0 --pkg glib-extra"
+DACTL_BASE_MODULES="gee-0.8 libxml-2.0 libpeas-1.0 libpeas-gtk-1.0"
+DACTL_BASE_MODULES_VALAFLAGS="--pkg gee-0.8 --pkg libxml-2.0 --pkg glib-extra --pkg libpeas-1.0 --pkg libpeas-gtk-1.0"
 
 PKG_CHECK_MODULES([LIBDACTL_CORE_DEPS], [$DACTL_BASE_MODULES gio-2.0 gmodule-2.0])
 LIBDACTL_CORE_DEPS_VALAFLAGS="$DACTL_BASE_MODULES_VALAFLAGS --pkg gio-2.0 --pkg gmodule-2.0"
@@ -219,24 +219,12 @@ AS_IF([test "x$try_cld" = "xyes"],
 
 AM_CONDITIONAL(USE_CLD, test "x$HAVE_CLD" = "xyes")
 
-dnl Check if the user chose to build using an installed version of libcld instead
-dnl of the git submodule version in deps/libcld
-dnl AC_ARG_WITH(installed_libcld,
-dnl     AS_HELP_STRING([--without-installed-libcld], [Build using local CLD]),
-dnl     [try_installed_cld=$withval], [try_installed_cld=yes])
-dnl
-dnl HAVE_INSTALLED_CLD=no
-dnl AS_IF([test "x$try_installed_cld" = "xyes"],
-dnl       [
-dnl         HAVE_INSTALLED_CLD="$HAVE_CLD"
-dnl       ],
-dnl       [
-dnl         AC_CONFIG_SUBDIRS([deps/libcld])
-dnl       ]
-dnl      )
-dnl
-dnl AM_CONDITIONAL(USE_INSTALLED_CLD, test "x$HAVE_INSTALLED_CLD" = "xyes")
+dnl XXX slowly switching to this as a simpler more sensible method
+m4_define([pygobject_required_version], [3.18.0])
 
+PKG_CHECK_MODULES(PYGOBJECT,[pygobject-3.0 >= pygobject_required_version],
+                            [have_pygobject=yes]
+                            [have_pygobject=no])
 
 dnl ***********************************************************************
 dnl Check if we have WebKit support
@@ -265,50 +253,44 @@ AM_CONDITIONAL(ENABLE_WEBKIT, [test "x$enable_webkit" = "xyes"])
 dnl ***********************************************************************
 dnl Check for supported plugins
 dnl ***********************************************************************
-DACTL_ADD_PLUGIN([brabender],[CLD Brabender plugin],[yes])
-AS_IF([test "x$enable_brabender_plugin" = "xyes"],
-  [
-    PKG_CHECK_MODULES([DACTL_PLUGIN_BRABENDER_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.3])
-  ])
-
-DACTL_ADD_PLUGIN([heidolph],[CLD Heidolph plugin],[yes])
-AS_IF([test "x$enable_heidolph_plugin" = "xyes"],
-  [
-    PKG_CHECK_MODULES([DACTL_PLUGIN_HEIDOLPH_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.3])
-  ])
-
-DACTL_ADD_PLUGIN([licor],[CLD Licor plugin],[yes])
-AS_IF([test "x$enable_licor_plugin" = "xyes"],
-  [
-    PKG_CHECK_MODULES([DACTL_PLUGIN_LICOR_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.3])
-  ])
-
-DACTL_ADD_PLUGIN([parker],[CLD Parker plugin],[yes])
-AS_IF([test "x$enable_parker_plugin" = "xyes"],
-  [
-    PKG_CHECK_MODULES([DACTL_PLUGIN_PARKER_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.3])
-  ])
-
-DACTL_ADD_PLUGIN([velmex],[CLD Velmex plugin],[yes])
-AS_IF([test "x$enable_velmex_plugin" = "xyes"],
-  [
-    PKG_CHECK_MODULES([DACTL_PLUGIN_VELMEX_DEPS],
-                      [$DACTL_COMMON_MODULES cld-0.3])
-  ])
+m4_include([src/plugins/brabender/configure.ac])
+m4_include([src/plugins/heidolph/configure.ac])
+m4_include([src/plugins/licor/configure.ac])
+m4_include([src/plugins/parker/configure.ac])
+m4_include([src/plugins/velmex/configure.ac])
+m4_include([src/plugins/samples/python/configure.ac])
+m4_include([src/plugins/samples/vala/configure.ac])
 
 AC_SUBST([DACTL_PLUGIN_LINKER_FLAGS],["-module -avoid-version -Wl,-z,defs"])
 AC_SUBST([DACTL_PLUGIN_DIR],[${libdir}/dactl-0.3/plugins])
 
-# This should be called only after all DACTL_CHECK_VALA() and DACTL_ADD_PLUGIN() calls:
+dnl This should be called only after all DACTL_CHECK_VALA() and DACTL_ADD_PLUGIN() calls:
 DACTL_CHECK_VALA([$VALA_REQUIRED],)
                  #[cld-0.3
                   #gio-2.0
                   #gee-0.8
                   #posix])
+
+
+dnl ***********************************************************************
+dnl Check for Required Python
+dnl ***********************************************************************
+enable_python_scripting=no
+AS_IF([test "x$have_pygobject" = "xyes"],[
+	AM_PATH_PYTHON([3.2.3])
+	AC_PATH_TOOL(PYTHON3_CONFIG, "python3-config")
+	AS_IF([test -z "${PYTHON3_CONFIG}"],[
+		AC_MSG_RESULT([Failed to locate python3-config.])
+	],[
+		LIBDACTL_CORE_DEPS_CFLAGS="${LIBDACTL_CORE_DEPS_CFLAGS} `${PYTHON3_CONFIG} --includes`"
+		LIBDACTL_CORE_DEPS_LIBS="${LIBDACTL_CORE_DEPS_LIBS} `${PYTHON3_CONFIG} --libs`"
+		LIBDACTL_CORE_DEPS_LDFLAGS="${LIBDACTL_CORE_DEPS_LDFLAGS} `${PYTHON3_CONFIG} --ldflags`"
+		enable_python_scripting=yes
+	])
+
+	pyoverridesdir="\$(pyexecdir)/gi/overrides"
+	AC_SUBST(pyoverridesdir)
+])
 
 
 dnl ***********************************************************************
@@ -412,6 +394,33 @@ AC_MSG_RESULT([$enable_profiling])
 
 
 dnl ***********************************************************************
+dnl Setup common cflags and ldflags for plugins
+dnl ***********************************************************************
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS -I\$(top_srcdir)/src/libdactl-core"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS -I\$(top_srcdir)/src/libdactl-ui"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS $LIBDACTL_UI_DEPS_CFLAGS"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS $LIBDACTL_CORE_DEPS_CFLAGS"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS $DEBUG_CFLAGS"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS $OPTIMIZE_CFLAGS"
+AC_SUBST(PLUGIN_CFLAGS)
+
+PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS $OPTIMIZE_LDFLAGS"
+PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS -avoid-version"
+PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS -export-symbols-regex peas_register_types"
+PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS -module"
+AC_SUBST(PLUGIN_LDFLAGS)
+
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --target-glib=2.44"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --thread"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-core"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-ui"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-core-0.3"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-ui-0.3"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg libpeas-1.0"
+AC_SUBST(PLUGIN_VALAFLAGS)
+
+
+dnl ***********************************************************************
 dnl Process .in Files
 dnl ***********************************************************************
 AC_CONFIG_FILES([
@@ -419,6 +428,8 @@ AC_CONFIG_FILES([
 
 	build/Makefile
 	build/autotools/Makefile
+
+	contrib/Makefile
 
 	data/Makefile
 	data/config/Makefile
@@ -434,8 +445,6 @@ AC_CONFIG_FILES([
 	data/schemas/Makefile
 	data/org.coanda.Dactl.desktop.in
 
-	deps/Makefile
-
 	doc/Makefile
 
 	po/Makefile.in
@@ -445,6 +454,7 @@ AC_CONFIG_FILES([
 	src/libdactl-core/Makefile
 	src/libdactl-ui/Makefile
 	src/plugins/Makefile
+	src/plugins/samples/Makefile
 
 	examples/Makefile
 
@@ -460,27 +470,36 @@ AC_MSG_NOTICE([
 
     Options
 
-     Prefix: .............................. : ${prefix}
-     Libdir: .............................. : ${libdir}
-     Optimized Build ...................... : ${enable_optimizations}
-     WebKit ............................... : ${enable_webkit}
+     Prefix: ...................................... : ${prefix}
+     Libdir: ...................................... : ${libdir}
+     Optimized Build .............................. : ${enable_optimizations}
+     WebKit ....................................... : ${enable_webkit}
 
     Development Options
 
-     CLD support: ......................... : ${with_cld}
-     UI support: .......................... : ${with_ui}
-     Enable Debug: ........................ : ${enable_debug}
-     Enable Tracing ....................... : ${enable_tracing}
-     Enable Profiling (-pg)................ : ${enable_profiling}
-     Build API reference .................. : ${enable_doc}
+     CLD support: ................................. : ${with_cld}
+     UI support: .................................. : ${with_ui}
+     Enable Debug: ................................ : ${enable_debug}
+     Enable Tracing ............................... : ${enable_tracing}
+     Enable Profiling (-pg)........................ : ${enable_profiling}
+     Build API reference .......................... : ${enable_doc}
 
     Plugins:
 
-     Brabender: ........................... : ${enable_brabender_plugin}
-     Heidolph: ............................ : ${enable_heidolph_plugin}
-     Licor: ............................... : ${enable_licor_plugin}
-     Parker: .............................. : ${enable_parker_plugin}
-     Velmex: .............................. : ${enable_velmex_plugin}
+     Brabender: ................................... : ${enable_brabender_plugin}
+     Heidolph: .................................... : ${enable_heidolph_plugin}
+     Licor: ....................................... : ${enable_licor_plugin}
+     Parker: ...................................... : ${enable_parker_plugin}
+     Velmex: ...................................... : ${enable_velmex_plugin}
+
+    Example Plugins:
+
+     Example Python: .............................. : ${enable_python_plugin}
+     Example Vala: ................................ : ${enable_vala_plugin}
+
+    Languages support:
+
+     Python 3 support: ............................ : ${enable_python_scripting}
 
     $PACKAGE will be installed in $bindir
 ])

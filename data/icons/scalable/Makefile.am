@@ -9,3 +9,5 @@ svg_DATA = \
 
 EXTRA_DIST = \
 	$(svg_DATA)
+
+-include $(top_srcdir)/git.mk
