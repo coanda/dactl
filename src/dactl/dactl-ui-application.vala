@@ -712,7 +712,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
         Gdk.Pixbuf? logo = null;
         try {
-            logo = Dactl.load_asset ("scalable/dactl.svg");
+            logo = Dactl.load_asset ("dactl.svg");
         } catch (GLib.Error error) {
             warning (error.message);
         }

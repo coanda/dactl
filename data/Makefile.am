@@ -1,4 +1,4 @@
-SUBDIRS = config glade icons mime schemas .
+SUBDIRS = gsettings config glade icons mime .
 
 @APPSTREAM_XML_RULES@
 @INTLTOOL_XML_RULE@

@@ -1,3 +1,8 @@
+CLEANFILES =
+DISTCLEANFILES =
+BUILT_SOURCES =
+EXTRA_DIST =
+
 include $(top_srcdir)/common.am
 
 bin_PROGRAMS = dactl
