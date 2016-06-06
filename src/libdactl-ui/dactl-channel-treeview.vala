@@ -423,18 +423,18 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
         var entries = get_object_map (typeof (Dactl.ChannelTreeEntry));
         foreach (var entry in entries.values) {
             if ((entry as Dactl.ChannelTreeEntry).ch_ref == object.uri) {
-                message ("Assigning channel `%s' to `%s'", object.uri, entry.id);
+                debug ("Assigning channel `%s' to `%s'", object.uri, entry.id);
                 (entry as Dactl.ChannelTreeEntry).channel = (object as Cld.Channel);
             }
             satisfied = (entry as Dactl.ChannelTreeEntry).channel_isset;
         }
 
-        message ("ChannelTreeView requirements satisfied: %s", satisfied.to_string ());
+        debug ("ChannelTreeView requirements satisfied: %s", satisfied.to_string ());
 
         if (satisfied) {
             channels_loaded ();
 
-            message ("Creating treeview");
+            debug ("Creating treeview");
             create_treeview ();
 
             treeview.cursor_changed.connect (treeview_cursor_changed_cb);
@@ -514,7 +514,7 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
                     break;
             }
 
-            message ("Column %d: %s type: %s",
+            debug ("Column %d: %s type: %s",
                      i, ((Columns)column).to_string (), column_types[i].name ());
             i++;
         }
@@ -546,7 +546,7 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
         foreach (var category in categories.values) {
             Gtk.TreeIter iter;
 
-            message ("TreeView `%s' adding category `%s'", id, category.id);
+            debug ("TreeView `%s' adding category `%s'", id, category.id);
             treemodel.append (out iter, null);
 
             for (i = 0; i <= columns.size; i++) {
@@ -560,7 +560,7 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
             foreach (var entry in entries.values) {
                 Gtk.TreeIter child_iter;
                 var channel = (entry as Dactl.ChannelTreeEntry).channel;
-                message ("TreeView `%s' adding channel `%s' to `%s'", id, channel.id, entry.id);
+                debug ("TreeView `%s' adding channel `%s' to `%s'", id, channel.id, entry.id);
 
                 if (channel is Cld.ScalableChannel) {
                     var cal = (channel as Cld.ScalableChannel).calibration;
@@ -627,7 +627,7 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
         var selection = (treeview as Gtk.TreeView).get_selection ();
         selection.get_selected (out model, out iter);
         model.get (iter, hidden_id, out selection_id);
-        message ("Selected: %s", selection_id);
+        debug ("Selected: %s", selection_id);
 
         var entry = get_object (selection_id) as Dactl.ChannelTreeEntry;
         channel_selected (entry.ch_ref);

@@ -60,7 +60,7 @@ public class Dactl.PluginLoader : Dactl.ModuleLoader {
     }
 
     public void add_plugin (Dactl.Plugin plugin) {
-        message (_("New plugin '%s' available"), plugin.name);
+        debug (_("New plugin '%s' available"), plugin.name);
         this.plugin_hash.set (plugin.name, plugin);
         this.plugin_available (plugin);
     }

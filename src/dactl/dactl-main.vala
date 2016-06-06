@@ -76,7 +76,7 @@ internal class Dactl.Main : GLib.Object {
     }
 
     private int run (string[] args) {
-        message (_("Dactl v%s starting..."), Config.PACKAGE_VERSION);
+        debug (_("Dactl v%s starting..."), Config.PACKAGE_VERSION);
         app.launch (args);
 
         return this.exit_code;
@@ -106,7 +106,7 @@ internal class Dactl.Main : GLib.Object {
                 // FIXME: this causes the application to close the device connections
                 //this.exit (-82);
             } else {
-                message ("Plugin timeout is complete, assuming all are loaded");
+                debug ("Plugin timeout is complete, assuming all are loaded");
             }
 
             return false;
@@ -122,7 +122,7 @@ internal class Dactl.Main : GLib.Object {
         app.plugins.add (plugin);
         app.register_plugin (plugin);
         if (app.plugins.size > 0) {
-            message ("Added `%s', there are now %d plugins loaded",
+            debug ("Added `%s', there are now %d plugins loaded",
                      plugin.name, app.plugins.size);
         }
 
