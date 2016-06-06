@@ -1,7 +1,9 @@
+if ENABLE_HEIDOLPH_PLUGIN
+
 include $(top_srcdir)/common.am
 
 plugin_LTLIBRARIES = libdactl-heidolph.la
-plugin_DATA = heidolph.plugin
+dist_plugin_DATA = heidolph.plugin
 
 gresource_file = heidolph.gresource.xml
 resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies $(gresource_file))
@@ -29,14 +31,12 @@ libdactl_heidolph_la_VALAFLAGS = \
 
 libdactl_heidolph_la_CFLAGS = \
 	-DG_LOG_DOMAIN='"Heidolph"' \
-	$(DACTL_PLUGIN_HEIDOLPH_DEPS_CFLAGS) \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS)
 
 libdactl_heidolph_la_LIBADD = \
-	$(DACTL_PLUGIN_HEIDOLPH_DEPS_LIBS) \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
@@ -50,4 +50,9 @@ MAINTAINERCLEANFILES += $(libdactl_brabender_la_SOURCES:.vala=.c)
 EXTRA_DIST = \
 	$(gresource_file) \
 	$(resource_files) \
-	heidolph.plugin.in
+	$(plugin_DATA) \
+	$(NULL)
+
+endif
+
+-include $(top_srcdir)/git.mk

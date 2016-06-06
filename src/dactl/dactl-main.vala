@@ -41,6 +41,9 @@ internal class Dactl.Main : GLib.Object {
     private Dactl.PluginLoader plugin_loader;
     private Dactl.LogHandler log_handler;
 
+    /* XXX testing Peas plugin manager */
+    private Dactl.PluginManager plugin_manager;
+
     private int exit_code;
 
     public bool need_restart;
@@ -49,6 +52,9 @@ internal class Dactl.Main : GLib.Object {
         this.factory = Dactl.ApplicationFactory.get_default ();
         this.log_handler = Dactl.LogHandler.get_default ();
         this.plugin_loader = new Dactl.PluginLoader ();
+
+        /* XXX testing Peas plugin manager */
+        plugin_manager = new Dactl.PluginManager ();
 
         this.exit_code = 0;
 

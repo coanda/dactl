@@ -1,7 +1,9 @@
+if ENABLE_VELMEX_PLUGIN
+
 include $(top_srcdir)/common.am
 
 plugin_LTLIBRARIES = libdactl-velmex.la
-plugin_DATA = velmex.plugin
+dist_plugin_DATA = velmex.plugin
 
 gresource_file = velmex.gresource.xml
 resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies $(gresource_file))
@@ -30,14 +32,12 @@ libdactl_velmex_la_VALAFLAGS = \
 
 libdactl_velmex_la_CFLAGS = \
 	-DG_LOG_DOMAIN='"Velmex"' \
-	$(DACTL_PLUGIN_VELMEX_DEPS_CFLAGS) \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS)
 
 libdactl_velmex_la_LIBADD = \
-	$(DACTL_PLUGIN_VELMEX_DEPS_LIBS) \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
@@ -51,4 +51,9 @@ MAINTAINERCLEANFILES += $(libdactl_brabender_la_SOURCES:.vala=.c)
 EXTRA_DIST = \
 	$(gresource_file) \
 	$(resource_files) \
-	velmex.plugin.in
+	$(plugin_DATA) \
+	$(NULL)
+
+endif
+
+-include $(top_srcdir)/git.mk

@@ -1,7 +1,9 @@
+if ENABLE_PARKER_PLUGIN
+
 include $(top_srcdir)/common.am
 
 plugin_LTLIBRARIES = libdactl-parker.la
-plugin_DATA = parker.plugin
+dist_plugin_DATA = parker.plugin
 
 gresource_file = parker.gresource.xml
 resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies $(gresource_file))
@@ -29,14 +31,12 @@ libdactl_parker_la_VALAFLAGS = \
 
 libdactl_parker_la_CFLAGS = \
 	-DG_LOG_DOMAIN='"Parker"' \
-	$(DACTL_PLUGIN_PARKER_DEPS_CFLAGS) \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS)
 
 libdactl_parker_la_LIBADD = \
-	$(DACTL_PLUGIN_PARKER_DEPS_LIBS) \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
@@ -50,4 +50,9 @@ MAINTAINERCLEANFILES += $(libdactl_brabender_la_SOURCES:.vala=.c)
 EXTRA_DIST = \
 	$(gresource_file) \
 	$(resource_files) \
-	parker.plugin.in
+	$(plugin_DATA) \
+	$(NULL)
+
+endif
+
+-include $(top_srcdir)/git.mk
