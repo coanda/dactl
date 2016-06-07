@@ -1,4 +1,10 @@
 LIBDACTL_CORE_VAPI_SOURCE_FILES = \
+    dactl-application.vala \
+    dactl-application-model.vala \
+    dactl-application-view.vala \
+    dactl-application-controller.vala \
+    dactl-application-config.vala \
+    dactl-application-factory.vala \
     dactl-buildable.vala \
     dactl-cld-adapter.vala \
     dactl-configuration.vala \

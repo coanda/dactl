@@ -14,7 +14,8 @@ public enum Dactl.LogLevel {
     DEBUG = 5
 }
 
-public class Dactl.LogHandler : GLib.Object {
+public class Dactl.Log : GLib.Object {
+
     private const string DEFAULT_LEVELS = "*:4";
     private const LogLevelFlags DEFAULT_FLAGS = LogLevelFlags.LEVEL_WARNING |
                                                 LogLevelFlags.LEVEL_CRITICAL |
@@ -24,17 +25,9 @@ public class Dactl.LogHandler : GLib.Object {
 
     private Gee.HashMap<string,LogLevelFlags> log_level_hash;
 
-    private static Dactl.LogHandler log_handler; // Singleton
+    public int verbosity { get; set; default = 0; }
 
-    public static Dactl.LogHandler get_default () {
-        if (log_handler == null) {
-            log_handler = new Dactl.LogHandler ();
-        }
-
-        return log_handler;
-    }
-
-    private LogHandler () {
+    private Log () {
         this.log_level_hash = new HashMap<string,LogLevelFlags> ();
 
         // Get the allowed log levels from the config
@@ -72,11 +65,13 @@ public class Dactl.LogHandler : GLib.Object {
             this.log_level_hash[domain] = flags;
         }
 
+
+
         Log.set_default_handler (this.log_func);
     }
 
     private void log_func (string?       log_domain,
-                           LogLevelFlags log_levels,
+                           LogLevelFlags log_level,
                            string        message) {
         LogLevelFlags flags = 0;
 
@@ -88,9 +83,30 @@ public class Dactl.LogHandler : GLib.Object {
             flags = this.log_level_hash["*"];
         }
 
-        if (log_levels in flags) {
+        switch ((int) log_level) {
+            case LogLevel.MESSAGE:
+                if (verbosity < 1)
+                    return;
+                break;
+            case LogLevel.INFO:
+                if (verbosity < 2)
+                    return;
+                break;
+            case LogLevel.DEBUG:
+                if (verbosity < 3)
+                    return;
+                break;
+            case LogLevel.TRACE:
+                if (verbosity < 4)
+                    return;
+                break;
+            default:
+                break;
+        }
+
+        if (log_level in flags) {
             // Forward the message to default domain
-            Log.default_handler (log_domain, log_levels, message);
+            Log.default_handler (log_domain, log_level, message);
         }
     }
 
