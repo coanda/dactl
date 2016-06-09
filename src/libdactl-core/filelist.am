@@ -11,7 +11,7 @@ LIBDACTL_CORE_VAPI_SOURCE_FILES = \
     dactl-container.vala \
     dactl-dbus-interface.vala \
     dactl-factory.vala \
-    dactl-log-handler.vala \
+    dactl-log.vala \
     dactl-module-loader.vala \
     dactl-object.vala \
     dactl-plugin.vala \

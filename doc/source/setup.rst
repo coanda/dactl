@@ -19,7 +19,7 @@ The source code is hosted on `GitHub <https://github.com/coanda/dactl.git>`_.
 Pre-installation Setup
 ----------------------
 
-Install Fedora 19/20/21 dependencies
+Install Fedora 19 .. 23 dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
@@ -29,7 +29,8 @@ Install Fedora 19/20/21 dependencies
    sudo yum install -y glib2-devel gtk3-devel libxml2-devel libgee-devel \
     json-glib-devel clutter-devel clutter-gtk-devel gsl-devel gtksourceview3-devel \
     libmatheval-devel sqlite-devel gobject-introspection-devel gettext-devel \
-    gettext-common-devel libmodbus-devel comedilib-devel librsvg2-devel
+    gettext-common-devel libmodbus-devel comedilib-devel librsvg2-devel \
+    python3-devel pygobject3-devel
 
 Install Ubuntu 14.04 dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -44,7 +45,8 @@ Notice: These commands have only been tested as part of a Travis-CI build.
    sudo apt-get install -qq gnome-common libglib2.0-dev libjson-glib-dev \
     libgee-0.8-dev libvala-0.22-dev libgsl0-dev libsqlite0-dev libxml2-dev \
     libmatheval-dev libmodbus-dev libcomedi-dev valac-0.22 librsvg2-dev \
-    libgirepository1.0-dev libgtk-3-dev libclutter-1.0-dev libclutter-gtk-1.0-dev
+    libgirepository1.0-dev libgtk-3-dev libclutter-1.0-dev libclutter-gtk-1.0-dev \
+    python3-dev python-gobject-dev
 
 Compiled Dependencies
 ---------------------

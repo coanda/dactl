@@ -9,7 +9,7 @@ internal class Dactl.Main : GLib.Object {
             "cli", 'c', 0, OptionArg.NONE, ref cli,
             "Start the application with a command line interface", null
         },{
-            "verbose", 'v', 0, OptionArg.CALLBACK, (void *) verbose_cb,
+            "verbose", 'v', OptionFlags.NO_ARG, OptionArg.CALLBACK, (void *) verbose_cb,
             "Provide verbose debugging output.", null
         },{
             "version", 'V', 0, OptionArg.NONE, ref version,
@@ -20,7 +20,7 @@ internal class Dactl.Main : GLib.Object {
     }
 
     private bool verbose_cb () {
-        log.verbosity++;
+        Dactl.Log.increase_verbosity ();
         return true;
     }
 
@@ -56,8 +56,10 @@ internal class Dactl.Main : GLib.Object {
     public bool need_restart;
 
     private Main () throws GLib.Error {
+        this.log = Dactl.Log.get_default ();
+        log.init (true, null);
+
         this.factory = Dactl.ApplicationFactory.get_default ();
-        this.log = new Dactl.Log (true, null);
         this.plugin_loader = new Dactl.PluginLoader ();
 
         /* XXX testing Peas plugin manager */
@@ -80,6 +82,7 @@ internal class Dactl.Main : GLib.Object {
      */
     public void exit (int exit_code) {
         this.exit_code = exit_code;
+        Dactl.Log.shutdown ();
         (app as Dactl.UI.Application).shutdown ();
     }
 

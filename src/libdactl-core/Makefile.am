@@ -16,6 +16,7 @@ libdactl_core_0_3_la_VALAFLAGS = \
 	--gir=Dactl-0.3.gir \
 	--vapidir=$(srcdir) \
 	--pkg posix \
+	--pkg linux \
 	$(LIBDACTL_CORE_DEPS_VALAFLAGS) \
 	$(DACTL_CLD_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_VALAFLAGS)
