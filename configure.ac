@@ -6,7 +6,7 @@ dnl Define Versioning Information
 dnl ***********************************************************************
 m4_define([dactl_major_version],[0])
 m4_define([dactl_minor_version],[3])
-m4_define([dactl_micro_version],[3])
+m4_define([dactl_micro_version],[4])
 m4_define([dactl_version],[dactl_major_version.dactl_minor_version.dactl_micro_version])
 m4_define([dactl_interface_age],[0])
 m4_define([dactl_bugreport_url],
