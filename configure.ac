@@ -434,6 +434,7 @@ AC_CONFIG_FILES([
 	data/Makefile
 	data/config/Makefile
 	data/glade/Makefile
+	data/gsettings/Makefile
 	data/icons/Makefile
 	data/icons/16x16/Makefile
 	data/icons/22x22/Makefile
@@ -442,8 +443,9 @@ AC_CONFIG_FILES([
 	data/icons/48x48/Makefile
 	data/icons/scalable/Makefile
 	data/mime/Makefile
-	data/schemas/Makefile
 	data/org.coanda.Dactl.desktop.in
+
+	data/gsettings/org.coanda.dactl.gschema.xml
 
 	doc/Makefile
 

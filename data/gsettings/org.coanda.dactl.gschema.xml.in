@@ -1,27 +1,25 @@
 <schemalist>
   <schema id="org.coanda.dactl" path="/org/coanda/dactl/" gettext-domain="dactl">
-
     <key name="window-size" type="ai">
       <default>[1280, 800]</default>
-      <_summary>Window size</_summary>
-      <_description>
+      <summary>Window size</summary>
+      <description>
         Window size (width and height)
-      </_description>
+      </description>
     </key>
     <key name="window-position" type="ai">
       <default>[]</default>
-      <_summary>Window position</_summary>
-      <_description>
+      <summary>Window position</summary>
+      <description>
         Window position (x and y)
-      </_description>
+      </description>
     </key>
     <key name="window-maximized" type="b">
       <default>true</default>
-      <_summary>Window maximized</_summary>
-      <_description>
+      <summary>Window maximized</summary>
+      <description>
         Window maximized state
-      </_description>
+      </description>
     </key>
-
   </schema>
 </schemalist>

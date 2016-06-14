@@ -1,3 +1,8 @@
+CLEANFILES =
+DISTCLEANFILES =
+BUILT_SOURCES =
+EXTRA_DIST =
+
 include $(top_srcdir)/common.am
 
 bin_PROGRAMS = dactl
@@ -66,19 +71,15 @@ UI_SOURCES = \
 	dactl-sidebar.vala \
 	dactl-topbar.vala \
 	dactl-ui-application.vala \
+	dactl-ui-application-model.vala \
 	dactl-ui-application-view.vala \
+	dactl-ui-application-controller.vala \
 	dactl-ux-manager.vala
 
 dactl_SOURCES = \
 	$(BUILT_SOURCES) \
 	dactl-main.vala \
 	dactl-dbus-service.vala \
-	dactl-application.vala \
-	dactl-application-factory.vala \
-	dactl-application-config.vala \
-	dactl-application-model.vala \
-	dactl-application-controller.vala \
-	dactl-application-view.vala \
 	dactl-cmdline-config.vala \
 	dactl-utility.vala \
 	$(UI_SOURCES) \

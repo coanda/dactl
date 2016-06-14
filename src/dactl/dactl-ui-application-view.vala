@@ -107,7 +107,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         /* XXX use resource instead - see gtk3-demo for example */
 
         /* Apply stylings from CSS resource */
-        var provider = Dactl.load_css ("gtk-style.css");
+        var provider = Dactl.load_css ("theme/shared.css");
         Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (),
                                                   provider,
                                                   600);

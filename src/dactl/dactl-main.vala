@@ -1,45 +1,52 @@
-private static bool cli = false;
-private static bool verbose = false;
-private static bool version = false;
-
-private const GLib.OptionEntry[] local_options = {{
-    "cli", 'c', 0, OptionArg.NONE, ref cli,
-    "Start the application with a command line interface", null
-},{
-    "verbose", 'v', 0, OptionArg.NONE, ref verbose,
-    "Provide verbose debugging output.", null
-},{
-    "version", 'V', 0, OptionArg.NONE, ref version,
-    "Display version number.", null
-},{
-    null
-}};
-
-private static void parse_local_args (ref unowned string[] args) {
-    var opt_context = new OptionContext (Dactl.Config.PACKAGE_NAME);
-    opt_context.set_ignore_unknown_options (true);
-    opt_context.set_help_enabled (false);
-    opt_context.add_main_entries (local_options, null);
-
-    try {
-        opt_context.parse (ref args);
-    } catch (OptionError e) {
-    }
-
-    if (version) {
-        stdout.printf ("%s - version %s\n", args[0], Dactl.Config.PACKAGE_VERSION);
-        Posix.exit (0);
-    }
-}
-
 internal class Dactl.Main : GLib.Object {
+
+    private struct Options {
+
+        public static bool cli = false;
+        public static  bool version = false;
+
+        public static const GLib.OptionEntry[] entries = {{
+            "cli", 'c', 0, OptionArg.NONE, ref cli,
+            "Start the application with a command line interface", null
+        },{
+            "verbose", 'v', OptionFlags.NO_ARG, OptionArg.CALLBACK, (void *) verbose_cb,
+            "Provide verbose debugging output.", null
+        },{
+            "version", 'V', 0, OptionArg.NONE, ref version,
+            "Display version number.", null
+        },{
+            null
+        }};
+    }
+
+    private bool verbose_cb () {
+        Dactl.Log.increase_verbosity ();
+        return true;
+    }
+
+    private static void parse_local_args (ref unowned string[] args) {
+        var opt_context = new OptionContext (Dactl.Config.PACKAGE_NAME);
+        opt_context.set_ignore_unknown_options (true);
+        opt_context.set_help_enabled (false);
+        opt_context.add_main_entries (Options.entries, null);
+
+        try {
+            opt_context.parse (ref args);
+        } catch (OptionError e) {
+        }
+
+        if (Options.version) {
+            stdout.printf ("%s - version %s\n", args[0], Dactl.Config.PACKAGE_VERSION);
+            Posix.exit (0);
+        }
+    }
 
     private static int PLUGIN_TIMEOUT = 5;
 
     private Dactl.Application app;
     private Dactl.ApplicationFactory factory;
     private Dactl.PluginLoader plugin_loader;
-    private Dactl.LogHandler log_handler;
+    private Dactl.Log log;
 
     /* XXX testing Peas plugin manager */
     private Dactl.PluginManager plugin_manager;
@@ -49,8 +56,10 @@ internal class Dactl.Main : GLib.Object {
     public bool need_restart;
 
     private Main () throws GLib.Error {
+        this.log = Dactl.Log.get_default ();
+        log.init (true, null);
+
         this.factory = Dactl.ApplicationFactory.get_default ();
-        this.log_handler = Dactl.LogHandler.get_default ();
         this.plugin_loader = new Dactl.PluginLoader ();
 
         /* XXX testing Peas plugin manager */
@@ -73,6 +82,7 @@ internal class Dactl.Main : GLib.Object {
      */
     public void exit (int exit_code) {
         this.exit_code = exit_code;
+        Dactl.Log.shutdown ();
         (app as Dactl.UI.Application).shutdown ();
     }
 
