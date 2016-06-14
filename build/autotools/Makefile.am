@@ -14,6 +14,7 @@ EXTRA_DIST = \
 	$(NULL)
 
 GITIGNOREFILES = \
+	ax_set_default_paths_system.m4 \
 	glib-2.0.m4 \
 	glib-gettext.m4 \
 	gsettings.m4 \
@@ -24,6 +25,7 @@ GITIGNOREFILES = \
 	ltversion.m4 \
 	lt~obsolete.m4 \
 	nls.m4 \
+	vapigen.m4 \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

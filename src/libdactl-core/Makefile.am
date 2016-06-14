@@ -29,7 +29,7 @@ libdactl_core_0_3_la_CFLAGS = \
 	-DSMALL_ICON_DIR='"$(smallicondir)"' \
 	-DBIG_ICON_DIR='"$(bigicondir)"' \
 	-include config.h \
-	-DG_LOG_DOMAIN='"Dactl"'
+	-DG_LOG_DOMAIN='"libdactl-core"'
 
 libdactl_core_0_3_la_LIBADD = \
 	$(DACTL_CLD_DEPS_LIBS) \
@@ -52,21 +52,23 @@ vapidir = $(VAPIDIR)
 vapi_DATA = $(VAPI_FILES) $(DEPS_FILES)
 dactl-core-0.3.vapi dactl-core.h Dactl-0.3.gir: libdactl_core_0_3_la_vala.stamp
 
+if HAVE_INTROSPECTION
 -include $(INTROSPECTION_MAKEFILE)
-INTROSPECTION_GIRS=
-INTROSPECTION_SCANNER_ARGS=
-INTROSPECTION_COMPILER_ARGS= -l libdactl-core-0.3.so.0
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS =
+INTROSPECTION_COMPILER_ARGS = -l libdactl-core-0.3.so.0
 $(builddir)/DactlCore-0.3.gir: $(srcdir)/Dactl-0.3.gir
 	$(AM_V_GEN)$(SED) -e 's,Dactl\.,DactlCore.,g' -e 's,namespace name="Dactl",namespace name="DactlCore",g' $< >$@
 GIRS = DactlCore-0.3.gir
 
-girdir=$(datadir)/gir-1.0
-dist_gir_DATA = $(GIRS)
+girdir = $(datadir)/gir-1.0
+gir_DATA = $(GIRS)
 
 typelibdir = $(libdir)/girepository-1.0
-nodist_typelib_DATA = $(GIRS:.gir=.typelib)
+typelib_DATA = $(GIRS:.gir=.typelib)
 
-DISTCLEANFILES = DactlCore-0.3.typelib
+CLEANFILES = $(gir_DATA) $(typelib_DATA)
+endif
 
 MAINTAINERCLEANFILES += $(BUILT_SOURCES)
 
