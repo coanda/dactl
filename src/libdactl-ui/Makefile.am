@@ -47,12 +47,13 @@ libdactl_ui_0_3_la_LDFLAGS = \
 	$(DACTL_DATA_DIR_DEFINES) \
 	-version-info $(LIBDACTL_UI_VERSION)
 
-VAPI_FILES = dactl-ui-0.3.vapi
-DEPS_FILES = dactl-ui-0.3.deps
 
-vapidir = $(VAPIDIR)
-vapi_DATA = $(VAPI_FILES) $(DEPS_FILES)
-dactl-ui.h dactl-ui-0.3.vapi Dactl-0.3.gir: libdactl_ui_0_3_la_vala.stamp
+if ENABLE_WEBKIT
+libdactl_ui_0_3_la_SOURCES += dactl-webkit.vala
+libdactl_ui_0_3_la_CFLAGS += $(WEBKIT_CFLAGS)
+libdactl_ui_0_3_la_LIBADD += $(WEBKIT_LIBS)
+endif
+
 
 if HAVE_INTROSPECTION
 -include $(INTROSPECTION_MAKEFILE)
@@ -81,6 +82,14 @@ typelib_DATA = $(GIRS:.gir=.typelib)
 
 CLEANFILES = $(gir_DATA) $(typelib_DATA)
 endif
+
+
+VAPI_FILES = dactl-ui-0.3.vapi
+DEPS_FILES = dactl-ui-0.3.deps
+
+vapidir = $(VAPIDIR)
+vapi_DATA = $(VAPI_FILES) $(DEPS_FILES)
+dactl-ui.h dactl-ui-0.3.vapi Dactl-0.3.gir: libdactl_ui_0_3_la_vala.stamp
 
 EXTRA_DIST = \
 	dactl-ui.h \

@@ -1,5 +1,5 @@
-[GtkTemplate (ui = "/org/coanda/libdactl/ui/rich-content.ui")]
-public class Dactl.RichContentView : Dactl.CompositeWidget, Dactl.CldAdapter {
+[GtkTemplate (ui = "/org/coanda/libdactl/ui/webkit.ui")]
+public class Dactl.WebKit : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     private Gee.Map<string, Dactl.Object> _objects;
 
@@ -83,7 +83,7 @@ public class Dactl.RichContentView : Dactl.CompositeWidget, Dactl.CldAdapter {
         objects = new Gee.TreeMap<string, Dactl.Object> ();
     }
 
-    public RichContentView (string svg) {
+    public WebKit (string svg) {
         this.svg = svg;
 
         view.load_string (HTML, "text/html", "UTF8", "");
@@ -93,7 +93,7 @@ public class Dactl.RichContentView : Dactl.CompositeWidget, Dactl.CldAdapter {
         request_data.begin ();
     }
 
-    public RichContentView.from_xml_node (Xml.Node *node) {
+    public WebKit.from_xml_node (Xml.Node *node) {
         build_from_xml_node (node);
 
         //view.load_string (HTML, "text/html", "UTF8", "");
@@ -175,7 +175,7 @@ public class Dactl.RichContentView : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     private static void on_div_clicked (WebKit.DOM.Element element,
                                         WebKit.DOM.Event event,
-                                        Dactl.RichContentView view) {
+                                        Dactl.WebKit view) {
         view.div_clicked (element.get_attribute ("id"));
     }
 
