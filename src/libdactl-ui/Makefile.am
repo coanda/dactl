@@ -34,7 +34,7 @@ libdactl_ui_0_3_la_CFLAGS = \
 	$(LIBDACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
-	-DG_LOG_DOMAIN='"Dactl"'
+	-DG_LOG_DOMAIN='"libdactl-ui"'
 
 libdactl_ui_0_3_la_LIBADD = \
 	$(LIBDACTL_UI_DEPS_LIBS) \
@@ -52,10 +52,14 @@ vapidir = $(VAPIDIR)
 vapi_DATA = $(VAPI_FILES) $(DEPS_FILES)
 dactl-ui.h dactl-ui-0.3.vapi Dactl-0.3.gir: libdactl_ui_0_3_la_vala.stamp
 
+if HAVE_INTROSPECTION
 -include $(INTROSPECTION_MAKEFILE)
-INTROSPECTION_GIRS=
-INTROSPECTION_SCANNER_ARGS=
-INTROSPECTION_COMPILER_ARGS= -l libdactl-ui-0.3.so.0 --includedir=$(builddir)/../libdactl-core --includedir=$(srcdir)/../libdactl-core
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS =
+INTROSPECTION_COMPILER_ARGS = \
+	-l libdactl-ui-0.3.so.0 \
+	--includedir=$(builddir)/../libdactl-core \
+	--includedir=$(srcdir)/../libdactl-core
 $(builddir)/DactlUI-0.3.gir: $(srcdir)/Dactl-0.3.gir
 	$(AM_V_GEN)$(SED) -e 's,Dactl\.,DactlUI.,g' \
 		-e 's,namespace name="Dactl",namespace name="DactlUI",g' \
@@ -67,13 +71,14 @@ $(builddir)/DactlUI-0.3.gir: $(srcdir)/Dactl-0.3.gir
 		$< >$@
 GIRS = DactlUI-0.3.gir
 
-girdir=$(datadir)/gir-1.0
-dist_gir_DATA = $(GIRS)
+girdir = $(datadir)/gir-1.0
+gir_DATA = $(GIRS)
 
 typelibdir = $(libdir)/girepository-1.0
-nodist_typelib_DATA = $(GIRS:.gir=.typelib)
+typelib_DATA = $(GIRS:.gir=.typelib)
 
-DISTCLEANFILES = DactlUI-0.3.typelib
+CLEANFILES = $(gir_DATA) $(typelib_DATA)
+endif
 
 EXTRA_DIST = \
 	dactl-ui.h \

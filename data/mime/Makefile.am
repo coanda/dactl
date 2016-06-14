@@ -1,5 +1,3 @@
-## MIMEFILES = dactl.xml.in
-
 mimexmldir = $(datadir)/mime/packages
 mimexml_DATA = dactl.xml
 

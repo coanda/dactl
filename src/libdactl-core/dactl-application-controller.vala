@@ -25,11 +25,6 @@ public class Dactl.ApplicationController : GLib.Object {
         this.model = model;
         this.view = view;
 
-        var app = Dactl.UI.Application.get_default ();
-        app.save_requested.connect (save_requested_cb);
-        app.closed.connect (() => {
-            (app as GLib.Application).quit ();
-        });
         connect_signals ();
     }
 
@@ -55,7 +50,7 @@ public class Dactl.ApplicationController : GLib.Object {
      * Callbacks common to all view types.
      * XXX the intention is to use a common interface later on
      */
-    public void save_requested_cb () {
+    protected void save_requested_cb () {
         debug ("Saving the configuration.");
         try {
             model.config.set_xml_node ("//dactl/cld:objects",

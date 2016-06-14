@@ -1,7 +1,7 @@
 /**
  * Class use to build objects from configuration data.
  */
-private class Dactl.ApplicationFactory : GLib.Object, Dactl.Factory {
+public class Dactl.ApplicationFactory : GLib.Object, Dactl.Factory {
 
     /* Factory singleton */
     private static Dactl.ApplicationFactory app_factory;
@@ -127,7 +127,8 @@ private class Dactl.ApplicationFactory : GLib.Object, Dactl.Factory {
             if (node->name == "object") {
                 var type = node->get_prop ("type");
                 switch (type) {
-                    case "foo": return null;
+                    case "foo":
+                        break;
                     default:
                         throw new Dactl.FactoryError.TYPE_NOT_FOUND (
                             _("The type requested is not a known Dactl type."));

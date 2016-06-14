@@ -6,7 +6,7 @@ dnl Define Versioning Information
 dnl ***********************************************************************
 m4_define([dactl_major_version],[0])
 m4_define([dactl_minor_version],[3])
-m4_define([dactl_micro_version],[3])
+m4_define([dactl_micro_version],[4])
 m4_define([dactl_version],[dactl_major_version.dactl_minor_version.dactl_micro_version])
 m4_define([dactl_interface_age],[0])
 m4_define([dactl_bugreport_url],
@@ -434,6 +434,7 @@ AC_CONFIG_FILES([
 	data/Makefile
 	data/config/Makefile
 	data/glade/Makefile
+	data/gsettings/Makefile
 	data/icons/Makefile
 	data/icons/16x16/Makefile
 	data/icons/22x22/Makefile
@@ -442,8 +443,9 @@ AC_CONFIG_FILES([
 	data/icons/48x48/Makefile
 	data/icons/scalable/Makefile
 	data/mime/Makefile
-	data/schemas/Makefile
 	data/org.coanda.Dactl.desktop.in
+
+	data/gsettings/org.coanda.dactl.gschema.xml
 
 	doc/Makefile
 
