@@ -66,7 +66,7 @@ public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
             case "DactlChannelTreeCategory":    break;
             case "DactlChannelTreeEntry":       break;
             case "DactlVideoProcessor":         break;
-            case "DactlWebKit":                 break;
+            case "DactlRichContent":            break;
             default:
                 throw new Dactl.FactoryError.TYPE_NOT_FOUND (
                     _("The type requested is not a known Dactl type"));
@@ -107,7 +107,7 @@ public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
                     case "tree-category":   return make_tree_category (node);
                     case "tree-entry":      return make_tree_entry (node);
                     case "video":           return make_video_processor (node);
-                    case "webkit":          return make_webkit (node);
+                    case "rich-content":    return make_rich_content (node);
                     default:
                         throw new Dactl.FactoryError.TYPE_NOT_FOUND (
                             _("The type requested is not a known Dactl type"));
@@ -172,8 +172,8 @@ public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
         return new Dactl.PolarChart.from_xml_node (node);
     }
 
-    private Dactl.Object make_webkit (Xml.Node *node) {
-        return new Dactl.WebKit.from_xml_node (node);
+    private Dactl.Object make_rich_content (Xml.Node *node) {
+        return new Dactl.UI.RichContent.from_xml_node (node);
     }
 
     private Dactl.Object make_rt_chart (Xml.Node *node) {

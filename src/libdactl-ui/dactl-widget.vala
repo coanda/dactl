@@ -332,7 +332,7 @@ public abstract class Dactl.CompositeWidget : Gtk.Box, Dactl.Widget, Dactl.Conta
     public abstract void update_objects (Gee.Map<string, Dactl.Object> val);
 }
 
-public abstract class Dactl.WebKitWidget : WebKit.WebView, Dactl.Widget, Dactl.Container, Dactl.Buildable, Dactl.Object {
+public abstract class Dactl.UI.WebKitWidget : WebKit.WebView, Dactl.Widget, Dactl.Container, Dactl.Buildable, Dactl.Object {
 
     private Xml.Node* _node;
 

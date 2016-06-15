@@ -44,6 +44,14 @@ libdactl_brabender_la_LIBADD = \
 libdactl_brabender_la_LDFLAGS = \
 	$(DACTL_PLUGIN_LINKER_FLAGS)
 
+
+if ENABLE_WEBKIT
+libdactl_brabender_la_VALAFLAGS += --pkg webkit2gtk-4.0
+libdactl_brabender_la_CFLAGS += $(WEBKIT_CFLAGS)
+libdactl_brabender_la_LIBADD += $(WEBKIT_LIBS)
+endif
+
+
 MAINTAINERCLEANFILES += $(libdactl_brabender_la_SOURCES:.vala=.c)
 
 EXTRA_DIST = \

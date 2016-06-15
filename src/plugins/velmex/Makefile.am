@@ -46,7 +46,15 @@ libdactl_velmex_la_LIBADD = \
 libdactl_velmex_la_LDFLAGS = \
 	$(DACTL_PLUGIN_LINKER_FLAGS)
 
-MAINTAINERCLEANFILES += $(libdactl_brabender_la_SOURCES:.vala=.c)
+
+if ENABLE_WEBKIT
+libdactl_velmex_la_VALAFLAGS += --pkg webkit2gtk-4.0
+libdactl_velmex_la_CFLAGS += $(WEBKIT_CFLAGS)
+libdactl_velmex_la_LIBADD += $(WEBKIT_LIBS)
+endif
+
+
+MAINTAINERCLEANFILES += $(libdactl_velmex_la_SOURCES:.vala=.c)
 
 EXTRA_DIST = \
 	$(gresource_file) \

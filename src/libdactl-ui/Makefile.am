@@ -23,10 +23,10 @@ libdactl_ui_0_3_la_SOURCES = \
 	$(LIBDACTL_UI_NONVAPI_SOURCE_FILES)
 
 libdactl_ui_0_3_la_VALAFLAGS = \
-	--target-glib=2.38 --gresources $(gresource_file) \
 	--vapidir=$(top_srcdir)/vapi \
 	-H dactl-ui.h -C --library=dactl-ui-0.3 \
 	--gir=Dactl-0.3.gir --pkg posix \
+	--gresources $(gresource_file) \
 	$(LIBDACTL_UI_DEPS_VALAFLAGS) \
 	$(DACTL_CLD_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
@@ -49,7 +49,8 @@ libdactl_ui_0_3_la_LDFLAGS = \
 
 
 if ENABLE_WEBKIT
-libdactl_ui_0_3_la_SOURCES += dactl-webkit.vala
+libdactl_ui_0_3_la_SOURCES += dactl-rich-content.vala
+libdactl_ui_0_3_la_VALAFLAGS += --pkg webkit2gtk-4.0
 libdactl_ui_0_3_la_CFLAGS += $(WEBKIT_CFLAGS)
 libdactl_ui_0_3_la_LIBADD += $(WEBKIT_LIBS)
 endif
@@ -70,6 +71,7 @@ $(builddir)/DactlUI-0.3.gir: $(srcdir)/Dactl-0.3.gir
 		-e 's,DactlUI\.Buildable,DactlCore.Buildable,g' \
 		-e 's,DactlUI\.Container,DactlCore.Container,g' \
 		-e 's,DactlUI\.CldAdapter,DactlCore.CldAdapter,g' \
+		-e 's,DactlUI\.Factory,DactlCore.Factory,g' \
 		-e 's,<package name="dactl-ui-0.3"/>,<include name="DactlCore" version="0.3"/>\n<package name="dactl-ui-0.3"/>,' \
 		$< >$@
 GIRS = DactlUI-0.3.gir

@@ -1,5 +1,5 @@
-[GtkTemplate (ui = "/org/coanda/libdactl/ui/webkit.ui")]
-public class Dactl.WebKit : Dactl.CompositeWidget, Dactl.CldAdapter {
+[GtkTemplate (ui = "/org/coanda/libdactl/ui/rich-content.ui")]
+public class Dactl.UI.RichContent : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     private Gee.Map<string, Dactl.Object> _objects;
 
@@ -46,6 +46,16 @@ public class Dactl.WebKit : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     private string svg;
 
+    private string _uri = "http://www.google.ca";
+
+    /**
+     * URI to be loaded into the WebKit WebView
+     */
+    public string uri {
+        get { return _uri; }
+        set { _uri = value; }
+    }
+
     public signal void div_clicked (string id);
 
     private const string HTML = """
@@ -83,23 +93,22 @@ public class Dactl.WebKit : Dactl.CompositeWidget, Dactl.CldAdapter {
         objects = new Gee.TreeMap<string, Dactl.Object> ();
     }
 
-    public WebKit (string svg) {
+    public RichContent (string svg) {
         this.svg = svg;
 
-        view.load_string (HTML, "text/html", "UTF8", "");
-        add_svg (svg);
+        view.load_bytes (new GLib.Bytes (HTML.data), "text/html", "UTF8", "");
+        //add_svg (svg);
 
         // Request CLD data
         request_data.begin ();
     }
 
-    public WebKit.from_xml_node (Xml.Node *node) {
+    public RichContent.from_xml_node (Xml.Node *node) {
         build_from_xml_node (node);
 
-        //view.load_string (HTML, "text/html", "UTF8", "");
-        view.load_uri ("http://www.google.ca");
-        message ("from_xml_node");
-        add_svg (svg);
+        view.load_uri (uri);
+        debug ("from_xml_node");
+        //add_svg (svg);
 
         // Request CLD data
         request_data.begin ();
@@ -112,7 +121,7 @@ public class Dactl.WebKit : Dactl.CompositeWidget, Dactl.CldAdapter {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
             id = node->get_prop ("id");
-            svg = node->get_prop ("svg");
+            uri = node->get_prop ("uri");
         }
     }
 
@@ -145,39 +154,35 @@ public class Dactl.WebKit : Dactl.CompositeWidget, Dactl.CldAdapter {
         message ("request_data");
     }
 
-    public void add_svg (string svg) {
-        message ("add_svg");
-        WebKit.DOM.Document doc = view.get_dom_document ();
-        try {
-            WebKit.DOM.Element el = doc.create_element ("div");
-            WebKit.DOM.Element node = doc.create_element ("svg");
-            node.set_text_content (SVG);
-            el.append_child (node);
-            ///
-            /*
-             *int x = 100, y = 100;
-             *string color = "#f00";
-             *el.append_child (doc.create_text_node(@"$id"));
-             *el.set_attribute ("style", @"background: $color; left: $x; top: $y;");
-             */
-            ///
-            el.set_attribute ("id", @"$id");
-            ((WebKit.DOM.EventTarget) el).add_event_listener (
-                "click", (Callback) on_div_clicked, false, this
-            );
-            doc.body.insert_before (el, null);
-        } catch (GLib.Error error) {
-            warning ("WebKit error: %s", error.message);
-        }
-    }
+    /*
+     *public void add_svg (string svg) {
+     *    message ("add_svg");
+     *    WebKit.DOM.Document doc = view.get_dom_document ();
+     *    try {
+     *        WebKit.DOM.Element el = doc.create_element ("div");
+     *        WebKit.DOM.Element node = doc.create_element ("svg");
+     *        node.set_text_content (SVG);
+     *        el.append_child (node);
+     *        el.set_attribute ("id", @"$id");
+     *        ((WebKit.DOM.EventTarget) el).add_event_listener (
+     *            "click", (Callback) on_div_clicked, false, this
+     *        );
+     *        doc.body.insert_before (el, null);
+     *    } catch (GLib.Error error) {
+     *        warning ("WebKit error: %s", error.message);
+     *    }
+     *}
+     */
 
     /// XXX add any svg/div callbacks here
 
-    private static void on_div_clicked (WebKit.DOM.Element element,
-                                        WebKit.DOM.Event event,
-                                        Dactl.WebKit view) {
-        view.div_clicked (element.get_attribute ("id"));
-    }
+    /*
+     *private static void on_div_clicked (WebKit.DOM.Element element,
+     *                                    WebKit.DOM.Event event,
+     *                                    Dactl.UI.RichContent view) {
+     *    view.div_clicked (element.get_attribute ("id"));
+     *}
+     */
 
     /**
      * {@inheritDoc}

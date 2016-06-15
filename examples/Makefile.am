@@ -24,6 +24,12 @@ example_LDADD = \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_UI_LIBS)
 
+if ENABLE_WEBKIT
+example_VALAFLAGS += --pkg webkit2gtk-4.0
+example_CFLAGS += $(WEBKIT_CFLAGS)
+example_LDADD += $(WEBKIT_LIBS)
+endif
+
 box_SOURCES = box.vala
 box_DEPENDENCIES = $(example_DEPENDENCIES)
 box_VALAFLAGS = $(example_VALAFLAGS)

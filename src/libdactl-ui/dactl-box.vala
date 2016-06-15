@@ -208,8 +208,8 @@ public class Dactl.Box : Dactl.CompositeWidget {
                         case "video":
                             object = new Dactl.VideoProcessor.from_xml_node (iter);
                             break;
-                        case "webkit":
-                            object = new Dactl.WebKit.from_xml_node (iter);
+                        case "rich-content":
+                            object = new Dactl.UI.RichContent.from_xml_node (iter);
                             break;
                         default:
                             object = null;
@@ -267,7 +267,7 @@ public class Dactl.Box : Dactl.CompositeWidget {
         if (object is Dactl.Box) {
             //child_set_property (object as Gtk.Widget, "expand", true);
             child_set_property (object as Gtk.Widget, "fill", true);
-        } else if (object is Dactl.WebKit) {
+        } else if (object is Dactl.UI.RichContent) {
             child_set_property (object as Gtk.Widget, "expand", true);
         }
 
