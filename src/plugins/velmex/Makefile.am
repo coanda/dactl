@@ -17,7 +17,8 @@ libdactl_velmex_la_SOURCES = \
 	dactl-velmex-control.vala \
 	dactl-velmex-factory.vala \
 	dactl-velmex-settings.vala \
-	dactl-velmex-plugin.vala
+	dactl-velmex-plugin.vala \
+	$(NULL)
 
 libdactl_velmex_la_VALAFLAGS = \
 	--target-glib=2.38 \
@@ -28,23 +29,35 @@ libdactl_velmex_la_VALAFLAGS = \
 	$(DACTL_UI_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_VALAFLAGS) \
-	$(DACTL_COMMON_VALAFLAGS)
+	$(DACTL_COMMON_VALAFLAGS) \
+	$(NULL)
 
 libdactl_velmex_la_CFLAGS = \
-	-DG_LOG_DOMAIN='"Velmex"' \
+	-DG_LOG_DOMAIN=\"libdactl-velmex\" \
+	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
-	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS)
+	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS) \
+	-Wno-deprecated-declarations \
+	-Wno-discarded-qualifiers \
+	-Wno-implicit-function-declaration \
+	-Wno-incompatible-pointer-types \
+	-Wno-unused-but-set-variable \
+	-Wno-unused-label \
+	-Wno-unused-function \
+	$(NULL)
 
 libdactl_velmex_la_LIBADD = \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
-	$(DACTL_COMMON_LIBDACTL_UI_LIBS)
+	$(DACTL_COMMON_LIBDACTL_UI_LIBS) \
+	$(NULL)
 
 libdactl_velmex_la_LDFLAGS = \
-	$(DACTL_PLUGIN_LINKER_FLAGS)
+	$(DACTL_PLUGIN_LINKER_FLAGS) \
+	$(NULL)
 
 
 if ENABLE_WEBKIT

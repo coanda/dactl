@@ -237,13 +237,15 @@ AC_ARG_ENABLE([webkit],
               [enable_webkit=auto])
 AS_IF([test "$enable_webkit" != no],[
 	PKG_CHECK_MODULES(WEBKIT,
-	                  [webkit2gtk-4.0 >= webkit_required_version],
+	                  [webkit2gtk-web-extension-4.0 >= webkit_required_version],
 	                  [have_webkit=yes],
 	                  [have_webkit=no])
 
 	AS_IF([test "$enable_webkit" = "yes" && "$have_webkit" = "no"],[
 	       AC_MSG_ERROR([--enable-webkit requires webkit2gtk-4.0 >= webkit_required_version])
 	])
+
+	AC_SUBST([WEB_EXTENSIONS_DIR],[${libdir}/dactl-0.3/extensions])
 
 	enable_webkit=$have_webkit
 ])
@@ -455,6 +457,7 @@ AC_CONFIG_FILES([
 	src/dactl/Makefile
 	src/libdactl-core/Makefile
 	src/libdactl-ui/Makefile
+	src/libdactl-ui/extensions/Makefile
 	src/plugins/Makefile
 	src/plugins/samples/Makefile
 
@@ -479,11 +482,12 @@ AC_MSG_NOTICE([
 
     Development Options
 
-     CLD support: ................................. : ${with_cld}
+     DAQ support: ................................. : ${with_cld}
      UI support: .................................. : ${with_ui}
      Enable Debug: ................................ : ${enable_debug}
      Enable Tracing ............................... : ${enable_tracing}
      Enable Profiling (-pg)........................ : ${enable_profiling}
+     Build documentation .......................... : ${enable_doc}
      Build API reference .......................... : ${enable_doc}
 
     Plugins:
@@ -503,5 +507,5 @@ AC_MSG_NOTICE([
 
      Python 3 support: ............................ : ${enable_python_scripting}
 
-    $PACKAGE will be installed in $bindir
+    $PACKAGE will be installed in ${bindir}
 ])

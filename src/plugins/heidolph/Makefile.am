@@ -15,7 +15,8 @@ BUILT_SOURCES = resources.c
 libdactl_heidolph_la_SOURCES = \
 	$(BUILT_SOURCES) \
 	dactl-heidolph-plugin.vala \
-	dactl-heidolph-box.vala
+	dactl-heidolph-box.vala \
+	$(NULL)
 
 libdactl_heidolph_la_VALAFLAGS = \
 	--target-glib=2.38 \
@@ -27,23 +28,35 @@ libdactl_heidolph_la_VALAFLAGS = \
 	$(DACTL_UI_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_VALAFLAGS) \
-	$(DACTL_COMMON_VALAFLAGS)
+	$(DACTL_COMMON_VALAFLAGS) \
+	$(NULL)
 
 libdactl_heidolph_la_CFLAGS = \
-	-DG_LOG_DOMAIN='"Heidolph"' \
+	-DG_LOG_DOMAIN=\"libdactl-heidolph\" \
+	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
-	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS)
+	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS) \
+	-Wno-deprecated-declarations \
+	-Wno-discarded-qualifiers \
+	-Wno-implicit-function-declaration \
+	-Wno-incompatible-pointer-types \
+	-Wno-unused-but-set-variable \
+	-Wno-unused-label \
+	-Wno-unused-function \
+	$(NULL)
 
 libdactl_heidolph_la_LIBADD = \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
-	$(DACTL_COMMON_LIBDACTL_UI_LIBS)
+	$(DACTL_COMMON_LIBDACTL_UI_LIBS) \
+	$(NULL)
 
 libdactl_heidolph_la_LDFLAGS = \
-	$(DACTL_PLUGIN_LINKER_FLAGS)
+	$(DACTL_PLUGIN_LINKER_FLAGS) \
+	$(NULL)
 
 
 if ENABLE_WEBKIT

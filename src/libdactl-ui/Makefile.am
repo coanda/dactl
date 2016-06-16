@@ -1,4 +1,4 @@
-#SUBDIRS = extensions
+SUBDIRS = extensions
 
 include $(top_srcdir)/common.am
 include $(srcdir)/filelist.am
@@ -20,7 +20,8 @@ BUILT_SOURCES = resources.c
 libdactl_ui_0_3_la_SOURCES = \
 	$(BUILT_SOURCES) \
 	$(LIBDACTL_UI_VAPI_SOURCE_FILES) \
-	$(LIBDACTL_UI_NONVAPI_SOURCE_FILES)
+	$(LIBDACTL_UI_NONVAPI_SOURCE_FILES) \
+	$(NULL)
 
 libdactl_ui_0_3_la_VALAFLAGS = \
 	--vapidir=$(top_srcdir)/vapi \
@@ -30,22 +31,35 @@ libdactl_ui_0_3_la_VALAFLAGS = \
 	$(LIBDACTL_UI_DEPS_VALAFLAGS) \
 	$(DACTL_CLD_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
-	$(DACTL_COMMON_VALAFLAGS)
+	$(DACTL_COMMON_VALAFLAGS) \
+	$(NULL)
 
 libdactl_ui_0_3_la_CFLAGS = \
+	-DWEB_EXTENSIONS_DIR=\""$(extensionsdir)"\" \
+	-DG_LOG_DOMAIN=\"libdactl-ui\" \
+	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(LIBDACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
-	-DG_LOG_DOMAIN='"libdactl-ui"'
+	-Wno-deprecated-declarations \
+	-Wno-discarded-qualifiers \
+	-Wno-implicit-function-declaration \
+	-Wno-incompatible-pointer-types \
+	-Wno-unused-but-set-variable \
+	-Wno-unused-label \
+	-Wno-unused-function \
+	$(NULL)
 
 libdactl_ui_0_3_la_LIBADD = \
 	$(LIBDACTL_UI_DEPS_LIBS) \
 	$(DACTL_CLD_DEPS_LIBS) \
-	$(DACTL_COMMON_LIBDACTL_CORE_LIBS)
+	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
+	$(NULL)
 
 libdactl_ui_0_3_la_LDFLAGS = \
 	$(DACTL_DATA_DIR_DEFINES) \
-	-version-info $(LIBDACTL_UI_VERSION)
+	-version-info $(LIBDACTL_UI_VERSION) \
+	$(NULL)
 
 
 if ENABLE_WEBKIT
@@ -100,6 +114,7 @@ EXTRA_DIST = \
 	$(gresource_file) \
 	$(resource_files) \
 	DactlUI-0.3.gir \
-	Dactl-0.3.gir
+	Dactl-0.3.gir \
+	$(NULL)
 
 -include $(top_srcdir)/git.mk

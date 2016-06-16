@@ -2,6 +2,7 @@ shareddir = $(datadir)/dactl
 sysconfigdir = $(sysconfdir)
 desktopdir = $(datadir)/applications
 plugindir = @DACTL_PLUGIN_DIR@
+extensionsdir = @WEB_EXTENSIONS_DIR@
 
 libdactlcoredir = $(top_srcdir)/src/libdactl-core
 libdactluidir = $(top_srcdir)/src/libdactl-ui

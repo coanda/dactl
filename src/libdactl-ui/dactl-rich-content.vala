@@ -1,3 +1,9 @@
+[DBus (name = "org.coanda.Dactl.Extension")]
+interface Dactl.UI.DOMMessenger : GLib.Object {
+    public signal void div_clicked (string num);
+    public abstract void add_div (string color) throws IOError;
+}
+
 [GtkTemplate (ui = "/org/coanda/libdactl/ui/rich-content.ui")]
 public class Dactl.UI.RichContent : Dactl.CompositeWidget, Dactl.CldAdapter {
 
@@ -44,9 +50,7 @@ public class Dactl.UI.RichContent : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     private WebKit.WebView view;
 
-    private string svg;
-
-    private string _uri = "http://www.google.ca";
+    private string _uri = null;
 
     /**
      * URI to be loaded into the WebKit WebView
@@ -56,7 +60,7 @@ public class Dactl.UI.RichContent : Dactl.CompositeWidget, Dactl.CldAdapter {
         set { _uri = value; }
     }
 
-    public signal void div_clicked (string id);
+    public signal void div_clicked (string number);
 
     private const string HTML = """
     <html>
@@ -77,12 +81,7 @@ public class Dactl.UI.RichContent : Dactl.CompositeWidget, Dactl.CldAdapter {
     </html>
     """;
 
-    private const string SVG = """
-    <svg:svg version="1.1" baseProfile="full" width="150" height="150">
-      <svg:rect x="10" y="10" width="100" height="100" fill="red"/>
-      <svg:circle cx="50" cy="50" r="30" fill="blue"/>
-    </svg:svg>
-    """;
+    private Dactl.UI.DOMMessenger messenger = null;
 
     construct {
         id = "rc-ctl0";
@@ -90,14 +89,24 @@ public class Dactl.UI.RichContent : Dactl.CompositeWidget, Dactl.CldAdapter {
         view = new WebKit.WebView ();
         pack_start (view, true, true);
 
+        // XXX enabling inspect crashes the view because of some libGL error
+        /*
+         *var settings = view.get_settings ();
+         *settings.set ("enable-webgl", true);
+         *settings.set ("enable-developer-extras", true);
+         */
+
         objects = new Gee.TreeMap<string, Dactl.Object> ();
+
+        Bus.watch_name (BusType.SESSION, "org.coanda.Dactl.Extension",
+                        BusNameWatcherFlags.NONE,
+                        (connection, name, owner) => {
+                            extension_appeared_cb (connection, name, owner);
+                        }, null);
     }
 
-    public RichContent (string svg) {
-        this.svg = svg;
-
+    public RichContent () {
         view.load_bytes (new GLib.Bytes (HTML.data), "text/html", "UTF8", "");
-        //add_svg (svg);
 
         // Request CLD data
         request_data.begin ();
@@ -106,12 +115,34 @@ public class Dactl.UI.RichContent : Dactl.CompositeWidget, Dactl.CldAdapter {
     public RichContent.from_xml_node (Xml.Node *node) {
         build_from_xml_node (node);
 
-        view.load_uri (uri);
-        debug ("from_xml_node");
-        //add_svg (svg);
+        if (uri != null) {
+            view.load_uri (uri);
+        } else {
+            view.load_bytes (new GLib.Bytes (HTML.data), "text/html", "UTF8", "");
+        }
 
         // Request CLD data
         request_data.begin ();
+    }
+
+    public void add_div (string color) {
+        if (messenger != null) {
+            try {
+                messenger.add_div (color);
+            } catch (Error error) {
+                warning ("WebKit error adding div: %s", error.message);
+            }
+        }
+    }
+
+    private void extension_appeared_cb (DBusConnection connection, string name, string owner) {
+        try {
+            messenger = connection.get_proxy_sync ("org.coanda.Dactl.Extension",
+                "/org/coanda/dactl/extension", DBusProxyFlags.NONE, null);
+            messenger.div_clicked.connect ((num) => { div_clicked (num); });
+        } catch (IOError error) {
+            warning ("Problem connecting to WebKit extension: %s", error.message);
+        }
     }
 
     /**
@@ -121,7 +152,7 @@ public class Dactl.UI.RichContent : Dactl.CompositeWidget, Dactl.CldAdapter {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
             id = node->get_prop ("id");
-            uri = node->get_prop ("uri");
+            uri = (node->get_prop ("uri") != null) ? node->get_prop ("uri") : uri;
         }
     }
 
@@ -151,38 +182,7 @@ public class Dactl.UI.RichContent : Dactl.CompositeWidget, Dactl.CldAdapter {
             // Try again in a second
             yield nap (1000);
         }
-        message ("request_data");
     }
-
-    /*
-     *public void add_svg (string svg) {
-     *    message ("add_svg");
-     *    WebKit.DOM.Document doc = view.get_dom_document ();
-     *    try {
-     *        WebKit.DOM.Element el = doc.create_element ("div");
-     *        WebKit.DOM.Element node = doc.create_element ("svg");
-     *        node.set_text_content (SVG);
-     *        el.append_child (node);
-     *        el.set_attribute ("id", @"$id");
-     *        ((WebKit.DOM.EventTarget) el).add_event_listener (
-     *            "click", (Callback) on_div_clicked, false, this
-     *        );
-     *        doc.body.insert_before (el, null);
-     *    } catch (GLib.Error error) {
-     *        warning ("WebKit error: %s", error.message);
-     *    }
-     *}
-     */
-
-    /// XXX add any svg/div callbacks here
-
-    /*
-     *private static void on_div_clicked (WebKit.DOM.Element element,
-     *                                    WebKit.DOM.Event event,
-     *                                    Dactl.UI.RichContent view) {
-     *    view.div_clicked (element.get_attribute ("id"));
-     *}
-     */
 
     /**
      * {@inheritDoc}
