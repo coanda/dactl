@@ -82,6 +82,8 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
         Gtk.Window.set_default_icon_name ("dactl");
 
+        WebKit.WebContext.get_default ().set_web_extensions_directory (Config.WEB_EXTENSIONS_DIR);
+
         debug ("Creating application model using file %s", opt_cfgfile);
         model = new Dactl.ApplicationModel (opt_cfgfile);
         assert (model != null);
@@ -389,7 +391,6 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         }
 
         if (opt_cfgfile == null) {
-
             opt_cfgfile = Path.build_filename (Config.DATADIR, "dactl.xml");
             GLib.message ("Configuration file not provided, using %s", opt_cfgfile);
         }
