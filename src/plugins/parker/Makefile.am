@@ -16,7 +16,8 @@ libdactl_parker_la_SOURCES = \
 	$(BUILT_SOURCES) \
 	dactl-parker-plugin.vala \
 	dactl-parker-box.vala \
-	dactl-parker-settings-box.vala
+	dactl-parker-settings-box.vala \
+	$(NULL)
 
 libdactl_parker_la_VALAFLAGS = \
 	--target-glib=2.38 \
@@ -27,25 +28,45 @@ libdactl_parker_la_VALAFLAGS = \
 	$(DACTL_UI_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_VALAFLAGS) \
-	$(DACTL_COMMON_VALAFLAGS)
+	$(DACTL_COMMON_VALAFLAGS) \
+	$(NULL)
 
 libdactl_parker_la_CFLAGS = \
-	-DG_LOG_DOMAIN='"Parker"' \
+	-DG_LOG_DOMAIN=\"libdactl-parker\" \
+	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
-	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS)
+	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS) \
+	-Wno-deprecated-declarations \
+	-Wno-discarded-qualifiers \
+	-Wno-implicit-function-declaration \
+	-Wno-incompatible-pointer-types \
+	-Wno-unused-but-set-variable \
+	-Wno-unused-label \
+	-Wno-unused-function \
+	$(NULL)
 
 libdactl_parker_la_LIBADD = \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
-	$(DACTL_COMMON_LIBDACTL_UI_LIBS)
+	$(DACTL_COMMON_LIBDACTL_UI_LIBS) \
+	$(NULL)
 
 libdactl_parker_la_LDFLAGS = \
-	$(DACTL_PLUGIN_LINKER_FLAGS)
+	$(DACTL_PLUGIN_LINKER_FLAGS) \
+	$(NULL)
 
-MAINTAINERCLEANFILES += $(libdactl_brabender_la_SOURCES:.vala=.c)
+
+if ENABLE_WEBKIT
+libdactl_parker_la_VALAFLAGS += --pkg webkit2gtk-4.0
+libdactl_parker_la_CFLAGS += $(WEBKIT_CFLAGS)
+libdactl_parker_la_LIBADD += $(WEBKIT_LIBS)
+endif
+
+
+MAINTAINERCLEANFILES += $(libdactl_parker_la_SOURCES:.vala=.c)
 
 EXTRA_DIST = \
 	$(gresource_file) \

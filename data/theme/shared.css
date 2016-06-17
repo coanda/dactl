@@ -136,6 +136,7 @@ DactlLogControl .stop-button {
 
     color: @destructive_action_button_fg;
 }
+/***************************/
 
 .destructive-action.button {
     text-shadow: 0 1px @destructive_action_button_shadow;

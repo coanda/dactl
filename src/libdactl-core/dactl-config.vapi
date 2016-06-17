@@ -39,6 +39,9 @@ public class Dactl.Config {
     [CCode (cname = "UI_DIR")]
     public static const string UI_DIR;
 
+    [CCode (cname = "WEB_EXTENSIONS_DIR")]
+    public static const string WEB_EXTENSIONS_DIR;
+
     [CCode (cname = "LIBDIR")]
     public static const string LIBDIR;
 }

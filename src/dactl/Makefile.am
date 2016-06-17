@@ -10,38 +10,61 @@ bin_PROGRAMS = dactl
 gresource_file = $(top_srcdir)/data/dactl.gresource.xml
 
 dactl_VALAFLAGS = \
-	--enable-experimental --target-glib=2.38 --gresources $(gresource_file) \
 	-H $(srcdir)/libdactl.h -C -c --thread \
 	--vapidir=$(top_srcdir)/vapi \
 	--pkg posix \
 	--pkg linux \
+	--gresources $(gresource_file) \
 	$(DACTL_DEPS_VALAFLAGS) \
 	$(DACTL_CLD_DEPS_VALAFLAGS) \
 	$(DACTL_UI_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_VALAFLAGS) \
-	$(DACTL_COMMON_VALAFLAGS)
+	$(DACTL_COMMON_VALAFLAGS) \
+	$(NULL)
 
 dactl_CFLAGS = \
 	--include config.h \
-	-DG_LOG_DOMAIN='"Dactl"' \
 	-DLOCALEDIR=\""$(datadir)/locale"\" \
+	-DG_LOG_DOMAIN=\"dactl\" \
+	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(DACTL_DEPS_CFLAGS) \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
-	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS)
+	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS) \
+	-Wno-deprecated-declarations \
+	-Wno-discarded-qualifiers \
+	-Wno-implicit-function-declaration \
+	-Wno-incompatible-pointer-types \
+	-Wno-unused-but-set-variable \
+	-Wno-unused-label \
+	-Wno-unused-function \
+	$(NULL)
 
 dactl_LDADD = \
 	$(DACTL_DEPS_LIBS) \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
-	$(DACTL_COMMON_LIBDACTL_UI_LIBS)
+	$(DACTL_COMMON_LIBDACTL_UI_LIBS) \
+	$(NULL)
+
+
+if ENABLE_WEBKIT
+dactl_VALAFLAGS += --pkg webkit2gtk-4.0
+dactl_CFLAGS += \
+	-DWEB_EXTENSIONS_DIR=\""$(extensionsdir)"\" \
+	$(WEBKIT_CFLAGS) \
+	$(NULL)
+dactl_LDADD += $(WEBKIT_LIBS)
+endif
+
 
 dactl_headers = \
 	dactl.h \
-	libdactl.h
+	libdactl.h \
+	$(NULL)
 
 resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sourcedir=$(top_srcdir)/data $(gresource_file))
 resources.c: $(gresource_file) $(resource_files)
@@ -74,7 +97,8 @@ UI_SOURCES = \
 	dactl-ui-application-model.vala \
 	dactl-ui-application-view.vala \
 	dactl-ui-application-controller.vala \
-	dactl-ux-manager.vala
+	dactl-ux-manager.vala \
+	$(NULL)
 
 dactl_SOURCES = \
 	$(BUILT_SOURCES) \
@@ -90,10 +114,12 @@ MAINTAINERCLEANFILES += $(BUILT_SOURCES)
 CLEANFILES = \
 	*.stamp \
 	stamp-h1 \
-	$(srcdir)/libdactl.h
+	$(srcdir)/libdactl.h \
+	$(NULL)
 
 EXTRA_DIST = \
 	$(gresource_file) \
-	$(BUILT_SOURCES)
+	$(BUILT_SOURCES) \
+	$(NULL)
 
 -include $(top_srcdir)/git.mk

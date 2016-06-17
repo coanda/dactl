@@ -76,6 +76,12 @@ libdactl_vala_la_CFLAGS = \
 libdactl_vala_la_LIBADD = $(VALA_LIBS)
 libdactl_vala_la_LDFLAGS = $(PLUGIN_LDFLAGS)
 
+if ENABLE_WEBKIT
+libdactl_vala_la_VALAFLAGS += --pkg webkit2gtk-4.0
+libdactl_vala_la_CFLAGS += $(WEBKIT_CFLAGS)
+libdactl_vala_la_LIBADD += $(WEBKIT_LIBS)
+endif
+
 include $(top_srcdir)/src/plugins/Makefile.plugin
 
 endif
