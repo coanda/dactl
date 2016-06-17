@@ -38,3 +38,42 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
 LIBDACTL_UI_NONVAPI_SOURCE_FILES = \
     dactl-utility.vala \
     dactl-widget-information.vala
+
+libdactl_ui_la_public_sources = \
+    dactl-box.c \
+    dactl-ai-control.c \
+    dactl-ao-control.c \
+    dactl-drawing.c \
+    dactl-channel-matrix.c \
+    dactl-channel-treeview.c \
+    dactl-channel-vector.c \
+    dactl-chart.c \
+    dactl-chart-axis.c \
+    dactl-chart-colormap.c \
+    dactl-chart-trace.c \
+    dactl-chart-widget.c \
+    dactl-dataseries.c \
+    dactl-digital-control.c \
+    dactl-exec-control.c \
+    dactl-log-control.c \
+    dactl-grid.c \
+    dactl-heatmap.c \
+    dactl-page.c \
+    dactl-pid-control.c \
+    dactl-plugin-control.c \
+    dactl-pnid.c \
+    dactl-polar-axis.c \
+    dactl-polar-canvas.c \
+    dactl-polar-chart.c \
+    dactl-polar-heatmap.c \
+    dactl-rt-chart.c \
+    dactl-rt-chart-trace.c \
+    dactl-rt-multichannel-trace.c \
+    dactl-settable.c \
+    dactl-stripchart.c \
+    dactl-ui-factory.c \
+    dactl-video-processor.c \
+    dactl-widget.c \
+    dactl-zoom-window.c \
+    dactl-utility.c \
+    dactl-widget-information.c
