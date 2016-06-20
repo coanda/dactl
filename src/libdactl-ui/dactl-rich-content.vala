@@ -90,11 +90,9 @@ public class Dactl.UI.RichContent : Dactl.CompositeWidget, Dactl.CldAdapter {
         pack_start (view, true, true);
 
         // XXX enabling inspect crashes the view because of some libGL error
-        /*
-         *var settings = view.get_settings ();
-         *settings.set ("enable-webgl", true);
-         *settings.set ("enable-developer-extras", true);
-         */
+        var settings = view.get_settings ();
+        settings.set ("enable-webgl", true);
+        settings.set ("enable-developer-extras", true);
 
         objects = new Gee.TreeMap<string, Dactl.Object> ();
 
