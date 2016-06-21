@@ -38,11 +38,13 @@ MAJOR_VERSION=dactl_major_version
 MINOR_VERSION=dactl_minor_version
 MICRO_VERSION=dactl_micro_version
 LIBDACTL_CORE_VERSION=dactl_version
+LIBDACTL_CLI_VERSION=dactl_version
 LIBDACTL_UI_VERSION=dactl_version
 AC_SUBST(MAJOR_VERSION)
 AC_SUBST(MINOR_VERSION)
 AC_SUBST(MICRO_VERSION)
 AC_SUBST(LIBDACTL_CORE_VERSION)
+AC_SUBST(LIBDACTL_CLI_VERSION)
 AC_SUBST(LIBDACTL_UI_VERSION)
 
 
@@ -156,12 +158,18 @@ AC_SUBST(BUGREPORT_URL)
 dnl ***********************************************************************
 dnl Check for Required Packages
 dnl ***********************************************************************
-GLIB_REQUIRED=2.38.0
-LIBXML_REQUIRED=2.7
-VALA_REQUIRED=0.22.0
-VALADOC_REQUIRED=0.2
-GEE_REQUIRED=0.8
-GTK_REQUIRED=3.0
+m4_define([glib_required_version], [2.46.0])
+m4_define([gee_required_version], [0.18.0])
+m4_define([gtk_required_version], [3.18.1])
+m4_define([libxml_required_version], [2.9.0])
+m4_define([peas_required_version], [1.16.0])
+m4_define([cld_required_version], [0.3.0])
+
+PKG_CHECK_MODULES(LIBDACTL_CLI, [glib-2.0 >= glib_required_version
+                                 gee-0.8 >= gee_required_version
+                                 libxml-2.0 >= libxml_required_version
+                                 libpeas-1.0 >= peas_required_version
+                                 cld-0.3 >= cld_required_version])
 
 dnl Library checks
 VALAFLAGS="--enable-deprecated --target-glib=2.38 $VALAFLAGS"
@@ -266,6 +274,7 @@ m4_include([src/plugins/samples/vala/configure.ac])
 AC_SUBST([DACTL_PLUGIN_LINKER_FLAGS],["-module -avoid-version -Wl,-z,defs"])
 AC_SUBST([DACTL_PLUGIN_DIR],[${libdir}/dactl-0.3/plugins])
 
+VALA_REQUIRED=0.22.0
 dnl This should be called only after all DACTL_CHECK_VALA() and DACTL_ADD_PLUGIN() calls:
 DACTL_CHECK_VALA([$VALA_REQUIRED],)
                  #[cld-0.3
@@ -456,6 +465,7 @@ AC_CONFIG_FILES([
 	src/Makefile
 	src/dactl/Makefile
 	src/libdactl-core/Makefile
+    src/libdactl-cli/Makefile
 	src/libdactl-ui/Makefile
 	src/libdactl-ui/extensions/Makefile
 	src/plugins/Makefile
