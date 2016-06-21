@@ -2,12 +2,13 @@ SUBDIRS = build contrib data doc src examples
 
 ACLOCAL_AMFLAGS = -I build/autotools
 
-pkgconfig_DATA = dactl-core-0.3.pc dactl-ui-0.3.pc
+pkgconfig_DATA = dactl-core-0.3.pc dactl-cli-0.3.pc dactl-ui-0.3.pc
 pkgconfigdir = $(libdir)/pkgconfig
 
 EXTRA_DIST = \
 	$(noinst_DATA) \
 	dactl-core-0.3.pc.in \
+	dactl-cli-0.3.pc.in \
 	dactl-ui-0.3.pc.in \
 	.version \
 	autogen.sh \

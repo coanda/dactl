@@ -118,4 +118,12 @@ vapidir = $(VAPIDIR)
 vapi_DATA = $(VAPI_FILES) $(DEPS_FILES)
 dactl-cli.h dactl-cli-0.3.vapi Dactl-0.3.gir: libdactl_cli_0_3_la_vala.stamp
 
+BUILT_SOURCES += \
+	dactl-cli.h \
+	$(VAPI_FILES) \
+	$(DEPS_FILES) \
+	DactlCLI-0.3.gir \
+	Dactl-0.3.gir \
+	$(NULL)
+
 -include $(top_srcdir)/git.mk

@@ -1,3 +1,8 @@
+CLEANFILES =
+DISTCLEANFILES =
+BUILT_SOURCES =
+EXTRA_DIST =
+
 SUBDIRS = extensions
 
 include $(top_srcdir)/common.am
@@ -15,7 +20,10 @@ resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies $(gre
 resources.c: $(gresource_file) $(resource_files)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=. --generate-source $<
 
-BUILT_SOURCES = resources.c
+BUILT_SOURCES += \
+	resources.c \
+	$(gresource_file) \
+	$(NULL)
 
 libdactl_ui_0_3_la_SOURCES = \
 	$(BUILT_SOURCES) \
@@ -99,7 +107,7 @@ gir_DATA = $(GIRS)
 typelibdir = $(libdir)/girepository-1.0
 typelib_DATA = $(GIRS:.gir=.typelib)
 
-CLEANFILES = $(gir_DATA) $(typelib_DATA)
+CLEANFILES += $(gir_DATA) $(typelib_DATA)
 endif
 
 
@@ -110,12 +118,10 @@ vapidir = $(VAPIDIR)
 vapi_DATA = $(VAPI_FILES) $(DEPS_FILES)
 dactl-ui.h dactl-ui-0.3.vapi Dactl-0.3.gir: libdactl_ui_0_3_la_vala.stamp
 
-EXTRA_DIST = \
+BUILT_SOURCES += \
 	dactl-ui.h \
 	$(VAPI_FILES) \
 	$(DEPS_FILES) \
-	$(gresource_file) \
-	$(resource_files) \
 	DactlUI-0.3.gir \
 	Dactl-0.3.gir \
 	$(NULL)

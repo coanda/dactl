@@ -70,7 +70,7 @@ resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sou
 resources.c: $(gresource_file) $(resource_files)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/data --generate-source $<
 
-BUILT_SOURCES = resources.c
+BUILT_SOURCES += resources.c
 
 UI_SOURCES = \
 	dactl-application-menu.vala \
@@ -111,13 +111,13 @@ dactl_SOURCES = \
 
 MAINTAINERCLEANFILES += $(BUILT_SOURCES)
 
-CLEANFILES = \
+CLEANFILES += \
 	*.stamp \
 	stamp-h1 \
 	$(srcdir)/libdactl.h \
 	$(NULL)
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	$(gresource_file) \
 	$(BUILT_SOURCES) \
 	$(NULL)

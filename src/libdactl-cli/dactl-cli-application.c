@@ -21,6 +21,10 @@
 typedef struct _DactlCLIApplication DactlCLIApplication;
 typedef struct _DactlCLIApplicationClass DactlCLIApplicationClass;
 typedef struct _DactlCLIApplicationPrivate DactlCLIApplicationPrivate;
+
+#define DACTL_CLI_APPLICATION_TYPE_COMMAND (dactl_cli_application_command_get_type ())
+#define _g_regex_unref0(var) ((var == NULL) ? NULL : (var = (g_regex_unref (var), NULL)))
+#define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 
 struct _DactlCLIApplication {
@@ -49,6 +53,19 @@ struct _DactlCLIApplicationPrivate {
 	GeeArrayList* _plugins;
 };
 
+typedef enum  {
+	DACTL_CLI_APPLICATION_COMMAND_NONE,
+	DACTL_CLI_APPLICATION_COMMAND_CLD,
+	DACTL_CLI_APPLICATION_COMMAND_CONFIG,
+	DACTL_CLI_APPLICATION_COMMAND_CONTROL,
+	DACTL_CLI_APPLICATION_COMMAND_HELP,
+	DACTL_CLI_APPLICATION_COMMAND_LIST,
+	DACTL_CLI_APPLICATION_COMMAND_LOG,
+	DACTL_CLI_APPLICATION_COMMAND_READ,
+	DACTL_CLI_APPLICATION_COMMAND_WRITE,
+	DACTL_CLI_APPLICATION_COMMAND_QUIT
+} DactlCLIApplicationCommand;
+
 
 static gpointer dactl_cli_application_parent_class = NULL;
 static GOnce dactl_cli_application__instance;
@@ -65,6 +82,11 @@ enum  {
 	DACTL_CLI_APPLICATION_CONTROLLER,
 	DACTL_CLI_APPLICATION_PLUGINS
 };
+GType dactl_cli_application_command_get_type (void) G_GNUC_CONST;
+gchar* dactl_cli_application_command_to_string (DactlCLIApplicationCommand self);
+gchar* dactl_cli_application_command_description (DactlCLIApplicationCommand self);
+DactlCLIApplicationCommand* dactl_cli_application_command_all (int* result_length1);
+DactlCLIApplicationCommand dactl_cli_application_command_parse (const gchar* value);
 DactlCLIApplication* dactl_cli_application_get_default (void);
 static DactlCLIApplication* __lambda4_ (void);
 DactlCLIApplication* dactl_cli_application_new (void);
@@ -86,6 +108,681 @@ GeeArrayList* dactl_cli_application_get_plugins (DactlCLIApplication* self);
 static void dactl_cli_application_finalize (GObject* obj);
 static void _vala_dactl_cli_application_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec);
 static void _vala_dactl_cli_application_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec);
+
+
+gchar* dactl_cli_application_command_to_string (DactlCLIApplicationCommand self) {
+	gchar* result = NULL;
+	switch (self) {
+		case DACTL_CLI_APPLICATION_COMMAND_NONE:
+		{
+			gchar* _tmp0_ = NULL;
+			_tmp0_ = g_strdup ("none");
+			result = _tmp0_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_CLD:
+		{
+			gchar* _tmp1_ = NULL;
+			_tmp1_ = g_strdup ("cld");
+			result = _tmp1_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_CONFIG:
+		{
+			gchar* _tmp2_ = NULL;
+			_tmp2_ = g_strdup ("config");
+			result = _tmp2_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_CONTROL:
+		{
+			gchar* _tmp3_ = NULL;
+			_tmp3_ = g_strdup ("control");
+			result = _tmp3_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_HELP:
+		{
+			gchar* _tmp4_ = NULL;
+			_tmp4_ = g_strdup ("help");
+			result = _tmp4_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_LIST:
+		{
+			gchar* _tmp5_ = NULL;
+			_tmp5_ = g_strdup ("list");
+			result = _tmp5_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_LOG:
+		{
+			gchar* _tmp6_ = NULL;
+			_tmp6_ = g_strdup ("log");
+			result = _tmp6_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_READ:
+		{
+			gchar* _tmp7_ = NULL;
+			_tmp7_ = g_strdup ("read");
+			result = _tmp7_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_WRITE:
+		{
+			gchar* _tmp8_ = NULL;
+			_tmp8_ = g_strdup ("write");
+			result = _tmp8_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_QUIT:
+		{
+			gchar* _tmp9_ = NULL;
+			_tmp9_ = g_strdup ("quit");
+			result = _tmp9_;
+			return result;
+		}
+		default:
+		{
+			g_assert_not_reached ();
+		}
+	}
+}
+
+
+gchar* dactl_cli_application_command_description (DactlCLIApplicationCommand self) {
+	gchar* result = NULL;
+	switch (self) {
+		case DACTL_CLI_APPLICATION_COMMAND_NONE:
+		{
+			gchar* _tmp0_ = NULL;
+			_tmp0_ = g_strdup ("No operation");
+			result = _tmp0_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_CLD:
+		{
+			gchar* _tmp1_ = NULL;
+			_tmp1_ = g_strdup ("Interface with the application CLD object tree");
+			result = _tmp1_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_CONFIG:
+		{
+			gchar* _tmp2_ = NULL;
+			_tmp2_ = g_strdup ("Perform an operation with the configuration");
+			result = _tmp2_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_CONTROL:
+		{
+			gchar* _tmp3_ = NULL;
+			_tmp3_ = g_strdup ("Perform a control operation");
+			result = _tmp3_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_HELP:
+		{
+			gchar* _tmp4_ = NULL;
+			_tmp4_ = g_strdup ("Show the help for a command");
+			result = _tmp4_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_LIST:
+		{
+			gchar* _tmp5_ = NULL;
+			_tmp5_ = g_strdup ("List all available commands");
+			result = _tmp5_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_LOG:
+		{
+			gchar* _tmp6_ = NULL;
+			_tmp6_ = g_strdup ("Perform a logging operation");
+			result = _tmp6_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_READ:
+		{
+			gchar* _tmp7_ = NULL;
+			_tmp7_ = g_strdup ("Read one or more channels");
+			result = _tmp7_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_WRITE:
+		{
+			gchar* _tmp8_ = NULL;
+			_tmp8_ = g_strdup ("Write one or more channels");
+			result = _tmp8_;
+			return result;
+		}
+		case DACTL_CLI_APPLICATION_COMMAND_QUIT:
+		{
+			gchar* _tmp9_ = NULL;
+			_tmp9_ = g_strdup ("Quit the command line interface");
+			result = _tmp9_;
+			return result;
+		}
+		default:
+		{
+			g_assert_not_reached ();
+		}
+	}
+}
+
+
+DactlCLIApplicationCommand* dactl_cli_application_command_all (int* result_length1) {
+	DactlCLIApplicationCommand* result = NULL;
+	DactlCLIApplicationCommand* _tmp0_ = NULL;
+	DactlCLIApplicationCommand* _tmp1_ = NULL;
+	gint _tmp1__length1 = 0;
+	_tmp0_ = g_new0 (DactlCLIApplicationCommand, 10);
+	_tmp0_[0] = DACTL_CLI_APPLICATION_COMMAND_NONE;
+	_tmp0_[1] = DACTL_CLI_APPLICATION_COMMAND_CLD;
+	_tmp0_[2] = DACTL_CLI_APPLICATION_COMMAND_CONFIG;
+	_tmp0_[3] = DACTL_CLI_APPLICATION_COMMAND_CONTROL;
+	_tmp0_[4] = DACTL_CLI_APPLICATION_COMMAND_HELP;
+	_tmp0_[5] = DACTL_CLI_APPLICATION_COMMAND_LIST;
+	_tmp0_[6] = DACTL_CLI_APPLICATION_COMMAND_LOG;
+	_tmp0_[7] = DACTL_CLI_APPLICATION_COMMAND_READ;
+	_tmp0_[8] = DACTL_CLI_APPLICATION_COMMAND_WRITE;
+	_tmp0_[9] = DACTL_CLI_APPLICATION_COMMAND_QUIT;
+	_tmp1_ = _tmp0_;
+	_tmp1__length1 = 10;
+	if (result_length1) {
+		*result_length1 = _tmp1__length1;
+	}
+	result = _tmp1_;
+	return result;
+}
+
+
+DactlCLIApplicationCommand dactl_cli_application_command_parse (const gchar* value) {
+	DactlCLIApplicationCommand result = 0;
+	GError * _inner_error_ = NULL;
+	g_return_val_if_fail (value != NULL, 0);
+	{
+		GRegex* regex_none = NULL;
+		GRegex* _tmp0_ = NULL;
+		GRegex* regex_cld = NULL;
+		GRegex* _tmp1_ = NULL;
+		GRegex* regex_config = NULL;
+		GRegex* _tmp2_ = NULL;
+		GRegex* regex_control = NULL;
+		GRegex* _tmp3_ = NULL;
+		GRegex* regex_help = NULL;
+		GRegex* _tmp4_ = NULL;
+		GRegex* regex_list = NULL;
+		GRegex* _tmp5_ = NULL;
+		GRegex* regex_log = NULL;
+		GRegex* _tmp6_ = NULL;
+		GRegex* regex_read = NULL;
+		GRegex* _tmp7_ = NULL;
+		GRegex* regex_write = NULL;
+		GRegex* _tmp8_ = NULL;
+		GRegex* regex_quit = NULL;
+		GRegex* _tmp9_ = NULL;
+		GRegex* _tmp10_ = NULL;
+		const gchar* _tmp11_ = NULL;
+		gboolean _tmp12_ = FALSE;
+		_tmp0_ = g_regex_new ("none", G_REGEX_CASELESS, 0, &_inner_error_);
+		regex_none = _tmp0_;
+		if (G_UNLIKELY (_inner_error_ != NULL)) {
+			if (_inner_error_->domain == G_REGEX_ERROR) {
+				goto __catch0_g_regex_error;
+			}
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return 0;
+		}
+		_tmp1_ = g_regex_new ("cld", G_REGEX_CASELESS, 0, &_inner_error_);
+		regex_cld = _tmp1_;
+		if (G_UNLIKELY (_inner_error_ != NULL)) {
+			_g_regex_unref0 (regex_none);
+			if (_inner_error_->domain == G_REGEX_ERROR) {
+				goto __catch0_g_regex_error;
+			}
+			_g_regex_unref0 (regex_none);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return 0;
+		}
+		_tmp2_ = g_regex_new ("c|cfg|config", G_REGEX_CASELESS, 0, &_inner_error_);
+		regex_config = _tmp2_;
+		if (G_UNLIKELY (_inner_error_ != NULL)) {
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			if (_inner_error_->domain == G_REGEX_ERROR) {
+				goto __catch0_g_regex_error;
+			}
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return 0;
+		}
+		_tmp3_ = g_regex_new ("ctl|control", G_REGEX_CASELESS, 0, &_inner_error_);
+		regex_control = _tmp3_;
+		if (G_UNLIKELY (_inner_error_ != NULL)) {
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			if (_inner_error_->domain == G_REGEX_ERROR) {
+				goto __catch0_g_regex_error;
+			}
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return 0;
+		}
+		_tmp4_ = g_regex_new ("h|help", G_REGEX_CASELESS, 0, &_inner_error_);
+		regex_help = _tmp4_;
+		if (G_UNLIKELY (_inner_error_ != NULL)) {
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			if (_inner_error_->domain == G_REGEX_ERROR) {
+				goto __catch0_g_regex_error;
+			}
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return 0;
+		}
+		_tmp5_ = g_regex_new ("ls|list", G_REGEX_CASELESS, 0, &_inner_error_);
+		regex_list = _tmp5_;
+		if (G_UNLIKELY (_inner_error_ != NULL)) {
+			_g_regex_unref0 (regex_help);
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			if (_inner_error_->domain == G_REGEX_ERROR) {
+				goto __catch0_g_regex_error;
+			}
+			_g_regex_unref0 (regex_help);
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return 0;
+		}
+		_tmp6_ = g_regex_new ("l|log", G_REGEX_CASELESS, 0, &_inner_error_);
+		regex_log = _tmp6_;
+		if (G_UNLIKELY (_inner_error_ != NULL)) {
+			_g_regex_unref0 (regex_list);
+			_g_regex_unref0 (regex_help);
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			if (_inner_error_->domain == G_REGEX_ERROR) {
+				goto __catch0_g_regex_error;
+			}
+			_g_regex_unref0 (regex_list);
+			_g_regex_unref0 (regex_help);
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return 0;
+		}
+		_tmp7_ = g_regex_new ("r|read", G_REGEX_CASELESS, 0, &_inner_error_);
+		regex_read = _tmp7_;
+		if (G_UNLIKELY (_inner_error_ != NULL)) {
+			_g_regex_unref0 (regex_log);
+			_g_regex_unref0 (regex_list);
+			_g_regex_unref0 (regex_help);
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			if (_inner_error_->domain == G_REGEX_ERROR) {
+				goto __catch0_g_regex_error;
+			}
+			_g_regex_unref0 (regex_log);
+			_g_regex_unref0 (regex_list);
+			_g_regex_unref0 (regex_help);
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return 0;
+		}
+		_tmp8_ = g_regex_new ("w|write", G_REGEX_CASELESS, 0, &_inner_error_);
+		regex_write = _tmp8_;
+		if (G_UNLIKELY (_inner_error_ != NULL)) {
+			_g_regex_unref0 (regex_read);
+			_g_regex_unref0 (regex_log);
+			_g_regex_unref0 (regex_list);
+			_g_regex_unref0 (regex_help);
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			if (_inner_error_->domain == G_REGEX_ERROR) {
+				goto __catch0_g_regex_error;
+			}
+			_g_regex_unref0 (regex_read);
+			_g_regex_unref0 (regex_log);
+			_g_regex_unref0 (regex_list);
+			_g_regex_unref0 (regex_help);
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return 0;
+		}
+		_tmp9_ = g_regex_new ("q|quit", G_REGEX_CASELESS, 0, &_inner_error_);
+		regex_quit = _tmp9_;
+		if (G_UNLIKELY (_inner_error_ != NULL)) {
+			_g_regex_unref0 (regex_write);
+			_g_regex_unref0 (regex_read);
+			_g_regex_unref0 (regex_log);
+			_g_regex_unref0 (regex_list);
+			_g_regex_unref0 (regex_help);
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			if (_inner_error_->domain == G_REGEX_ERROR) {
+				goto __catch0_g_regex_error;
+			}
+			_g_regex_unref0 (regex_write);
+			_g_regex_unref0 (regex_read);
+			_g_regex_unref0 (regex_log);
+			_g_regex_unref0 (regex_list);
+			_g_regex_unref0 (regex_help);
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return 0;
+		}
+		_tmp10_ = regex_none;
+		_tmp11_ = value;
+		_tmp12_ = g_regex_match (_tmp10_, _tmp11_, 0, NULL);
+		if (_tmp12_) {
+			result = DACTL_CLI_APPLICATION_COMMAND_NONE;
+			_g_regex_unref0 (regex_quit);
+			_g_regex_unref0 (regex_write);
+			_g_regex_unref0 (regex_read);
+			_g_regex_unref0 (regex_log);
+			_g_regex_unref0 (regex_list);
+			_g_regex_unref0 (regex_help);
+			_g_regex_unref0 (regex_control);
+			_g_regex_unref0 (regex_config);
+			_g_regex_unref0 (regex_cld);
+			_g_regex_unref0 (regex_none);
+			return result;
+		} else {
+			GRegex* _tmp13_ = NULL;
+			const gchar* _tmp14_ = NULL;
+			gboolean _tmp15_ = FALSE;
+			_tmp13_ = regex_cld;
+			_tmp14_ = value;
+			_tmp15_ = g_regex_match (_tmp13_, _tmp14_, 0, NULL);
+			if (_tmp15_) {
+				result = DACTL_CLI_APPLICATION_COMMAND_CLD;
+				_g_regex_unref0 (regex_quit);
+				_g_regex_unref0 (regex_write);
+				_g_regex_unref0 (regex_read);
+				_g_regex_unref0 (regex_log);
+				_g_regex_unref0 (regex_list);
+				_g_regex_unref0 (regex_help);
+				_g_regex_unref0 (regex_control);
+				_g_regex_unref0 (regex_config);
+				_g_regex_unref0 (regex_cld);
+				_g_regex_unref0 (regex_none);
+				return result;
+			} else {
+				GRegex* _tmp16_ = NULL;
+				const gchar* _tmp17_ = NULL;
+				gboolean _tmp18_ = FALSE;
+				_tmp16_ = regex_config;
+				_tmp17_ = value;
+				_tmp18_ = g_regex_match (_tmp16_, _tmp17_, 0, NULL);
+				if (_tmp18_) {
+					result = DACTL_CLI_APPLICATION_COMMAND_CONFIG;
+					_g_regex_unref0 (regex_quit);
+					_g_regex_unref0 (regex_write);
+					_g_regex_unref0 (regex_read);
+					_g_regex_unref0 (regex_log);
+					_g_regex_unref0 (regex_list);
+					_g_regex_unref0 (regex_help);
+					_g_regex_unref0 (regex_control);
+					_g_regex_unref0 (regex_config);
+					_g_regex_unref0 (regex_cld);
+					_g_regex_unref0 (regex_none);
+					return result;
+				} else {
+					GRegex* _tmp19_ = NULL;
+					const gchar* _tmp20_ = NULL;
+					gboolean _tmp21_ = FALSE;
+					_tmp19_ = regex_control;
+					_tmp20_ = value;
+					_tmp21_ = g_regex_match (_tmp19_, _tmp20_, 0, NULL);
+					if (_tmp21_) {
+						result = DACTL_CLI_APPLICATION_COMMAND_CONTROL;
+						_g_regex_unref0 (regex_quit);
+						_g_regex_unref0 (regex_write);
+						_g_regex_unref0 (regex_read);
+						_g_regex_unref0 (regex_log);
+						_g_regex_unref0 (regex_list);
+						_g_regex_unref0 (regex_help);
+						_g_regex_unref0 (regex_control);
+						_g_regex_unref0 (regex_config);
+						_g_regex_unref0 (regex_cld);
+						_g_regex_unref0 (regex_none);
+						return result;
+					} else {
+						GRegex* _tmp22_ = NULL;
+						const gchar* _tmp23_ = NULL;
+						gboolean _tmp24_ = FALSE;
+						_tmp22_ = regex_help;
+						_tmp23_ = value;
+						_tmp24_ = g_regex_match (_tmp22_, _tmp23_, 0, NULL);
+						if (_tmp24_) {
+							result = DACTL_CLI_APPLICATION_COMMAND_HELP;
+							_g_regex_unref0 (regex_quit);
+							_g_regex_unref0 (regex_write);
+							_g_regex_unref0 (regex_read);
+							_g_regex_unref0 (regex_log);
+							_g_regex_unref0 (regex_list);
+							_g_regex_unref0 (regex_help);
+							_g_regex_unref0 (regex_control);
+							_g_regex_unref0 (regex_config);
+							_g_regex_unref0 (regex_cld);
+							_g_regex_unref0 (regex_none);
+							return result;
+						} else {
+							GRegex* _tmp25_ = NULL;
+							const gchar* _tmp26_ = NULL;
+							gboolean _tmp27_ = FALSE;
+							_tmp25_ = regex_list;
+							_tmp26_ = value;
+							_tmp27_ = g_regex_match (_tmp25_, _tmp26_, 0, NULL);
+							if (_tmp27_) {
+								result = DACTL_CLI_APPLICATION_COMMAND_LIST;
+								_g_regex_unref0 (regex_quit);
+								_g_regex_unref0 (regex_write);
+								_g_regex_unref0 (regex_read);
+								_g_regex_unref0 (regex_log);
+								_g_regex_unref0 (regex_list);
+								_g_regex_unref0 (regex_help);
+								_g_regex_unref0 (regex_control);
+								_g_regex_unref0 (regex_config);
+								_g_regex_unref0 (regex_cld);
+								_g_regex_unref0 (regex_none);
+								return result;
+							} else {
+								GRegex* _tmp28_ = NULL;
+								const gchar* _tmp29_ = NULL;
+								gboolean _tmp30_ = FALSE;
+								_tmp28_ = regex_log;
+								_tmp29_ = value;
+								_tmp30_ = g_regex_match (_tmp28_, _tmp29_, 0, NULL);
+								if (_tmp30_) {
+									result = DACTL_CLI_APPLICATION_COMMAND_LOG;
+									_g_regex_unref0 (regex_quit);
+									_g_regex_unref0 (regex_write);
+									_g_regex_unref0 (regex_read);
+									_g_regex_unref0 (regex_log);
+									_g_regex_unref0 (regex_list);
+									_g_regex_unref0 (regex_help);
+									_g_regex_unref0 (regex_control);
+									_g_regex_unref0 (regex_config);
+									_g_regex_unref0 (regex_cld);
+									_g_regex_unref0 (regex_none);
+									return result;
+								} else {
+									GRegex* _tmp31_ = NULL;
+									const gchar* _tmp32_ = NULL;
+									gboolean _tmp33_ = FALSE;
+									_tmp31_ = regex_read;
+									_tmp32_ = value;
+									_tmp33_ = g_regex_match (_tmp31_, _tmp32_, 0, NULL);
+									if (_tmp33_) {
+										result = DACTL_CLI_APPLICATION_COMMAND_READ;
+										_g_regex_unref0 (regex_quit);
+										_g_regex_unref0 (regex_write);
+										_g_regex_unref0 (regex_read);
+										_g_regex_unref0 (regex_log);
+										_g_regex_unref0 (regex_list);
+										_g_regex_unref0 (regex_help);
+										_g_regex_unref0 (regex_control);
+										_g_regex_unref0 (regex_config);
+										_g_regex_unref0 (regex_cld);
+										_g_regex_unref0 (regex_none);
+										return result;
+									} else {
+										GRegex* _tmp34_ = NULL;
+										const gchar* _tmp35_ = NULL;
+										gboolean _tmp36_ = FALSE;
+										_tmp34_ = regex_write;
+										_tmp35_ = value;
+										_tmp36_ = g_regex_match (_tmp34_, _tmp35_, 0, NULL);
+										if (_tmp36_) {
+											result = DACTL_CLI_APPLICATION_COMMAND_WRITE;
+											_g_regex_unref0 (regex_quit);
+											_g_regex_unref0 (regex_write);
+											_g_regex_unref0 (regex_read);
+											_g_regex_unref0 (regex_log);
+											_g_regex_unref0 (regex_list);
+											_g_regex_unref0 (regex_help);
+											_g_regex_unref0 (regex_control);
+											_g_regex_unref0 (regex_config);
+											_g_regex_unref0 (regex_cld);
+											_g_regex_unref0 (regex_none);
+											return result;
+										} else {
+											GRegex* _tmp37_ = NULL;
+											const gchar* _tmp38_ = NULL;
+											gboolean _tmp39_ = FALSE;
+											_tmp37_ = regex_quit;
+											_tmp38_ = value;
+											_tmp39_ = g_regex_match (_tmp37_, _tmp38_, 0, NULL);
+											if (_tmp39_) {
+												result = DACTL_CLI_APPLICATION_COMMAND_QUIT;
+												_g_regex_unref0 (regex_quit);
+												_g_regex_unref0 (regex_write);
+												_g_regex_unref0 (regex_read);
+												_g_regex_unref0 (regex_log);
+												_g_regex_unref0 (regex_list);
+												_g_regex_unref0 (regex_help);
+												_g_regex_unref0 (regex_control);
+												_g_regex_unref0 (regex_config);
+												_g_regex_unref0 (regex_cld);
+												_g_regex_unref0 (regex_none);
+												return result;
+											} else {
+												result = DACTL_CLI_APPLICATION_COMMAND_NONE;
+												_g_regex_unref0 (regex_quit);
+												_g_regex_unref0 (regex_write);
+												_g_regex_unref0 (regex_read);
+												_g_regex_unref0 (regex_log);
+												_g_regex_unref0 (regex_list);
+												_g_regex_unref0 (regex_help);
+												_g_regex_unref0 (regex_control);
+												_g_regex_unref0 (regex_config);
+												_g_regex_unref0 (regex_cld);
+												_g_regex_unref0 (regex_none);
+												return result;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		_g_regex_unref0 (regex_quit);
+		_g_regex_unref0 (regex_write);
+		_g_regex_unref0 (regex_read);
+		_g_regex_unref0 (regex_log);
+		_g_regex_unref0 (regex_list);
+		_g_regex_unref0 (regex_help);
+		_g_regex_unref0 (regex_control);
+		_g_regex_unref0 (regex_config);
+		_g_regex_unref0 (regex_cld);
+		_g_regex_unref0 (regex_none);
+	}
+	goto __finally0;
+	__catch0_g_regex_error:
+	{
+		GError* e = NULL;
+		GError* _tmp40_ = NULL;
+		const gchar* _tmp41_ = NULL;
+		e = _inner_error_;
+		_inner_error_ = NULL;
+		_tmp40_ = e;
+		_tmp41_ = _tmp40_->message;
+		g_message ("dactl-cli-application.vala:106: Command regex error: %s", _tmp41_);
+		_g_error_free0 (e);
+	}
+	__finally0:
+	if (G_UNLIKELY (_inner_error_ != NULL)) {
+		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+		g_clear_error (&_inner_error_);
+		return 0;
+	}
+	result = DACTL_CLI_APPLICATION_COMMAND_NONE;
+	return result;
+}
+
+
+/**
+     * The commands that are recognized.
+     */
+GType dactl_cli_application_command_get_type (void) {
+	static volatile gsize dactl_cli_application_command_type_id__volatile = 0;
+	if (g_once_init_enter (&dactl_cli_application_command_type_id__volatile)) {
+		static const GEnumValue values[] = {{DACTL_CLI_APPLICATION_COMMAND_NONE, "DACTL_CLI_APPLICATION_COMMAND_NONE", "none"}, {DACTL_CLI_APPLICATION_COMMAND_CLD, "DACTL_CLI_APPLICATION_COMMAND_CLD", "cld"}, {DACTL_CLI_APPLICATION_COMMAND_CONFIG, "DACTL_CLI_APPLICATION_COMMAND_CONFIG", "config"}, {DACTL_CLI_APPLICATION_COMMAND_CONTROL, "DACTL_CLI_APPLICATION_COMMAND_CONTROL", "control"}, {DACTL_CLI_APPLICATION_COMMAND_HELP, "DACTL_CLI_APPLICATION_COMMAND_HELP", "help"}, {DACTL_CLI_APPLICATION_COMMAND_LIST, "DACTL_CLI_APPLICATION_COMMAND_LIST", "list"}, {DACTL_CLI_APPLICATION_COMMAND_LOG, "DACTL_CLI_APPLICATION_COMMAND_LOG", "log"}, {DACTL_CLI_APPLICATION_COMMAND_READ, "DACTL_CLI_APPLICATION_COMMAND_READ", "read"}, {DACTL_CLI_APPLICATION_COMMAND_WRITE, "DACTL_CLI_APPLICATION_COMMAND_WRITE", "write"}, {DACTL_CLI_APPLICATION_COMMAND_QUIT, "DACTL_CLI_APPLICATION_COMMAND_QUIT", "quit"}, {0, NULL, NULL}};
+		GType dactl_cli_application_command_type_id;
+		dactl_cli_application_command_type_id = g_enum_register_static ("DactlCLIApplicationCommand", values);
+		g_once_init_leave (&dactl_cli_application_command_type_id__volatile, dactl_cli_application_command_type_id);
+	}
+	return dactl_cli_application_command_type_id__volatile;
+}
 
 
 /**
@@ -122,7 +819,7 @@ DactlCLIApplication* dactl_cli_application_construct (GType object_type) {
 	DactlCLIApplication * self = NULL;
 	GeeArrayList* _tmp0_ = NULL;
 	GeeArrayList* _tmp1_ = NULL;
-	g_debug ("dactl-cli-application.vala:52: CLI application construction");
+	g_debug ("dactl-cli-application.vala:163: CLI application construction");
 	self = (DactlCLIApplication*) g_object_new (object_type, "application-id", "org.coanda.dactl.cli", "flags", G_APPLICATION_HANDLES_COMMAND_LINE | G_APPLICATION_HANDLES_OPEN, NULL);
 	_tmp0_ = gee_array_list_new (DACTL_TYPE_PLUGIN, (GBoxedCopyFunc) g_object_ref, g_object_unref, NULL, NULL, NULL);
 	_tmp1_ = _tmp0_;

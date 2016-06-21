@@ -120,6 +120,20 @@ dnl * XXX *****************************************************************
 
 
 dnl ***********************************************************************
+dnl Allow user to update application mime type
+dnl - always enabling results in slow make install w/ update-mime-database
+dnl ***********************************************************************
+AC_ARG_ENABLE(mime,
+              AS_HELP_STRING([--enable-mime=@<:@no/yes@:>@],
+                             [update mime database @<:@default=no@:>@]),
+              ,
+              enable_mime=no)
+AS_IF([test "x$enable_mime" = "xyes"],[enable_mime=yes ENABLE_MIME=1],[ENABLE_MIME=0])
+AC_SUBST(ENABLE_MIME)
+AM_CONDITIONAL(ENABLE_MIME, test "x$enable_mime" = "xyes")
+
+
+dnl ***********************************************************************
 dnl Setup Debug and Tracing Support
 dnl ***********************************************************************
 AC_ARG_ENABLE(tracing,
@@ -164,12 +178,16 @@ m4_define([gtk_required_version], [3.18.1])
 m4_define([libxml_required_version], [2.9.0])
 m4_define([peas_required_version], [1.16.0])
 m4_define([cld_required_version], [0.3.0])
+m4_define([soup_required_version], [2.4.0])
+m4_define([json_required_version], [1.0.0])
 
 PKG_CHECK_MODULES(LIBDACTL_CLI, [glib-2.0 >= glib_required_version
                                  gee-0.8 >= gee_required_version
                                  libxml-2.0 >= libxml_required_version
                                  libpeas-1.0 >= peas_required_version
                                  cld-0.3 >= cld_required_version])
+PKG_CHECK_MODULES(DACTL_SERVER, [libsoup-2.4 >= soup_required_version
+                                 json-glib-1.0 >= json_required_version])
 
 dnl Library checks
 VALAFLAGS="--enable-deprecated --target-glib=2.38 $VALAFLAGS"
@@ -464,6 +482,7 @@ AC_CONFIG_FILES([
 
 	src/Makefile
 	src/dactl/Makefile
+	src/daq-server/Makefile
 	src/libdactl-core/Makefile
     src/libdactl-cli/Makefile
 	src/libdactl-ui/Makefile
@@ -474,6 +493,7 @@ AC_CONFIG_FILES([
 	examples/Makefile
 
 	dactl-core-0.3.pc
+	dactl-cli-0.3.pc
 	dactl-ui-0.3.pc
 ])
 AC_OUTPUT
@@ -496,9 +516,10 @@ AC_MSG_NOTICE([
      UI support: .................................. : ${with_ui}
      Enable Debug: ................................ : ${enable_debug}
      Enable Tracing ............................... : ${enable_tracing}
-     Enable Profiling (-pg)........................ : ${enable_profiling}
+     Enable Profiling (-pg) ....................... : ${enable_profiling}
      Build documentation .......................... : ${enable_doc}
      Build API reference .......................... : ${enable_doc}
+     Update MIME Database ......................... : ${enable_mime}
 
     Plugins:
 

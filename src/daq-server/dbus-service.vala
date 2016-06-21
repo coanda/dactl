@@ -1,21 +1,17 @@
-[DBus (name = "org.coanda.Dactl")]
-internal class Dactl.DBusService : GLib.Object, Dactl.DBusInterface {
+[DBus (name = "org.coanda.Dactl.DaqServer")]
+internal class Dactl.DaqServer.DBusService : GLib.Object, Dactl.DBusInterface {
 
-    private Dactl.Main main;
+    private Dactl.DaqServer.Main main;
     private uint name_id;
     private uint connection_id;
 
-    public DBusService (Dactl.Main main) {
+    public DBusService (Dactl.DaqServer.Main main) {
         this.main = main;
-    }
-
-    public void shutdown () throws IOError {
-        this.main.exit (0);
     }
 
     internal void publish () {
         this.name_id = Bus.own_name (BusType.SESSION,
-                                     Dactl.DBusInterface.SERVICE_NAME,
+                                     Dactl.DBusInterface.SERVICE_NAME + ".DaqServer",
                                      BusNameOwnerFlags.NONE,
                                      this.on_bus_aquired,
                                      this.on_name_available,
@@ -37,9 +33,10 @@ internal class Dactl.DBusService : GLib.Object, Dactl.DBusInterface {
 
     private void on_bus_aquired (DBusConnection connection) {
         try {
-            this.connection_id = connection.register_object (
-                                        Dactl.DBusInterface.OBJECT_PATH,
-                                        this);
+            this.connection_id =
+                connection.register_object (
+                    Dactl.DBusInterface.OBJECT_PATH + "/DaqServer", this
+                );
         } catch (Error error) {
             stderr.printf ("Could not register service");
         }
@@ -57,16 +54,23 @@ internal class Dactl.DBusService : GLib.Object, Dactl.DBusInterface {
             return;
         }
 
-        message (_("Another instance of dactl is already running. Not starting."));
+        message (_("Another instance of daq-server is already running. Not starting."));
         this.main.exit (-15);
     }
 
     /*** Test Methods ***/
 
-    public void ping (GLib.BusName sender) {
-        message (_("Received ping from: %s"), sender);
-        pong ();
+    /*
+     *public void quit () {
+     *    this.main.exit (0);
+     *}
+     */
+
+    public void shutdown () throws IOError {
+        message (_("Received shutdown"));
+        //quit_requested ();
+        this.main.exit (0);
     }
 
-    public signal void pong ();
+    //public signal void quit_request ();
 }

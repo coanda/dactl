@@ -55,6 +55,7 @@ libdactl_core_0_3_la_LDFLAGS = \
 	$(NULL)
 
 BUILT_SOURCES = \
+	Dactl-0.3.gir \
 	dactl-core-0.3.vapi \
 	dactl-core.h \
 	$(NULL)
