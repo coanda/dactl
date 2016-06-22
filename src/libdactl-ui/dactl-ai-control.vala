@@ -104,7 +104,6 @@ public class Dactl.AIControl : Dactl.CompositeWidget, Dactl.CldAdapter {
     }
 
     public AIControl (string ai_ref) {
-        message ("wooot!");
         this.ch_ref = ai_ref;
 
         // Request CLD data

@@ -34,6 +34,8 @@ Existing Features
 
   * AI channel
   * AO channel
+  * DI channel
+  * DO channel
   * Log file (start/stop)
   * Strip chart
 
@@ -45,9 +47,9 @@ Existing Features
   * libcld logs
 
 * A page to export logged database tables as CSV files
-* Framework for custom plugins
+* Framework for custom plugins. See the `example plugin. <https://github.com/coanda/dactl-mcc-plugin>`
 
-Non-existant (but planned) Features
+Planned Features
 -----------------------------------
 
 * Configuration-less mode
