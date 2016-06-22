@@ -192,7 +192,7 @@ PKG_CHECK_MODULES(DACTL_SERVER, [libsoup-2.4 >= soup_required_version
                                  libzmq > zmq_required_version])
 
 dnl Library checks
-VALAFLAGS="--enable-deprecated --target-glib=2.38 $VALAFLAGS"
+VALAFLAGS="--enable-deprecated --target-glib=2.44 $VALAFLAGS"
 
 dnl Need to work these in to simplify checking
 DACTL_BASE_MODULES="gee-0.8 libxml-2.0 libpeas-1.0 libpeas-gtk-1.0"

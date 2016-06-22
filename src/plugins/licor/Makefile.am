@@ -19,7 +19,7 @@ libdactl_licor_la_SOURCES = \
 	$(NULL)
 
 libdactl_licor_la_VALAFLAGS = \
-	--target-glib=2.38 \
+	--target-glib=2.44 \
 	--gresources $(gresource_file) \
 	--vapidir=$(top_srcdir)/vapi \
 	$(DACTL_PLUGIN_COMMON_VALAFLAGS) \

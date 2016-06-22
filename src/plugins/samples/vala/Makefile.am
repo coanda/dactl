@@ -49,7 +49,7 @@ libdactl_vala_la_CFLAGS = \
 	$(NULL)
 
 #libdactl_sample_la_VALAFLAGS = \
-	#--target-glib=2.38 \
+	#--target-glib=2.44 \
 	#--vapidir=$(top_srcdir)/vapi \
 	#$(DACTL_PLUGIN_COMMON_VALAFLAGS) \
 	#$(DACTL_UI_DEPS_VALAFLAGS) \
