@@ -1,23 +1,27 @@
-public class Dactl.DaqServer.Application : Dactl.CLI.Application {
+public class Dactl.DAQ.Server : Dactl.CLI.Application {
 
-    private static Once<Dactl.DaqServer.Application> _instance;
+    private static Once<Dactl.DAQ.Server> _instance;
 
     private GLib.MainLoop loop;
 
-    private Dactl.DaqServer.RestService rest_server;
+    private Dactl.DAQ.RestService rest_service;
 
-    public static unowned Dactl.DaqServer.Application get_default () {
+    private Dactl.DAQ.ZmqService zmq_service;
+
+    public static unowned Dactl.DAQ.Server get_default () {
         return _instance.once (() => {
-            return new Dactl.DaqServer.Application ();
+            return new Dactl.DAQ.Server ();
         });
     }
 
-    internal Application () {
+    internal Server () {
         GLib.Object (application_id: "org.coanda.dactl.daqserver");
 
         loop = new GLib.MainLoop ();
 
-        rest_server = new Dactl.DaqServer.RestService ();
+        rest_service = new Dactl.DAQ.RestService ();
+        zmq_service = new Dactl.DAQ.ZmqService.with_conn_info (
+            Dactl.DAQ.ZmqService.Transport.TCP, "*", 5588);
     }
 
     protected override void activate () {
@@ -29,7 +33,10 @@ public class Dactl.DaqServer.Application : Dactl.CLI.Application {
     protected override void startup () {
         base.startup ();
 
-        debug (_("Starting DAQ server"));
+        debug (_("Starting DAQ server > ZMQ Service"));
+        zmq_service.run ();
+
+        debug (_("Starting DAQ server > Main"));
         loop.run ();
     }
 

@@ -1,4 +1,4 @@
-internal class Dactl.DaqServer.RestService : Soup.Server {
+internal class Dactl.DAQ.RestService : Soup.Server {
 
     private int _port = 8088;
     /**
@@ -42,7 +42,7 @@ internal class Dactl.DaqServer.RestService : Soup.Server {
     private void route_default (Soup.Server server, Soup.Message msg,
                                 string path, GLib.HashTable? query,
                                 Soup.ClientContext client) {
-        unowned RestService self = server as Dactl.DaqServer.RestService;
+        unowned RestService self = server as Dactl.DAQ.RestService;
 
         Timeout.add_seconds (0, () => {
 			string html_head = "<head><title>Index</title></head>";

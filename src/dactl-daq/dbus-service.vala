@@ -1,17 +1,17 @@
-[DBus (name = "org.coanda.Dactl.DaqServer")]
-internal class Dactl.DaqServer.DBusService : GLib.Object, Dactl.DBusInterface {
+[DBus (name = "org.coanda.Dactl.DAQ")]
+internal class Dactl.DAQ.DBusService : GLib.Object, Dactl.DBusInterface {
 
-    private Dactl.DaqServer.Main main;
+    private Dactl.DAQ.Main main;
     private uint name_id;
     private uint connection_id;
 
-    public DBusService (Dactl.DaqServer.Main main) {
+    public DBusService (Dactl.DAQ.Main main) {
         this.main = main;
     }
 
     internal void publish () {
         this.name_id = Bus.own_name (BusType.SESSION,
-                                     Dactl.DBusInterface.SERVICE_NAME + ".DaqServer",
+                                     Dactl.DBusInterface.SERVICE_NAME + ".DAQ",
                                      BusNameOwnerFlags.NONE,
                                      this.on_bus_aquired,
                                      this.on_name_available,
@@ -35,10 +35,10 @@ internal class Dactl.DaqServer.DBusService : GLib.Object, Dactl.DBusInterface {
         try {
             this.connection_id =
                 connection.register_object (
-                    Dactl.DBusInterface.OBJECT_PATH + "/DaqServer", this
+                    Dactl.DBusInterface.OBJECT_PATH + "/DAQ", this
                 );
         } catch (Error error) {
-            stderr.printf ("Could not register service");
+            critical ("Could not register service");
         }
     }
 
@@ -60,14 +60,8 @@ internal class Dactl.DaqServer.DBusService : GLib.Object, Dactl.DBusInterface {
 
     /*** Test Methods ***/
 
-    /*
-     *public void quit () {
-     *    this.main.exit (0);
-     *}
-     */
-
     public void shutdown () throws IOError {
-        message (_("Received shutdown"));
+        debug (_("Received shutdown"));
         //quit_requested ();
         this.main.exit (0);
     }

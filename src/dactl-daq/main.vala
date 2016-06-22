@@ -1,4 +1,4 @@
-internal class Dactl.DaqServer.Main : GLib.Object {
+internal class Dactl.DAQ.Main : GLib.Object {
 
     private struct Options {
 
@@ -55,7 +55,7 @@ internal class Dactl.DaqServer.Main : GLib.Object {
 
         this.exit_code = 0;
 
-        app = Dactl.DaqServer.Application.get_default ();
+        app = Dactl.DAQ.Server.get_default ();
 
         Unix.signal_add (Posix.SIGHUP,  () => { this.restart (); return true; });
         Unix.signal_add (Posix.SIGINT,  () => { this.exit (0);   return true; });
@@ -69,7 +69,7 @@ internal class Dactl.DaqServer.Main : GLib.Object {
     public void exit (int exit_code) {
         this.exit_code = exit_code;
         Dactl.Log.shutdown ();
-        (app as Dactl.DaqServer.Application).shutdown ();
+        (app as Dactl.DAQ.Server).shutdown ();
     }
 
     public void restart () {
@@ -89,24 +89,24 @@ internal class Dactl.DaqServer.Main : GLib.Object {
 
     private static int main (string[] args) {
 
-        Dactl.DaqServer.Main main = null;
-        Dactl.DaqServer.DBusService service = null;
+        Dactl.DAQ.Main main = null;
+        Dactl.DAQ.DBusService service = null;
 
         var original_args = args;
 
         Intl.setlocale (LocaleCategory.ALL, "");
-        Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.LOCALEDIR);
-        Intl.bind_textdomain_codeset (Config.GETTEXT_PACKAGE, "UTF-8");
-        Intl.textdomain (Config.GETTEXT_PACKAGE);
+        Intl.bindtextdomain (Dactl.Config.GETTEXT_PACKAGE, Dactl.Config.LOCALEDIR);
+        Intl.bind_textdomain_codeset (Dactl.Config.GETTEXT_PACKAGE, "UTF-8");
+        Intl.textdomain (Dactl.Config.GETTEXT_PACKAGE);
 
-        GLib.Environment.set_prgname (_(Config.PACKAGE_NAME));
-        GLib.Environment.set_application_name (_(Config.PACKAGE_NAME));
+        GLib.Environment.set_prgname (_(Dactl.Config.PACKAGE_NAME));
+        GLib.Environment.set_application_name (_(Dactl.Config.PACKAGE_NAME));
 
         try {
             parse_local_args (ref args);
 
-            main = new Dactl.DaqServer.Main ();
-            service = new Dactl.DaqServer.DBusService (main);
+            main = new Dactl.DAQ.Main ();
+            service = new Dactl.DAQ.DBusService (main);
             service.publish ();
         } catch (GLib.Error e) {
             error ("%s", e.message);

@@ -180,6 +180,7 @@ m4_define([peas_required_version], [1.16.0])
 m4_define([cld_required_version], [0.3.0])
 m4_define([soup_required_version], [2.4.0])
 m4_define([json_required_version], [1.0.0])
+m4_define([zmq_required_version], [3.2.0])
 
 PKG_CHECK_MODULES(LIBDACTL_CLI, [glib-2.0 >= glib_required_version
                                  gee-0.8 >= gee_required_version
@@ -187,7 +188,8 @@ PKG_CHECK_MODULES(LIBDACTL_CLI, [glib-2.0 >= glib_required_version
                                  libpeas-1.0 >= peas_required_version
                                  cld-0.3 >= cld_required_version])
 PKG_CHECK_MODULES(DACTL_SERVER, [libsoup-2.4 >= soup_required_version
-                                 json-glib-1.0 >= json_required_version])
+                                 json-glib-1.0 >= json_required_version
+                                 libzmq > zmq_required_version])
 
 dnl Library checks
 VALAFLAGS="--enable-deprecated --target-glib=2.38 $VALAFLAGS"
@@ -482,7 +484,7 @@ AC_CONFIG_FILES([
 
 	src/Makefile
 	src/dactl/Makefile
-	src/daq-server/Makefile
+	src/dactl-daq/Makefile
 	src/libdactl-core/Makefile
     src/libdactl-cli/Makefile
 	src/libdactl-ui/Makefile

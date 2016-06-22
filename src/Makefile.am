@@ -2,7 +2,7 @@ SUBDIRS = libdactl-core \
 		  libdactl-cli \
 		  libdactl-ui \
 		  dactl \
-		  daq-server \
+		  dactl-daq \
 		  plugins
 
 MAINTAINERCLEANFILES = Makefile.in
