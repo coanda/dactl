@@ -9,6 +9,8 @@ internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
      *};
      */
 
+    private const string bad_request = "jsonp('XXX': {'status': 400})";
+
     public RestService () {
         init ();
     }
@@ -25,10 +27,10 @@ internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
         add_handler (null,        route_default);
         add_handler ("/channel",  route_channel);
         add_handler ("/channels", route_channels);
-        //add_handler ("/device",   route_device);
-        //add_handler ("/devices",  route_devices);
-        //add_handler ("/task",     route_task);
-        //add_handler ("/tasks",    route_tasks);
+        add_handler ("/device",   route_device);
+        add_handler ("/devices",  route_devices);
+        add_handler ("/task",     route_task);
+        add_handler ("/tasks",    route_tasks);
 
         /*
          *add_routes (routes);
@@ -37,6 +39,9 @@ internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
 
     /* API routes */
 
+    /**
+     * Default route serves static index page.
+     */
     private void route_default (Soup.Server server,
                                 Soup.Message msg,
                                 string path,
@@ -62,6 +67,9 @@ internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
         self.pause_message (msg);
     }
 
+    /**
+     * Channel routes to display all or work with CRUD.
+     */
     private void route_channel (Soup.Server server,
                                 Soup.Message msg,
                                 string path,
@@ -71,17 +79,19 @@ internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
         // Leaving in leading / results in empty 0th token
         string[] tokens = path.substring (1).split ("/");
 
-        var bad_request = "jsonp('channel': {'status': %d})".printf (
-                                Soup.Status.BAD_REQUEST);
+        /*
+         *var bad_request = "jsonp('channel': {'status': %d})".printf (
+         *                        Soup.Status.BAD_REQUEST);
+         */
 
         // CRUD for channel requests
         switch (msg.method.up ()) {
             case "PUT":
-                debug ("PUT channel: not implemented");
+                debug (_("PUT channel: not implemented"));
                 break;
             case "GET":
                 if (tokens.length >= 2) {
-                    debug ("GET channel: (id %s)", tokens[1]);
+                    debug (_("GET channel: (id %s)"), tokens[1]);
                 } else {
                     msg.status_code = Soup.Status.BAD_REQUEST;
                     msg.response_headers.append ("Access-Control-Allow-Origin", "*");
@@ -91,16 +101,17 @@ internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
                 }
                 break;
             case "POST":
-                debug ("POST channel: not implemented");
+                debug (_("POST channel: not implemented"));
                 break;
             case "DELETE":
-                debug ("DELETE channel: not implemented");
+                debug (_("DELETE channel: not implemented"));
                 break;
             default:
+                msg.status_code = Soup.Status.BAD_REQUEST;
                 msg.response_headers.append ("Access-Control-Allow-Origin", "*");
                 msg.set_response ("application/json",
                                   Soup.MemoryUse.COPY,
-                                  bad_request.data);
+                                  bad_request.replace ("XXX", "channel").data);
                 break;
         }
     }
@@ -121,7 +132,111 @@ internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
         generator.set_root (builder.get_root ());
 
         var response = "jsonp(%s)".printf (generator.to_data (null));
-        debug ("REST response: %s", response);
+        debug ("GET channels: %s", response);
+
+        msg.status_code = Soup.Status.OK;
+        msg.response_headers.append ("Access-Control-Allow-Origin", "*");
+        msg.set_response ("application/json",
+                          Soup.MemoryUse.COPY,
+                          response.data);
+    }
+
+    /**
+     * Device routes to display all or work with CRUD.
+     */
+    private void route_device (Soup.Server server,
+                               Soup.Message msg,
+                               string path,
+                               GLib.HashTable? query,
+                               Soup.ClientContext client) {
+
+        // Leaving in leading / results in empty 0th token
+        string[] tokens = path.substring (1).split ("/");
+
+        // CRUD for task requests
+        switch (msg.method.up ()) {
+            case "PUT":
+                debug (_("PUT device: not implemented"));
+                break;
+            case "GET":
+                debug (_("GET device: not implemented"));
+                break;
+            case "POST":
+                debug (_("POST device: not implemented"));
+                break;
+            case "DELETE":
+                debug (_("DELETE device: not implemented"));
+                break;
+            default:
+                msg.status_code = Soup.Status.BAD_REQUEST;
+                msg.response_headers.append ("Access-Control-Allow-Origin", "*");
+                msg.set_response ("application/json",
+                                  Soup.MemoryUse.COPY,
+                                  bad_request.replace ("XXX", "device").data);
+                break;
+        }
+    }
+
+    private void route_devices (Soup.Server server,
+                                Soup.Message msg,
+                                string path,
+                                GLib.HashTable? query,
+                                Soup.ClientContext client) {
+
+        var response = "jsonp('devices': { 'response': 'test' })";
+        debug ("GET devices: %s", response);
+
+        msg.status_code = Soup.Status.OK;
+        msg.response_headers.append ("Access-Control-Allow-Origin", "*");
+        msg.set_response ("application/json",
+                          Soup.MemoryUse.COPY,
+                          response.data);
+    }
+
+    /**
+     * Task routes to display all or work with CRUD.
+     */
+    private void route_task (Soup.Server server,
+                             Soup.Message msg,
+                             string path,
+                             GLib.HashTable? query,
+                             Soup.ClientContext client) {
+
+        // Leaving in leading / results in empty 0th token
+        string[] tokens = path.substring (1).split ("/");
+
+        // CRUD for task requests
+        switch (msg.method.up ()) {
+            case "PUT":
+                debug (_("PUT task: not implemented"));
+                break;
+            case "GET":
+                debug (_("GET task: not implemented"));
+                break;
+            case "POST":
+                debug (_("POST task: not implemented"));
+                break;
+            case "DELETE":
+                debug (_("DELETE task: not implemented"));
+                break;
+            default:
+                msg.status_code = Soup.Status.BAD_REQUEST;
+                msg.response_headers.append ("Access-Control-Allow-Origin", "*");
+                msg.set_response ("application/json",
+                                  Soup.MemoryUse.COPY,
+                                  bad_request.replace ("XXX", "task").data);
+                break;
+        }
+    }
+
+    private void route_tasks (Soup.Server server,
+                              Soup.Message msg,
+                              string path,
+                              GLib.HashTable? query,
+                              Soup.ClientContext client) {
+
+        var response = "jsonp('tasks': { 'response': 'test' })";
+        debug ("GET tasks: %s", response);
 
         msg.status_code = Soup.Status.OK;
         msg.response_headers.append ("Access-Control-Allow-Origin", "*");
