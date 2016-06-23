@@ -2,7 +2,7 @@ SUBDIRS = build contrib data doc src examples
 
 ACLOCAL_AMFLAGS = -I build/autotools
 
-pkgconfig_DATA = dactl-core-0.3.pc dactl-cli-0.3.pc dactl-ui-0.3.pc
+pkgconfig_DATA = dactl-core-0.3.pc dactl-cli-0.3.pc dactl-net-0.3.pc dactl-ui-0.3.pc
 pkgconfigdir = $(libdir)/pkgconfig
 
 EXTRA_DIST = \

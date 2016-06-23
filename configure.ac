@@ -501,6 +501,7 @@ AC_CONFIG_FILES([
 
 	dactl-core-0.3.pc
 	dactl-cli-0.3.pc
+	dactl-net-0.3.pc
 	dactl-ui-0.3.pc
 ])
 AC_OUTPUT

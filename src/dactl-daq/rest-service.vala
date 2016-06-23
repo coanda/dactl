@@ -10,14 +10,25 @@ internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
      */
 
     public RestService () {
-        assert (this != null);
+        init ();
+    }
 
-        debug (_("Starting DAQ REST service"));
+    public RestService.with_port (int port) {
+        GLib.Object (port: port);
+        init ();
+    }
 
+    private void init () {
+        debug (_("Starting DAQ REST service on port %d"), port);
         listen_all (port, 0);
 
-        add_handler (null, route_default);
+        add_handler (null,        route_default);
+        add_handler ("/channel",  route_channel);
         add_handler ("/channels", route_channels);
+        //add_handler ("/device",   route_device);
+        //add_handler ("/devices",  route_devices);
+        //add_handler ("/task",     route_task);
+        //add_handler ("/tasks",    route_tasks);
 
         /*
          *add_routes (routes);
@@ -26,11 +37,15 @@ internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
 
     /* API routes */
 
-    private void route_default (Soup.Server server, Soup.Message msg,
-                                string path, GLib.HashTable? query,
+    private void route_default (Soup.Server server,
+                                Soup.Message msg,
+                                string path,
+                                GLib.HashTable? query,
                                 Soup.ClientContext client) {
+
         unowned Dactl.DAQ.RestService self = server as Dactl.DAQ.RestService;
 
+        // XXX async example that simulates load, should change
         Timeout.add_seconds (0, () => {
 			string html_head = "<head><title>Index</title></head>";
 			string html_body = "<body><h1>Index:</h1></body>";
@@ -47,14 +62,55 @@ internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
         self.pause_message (msg);
     }
 
-    private void route_channel (Soup.Server server, Soup.Message msg,
-                                string path, GLib.HashTable? query,
+    private void route_channel (Soup.Server server,
+                                Soup.Message msg,
+                                string path,
+                                GLib.HashTable? query,
                                 Soup.ClientContext client) {
+
+        // Leaving in leading / results in empty 0th token
+        string[] tokens = path.substring (1).split ("/");
+
+        var bad_request = "jsonp('channel': {'status': %d})".printf (
+                                Soup.Status.BAD_REQUEST);
+
+        // CRUD for channel requests
+        switch (msg.method.up ()) {
+            case "PUT":
+                debug ("PUT channel: not implemented");
+                break;
+            case "GET":
+                if (tokens.length >= 2) {
+                    debug ("GET channel: (id %s)", tokens[1]);
+                } else {
+                    msg.status_code = Soup.Status.BAD_REQUEST;
+                    msg.response_headers.append ("Access-Control-Allow-Origin", "*");
+                    msg.set_response ("application/json",
+                                      Soup.MemoryUse.COPY,
+                                      bad_request.data);
+                }
+                break;
+            case "POST":
+                debug ("POST channel: not implemented");
+                break;
+            case "DELETE":
+                debug ("DELETE channel: not implemented");
+                break;
+            default:
+                msg.response_headers.append ("Access-Control-Allow-Origin", "*");
+                msg.set_response ("application/json",
+                                  Soup.MemoryUse.COPY,
+                                  bad_request.data);
+                break;
+        }
     }
 
-    private void route_channels (Soup.Server server, Soup.Message msg,
-                                 string path, GLib.HashTable? query,
+    private void route_channels (Soup.Server server,
+                                 Soup.Message msg,
+                                 string path,
+                                 GLib.HashTable? query,
                                  Soup.ClientContext client) {
+
         var builder = new Json.Builder ();
         builder.begin_object ();
         builder.set_member_name ("data");
@@ -67,8 +123,10 @@ internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
         var response = "jsonp(%s)".printf (generator.to_data (null));
         debug ("REST response: %s", response);
 
-        msg.status_code = 200;
+        msg.status_code = Soup.Status.OK;
         msg.response_headers.append ("Access-Control-Allow-Origin", "*");
-        msg.set_response ("application/json", Soup.MemoryUse.COPY, response.data);
+        msg.set_response ("application/json",
+                          Soup.MemoryUse.COPY,
+                          response.data);
     }
 }

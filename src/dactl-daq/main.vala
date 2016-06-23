@@ -78,7 +78,7 @@ internal class Dactl.DAQ.Main : GLib.Object {
     }
 
     private int run (string[] args) {
-        debug (_("DAQ Server v%s starting..."), Config.PACKAGE_VERSION);
+        message (_("DAQ Server v%s starting..."), Config.PACKAGE_VERSION);
         app.launch (args);
 
         return this.exit_code;
