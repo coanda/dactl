@@ -499,10 +499,10 @@ AC_CONFIG_FILES([
 
 	examples/Makefile
 
-	dactl-core-0.3.pc
-	dactl-cli-0.3.pc
-	dactl-net-0.3.pc
-	dactl-ui-0.3.pc
+	src/libdactl-core/dactl-core-0.3.pc
+	src/libdactl-cli/dactl-cli-0.3.pc
+	src/libdactl-net/dactl-net-0.3.pc
+	src/libdactl-ui/dactl-ui-0.3.pc
 ])
 AC_OUTPUT
 

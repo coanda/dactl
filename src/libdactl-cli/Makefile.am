@@ -9,6 +9,13 @@ pkglib_LTLIBRARIES = libdactl-cli-0.3.la
 headersdir = $(includedir)/dactl-@VERSION@/libdactl-cli
 nobase_headers_DATA =
 
+pkgconfig_DATA = dactl-cli-0.3.pc
+pkgconfigdir = $(libdir)/pkgconfig
+
+EXTRA_DIST += \
+	dactl-cli-0.3.pc.in \
+	$(NULL)
+
 LIBDACTL_CLI_VERSION=0:3:0
 
 libdactl_cli_0_3_la_public_headers = \

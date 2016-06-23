@@ -7,6 +7,13 @@ libdactlinc_HEADERS = dactl-core.h
 
 lib_LTLIBRARIES = libdactl-core-0.3.la
 
+pkgconfig_DATA = dactl-core-0.3.pc
+pkgconfigdir = $(libdir)/pkgconfig
+
+EXTRA_DIST = \
+	dactl-core-0.3.pc.in \
+	$(NULL)
+
 libdactl_core_0_3_la_SOURCES = \
 	$(LIBDACTL_CORE_VAPI_SOURCE_FILES) \
 	$(LIBDACTL_CORE_NONVAPI_SOURCE_FILES) \

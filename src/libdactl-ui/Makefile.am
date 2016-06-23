@@ -13,6 +13,13 @@ libdactl_ui_include_HEADERS = dactl-ui.h
 
 lib_LTLIBRARIES = libdactl-ui-0.3.la
 
+pkgconfig_DATA = dactl-ui-0.3.pc
+pkgconfigdir = $(libdir)/pkgconfig
+
+EXTRA_DIST += \
+	dactl-ui-0.3.pc.in \
+	$(NULL)
+
 LIBDACTL_UI_VERSION=0:3:0
 
 gresource_file = libdactl-ui.gresource.xml
