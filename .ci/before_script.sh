@@ -3,6 +3,9 @@
 set -e
 set -o pipefail
 
+sudo add-apt-repository ppa:vala-team/ppa -y
+sudo apt-get update -qq
+
 # XXX not actually sure if we're in srcdir yet
 sed -i 's/\sdactl-rich-content.vala//' src/libdactl-ui/Makefile
 sed -i 's/UI\.RichContent/Box/' src/libdactl-ui/dactl-box.vala

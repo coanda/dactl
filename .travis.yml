@@ -10,8 +10,8 @@ script:        .ci/script.sh
 
 addons:
   apt:
-    sources:
-      - vala-team
+    #sources:
+    #  - vala-team
     packages:
       - gnome-common
       - gobject-introspection
