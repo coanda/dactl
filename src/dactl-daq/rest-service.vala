@@ -1,16 +1,13 @@
-internal class Dactl.DAQ.RestService : Soup.Server {
+internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
 
-    private int _port = 8088;
-    /**
-     * The TCP port to listen to. Setting should restart gracefully.
+    /*
+     *private const Dactl.Net.RouteEntry[] routes = {
+     *    { "/",                 Dactl.Net.RouteArg.CALLBACK, (void*) route_default,  null },
+     *    { "/channel/<int:id>", Dactl.Net.RouteArg.CALLBACK, (void*) route_channel,  null },
+     *    { "/channels",         Dactl.Net.RouteArg.CALLBACK, (void*) route_channels, null },
+     *    { null }
+     *};
      */
-    public int port {
-        get { return _port; }
-        set {
-            _port = value;
-            //reset ();
-        }
-    }
 
     public RestService () {
         assert (this != null);
@@ -21,28 +18,18 @@ internal class Dactl.DAQ.RestService : Soup.Server {
 
         add_handler (null, route_default);
         add_handler ("/channels", route_channels);
-    }
 
-/*
- *    public void reset () {
- *        rest_server.disconnect ();
- *        rest_server = null;
- *
- *        try {
- *            rest_server = new Soup.Server (Soup.SERVER_PORT, port);
- *            //rest_server.listen_all (port, 0);
- *        } catch (GLib.Error e) {
- *            warning ("Error creating REST service: %s", e.message);
- *        }
- *    }
- */
+        /*
+         *add_routes (routes);
+         */
+    }
 
     /* API routes */
 
     private void route_default (Soup.Server server, Soup.Message msg,
                                 string path, GLib.HashTable? query,
                                 Soup.ClientContext client) {
-        unowned RestService self = server as Dactl.DAQ.RestService;
+        unowned Dactl.DAQ.RestService self = server as Dactl.DAQ.RestService;
 
         Timeout.add_seconds (0, () => {
 			string html_head = "<head><title>Index</title></head>";
@@ -58,6 +45,11 @@ internal class Dactl.DAQ.RestService : Soup.Server {
         }, Priority.DEFAULT);
 
         self.pause_message (msg);
+    }
+
+    private void route_channel (Soup.Server server, Soup.Message msg,
+                                string path, GLib.HashTable? query,
+                                Soup.ClientContext client) {
     }
 
     private void route_channels (Soup.Server server, Soup.Message msg,

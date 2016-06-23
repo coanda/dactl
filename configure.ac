@@ -39,12 +39,14 @@ MINOR_VERSION=dactl_minor_version
 MICRO_VERSION=dactl_micro_version
 LIBDACTL_CORE_VERSION=dactl_version
 LIBDACTL_CLI_VERSION=dactl_version
+LIBDACTL_NET_VERSION=dactl_version
 LIBDACTL_UI_VERSION=dactl_version
 AC_SUBST(MAJOR_VERSION)
 AC_SUBST(MINOR_VERSION)
 AC_SUBST(MICRO_VERSION)
 AC_SUBST(LIBDACTL_CORE_VERSION)
 AC_SUBST(LIBDACTL_CLI_VERSION)
+AC_SUBST(LIBDACTL_NET_VERSION)
 AC_SUBST(LIBDACTL_UI_VERSION)
 
 
@@ -187,7 +189,7 @@ PKG_CHECK_MODULES(LIBDACTL_CLI, [glib-2.0 >= glib_required_version
                                  libxml-2.0 >= libxml_required_version
                                  libpeas-1.0 >= peas_required_version
                                  cld-0.3 >= cld_required_version])
-PKG_CHECK_MODULES(DACTL_SERVER, [libsoup-2.4 >= soup_required_version
+PKG_CHECK_MODULES(LIBDACTL_NET, [libsoup-2.4 >= soup_required_version
                                  json-glib-1.0 >= json_required_version
                                  libzmq > zmq_required_version])
 
@@ -428,6 +430,7 @@ dnl ***********************************************************************
 dnl Setup common cflags and ldflags for plugins
 dnl ***********************************************************************
 PLUGIN_CFLAGS="$PLUGIN_CFLAGS -I\$(top_srcdir)/src/libdactl-core"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS -I\$(top_srcdir)/src/libdactl-net"
 PLUGIN_CFLAGS="$PLUGIN_CFLAGS -I\$(top_srcdir)/src/libdactl-ui"
 PLUGIN_CFLAGS="$PLUGIN_CFLAGS $LIBDACTL_UI_DEPS_CFLAGS"
 PLUGIN_CFLAGS="$PLUGIN_CFLAGS $LIBDACTL_CORE_DEPS_CFLAGS"
@@ -444,6 +447,7 @@ AC_SUBST(PLUGIN_LDFLAGS)
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --target-glib=2.44"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --thread"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-core"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-net"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-ui"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-core-0.3"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-ui-0.3"
@@ -486,7 +490,8 @@ AC_CONFIG_FILES([
 	src/dactl/Makefile
 	src/dactl-daq/Makefile
 	src/libdactl-core/Makefile
-    src/libdactl-cli/Makefile
+	src/libdactl-cli/Makefile
+	src/libdactl-net/Makefile
 	src/libdactl-ui/Makefile
 	src/libdactl-ui/extensions/Makefile
 	src/plugins/Makefile

@@ -21,7 +21,7 @@ public class Dactl.DAQ.Server : Dactl.CLI.Application {
 
         rest_service = new Dactl.DAQ.RestService ();
         zmq_service = new Dactl.DAQ.ZmqService.with_conn_info (
-            Dactl.DAQ.ZmqService.Transport.TCP, "*", 5588);
+            Dactl.Net.ZmqService.Transport.TCP, "*", 5588);
     }
 
     protected override void activate () {

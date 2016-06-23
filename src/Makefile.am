@@ -1,5 +1,6 @@
 SUBDIRS = libdactl-core \
 		  libdactl-cli \
+		  libdactl-net \
 		  libdactl-ui \
 		  dactl \
 		  dactl-daq \
