@@ -20,10 +20,10 @@ internal class Dactl.DAQ.ZmqService : GLib.Object {
          */
         public string to_string () {
             switch (this) {
-                case INPROC: return "inproc://";
-                case IPC:    return "ipc://";
-                case TCP:    return "tcp://";
-                case PGM:    return "pgm://";
+                case INPROC: return "inproc";
+                case IPC:    return "ipc";
+                case TCP:    return "tcp";
+                case PGM:    return "pgm";
                 default: assert_not_reached ();
             }
         }
@@ -64,8 +64,6 @@ internal class Dactl.DAQ.ZmqService : GLib.Object {
 
     private ZMQ.Socket publisher;
 
-    private string endpoint;
-
     /**
      * Port number to use with the service.
      */
@@ -101,9 +99,24 @@ internal class Dactl.DAQ.ZmqService : GLib.Object {
     }
 
     private void zmq_init () throws Dactl.DAQ.ZmqError {
-        endpoint = "%s%s:%d".printf (transport.to_string (), address, port);
+        string endpoint = null;
+
         context = new ZMQ.Context ();
         publisher = ZMQ.Socket.create (context, ZMQ.SocketType.PUB);
+
+        switch (transport) {
+            case Transport.INPROC:
+                endpoint = "%s://%s".printf (transport.to_string (), address);
+                break;
+            case Transport.IPC:
+            case Transport.TCP:
+            case Transport.PGM:
+                endpoint = "%s://%s:%d".printf (transport.to_string (), address, port);
+                break;
+            default:
+                assert_not_reached ();
+        }
+
         debug ("Connect to %s", endpoint);
 
         var ret = publisher.bind (endpoint);
