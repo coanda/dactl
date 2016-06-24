@@ -39,6 +39,7 @@ MINOR_VERSION=dactl_minor_version
 MICRO_VERSION=dactl_micro_version
 LIBDACTL_CORE_VERSION=dactl_version
 LIBDACTL_CLI_VERSION=dactl_version
+LIBDACTL_LOG_VERSION=dactl_version
 LIBDACTL_NET_VERSION=dactl_version
 LIBDACTL_UI_VERSION=dactl_version
 AC_SUBST(MAJOR_VERSION)
@@ -46,6 +47,7 @@ AC_SUBST(MINOR_VERSION)
 AC_SUBST(MICRO_VERSION)
 AC_SUBST(LIBDACTL_CORE_VERSION)
 AC_SUBST(LIBDACTL_CLI_VERSION)
+AC_SUBST(LIBDACTL_LOG_VERSION)
 AC_SUBST(LIBDACTL_NET_VERSION)
 AC_SUBST(LIBDACTL_UI_VERSION)
 
@@ -189,6 +191,8 @@ PKG_CHECK_MODULES(LIBDACTL_CLI, [glib-2.0 >= glib_required_version
                                  libxml-2.0 >= libxml_required_version
                                  libpeas-1.0 >= peas_required_version
                                  cld-0.3 >= cld_required_version])
+PKG_CHECK_MODULES(LIBDACTL_LOG, [gio-2.0 >= glib_required_version
+                                 libzmq >= zmq_required_version])
 PKG_CHECK_MODULES(LIBDACTL_NET, [libsoup-2.4 >= soup_required_version
                                  json-glib-1.0 >= json_required_version
                                  libzmq > zmq_required_version])
@@ -357,6 +361,7 @@ AX_APPEND_COMPILE_FLAGS([ \
 	-Wno-uninitialized \
 	-Wno-unused-parameter \
 	-Wpointer-arith \
+	-Wpointer-sign \
 	-Wredundant-decls \
 	-Wshadow \
 	-Wswitch-default \
@@ -489,18 +494,26 @@ AC_CONFIG_FILES([
 	src/Makefile
 	src/dactl/Makefile
 	src/dactl-daq/Makefile
+	src/dactl-log/Makefile
+
 	src/libdactl-core/Makefile
 	src/libdactl-cli/Makefile
+	src/libdactl-log/Makefile
 	src/libdactl-net/Makefile
 	src/libdactl-ui/Makefile
 	src/libdactl-ui/extensions/Makefile
+
 	src/plugins/Makefile
 	src/plugins/samples/Makefile
+
+	src/devices/Makefile
+	src/devices/samples/Makefile
 
 	examples/Makefile
 
 	src/libdactl-core/dactl-core-0.3.pc
 	src/libdactl-cli/dactl-cli-0.3.pc
+	src/libdactl-log/dactl-log-0.3.pc
 	src/libdactl-net/dactl-net-0.3.pc
 	src/libdactl-ui/dactl-ui-0.3.pc
 ])

@@ -3,15 +3,6 @@
 set -e
 set -o pipefail
 
-sudo add-apt-repository ppa:vala-team/ppa -y
-sudo apt-get update -qq
-
-# XXX not actually sure if we're in srcdir yet
-sed -i 's/\sdactl-rich-content.vala//' src/libdactl-ui/Makefile
-sed -i 's/UI\.RichContent/Box/' src/libdactl-ui/dactl-box.vala
-sed -i 's/UI\.RichContent/Box/' src/libdactl-ui/dactl-ui-factory.vala
-sed -i 's/\(WebKit.*\)/\/\/\1/' src/dactl/dactl-ui-application.vala
-
 # TODO move into a build_deps script within .ci/common/build.sh
 git clone https://github.com/geoffjay/libcld.git
 cd libcld
