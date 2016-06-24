@@ -3,5 +3,5 @@
 set -e
 set -o pipefail
 
-./autogen.sh --disable-webkit
+./autogen.sh
 make
