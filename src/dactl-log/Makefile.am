@@ -74,6 +74,7 @@ dactl_log_SOURCES = \
 	dbus-service.vala \
 	rest-service.vala \
 	zmq-service.vala \
+	zmq-client.vala \
 	$(NULL)
 
 BUILT_SOURCES += libdactl-log.h

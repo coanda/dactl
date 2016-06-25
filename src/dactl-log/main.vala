@@ -29,6 +29,7 @@ internal class Dactl.Recorder.Main : GLib.Object {
         try {
             opt_context.parse (ref args);
         } catch (OptionError e) {
+            error (e.message);
         }
 
         if (Options.version) {

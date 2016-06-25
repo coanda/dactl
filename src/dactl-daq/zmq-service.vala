@@ -4,8 +4,9 @@ internal class Dactl.DAQ.ZmqService : Dactl.Net.ZmqService {
         base ();
     }
 
-    public ZmqService.with_conn_info (Dactl.Net.ZmqService.Transport transport,
-									  string address, int port) {
+    public ZmqService.with_conn_info (Dactl.Net.ZmqTransport transport,
+									  string address,
+                                      int port) {
         base.with_conn_info (transport, address, port);
     }
 
@@ -27,7 +28,7 @@ internal class Dactl.DAQ.ZmqService : Dactl.Net.ZmqService {
                 var ntimes = 0;
                 // XXX just here to do something
                 while (true) {
-                    string str = @"1000 nailed it! - $(ntimes)";
+                    string str = @"\"data\": { \"grp0\": [ 0.0, 1.0, 2.0 ] }";
                     var reply = ZMQ.Msg.with_data (str.data);
                     var n = reply.send (publisher);
                     Posix.sleep (1);

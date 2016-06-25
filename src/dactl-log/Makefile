@@ -132,7 +132,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_dactl_log_OBJECTS = dactl_log-main.$(OBJEXT) \
 	dactl_log-server.$(OBJEXT) dactl_log-dbus-service.$(OBJEXT) \
 	dactl_log-rest-service.$(OBJEXT) \
-	dactl_log-zmq-service.$(OBJEXT)
+	dactl_log-zmq-service.$(OBJEXT) dactl_log-zmq-client.$(OBJEXT)
 dactl_log_OBJECTS = $(am_dactl_log_OBJECTS)
 am__DEPENDENCIES_1 =
 dactl_log_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
@@ -218,7 +218,7 @@ CTAGS = ctags
 am__DIST_COMMON = $(srcdir)/$(srcdir)/libdactl-log.h \
 	$(srcdir)/Makefile.in $(srcdir)/dactl_log_vala.stamp \
 	$(top_srcdir)/build/depcomp dbus-service.c main.c \
-	rest-service.c server.c zmq-service.c
+	rest-service.c server.c zmq-client.c zmq-service.c
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = ${SHELL} /home/gjohn/Dropbox/Projects/dactl/build/missing aclocal-1.15
 ACLOCAL_AMFLAGS = -I build/autotools
@@ -531,6 +531,7 @@ dactl_log_SOURCES = \
 	dbus-service.vala \
 	rest-service.vala \
 	zmq-service.vala \
+	zmq-client.vala \
 	$(NULL)
 
 all: $(BUILT_SOURCES)
@@ -631,6 +632,7 @@ include ./$(DEPDIR)/dactl_log-dbus-service.Po
 include ./$(DEPDIR)/dactl_log-main.Po
 include ./$(DEPDIR)/dactl_log-rest-service.Po
 include ./$(DEPDIR)/dactl_log-server.Po
+include ./$(DEPDIR)/dactl_log-zmq-client.Po
 include ./$(DEPDIR)/dactl_log-zmq-service.Po
 
 .c.o:
@@ -726,6 +728,20 @@ dactl_log-zmq-service.obj: zmq-service.c
 #	$(AM_V_CC)source='zmq-service.c' object='dactl_log-zmq-service.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dactl_log_CFLAGS) $(CFLAGS) -c -o dactl_log-zmq-service.obj `if test -f 'zmq-service.c'; then $(CYGPATH_W) 'zmq-service.c'; else $(CYGPATH_W) '$(srcdir)/zmq-service.c'; fi`
+
+dactl_log-zmq-client.o: zmq-client.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dactl_log_CFLAGS) $(CFLAGS) -MT dactl_log-zmq-client.o -MD -MP -MF $(DEPDIR)/dactl_log-zmq-client.Tpo -c -o dactl_log-zmq-client.o `test -f 'zmq-client.c' || echo '$(srcdir)/'`zmq-client.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dactl_log-zmq-client.Tpo $(DEPDIR)/dactl_log-zmq-client.Po
+#	$(AM_V_CC)source='zmq-client.c' object='dactl_log-zmq-client.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dactl_log_CFLAGS) $(CFLAGS) -c -o dactl_log-zmq-client.o `test -f 'zmq-client.c' || echo '$(srcdir)/'`zmq-client.c
+
+dactl_log-zmq-client.obj: zmq-client.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dactl_log_CFLAGS) $(CFLAGS) -MT dactl_log-zmq-client.obj -MD -MP -MF $(DEPDIR)/dactl_log-zmq-client.Tpo -c -o dactl_log-zmq-client.obj `if test -f 'zmq-client.c'; then $(CYGPATH_W) 'zmq-client.c'; else $(CYGPATH_W) '$(srcdir)/zmq-client.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/dactl_log-zmq-client.Tpo $(DEPDIR)/dactl_log-zmq-client.Po
+#	$(AM_V_CC)source='zmq-client.c' object='dactl_log-zmq-client.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(dactl_log_CFLAGS) $(CFLAGS) -c -o dactl_log-zmq-client.obj `if test -f 'zmq-client.c'; then $(CYGPATH_W) 'zmq-client.c'; else $(CYGPATH_W) '$(srcdir)/zmq-client.c'; fi`
 $(srcdir)/main.c: $(srcdir)/dactl_log_vala.stamp
 	@if test -f $@; then :; else rm -f $(srcdir)/dactl_log_vala.stamp; fi
 	@if test -f $@; then :; else \
@@ -751,14 +767,19 @@ $(srcdir)/zmq-service.c: $(srcdir)/dactl_log_vala.stamp
 	@if test -f $@; then :; else \
 	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/dactl_log_vala.stamp; \
 	fi
+$(srcdir)/zmq-client.c: $(srcdir)/dactl_log_vala.stamp
+	@if test -f $@; then :; else rm -f $(srcdir)/dactl_log_vala.stamp; fi
+	@if test -f $@; then :; else \
+	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/dactl_log_vala.stamp; \
+	fi
 $(srcdir)/$(srcdir)/libdactl-log.h: $(srcdir)/dactl_log_vala.stamp
 	@if test -f $@; then :; else rm -f $(srcdir)/dactl_log_vala.stamp; fi
 	@if test -f $@; then :; else \
 	  $(MAKE) $(AM_MAKEFLAGS) $(srcdir)/dactl_log_vala.stamp; \
 	fi
-$(srcdir)/dactl_log_vala.stamp: main.vala server.vala dbus-service.vala rest-service.vala zmq-service.vala
+$(srcdir)/dactl_log_vala.stamp: main.vala server.vala dbus-service.vala rest-service.vala zmq-service.vala zmq-client.vala
 	$(AM_V_at)rm -f $@ && echo stamp > $@-t
-	$(AM_V_VALAC)$(am__cd) $(srcdir) && $(VALAC) $(dactl_log_VALAFLAGS) $(VALAFLAGS) -C main.vala server.vala dbus-service.vala rest-service.vala zmq-service.vala
+	$(AM_V_VALAC)$(am__cd) $(srcdir) && $(VALAC) $(dactl_log_VALAFLAGS) $(VALAFLAGS) -C main.vala server.vala dbus-service.vala rest-service.vala zmq-service.vala zmq-client.vala
 	$(AM_V_at)mv -f $@-t $@
 
 mostlyclean-libtool:
@@ -896,11 +917,13 @@ maintainer-clean-generic:
 	-rm -f $(srcdir)/main.c
 	-rm -f $(srcdir)/rest-service.c
 	-rm -f $(srcdir)/server.c
+	-rm -f $(srcdir)/zmq-client.c
 	-rm -f $(srcdir)/zmq-service.c
 	-rm -f dbus-service.c
 	-rm -f main.c
 	-rm -f rest-service.c
 	-rm -f server.c
+	-rm -f zmq-client.c
 	-rm -f zmq-service.c
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am

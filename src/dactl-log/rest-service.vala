@@ -35,16 +35,16 @@ internal class Dactl.Recorder.RestService : Dactl.Net.RestService {
 
         // XXX async example that simulates load, should change
         Timeout.add_seconds (0, () => {
-			string html_head = "<head><title>Index</title></head>";
-			string html_body = "<body><h1>Index:</h1></body>";
-			msg.set_response ("text/html", Soup.MemoryUse.COPY,
-							  "<html>%s%s</html>".printf (html_head,
+            string html_head = "<head><title>Index</title></head>";
+            string html_body = "<body><h1>Index:</h1></body>";
+            msg.set_response ("text/html", Soup.MemoryUse.COPY,
+                              "<html>%s%s</html>".printf (html_head,
                                                           html_body).data);
 
-			// Resumes HTTP I/O on msg:
-			self.unpause_message (msg);
-			debug ("REST default handler end");
-			return false;
+            // Resumes HTTP I/O on msg:
+            self.unpause_message (msg);
+            debug ("REST default handler end");
+            return false;
         }, Priority.DEFAULT);
 
         self.pause_message (msg);

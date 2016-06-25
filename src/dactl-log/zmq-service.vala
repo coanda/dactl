@@ -4,8 +4,9 @@ internal class Dactl.Recorder.ZmqService : Dactl.Net.ZmqService {
         base ();
     }
 
-    public ZmqService.with_conn_info (Dactl.Net.ZmqService.Transport transport,
-									  string address, int port) {
+    public ZmqService.with_conn_info (Dactl.Net.ZmqTransport transport,
+                                      string address,
+                                      int port) {
         base.with_conn_info (transport, address, port);
     }
 

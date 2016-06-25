@@ -6,7 +6,7 @@ public class Dactl.Recorder.Server : Dactl.CLI.Application {
 
     private Dactl.Recorder.RestService rest_service;
 
-    private Dactl.Recorder.ZmqService zmq_service;
+    private Dactl.Recorder.ZmqClient zmq_client;
 
     public static unowned Dactl.Recorder.Server get_default () {
         return _instance.once (() => {
@@ -15,13 +15,13 @@ public class Dactl.Recorder.Server : Dactl.CLI.Application {
     }
 
     internal Server () {
-        GLib.Object (application_id: "org.coanda.dactl.daqserver");
+        GLib.Object (application_id: "org.coanda.dactl.log");
 
         loop = new GLib.MainLoop ();
 
-        rest_service = new Dactl.Recorder.RestService ();
-        zmq_service = new Dactl.Recorder.ZmqService.with_conn_info (
-            Dactl.Net.ZmqService.Transport.TCP, "*", 5588);
+        rest_service = new Dactl.Recorder.RestService.with_port (8089);
+        zmq_client = new Dactl.Recorder.ZmqClient.with_conn_info (
+            Dactl.Net.ZmqTransport.TCP, "127.0.0.1", 5588);
     }
 
     protected override void activate () {
@@ -33,8 +33,8 @@ public class Dactl.Recorder.Server : Dactl.CLI.Application {
     protected override void startup () {
         base.startup ();
 
-        debug (_("Starting Recorder server > ZMQ Service"));
-        zmq_service.run ();
+        debug (_("Starting Recorder server > ZMQ Client"));
+        zmq_client.run ();
 
         debug (_("Starting Recorder server > Main"));
         loop.run ();

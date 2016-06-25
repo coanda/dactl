@@ -153,11 +153,13 @@ public class Dactl.CLI.Application : GLib.Application, Dactl.Application {
      *
      * @return Instance of the application.
      */
-    public static unowned Dactl.CLI.Application get_default () {
-        return _instance.once (() => {
-            return new Dactl.CLI.Application ();
-        });
-    }
+    /*
+     *public static unowned Dactl.CLI.Application get_default () {
+     *    return _instance.once (() => {
+     *        return new Dactl.CLI.Application ();
+     *    });
+     *}
+     */
 
     internal Application () {
         debug ("CLI application construction");

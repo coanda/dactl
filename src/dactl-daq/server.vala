@@ -15,13 +15,13 @@ public class Dactl.DAQ.Server : Dactl.CLI.Application {
     }
 
     internal Server () {
-        GLib.Object (application_id: "org.coanda.dactl.daqserver");
+        GLib.Object (application_id: "org.coanda.dactl.daq");
 
         loop = new GLib.MainLoop ();
 
         rest_service = new Dactl.DAQ.RestService ();
         zmq_service = new Dactl.DAQ.ZmqService.with_conn_info (
-            Dactl.Net.ZmqService.Transport.TCP, "*", 5588);
+            Dactl.Net.ZmqTransport.TCP, "*", 5588);
     }
 
     protected override void activate () {
