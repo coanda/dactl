@@ -124,6 +124,15 @@ dnl * XXX *****************************************************************
 
 
 dnl ***********************************************************************
+dnl Systemd service unit file location
+dnl ***********************************************************************
+AC_ARG_WITH([systemd-unitdir],
+	AS_HELP_STRING([--with-systemd-unitdir], [Directory for systemd service files]),
+	[SYSTEMD_UNITDIR=$withval], [SYSTEMD_UNITDIR="\${prefix}/lib/systemd/system"])
+AC_SUBST(SYSTEMD_UNITDIR)
+
+
+dnl ***********************************************************************
 dnl Allow user to update application mime type
 dnl - always enabling results in slow make install w/ update-mime-database
 dnl ***********************************************************************
@@ -474,7 +483,6 @@ AC_CONFIG_FILES([
 	data/Makefile
 	data/config/Makefile
 	data/glade/Makefile
-	data/gsettings/Makefile
 	data/icons/Makefile
 	data/icons/16x16/Makefile
 	data/icons/22x22/Makefile
@@ -485,6 +493,12 @@ AC_CONFIG_FILES([
 	data/mime/Makefile
 	data/org.coanda.Dactl.desktop.in
 
+    data/systemd/Makefile
+    data/systemd/dactl-ctl.service
+    data/systemd/dactl-daq.service
+    data/systemd/dactl-log.service
+
+    data/gsettings/Makefile
 	data/gsettings/org.coanda.dactl.gschema.xml
 
 	doc/Makefile

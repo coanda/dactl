@@ -8,10 +8,11 @@ SUBDIRS = extensions
 include $(top_srcdir)/common.am
 include $(srcdir)/filelist.am
 
-libdactl_ui_includedir = $(includedir)/dactl-0.3
-libdactl_ui_include_HEADERS = dactl-ui.h
+pkglibdir = $(libdir)/dactl
+pkglib_LTLIBRARIES = libdactl-ui-0.3.la
 
-lib_LTLIBRARIES = libdactl-ui-0.3.la
+headersdir = $(includedir)/dactl-0.3
+nobase_headers_DATA =
 
 pkgconfig_DATA = dactl-ui-0.3.pc
 pkgconfigdir = $(libdir)/pkgconfig
@@ -32,17 +33,30 @@ BUILT_SOURCES += \
 	$(gresource_file) \
 	$(NULL)
 
+libdactl_ui_0_3_la_public_headers = \
+	$(NULL)
+
+libdactl_ui_0_3_la_public_sources = \
+	resources.c \
+	$(NULL)
+
 libdactl_ui_0_3_la_SOURCES = \
-	$(BUILT_SOURCES) \
+	$(libdactl_ui_0_3_la_public_sources) \
 	$(LIBDACTL_UI_VAPI_SOURCE_FILES) \
 	$(LIBDACTL_UI_NONVAPI_SOURCE_FILES) \
 	$(NULL)
 
+libdactl_ui_0_3_la_includes = \
+	$(DEBUG_CFLAGS) \
+	$(NULL)
+
 libdactl_ui_0_3_la_VALAFLAGS = \
-	--vapidir=$(top_srcdir)/vapi \
-	-H dactl-ui.h -C --library=dactl-ui-0.3 \
-	--gir=Dactl-0.3.gir --pkg posix \
+	-H dactl-ui.h -C \
+	--library=dactl-ui-0.3 \
+	--gir=Dactl-0.3.gir \
 	--gresources $(gresource_file) \
+	--vapidir=$(top_srcdir)/vapi \
+	--pkg posix \
 	$(LIBDACTL_UI_DEPS_VALAFLAGS) \
 	$(DACTL_CLD_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
@@ -53,9 +67,12 @@ libdactl_ui_0_3_la_CFLAGS = \
 	-DWEB_EXTENSIONS_DIR=\""$(extensionsdir)"\" \
 	-DG_LOG_DOMAIN=\"libdactl-ui\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
+	$(AM_CFLAGS) \
 	$(LIBDACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
+	$(OPTIMIZE_CFLAGS) \
+	$(libdactl_ui_0_3_la_includes) \
 	-Wno-deprecated-declarations \
 	-Wno-discarded-qualifiers \
 	-Wno-implicit-function-declaration \
@@ -65,15 +82,16 @@ libdactl_ui_0_3_la_CFLAGS = \
 	-Wno-unused-function \
 	$(NULL)
 
+libdactl_ui_0_3_la_LDFLAGS = \
+	$(OPTIMIZE_LDFLAGS) \
+	$(DACTL_DATA_DIR_DEFINES) \
+	-version-info $(LIBDACTL_UI_VERSION) \
+	$(NULL)
+
 libdactl_ui_0_3_la_LIBADD = \
 	$(LIBDACTL_UI_DEPS_LIBS) \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
-	$(NULL)
-
-libdactl_ui_0_3_la_LDFLAGS = \
-	$(DACTL_DATA_DIR_DEFINES) \
-	-version-info $(LIBDACTL_UI_VERSION) \
 	$(NULL)
 
 
@@ -90,8 +108,9 @@ endif
 
 if HAVE_INTROSPECTION
 -include $(INTROSPECTION_MAKEFILE)
+
 INTROSPECTION_GIRS =
-INTROSPECTION_SCANNER_ARGS =
+INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --warn-all
 INTROSPECTION_COMPILER_ARGS = \
 	-l libdactl-ui-0.3.so.0 \
 	--includedir=$(builddir)/../libdactl-core \
@@ -118,12 +137,23 @@ CLEANFILES += $(gir_DATA) $(typelib_DATA)
 endif
 
 
+libdactl_ui_0_3_vapi_DEPS = \
+	gee-0.8 \
+	gio-2.0 \
+	gtk+-3.0 \
+	libpeas-1.0 \
+	librsvg-2.0 \
+	libxml-2.0
+
+dactl-ui-0.3.deps: Makefile
+	$(AM_V_GEN) echo $(libdactl_ui_0_3_vapi_DEPS) | tr ' ' '\n' > $@
+
 VAPI_FILES = dactl-ui-0.3.vapi
 DEPS_FILES = dactl-ui-0.3.deps
 
 vapidir = $(VAPIDIR)
 vapi_DATA = $(VAPI_FILES) $(DEPS_FILES)
-dactl-ui.h dactl-ui-0.3.vapi Dactl-0.3.gir: libdactl_ui_0_3_la_vala.stamp
+dactl-ui.h dactl-cli-0.3.vapi: libdactl_ui_0_3_la_vala.stamp
 
 BUILT_SOURCES += \
 	dactl-ui.h \

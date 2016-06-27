@@ -71,7 +71,6 @@ libdactl_net_0_3_la_CFLAGS = \
 	$(LIBDACTL_CFLAGS) \
 	$(LIBDACTL_NET_CFLAGS) \
 	$(OPTIMIZE_CFLAGS) \
-	$(DEBUG_CFLAGS) \
 	$(libdactl_net_0_3_la_includes) \
 	-Wno-deprecated-declarations \
 	-Wno-discarded-qualifiers \
