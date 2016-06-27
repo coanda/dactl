@@ -9,6 +9,12 @@ BUILT_SOURCES += \
 	dactl-ctl.service \
 	$(NULL)
 
+EXTRA_DIST += \
+	dactl-daq.service.in \
+	dactl-log.service.in \
+	dactl-ctl.service.in \
+	$(NULL)
+
 edit = sed \
 	-e 's|@bindir[@]|$(bindir)|g' \
 	-e 's|@sbindir[@]|$(sbindir)|g' \
