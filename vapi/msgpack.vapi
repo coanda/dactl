@@ -24,6 +24,15 @@
 [CCode (lower_case_cprefix = "msgpack_")]
 namespace MsgPack {
 
+    [CCode (cheader_filename = "msgpack/version.h")]
+    public string version ();
+    [CCode (cheader_filename = "msgpack/version.h")]
+    public int version_major ();
+    [CCode (cheader_filename = "msgpack/version.h")]
+    public int version_minor ();
+    [CCode (cheader_filename = "msgpack/version.h")]
+    public int version_revision ();
+
     [CCode (cprefix = "MSGPACK_", cheader_filename = "msgpack/util.h")]
     public const int UNUSED;
 
@@ -80,38 +89,38 @@ namespace MsgPack {
         public ZoneChunk head;
     }
 
-    [CCode (cheader_filename = "msgpack/zone.h", free_function = "msgpack_zone_free")]
+    [CCode (free_function = "msgpack_zone_free", cheader_filename = "msgpack/zone.h")]
     public class Zone {
         [CCode (cprefix = "MSGPACK_ZONE_")]
         public const int ALIGN;
+
         public ZoneChunkList chunk_list;
         public ZoneFinalizerArray finalizer_array;
         public size_t size;
+
         [CCode (cname = "msgpack_zone_new")]
         public Zone (size_t chunk_size);
-        public void free ();
         public bool init (size_t chunk_size);
-        public void destroy ();
-        public static inline void* malloc (size_t size);
-        public static inline void* malloc_no_align (size_t size);
-        public static inline bool push_finalizer (ZoneFinalizerFunc<T> func, T data);
-        public static inline void swap (Zone b);
+        public static void* malloc (size_t size);
+        public static void* malloc_no_align (size_t size);
+        public static bool push_finalizer (ZoneFinalizerFunc<T> func, T data);
+        public static void swap (Zone b);
         public bool is_empty ();
         public void clear ();
-        public static inline void* malloc_expand (size_t size);
+        public static void* malloc_expand (size_t size);
         public bool push_finalizer_expand (ZoneFinalizerFunc<T> func, T data);
     }
 
     [CCode (has_target = false, cheader_filename = "msgpack/pack.h")]
     public delegate int PackerWriteFunc<T> (T data, string buf, size_t len);
 
-    [CCode (cheader_filename = "msgpack/pack.h")]
+    [CCode (free_function = "msgpack_packer_free", cheader_filename = "msgpack/pack.h")]
     public class Packer<T> {
         public T data;
         public PackerWriteFunc callback;
+
         [CCode (cname = "msgpack_packer_new")]
         public Packer(T data, PackerWriteFunc<T> callback);
-        public void free ();
         public void init (T data, PackerWriteFunc<T> callback);
         public int pack_char (char d);
         public int pack_short (short d);
@@ -157,28 +166,39 @@ namespace MsgPack {
         public int pack_object (MsgPack.Object d);
     }
 
-    [CCode (cname = "msgpack_unpack_return", cprefix = "MSGPACK_UNPACK_", has_type_id = false, cheader_filename = "msgpack/unpack.h")]
-    public enum UnpackReturn {
-        SUCCESS,
-        EXTRA_BYTES,
-        CONTINUE,
-        PARSE_ERROR,
-        NOMEM_ERROR
-    }
-
     [CCode (cheader_filename = "msgpack/unpack.h")]
     public struct Unpacked {
         public Zone zone;
         public MsgPack.Object data;
+
+        public static void init ();
+        public static void destroy ();
+        public static Zone release_zone ();
     }
 
-    [CCode (cname = "msgpack_unpack_next", cheader_filename = "msgpack/unpack.h")]
-    public UnpackReturn unpack_next (Unpacked result, const string data, size_t len, [CCode (array_length = false, array_null_terminated = true)] size_t[] off);
-
     [CCode (cheader_filename = "msgpack/unpack.h")]
+    namespace Unpack {
+
+        [CCode (cname = "msgpack_unpack_return", cprefix = "MSGPACK_UNPACK_", has_type_id = false)]
+        public enum Status {
+            SUCCESS,
+            EXTRA_BYTES,
+            CONTINUE,
+            PARSE_ERROR,
+            NOMEM_ERROR
+        }
+
+        [CCode (cname = "msgpack_unpack_next")]
+        public Status next (out Unpacked result, const string data, size_t len, [CCode (array_length = false, array_null_terminated = true)] size_t[] off);
+    }
+
+    [CCode (free_function = "msgpack_unpacker_free", cheader_filename = "msgpack/unpack.h")]
     public class Unpacker<T> {
         [CCode (cprefix = "MSGPACK_UNPACKER_")]
         public const int INIT_BUFFER_SIZE;
+        [CCode (cprefix = "MSGPACK_UNPACKER_")]
+        public const int RESERVE_SIZE;
+
         public string buffer;
         public size_t used;
         public size_t free;
@@ -187,5 +207,86 @@ namespace MsgPack {
         public Zone z;
         public size_t initial_buffer_size;
         public T ctx;
+
+        [CCode (cprefix = "msgpack_unpacker_new")]
+        public Unpacker (size_t initial_buffer_size);
+        public bool init (site_t initial_buffer_size);
+        public static bool reserve_buffer (size_t size);
+        public static string buffer ();
+        public static size_t buffer_capacity ();
+        public static void buffer_consumed (size_t size);
+        public Unpack.Status next (Unpacked pac);
+        public int execute ();
+        public MsgPack.Object data ();
+        public Zone release_zone ();
+        public void reset_zone ();
+        public void reset ();
+        public static size_t message_size ();
+        public static size_t parsed_size ();
+        public bool flush_zone ();
+        public bool expand_buffer (size_t size);
+    }
+
+    [CCode (cname = "msgpack_sbuffer", cprefix = "msgpack_sbuffer_", free_function = "msgpack_sbuffer_free", cheader_filename = "msgpack/sbuffer.h")]
+    public class SimpleBuffer {
+        [CCode (cprefix = "MSGPACK_SBUFFER_")]
+        public const int INIT_SIZE;
+
+        public size_t size;
+        public string data;
+        public size_t alloc;
+
+        [CCode (cname = "msgpack_sbuffer_new")]
+        public SimpleBuffer ();
+        public void init ();
+        [CCode (simple_generics = true, instance_pos = -1)]
+        public int write (T data, string buf, size_t len);
+        public string release ();
+        public void clear ();
+    }
+
+    [CCode (cname = "iovec", cheader_filename = "msgpack/vrefbuffer.h")]
+    public struct IOVector<T> {
+        [CCode (simple_generics = true)]
+        T iov_base;
+        size_t iov_len;
+    }
+
+    [CCode (cname = "msgpack_vrefbuffer_chunk", cheader_filename = "msgpack/vrefbuffer.h")]
+    public struct VRefBufferChunk {
+    }
+
+    [CCode (cname = "msgpack_vrefbuffer_inner_buffer", cheader_filename = "msgpack/vrefbuffer.h")]
+    public class VRefInnerBuffer {
+        size_t free;
+        string ptr;
+        VRefBufferChunk head;
+    }
+
+    [CCode (cname = "msgpack_vrefbuffer", cprefix = "msgpack_vrefbuffer_", free_function = "msgpack_vrefbuffer_free", cheader_filename = "msgpack/vrefbuffer.h")]
+    public class VRefBuffer {
+        [CCode (cprefix = "MSGPACK_VREFBUFFER_")]
+        public const int REF_SIZE;
+        [CCode (cprefix = "MSGPACK_VREFBUFFER_")]
+        public const int CHUNK_SIZE;
+
+        public IOVector tail;
+        public IOVector end;
+        public IOVector array;
+        public size_t chunk_size;
+        public size_t ref_size;
+        public VRefInnerBuffer inner_buffer;
+
+        [CCode (cname = "msgpack_vrefbuffer_new")]
+        public VRefBuffer (size_t ref_size, size_t chunk_size);
+        public bool init (size_t ref_size, size_t chunk_size);
+        [CCode (simple_generics = true, instance_pos = -1)]
+        public int write (T data, string buf, size_t len);
+        public IOVector vec ();
+        public size_t veclen ();
+        public int append_copy (string buf, size_t len);
+        public int append_ref (string buf, size_t len);
+        public int migrate (VRefBuffer to);
+        public void clear ();
     }
 }
