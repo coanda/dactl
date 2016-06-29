@@ -64,7 +64,7 @@ libdactl_ui_0_3_la_VALAFLAGS = \
 	$(NULL)
 
 libdactl_ui_0_3_la_CFLAGS = \
-	-DWEB_EXTENSIONS_DIR=\""$(extensionsdir)"\" \
+	-DWEB_EXTENSION_DIR=\""$(extensiondir)"\" \
 	-DG_LOG_DOMAIN=\"libdactl-ui\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(AM_CFLAGS) \

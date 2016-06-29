@@ -3,13 +3,13 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-plugindir=@PLUGIN_DIR@
+plugindir=@DEVICE_DIR@
 plugin_ldflags=@PLUGIN_LDFLAGS@
 
-Name: dactl-core-0.3
-Description: Data Acquisition and Control Interface
+Name: dactl-daq-0.3
+Description: Data Acquisition and Control Interface - Data Acquisition Components
 Version: @VERSION@
-Libs: -L${libdir} -ldactl-core-0.3
+Libs: -L${libdir} -ldactl-daq-0.3
 Cflags: -I${includedir}/dactl-0.3
 Requires: gee-0.8
-Requires.Private: gmodule-2.0
+Requires.Private: gio-2.0

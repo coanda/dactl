@@ -96,7 +96,7 @@ endif
 
 MAINTAINERCLEANFILES += $(BUILT_SOURCES)
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	dactl-config.vapi \
 	$(VAPI_FILES) \
 	$(DEPS_FILES) \

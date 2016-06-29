@@ -19,9 +19,9 @@ public class Dactl.DAQ.Config {
     /* Configured paths - these variables are not present in config.h, they are
      * passed to underlying C code as cmd line macros. */
 
-    [CCode (cname = "DAQ_PACKAGE_DATA_DIR")]
+    [CCode (cname = "DAQ_DATA_DIR")]
     public static const string PACKAGE_DATA_DIR;
 
-    [CCode (cname = "DAQ_PACKAGE_PLUGIN_DIR")]
-    public static const string PACKAGE_PLUGIN_DIR;
+    [CCode (cname = "DAQ_DEVICE_DIR")]
+    public static const string PACKAGE_DEVICe_DIR;
 }

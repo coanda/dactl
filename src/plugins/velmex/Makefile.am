@@ -56,7 +56,7 @@ libdactl_velmex_la_LIBADD = \
 	$(NULL)
 
 libdactl_velmex_la_LDFLAGS = \
-	$(DACTL_PLUGIN_LINKER_FLAGS) \
+	$(PLUGIN_LDFLAGS) \
 	$(NULL)
 
 

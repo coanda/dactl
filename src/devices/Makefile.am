@@ -1,4 +1,7 @@
 SUBDIRS = \
+	arduino \
+	comedi \
+	mccusb \
 	samples \
 	$(NULL)
 

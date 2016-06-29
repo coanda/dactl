@@ -6,7 +6,7 @@ test -z "$srcdir" && srcdir=.
 
 PKG_NAME="dactl"
 
-(test -f $srcdir/src/dactl/dactl-main.vala) || {
+(test -f $srcdir/src/libdactl-core/dactl-object.vala) || {
     echo -n "**Error**: Directory "\`$srcdir\'" does not look like the"
     echo " top-level $PKG_NAME directory"
     exit 1

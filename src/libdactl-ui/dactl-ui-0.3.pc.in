@@ -3,8 +3,8 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-plugindir=@DACTL_PLUGIN_DIR@
-plugin_ldflags=@DACTL_PLUGIN_LINKER_FLAGS@
+plugindir=@PLUGIN_DIR@
+plugin_ldflags=@PLUGIN_LDFLAGS@
 
 Name: dactl-ui-0.3
 Description: Data Acquisition and Control Interface - UI Components
