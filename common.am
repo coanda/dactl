@@ -6,6 +6,10 @@ devicedir = @DEVICE_DIR@
 extensiondir = @WEB_EXTENSION_DIR@
 
 libdactlcoredir = $(top_srcdir)/src/libdactl-core
+libdactlclidir = $(top_srcdir)/src/libdactl-cli
+libdactldaqdir = $(top_srcdir)/src/libdactl-daq
+libdactllogdir = $(top_srcdir)/src/libdactl-log
+libdactlnetdir = $(top_srcdir)/src/libdactl-net
 libdactluidir = $(top_srcdir)/src/libdactl-ui
 
 MAINTAINERCLEANFILES = Makefile.in

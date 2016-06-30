@@ -19,7 +19,6 @@ libdactl_heidolph_la_SOURCES = \
 	$(NULL)
 
 libdactl_heidolph_la_VALAFLAGS = \
-	--target-glib=2.44 \
 	--gresources $(gresource_file) \
 	--vapidir=$(top_srcdir)/vapi \
 	--pkg posix \
@@ -29,6 +28,7 @@ libdactl_heidolph_la_VALAFLAGS = \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_VALAFLAGS) \
 	$(DACTL_COMMON_VALAFLAGS) \
+	$(PLUGIN_VALAFLAGS) \
 	$(NULL)
 
 libdactl_heidolph_la_CFLAGS = \
@@ -38,6 +38,7 @@ libdactl_heidolph_la_CFLAGS = \
 	$(DACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS) \
+	$(PLUGIN_CFLAGS) \
 	-Wno-deprecated-declarations \
 	-Wno-discarded-qualifiers \
 	-Wno-implicit-function-declaration \

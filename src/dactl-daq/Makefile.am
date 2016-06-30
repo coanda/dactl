@@ -10,6 +10,7 @@ dactl_daq_VALAFLAGS = \
 	--vapidir=$(top_srcdir)/vapi \
 	--vapidir=$(top_srcdir)/src/libdactl-core \
 	--vapidir=$(top_srcdir)/src/libdactl-cli \
+	--vapidir=$(top_srcdir)/src/libdactl-daq \
 	--vapidir=$(top_srcdir)/src/libdactl-net \
 	--pkg posix \
 	--pkg gio-2.0 \
@@ -20,6 +21,7 @@ dactl_daq_VALAFLAGS = \
 	--pkg dactl-config \
 	--pkg dactl-core-0.3 \
 	--pkg dactl-cli-0.3 \
+	--pkg dactl-daq-0.3 \
 	--pkg dactl-net-0.3 \
 	$(NULL)
 
@@ -29,6 +31,7 @@ dactl_daq_includes = \
 	-DDATADIR=\""$(shareddir)"\" \
 	-I$(top_srcdir)/src/libdactl-core \
 	-I$(top_srcdir)/src/libdactl-cli \
+	-I$(top_srcdir)/src/libdactl-daq \
 	-I$(top_srcdir)/src/libdactl-net \
 	$(NULL)
 
@@ -56,6 +59,7 @@ dactl_daq_LDADD = \
 	$(LIBDACTL_NET_LIBS) \
 	$(top_builddir)/src/libdactl-core/libdactl-core-0.3.la \
 	$(top_builddir)/src/libdactl-cli/libdactl-cli-0.3.la \
+	$(top_builddir)/src/libdactl-daq/libdactl-daq-0.3.la \
 	$(top_builddir)/src/libdactl-net/libdactl-net-0.3.la \
 	$(NULL)
 

@@ -266,12 +266,15 @@ AS_IF([test "x$try_cld" = "xyes"],
 
 AM_CONDITIONAL(USE_CLD, test "x$HAVE_CLD" = "xyes")
 
-dnl XXX slowly switching to this as a simpler more sensible method
-m4_define([pygobject_required_version], [3.18.0])
 
+dnl ***********************************************************************
+dnl Check if pygobject is available
+dnl ***********************************************************************
+m4_define([pygobject_required_version], [3.18.0])
 PKG_CHECK_MODULES(PYGOBJECT,[pygobject-3.0 >= pygobject_required_version],
                             [have_pygobject=yes]
                             [have_pygobject=no])
+
 
 dnl ***********************************************************************
 dnl Check if we have WebKit support
@@ -459,7 +462,7 @@ AC_SUBST(PLUGIN_CFLAGS)
 
 PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS $OPTIMIZE_LDFLAGS"
 PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS -avoid-version"
-PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS -export-symbols-regex peas_register_types"
+dnl PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS -export-symbols-regex peas_register_types"
 PLUGIN_LDFLAGS="$PLUGIN_LDFLAGS -module"
 AC_SUBST(PLUGIN_LDFLAGS)
 
@@ -478,29 +481,29 @@ AC_SUBST(PLUGIN_VALAFLAGS)
 dnl ***********************************************************************
 dnl Setup common cflags and ldflags for devices
 dnl ***********************************************************************
-PLUGIN_CFLAGS="$DEVICE_CFLAGS -I\$(top_srcdir)/src/libdactl-core"
-PLUGIN_CFLAGS="$DEVICE_CFLAGS -I\$(top_srcdir)/src/libdactl-daq"
-PLUGIN_CFLAGS="$DEVICE_CFLAGS -I\$(top_srcdir)/src/libdactl-net"
-PLUGIN_CFLAGS="$DEVICE_CFLAGS $LIBDACTL_CORE_DEPS_CFLAGS"
-PLUGIN_CFLAGS="$DEVICE_CFLAGS $DEBUG_CFLAGS"
-PLUGIN_CFLAGS="$DEVICE_CFLAGS $OPTIMIZE_CFLAGS"
+DEVICE_CFLAGS="$DEVICE_CFLAGS -I\$(top_srcdir)/src/libdactl-core"
+DEVICE_CFLAGS="$DEVICE_CFLAGS -I\$(top_srcdir)/src/libdactl-daq"
+DEVICE_CFLAGS="$DEVICE_CFLAGS -I\$(top_srcdir)/src/libdactl-net"
+DEVICE_CFLAGS="$DEVICE_CFLAGS $LIBDACTL_CORE_DEPS_CFLAGS"
+DEVICE_CFLAGS="$DEVICE_CFLAGS $DEBUG_CFLAGS"
+DEVICE_CFLAGS="$DEVICE_CFLAGS $OPTIMIZE_CFLAGS"
 AC_SUBST(DEVICE_CFLAGS)
 
-PLUGIN_LDFLAGS="$DEVICE_LDFLAGS $OPTIMIZE_LDFLAGS"
-PLUGIN_LDFLAGS="$DEVICE_LDFLAGS -avoid-version"
-PLUGIN_LDFLAGS="$DEVICE_LDFLAGS -export-symbols-regex peas_register_types"
-PLUGIN_LDFLAGS="$DEVICE_LDFLAGS -module"
+DEVICE_LDFLAGS="$DEVICE_LDFLAGS $OPTIMIZE_LDFLAGS"
+DEVICE_LDFLAGS="$DEVICE_LDFLAGS -avoid-version"
+DEVICE_LDFLAGS="$DEVICE_LDFLAGS -export-symbols-regex peas_register_types"
+DEVICE_LDFLAGS="$DEVICE_LDFLAGS -module"
 AC_SUBST(DEVICE_LDFLAGS)
 
-PLUGIN_VALAFLAGS="$DEVICE_VALAFLAGS --target-glib=2.44"
-PLUGIN_VALAFLAGS="$DEVICE_VALAFLAGS --thread"
-PLUGIN_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-core"
-PLUGIN_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-daq"
-PLUGIN_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-net"
-PLUGIN_VALAFLAGS="$DEVICE_VALAFLAGS --pkg dactl-core-0.3"
-PLUGIN_VALAFLAGS="$DEVICE_VALAFLAGS --pkg dactl-daq-0.3"
-PLUGIN_VALAFLAGS="$DEVICE_VALAFLAGS --pkg dactl-net-0.3"
-PLUGIN_VALAFLAGS="$DEVICE_VALAFLAGS --pkg libpeas-1.0"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --target-glib=2.44"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --thread"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-core"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-daq"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-net"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --pkg dactl-core-0.3"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --pkg dactl-daq-0.3"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --pkg dactl-net-0.3"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --pkg libpeas-1.0"
 AC_SUBST(DEVICE_VALAFLAGS)
 
 

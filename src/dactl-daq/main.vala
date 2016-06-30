@@ -41,7 +41,7 @@ internal class Dactl.DAQ.Main : GLib.Object {
 
     private Dactl.Application app;
     private Dactl.Log log;
-    private Dactl.PluginManager plugin_manager;
+    private Dactl.DAQ.DeviceManager device_manager;
 
     private int exit_code;
 
@@ -51,7 +51,7 @@ internal class Dactl.DAQ.Main : GLib.Object {
         this.log = Dactl.Log.get_default ();
         log.init (true, null);
 
-        plugin_manager = new Dactl.PluginManager ();
+        device_manager = new Dactl.DAQ.DeviceManager ();
 
         this.exit_code = 0;
 

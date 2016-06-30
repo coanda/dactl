@@ -1,3 +1,5 @@
+include $(top_srcdir)/common.am
+
 CLEANFILES =
 DISTCLEANFILES =
 BUILT_SOURCES =
@@ -23,10 +25,12 @@ libdactl_daq_0_3_la_public_headers = \
 
 libdactl_daq_0_3_la_public_sources = \
 	dactl-daq-channel.c \
+	dactl-daq-device-manager.c \
 	$(NULL)
 
 libdactl_daq_0_3_la_VALASOURCES = \
 	dactl-daq-channel.vala \
+	dactl-daq-device-manager.vala \
 	$(NULL)
 
 libdactl_daq_0_3_la_SOURCES = \
@@ -53,12 +57,15 @@ libdactl_daq_0_3_la_VALAFLAGS = \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
 	--pkg json-glib-1.0 \
+	--pkg libpeas-1.0 \
 	--pkg dactl-core-0.3 \
+	--pkg dactl-config \
 	$(NULL)
 
 libdactl_daq_0_3_la_CFLAGS = \
 	-DG_LOG_DOMAIN=\"libdactl-daq\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
+	-DDEVICE_DIR=\""$(devicedir)"\" \
 	$(AM_CFLAGS) \
 	$(LIBDACTL_CFLAGS) \
 	$(LIBDACTL_DAQ_CFLAGS) \
