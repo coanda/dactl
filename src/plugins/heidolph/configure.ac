@@ -3,7 +3,7 @@ AC_ARG_ENABLE([heidolph-plugin],
               [AS_HELP_STRING([--enable-heidolph-plugin=@<:@yes/no@:>@],
                               [Build a plugin for a Heidolph mixer.])],
               [enable_heidolph_plugin=$enableval],
-              [enable_heidolph_plugin=yes])
+              [enable_heidolph_plugin=no])
 
 # for if ENABLE_HEIDOLPH_PLUGIN in Makefile.am
 AM_CONDITIONAL(ENABLE_HEIDOLPH_PLUGIN, test x$enable_heidolph_plugin != xno)

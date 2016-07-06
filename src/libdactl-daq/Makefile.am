@@ -1,9 +1,9 @@
-include $(top_srcdir)/common.am
-
 CLEANFILES =
 DISTCLEANFILES =
 BUILT_SOURCES =
 EXTRA_DIST =
+
+include $(top_srcdir)/common.am
 
 pkglibdir = $(libdir)/dactl
 pkglib_LTLIBRARIES = libdactl-daq-0.3.la

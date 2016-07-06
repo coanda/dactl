@@ -27,8 +27,7 @@ libdactl_brabender_la_VALAFLAGS = \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_VALAFLAGS) \
 	$(DACTL_COMMON_VALAFLAGS) \
-	$(PLUGIN_VALAFLAGS) \
-	$(NULL)
+	$(PLUGIN_VALAFLAGS)
 
 libdactl_brabender_la_CFLAGS = \
 	-DG_LOG_DOMAIN=\"libdactl-brabender\" \
@@ -44,25 +43,23 @@ libdactl_brabender_la_CFLAGS = \
 	-Wno-incompatible-pointer-types \
 	-Wno-unused-but-set-variable \
 	-Wno-unused-label \
-	-Wno-unused-function \
-	$(NULL)
+	-Wno-unused-function
 
 libdactl_brabender_la_LIBADD = \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
-	$(DACTL_COMMON_LIBDACTL_UI_LIBS) \
-	$(NULL)
+	$(DACTL_COMMON_LIBDACTL_UI_LIBS)
 
 libdactl_brabender_la_LDFLAGS = \
-	$(PLUGIN_LDFLAGS) \
-	$(NULL)
+	$(PLUGIN_LDFLAGS)
 
 
 if ENABLE_WEBKIT
 libdactl_brabender_la_VALAFLAGS += --pkg webkit2gtk-4.0
 libdactl_brabender_la_CFLAGS += $(WEBKIT_CFLAGS)
 libdactl_brabender_la_LIBADD += $(WEBKIT_LIBS)
+libdactl_brabender_la_LDFLAGS += $(WEBKIT_LDFLAGS)
 endif
 
 

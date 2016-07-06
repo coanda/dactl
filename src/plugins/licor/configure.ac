@@ -3,7 +3,7 @@ AC_ARG_ENABLE([licor-plugin],
               [AS_HELP_STRING([--enable-licor-plugin=@<:@yes/no@:>@],
                               [Build a plugin for a Licor gas analyzer.])],
               [enable_licor_plugin=$enableval],
-              [enable_licor_plugin=yes])
+              [enable_licor_plugin=no])
 
 # for if ENABLE_LICOR_PLUGIN in Makefile.am
 AM_CONDITIONAL(ENABLE_LICOR_PLUGIN, test x$enable_licor_plugin != xno)

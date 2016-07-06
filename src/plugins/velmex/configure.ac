@@ -3,7 +3,7 @@ AC_ARG_ENABLE([velmex-plugin],
               [AS_HELP_STRING([--enable-velmex-plugin=@<:@yes/no@:>@],
                               [Build a plugin for a Velmex stepper drive.])],
               [enable_velmex_plugin=$enableval],
-              [enable_velmex_plugin=yes])
+              [enable_velmex_plugin=no])
 
 # for if ENABLE_VELMEX_PLUGIN in Makefile.am
 AM_CONDITIONAL(ENABLE_VELMEX_PLUGIN, test x$enable_velmex_plugin != xno)

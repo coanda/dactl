@@ -2,7 +2,7 @@ if ENABLE_MCCUSB_DEVICE
 
 EXTRA_DIST = $(plugin_DATA)
 
-plugindir = $(libdir)/dactl-0.3/devices
+plugindir = $(libdir)/dactl/devices
 plugin_LTLIBRARIES = libdactl-device-mccusb.la
 dist_plugin_DATA = mccusb.plugin
 

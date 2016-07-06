@@ -22,8 +22,7 @@ dactl_VALAFLAGS = \
 	$(DACTL_UI_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_VALAFLAGS) \
-	$(DACTL_COMMON_VALAFLAGS) \
-	$(NULL)
+	$(DACTL_COMMON_VALAFLAGS)
 
 dactl_CFLAGS = \
 	-include config.h \
@@ -41,16 +40,14 @@ dactl_CFLAGS = \
 	-Wno-incompatible-pointer-types \
 	-Wno-unused-but-set-variable \
 	-Wno-unused-label \
-	-Wno-unused-function \
-	$(NULL)
+	-Wno-unused-function
 
 dactl_LDADD = \
 	$(DACTL_DEPS_LIBS) \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
-	$(DACTL_COMMON_LIBDACTL_UI_LIBS) \
-	$(NULL)
+	$(DACTL_COMMON_LIBDACTL_UI_LIBS)
 
 
 if ENABLE_WEBKIT
@@ -99,8 +96,7 @@ UI_SOURCES = \
 	dactl-ui-application-model.vala \
 	dactl-ui-application-view.vala \
 	dactl-ui-application-controller.vala \
-	dactl-ux-manager.vala \
-	$(NULL)
+	dactl-ux-manager.vala
 
 dactl_SOURCES = \
 	$(BUILT_SOURCES) \

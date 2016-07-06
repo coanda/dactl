@@ -2,7 +2,7 @@ if ENABLE_COMEDI_DEVICE
 
 EXTRA_DIST = $(plugin_DATA)
 
-plugindir = $(libdir)/dactl-0.3/devices
+plugindir = $(libdir)/dactl/devices
 plugin_LTLIBRARIES = libdactl-device-comedi.la
 dist_plugin_DATA = comedi.plugin
 

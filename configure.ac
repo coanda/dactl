@@ -210,11 +210,14 @@ PKG_CHECK_MODULES(LIBDACTL_CLI, [glib-2.0 >= glib_required_version
                                  libpeas-1.0 >= peas_required_version
                                  cld-0.3 >= cld_required_version])
 PKG_CHECK_MODULES(LIBDACTL_DAQ, [glib-2.0 >= glib_required_version
-                                 libpeas-1.0 >= peas_required_version
                                  gee-0.8 >= gee_required_version
+                                 libpeas-1.0 >= peas_required_version
                                  cld-0.3 >= cld_required_version])
 PKG_CHECK_MODULES(LIBDACTL_LOG, [gio-2.0 >= glib_required_version
-                                 libzmq >= zmq_required_version])
+                                 gee-0.8 >= gee_required_version
+                                 libpeas-1.0 >= peas_required_version
+                                 libzmq >= zmq_required_version
+                                 cld-0.3 >= cld_required_version])
 PKG_CHECK_MODULES(LIBDACTL_NET, [libsoup-2.4 >= soup_required_version
                                  json-glib-1.0 >= json_required_version
                                  libzmq > zmq_required_version])
@@ -300,7 +303,7 @@ AS_IF([test "$enable_webkit" != no],[
 	       AC_MSG_ERROR([--enable-webkit requires webkit2gtk-4.0 >= webkit_required_version])
 	])
 
-	AC_SUBST([WEB_EXTENSION_DIR],[${libdir}/dactl-0.3/extensions])
+	AC_SUBST([WEB_EXTENSION_DIR],[${libdir}/dactl/extensions])
 
 	enable_webkit=$have_webkit
 ])
@@ -318,7 +321,7 @@ m4_include([src/plugins/velmex/configure.ac])
 m4_include([src/plugins/samples/python/configure.ac])
 m4_include([src/plugins/samples/vala/configure.ac])
 
-AC_SUBST([PLUGIN_DIR],[${libdir}/dactl-0.3/plugins])
+AC_SUBST([PLUGIN_DIR],[${libdir}/dactl/plugins])
 
 
 dnl ***********************************************************************
@@ -328,7 +331,15 @@ m4_include([src/devices/comedi/configure.ac])
 m4_include([src/devices/mccusb/configure.ac])
 m4_include([src/devices/arduino/configure.ac])
 
-AC_SUBST([DEVICE_DIR],[${libdir}/dactl-0.3/devices])
+AC_SUBST([DEVICE_DIR],[${libdir}/dactl/devices])
+
+
+dnl ***********************************************************************
+dnl Check for supported backends
+dnl ***********************************************************************
+m4_include([src/backends/xml/configure.ac])
+
+AC_SUBST([BACKEND_DIR],[${libdir}/dactl/backends])
 
 
 dnl ***********************************************************************
@@ -518,6 +529,36 @@ AC_SUBST(DEVICE_VALAFLAGS)
 
 
 dnl ***********************************************************************
+dnl Setup common cflags and ldflags for logging backends
+dnl ***********************************************************************
+BACKEND_CFLAGS="$BACKEND_CFLAGS -I\$(top_srcdir)/src/libdactl-core"
+BACKEND_CFLAGS="$BACKEND_CFLAGS -I\$(top_srcdir)/src/libdactl-log"
+BACKEND_CFLAGS="$BACKEND_CFLAGS -I\$(top_srcdir)/src/libdactl-net"
+BACKEND_CFLAGS="$BACKEND_CFLAGS $LIBDACTL_CORE_CFLAGS"
+BACKEND_CFLAGS="$BACKEND_CFLAGS $DEBUG_CFLAGS"
+BACKEND_CFLAGS="$BACKEND_CFLAGS $OPTIMIZE_CFLAGS"
+AC_SUBST(BACKEND_CFLAGS)
+
+BACKEND_LDFLAGS="$BACKEND_LDFLAGS $OPTIMIZE_LDFLAGS"
+BACKEND_LDFLAGS="$BACKEND_LDFLAGS -avoid-version"
+dnl BACKEND_LDFLAGS="$BACKEND_LDFLAGS -export-symbols-regex peas_register_types"
+BACKEND_LDFLAGS="$BACKEND_LDFLAGS -module"
+AC_SUBST(BACKEND_LDFLAGS)
+
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --target-glib=2.44"
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --thread"
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --vapidir \$(top_srcdir)/vapi"
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-core"
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-log"
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-net"
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --pkg dactl-core-0.3"
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --pkg dactl-log-0.3"
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --pkg dactl-net-0.3"
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --pkg libpeas-1.0"
+AC_SUBST(BACKEND_VALAFLAGS)
+
+
+dnl ***********************************************************************
 dnl Process .in Files
 dnl ***********************************************************************
 AC_CONFIG_FILES([
@@ -566,6 +607,8 @@ AC_CONFIG_FILES([
 	src/libdactl-ui/Makefile
 	src/libdactl-ui/extensions/Makefile
 
+    src/backends/Makefile
+
 	src/plugins/Makefile
 	src/plugins/samples/Makefile
 
@@ -613,6 +656,10 @@ AC_MSG_NOTICE([
      Licor: ....................................... : ${enable_licor_plugin}
      Parker: ...................................... : ${enable_parker_plugin}
      Velmex: ...................................... : ${enable_velmex_plugin}
+
+    Backends
+
+     XML: ......................................... : ${enable_xml_backend}
 
     Devices
 

@@ -9,6 +9,7 @@ SUBDIRS = \
 	dactl-daq \
 	dactl-log \
 	plugins \
+	backends \
 	devices \
 	$(NULL)
 

@@ -3,6 +3,8 @@ DISTCLEANFILES =
 BUILT_SOURCES =
 EXTRA_DIST =
 
+include $(top_srcdir)/common.am
+
 pkglibdir = $(libdir)/dactl
 pkglib_LTLIBRARIES = libdactl-log-0.3.la
 
@@ -23,10 +25,12 @@ libdactl_log_0_3_la_public_headers = \
 
 libdactl_log_0_3_la_public_sources = \
 	dactl-log-backend.c \
+	dactl-log-backend-manager.c \
 	$(NULL)
 
 libdactl_log_0_3_la_VALASOURCES = \
 	dactl-log-backend.vala \
+	dactl-log-backend-manager.vala \
 	$(NULL)
 
 libdactl_log_0_3_la_SOURCES = \
@@ -53,12 +57,15 @@ libdactl_log_0_3_la_VALAFLAGS = \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
 	--pkg json-glib-1.0 \
+	--pkg libpeas-1.0 \
 	--pkg dactl-core-0.3 \
+	--pkg dactl-config \
 	$(NULL)
 
 libdactl_log_0_3_la_CFLAGS = \
 	-DG_LOG_DOMAIN=\"libdactl-log\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
+	-DBACKEND_DIR=\""$(backenddir)"\" \
 	$(AM_CFLAGS) \
 	$(LIBDACTL_CFLAGS) \
 	$(LIBDACTL_LOG_CFLAGS) \

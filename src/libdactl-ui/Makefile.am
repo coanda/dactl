@@ -43,8 +43,7 @@ libdactl_ui_0_3_la_public_sources = \
 libdactl_ui_0_3_la_SOURCES = \
 	$(libdactl_ui_0_3_la_public_sources) \
 	$(LIBDACTL_UI_VAPI_SOURCE_FILES) \
-	$(LIBDACTL_UI_NONVAPI_SOURCE_FILES) \
-	$(NULL)
+	$(LIBDACTL_UI_NONVAPI_SOURCE_FILES)
 
 libdactl_ui_0_3_la_includes = \
 	$(DEBUG_CFLAGS) \
@@ -72,8 +71,7 @@ libdactl_ui_0_3_la_VALAFLAGS = \
 	--pkg librsvg-2.0 \
 	$(DACTL_CLD_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
-	$(DACTL_COMMON_VALAFLAGS) \
-	$(NULL)
+	$(DACTL_COMMON_VALAFLAGS)
 
 libdactl_ui_0_3_la_CFLAGS = \
 	-DWEB_EXTENSION_DIR=\""$(extensiondir)"\" \
@@ -91,20 +89,17 @@ libdactl_ui_0_3_la_CFLAGS = \
 	-Wno-incompatible-pointer-types \
 	-Wno-unused-but-set-variable \
 	-Wno-unused-label \
-	-Wno-unused-function \
-	$(NULL)
+	-Wno-unused-function
 
 libdactl_ui_0_3_la_LDFLAGS = \
 	$(OPTIMIZE_LDFLAGS) \
 	$(DACTL_DATA_DIR_DEFINES) \
-	-version-info $(LIBDACTL_UI_VERSION) \
-	$(NULL)
+	-version-info $(LIBDACTL_UI_VERSION)
 
 libdactl_ui_0_3_la_LIBADD = \
 	$(LIBDACTL_UI_LIBS) \
 	$(DACTL_CLD_DEPS_LIBS) \
-	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
-	$(NULL)
+	$(DACTL_COMMON_LIBDACTL_CORE_LIBS)
 
 
 if ENABLE_WEBKIT
@@ -115,6 +110,7 @@ libdactl_ui_0_3_la_SOURCES += \
 libdactl_ui_0_3_la_VALAFLAGS += --pkg webkit2gtk-4.0
 libdactl_ui_0_3_la_CFLAGS += $(WEBKIT_CFLAGS)
 libdactl_ui_0_3_la_LIBADD += $(WEBKIT_LIBS)
+libdactl_ui_0_3_la_LDFLAGS += $(WEBKIT_LDFLAGS)
 endif
 
 

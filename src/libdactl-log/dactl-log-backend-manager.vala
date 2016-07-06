@@ -1,21 +1,10 @@
-public class Dactl.DAQ.Extension : GLib.Object, Dactl.Extension {
+public class Dactl.Log.BackendManager : Dactl.PluginManager {
 
-    public virtual void activate () {
-        message ("DAQ extension added");
-    }
-
-    public virtual void deactivate () {
-        message ("DAQ extension removed");
-    }
-}
-
-public class Dactl.DAQ.DeviceManager : Dactl.PluginManager {
-
-    public DeviceManager () {
+    public BackendManager () {
 
         engine = Peas.Engine.get_default ();
-        ext = new Dactl.DAQ.Extension ();
-        search_path = Dactl.Config.DEVICE_DIR;
+        ext = new Dactl.Log.Backend ();
+        search_path = Dactl.Config.BACKEND_DIR;
 
         init ();
         add_extension ();
@@ -23,9 +12,9 @@ public class Dactl.DAQ.DeviceManager : Dactl.PluginManager {
     }
 
     protected override void add_extension () {
-        // The extension set
+		// The extension set
         Parameter param = GLib.Parameter ();
-        param.value = ext as Dactl.DAQ.Extension;
+        param.value = ext as Dactl.Log.Backend;
         param.name = "object";
         extensions = new Peas.ExtensionSet (engine,
                                             typeof (Peas.Activatable),

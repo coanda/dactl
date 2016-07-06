@@ -3,6 +3,7 @@ sysconfigdir = $(sysconfdir)
 desktopdir = $(datadir)/applications
 plugindir = @PLUGIN_DIR@
 devicedir = @DEVICE_DIR@
+backenddir = @BACKEND_DIR@
 extensiondir = @WEB_EXTENSION_DIR@
 
 libdactlcoredir = $(top_srcdir)/src/libdactl-core

@@ -32,5 +32,21 @@ public abstract class Dactl.PluginManager {
 
     public Dactl.Extension ext { protected set; public get; }
 
-    protected abstract void init ();
+    protected virtual void init () {
+		GLib.Environment.set_variable ("PEAS_ALLOW_ALL_LOADERS", "1", true);
+		engine.enable_loader ("python3");
+
+		message ("Loading peas plugins from: %s", search_path);
+		engine.add_search_path (search_path, null);
+    }
+
+    protected abstract void add_extension ();
+
+    protected virtual void load_plugins () {
+        foreach (var plug in engine.get_plugin_list ()) {
+            if (engine.try_load_plugin (plug)) {
+                warning (_("Plugin loaded: " + plug.get_name ()));
+            }
+        }
+    }
 }

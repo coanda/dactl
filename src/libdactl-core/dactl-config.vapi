@@ -45,6 +45,9 @@ public class Dactl.Config {
     [CCode (cname = "DEVICE_DIR")]
     public static const string DEVICE_DIR;
 
+    [CCode (cname = "BACKEND_DIR")]
+    public static const string BACKEND_DIR;
+
     [CCode (cname = "LIBDIR")]
     public static const string LIBDIR;
 }
