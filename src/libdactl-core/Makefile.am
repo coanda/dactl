@@ -42,8 +42,9 @@ libdactl_core_0_3_la_VALAFLAGS = \
 	--pkg linux \
 	--pkg cld-0.3 \
 	--pkg comedi \
-	--pkg gio-2.0 \
 	--pkg gee-0.8 \
+	--pkg gio-2.0 \
+	--pkg gmodule-2.0 \
 	--pkg libxml-2.0 \
 	--pkg libpeas-1.0 \
 	$(DACTL_CLD_DEPS_VALAFLAGS) \

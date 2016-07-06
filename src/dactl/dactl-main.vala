@@ -20,7 +20,7 @@ internal class Dactl.Main : GLib.Object {
     }
 
     private bool verbose_cb () {
-        Dactl.Log.increase_verbosity ();
+        Dactl.SysLog.increase_verbosity ();
         return true;
     }
 
@@ -46,7 +46,7 @@ internal class Dactl.Main : GLib.Object {
     private Dactl.Application app;
     private Dactl.ApplicationFactory factory;
     private Dactl.PluginLoader plugin_loader;
-    private Dactl.Log log;
+    private Dactl.SysLog log;
 
     /* XXX testing Peas plugin manager */
     private Dactl.PluginManager plugin_manager;
@@ -56,7 +56,7 @@ internal class Dactl.Main : GLib.Object {
     public bool need_restart;
 
     private Main () throws GLib.Error {
-        this.log = Dactl.Log.get_default ();
+        this.log = Dactl.SysLog.get_default ();
         log.init (true, null);
 
         this.factory = Dactl.ApplicationFactory.get_default ();
@@ -82,7 +82,7 @@ internal class Dactl.Main : GLib.Object {
      */
     public void exit (int exit_code) {
         this.exit_code = exit_code;
-        Dactl.Log.shutdown ();
+        Dactl.SysLog.shutdown ();
         (app as Dactl.UI.Application).shutdown ();
     }
 

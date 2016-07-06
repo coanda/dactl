@@ -16,7 +16,7 @@ internal class Dactl.DAQ.Main : GLib.Object {
     }
 
     private bool verbose_cb () {
-        Dactl.Log.increase_verbosity ();
+        Dactl.SysLog.increase_verbosity ();
         return true;
     }
 
@@ -40,7 +40,7 @@ internal class Dactl.DAQ.Main : GLib.Object {
     private static int PLUGIN_TIMEOUT = 5;
 
     private Dactl.Application app;
-    private Dactl.Log log;
+    private Dactl.SysLog log;
     private Dactl.DAQ.DeviceManager device_manager;
 
     private int exit_code;
@@ -48,7 +48,7 @@ internal class Dactl.DAQ.Main : GLib.Object {
     public bool need_restart;
 
     private Main () throws GLib.Error {
-        this.log = Dactl.Log.get_default ();
+        this.log = Dactl.SysLog.get_default ();
         log.init (true, null);
 
         device_manager = new Dactl.DAQ.DeviceManager ();
@@ -68,7 +68,7 @@ internal class Dactl.DAQ.Main : GLib.Object {
      */
     public void exit (int exit_code) {
         this.exit_code = exit_code;
-        Dactl.Log.shutdown ();
+        Dactl.SysLog.shutdown ();
         (app as Dactl.DAQ.Server).shutdown ();
     }
 

@@ -16,7 +16,7 @@ internal class Dactl.Recorder.Main : GLib.Object {
     }
 
     private bool verbose_cb () {
-        Dactl.Log.increase_verbosity ();
+        Dactl.SysLog.increase_verbosity ();
         return true;
     }
 
@@ -39,7 +39,7 @@ internal class Dactl.Recorder.Main : GLib.Object {
     }
 
     private Dactl.Application app;
-    private Dactl.Log log;
+    private Dactl.SysLog log;
     //private Dactl.PluginManager plugin_manager;
 
     private int exit_code;
@@ -47,7 +47,7 @@ internal class Dactl.Recorder.Main : GLib.Object {
     public bool need_restart;
 
     private Main () throws GLib.Error {
-        this.log = Dactl.Log.get_default ();
+        this.log = Dactl.SysLog.get_default ();
         log.init (true, null);
 
         //plugin_manager = new Dactl.PluginManager ();
@@ -67,7 +67,7 @@ internal class Dactl.Recorder.Main : GLib.Object {
      */
     public void exit (int exit_code) {
         this.exit_code = exit_code;
-        Dactl.Log.shutdown ();
+        Dactl.SysLog.shutdown ();
         (app as Dactl.Recorder.Server).shutdown ();
     }
 
