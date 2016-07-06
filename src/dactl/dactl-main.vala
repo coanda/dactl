@@ -63,7 +63,7 @@ internal class Dactl.Main : GLib.Object {
         this.plugin_loader = new Dactl.PluginLoader ();
 
         /* XXX testing Peas plugin manager */
-        plugin_manager = new Dactl.PluginManager ();
+        plugin_manager = new Dactl.UI.PluginManager ();
 
         this.exit_code = 0;
 

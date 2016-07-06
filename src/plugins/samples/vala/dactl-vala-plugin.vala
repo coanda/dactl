@@ -1,7 +1,7 @@
 /**
  * Sample plugin using libpeas.
  */
-public class Dactl.Sample.Plugin : GLib.Object, Peas.Activatable, PeasGtk.Configurable {
+public class Dactl.Sample.Plugin : Dactl.UI.Extension, Peas.Activatable, PeasGtk.Configurable {
 
     public GLib.Object object { owned get; construct; }
 

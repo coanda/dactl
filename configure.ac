@@ -187,16 +187,23 @@ AC_SUBST(BUGREPORT_URL)
 dnl ***********************************************************************
 dnl Check for Required Packages
 dnl ***********************************************************************
-m4_define([glib_required_version], [2.46.0])
+m4_define([cld_required_version], [0.3.0])
+m4_define([comedi_required_version], [0.8.1])
 m4_define([gee_required_version], [0.18.0])
+m4_define([glib_required_version], [2.46.0])
 m4_define([gtk_required_version], [3.18.1])
+m4_define([json_required_version], [1.0.0])
 m4_define([libxml_required_version], [2.9.0])
 m4_define([peas_required_version], [1.16.0])
-m4_define([cld_required_version], [0.3.0])
+m4_define([rsvg_required_version], [2.40.0])
 m4_define([soup_required_version], [2.4.0])
-m4_define([json_required_version], [1.0.0])
 m4_define([zmq_required_version], [3.2.0])
 
+PKG_CHECK_MODULES(LIBDACTL_CORE, [gio-2.0 >= glib_required_version
+                                  gee-0.8 >= gee_required_version
+                                  libxml-2.0 >= libxml_required_version
+                                  libpeas-1.0 >= peas_required_version
+                                  cld-0.3 >= cld_required_version])
 PKG_CHECK_MODULES(LIBDACTL_CLI, [glib-2.0 >= glib_required_version
                                  gee-0.8 >= gee_required_version
                                  libxml-2.0 >= libxml_required_version
@@ -211,18 +218,21 @@ PKG_CHECK_MODULES(LIBDACTL_LOG, [gio-2.0 >= glib_required_version
 PKG_CHECK_MODULES(LIBDACTL_NET, [libsoup-2.4 >= soup_required_version
                                  json-glib-1.0 >= json_required_version
                                  libzmq > zmq_required_version])
+PKG_CHECK_MODULES(LIBDACTL_UI, [gio-2.0 >= glib_required_version
+                                gee-0.8 >= gee_required_version
+                                gtk+-3.0 >= gtk_required_version
+                                gtksourceview-3.0 >= gtk_required_version
+                                cld-0.3 >= cld_required_version
+                                libxml-2.0 >= libxml_required_version
+                                libpeas-1.0 >= peas_required_version
+                                libpeas-gtk-1.0 >= peas_required_version
+                                librsvg-2.0 >= rsvg_required_version
+                                libsoup-2.4 >= soup_required_version])
 
 
 dnl Need to work these in to simplify checking
-DACTL_BASE_MODULES="gee-0.8 libxml-2.0 libpeas-1.0 libpeas-gtk-1.0"
-DACTL_BASE_MODULES_VALAFLAGS="--pkg gee-0.8 --pkg libxml-2.0 --pkg glib-extra --pkg libpeas-1.0 --pkg libpeas-gtk-1.0"
-
-PKG_CHECK_MODULES([LIBDACTL_CORE_DEPS], [$DACTL_BASE_MODULES gio-2.0 gmodule-2.0])
-LIBDACTL_CORE_DEPS_VALAFLAGS="$DACTL_BASE_MODULES_VALAFLAGS --pkg gio-2.0 --pkg gmodule-2.0"
-AC_SUBST([LIBDACTL_CORE_DEPS_VALAFLAGS])
-
-DACTL_PLUGIN_COMMON_VALAFLAGS="$LIBDACTL_CORE_DEPS_VALAFLAGS"
-AC_SUBST([DACTL_PLUGIN_COMMON_VALAFLAGS])
+DACTL_BASE_MODULES="gee-0.8 libxml-2.0 libpeas-1.0"
+DACTL_BASE_MODULES_VALAFLAGS="--pkg gee-0.8 --pkg libxml-2.0 --pkg glib-extra --pkg libpeas-1.0"
 
 DACTL_COMMON_MODULES="$DACTL_BASE_MODULES"
 DACTL_COMMON_MODULES_VALAFLAGS="$DACTL_BASE_MODULES_VALAFLAGS"
@@ -237,11 +247,6 @@ DACTL_UI_MODULES="gtk+-3.0 librsvg-2.0 gtksourceview-3.0 libsoup-2.4"
 DACTL_UI_DEPS_VALAFLAGS="--pkg gtk+-3.0 --pkg cogl-1.0 --pkg librsvg-2.0 --pkg gtksourceview-3.0 --pkg libsoup-2.4"
 AC_SUBST([DACTL_UI_DEPS_VALAFLAGS])
 DACTL_PLUGIN_COMMON_VALAFLAGS="$DACTL_PLUGIN_COMMON_VALAFLAGS $DACTL_UI_DEPS_VALAFLAGS"
-
-PKG_CHECK_MODULES([LIBDACTL_UI_DEPS], [$DACTL_BASE_MODULES $DACTL_UI_MODULES])
-LIBDACTL_UI_DEPS_VALAFLAGS="$DACTL_BASE_MODULES_VALAFLAGS $DACTL_UI_DEPS_VALAFLAGS"
-AS_IF([test "x$try_cld" = "xyes"], [LIBDACTL_UI_DEPS_VALAFLAGS="$LIBDACTL_UI_DEPS_VALAFLAGS $DACTL_CLD_DEPS_VALAFLAGS"])
-AC_SUBST([LIBDACTL_UI_DEPS_VALAFLAGS])
 
 dnl Check if building CLD support was requested
 dnl XXX CLD is more of a requirement than an option at this point but the hope
@@ -336,9 +341,9 @@ AS_IF([test "x$have_pygobject" = "xyes"],[
 	AS_IF([test -z "${PYTHON3_CONFIG}"],[
 		AC_MSG_RESULT([Failed to locate python3-config.])
 	],[
-		LIBDACTL_CORE_DEPS_CFLAGS="${LIBDACTL_CORE_DEPS_CFLAGS} `${PYTHON3_CONFIG} --includes`"
-		LIBDACTL_CORE_DEPS_LIBS="${LIBDACTL_CORE_DEPS_LIBS} `${PYTHON3_CONFIG} --libs`"
-		LIBDACTL_CORE_DEPS_LDFLAGS="${LIBDACTL_CORE_DEPS_LDFLAGS} `${PYTHON3_CONFIG} --ldflags`"
+		LIBDACTL_CORE_CFLAGS="${LIBDACTL_CORE_CFLAGS} `${PYTHON3_CONFIG} --includes`"
+		LIBDACTL_CORE_LIBS="${LIBDACTL_CORE_LIBS} `${PYTHON3_CONFIG} --libs`"
+		LIBDACTL_CORE_LDFLAGS="${LIBDACTL_CORE_LDFLAGS} `${PYTHON3_CONFIG} --ldflags`"
 		enable_python_scripting=yes
 	])
 
@@ -454,8 +459,9 @@ dnl ***********************************************************************
 PLUGIN_CFLAGS="$PLUGIN_CFLAGS -I\$(top_srcdir)/src/libdactl-core"
 PLUGIN_CFLAGS="$PLUGIN_CFLAGS -I\$(top_srcdir)/src/libdactl-net"
 PLUGIN_CFLAGS="$PLUGIN_CFLAGS -I\$(top_srcdir)/src/libdactl-ui"
-PLUGIN_CFLAGS="$PLUGIN_CFLAGS $LIBDACTL_UI_DEPS_CFLAGS"
-PLUGIN_CFLAGS="$PLUGIN_CFLAGS $LIBDACTL_CORE_DEPS_CFLAGS"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS $LIBDACTL_CORE_CFLAGS"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS $LIBDACTL_NET_CFLAGS"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS $LIBDACTL_UI_CFLAGS"
 PLUGIN_CFLAGS="$PLUGIN_CFLAGS $DEBUG_CFLAGS"
 PLUGIN_CFLAGS="$PLUGIN_CFLAGS $OPTIMIZE_CFLAGS"
 AC_SUBST(PLUGIN_CFLAGS)
@@ -468,6 +474,7 @@ AC_SUBST(PLUGIN_LDFLAGS)
 
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --target-glib=2.44"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --thread"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_srcdir)/vapi"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-core"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-net"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-ui"
@@ -475,6 +482,8 @@ PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-core-0.3"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-net-0.3"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-ui-0.3"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg libpeas-1.0"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg libpeas-gtk-1.0"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg libzmq"
 AC_SUBST(PLUGIN_VALAFLAGS)
 
 
@@ -484,19 +493,20 @@ dnl ***********************************************************************
 DEVICE_CFLAGS="$DEVICE_CFLAGS -I\$(top_srcdir)/src/libdactl-core"
 DEVICE_CFLAGS="$DEVICE_CFLAGS -I\$(top_srcdir)/src/libdactl-daq"
 DEVICE_CFLAGS="$DEVICE_CFLAGS -I\$(top_srcdir)/src/libdactl-net"
-DEVICE_CFLAGS="$DEVICE_CFLAGS $LIBDACTL_CORE_DEPS_CFLAGS"
+DEVICE_CFLAGS="$DEVICE_CFLAGS $LIBDACTL_CORE_CFLAGS"
 DEVICE_CFLAGS="$DEVICE_CFLAGS $DEBUG_CFLAGS"
 DEVICE_CFLAGS="$DEVICE_CFLAGS $OPTIMIZE_CFLAGS"
 AC_SUBST(DEVICE_CFLAGS)
 
 DEVICE_LDFLAGS="$DEVICE_LDFLAGS $OPTIMIZE_LDFLAGS"
 DEVICE_LDFLAGS="$DEVICE_LDFLAGS -avoid-version"
-DEVICE_LDFLAGS="$DEVICE_LDFLAGS -export-symbols-regex peas_register_types"
+dnl DEVICE_LDFLAGS="$DEVICE_LDFLAGS -export-symbols-regex peas_register_types"
 DEVICE_LDFLAGS="$DEVICE_LDFLAGS -module"
 AC_SUBST(DEVICE_LDFLAGS)
 
 DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --target-glib=2.44"
 DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --thread"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_srcdir)/vapi"
 DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-core"
 DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-daq"
 DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-net"

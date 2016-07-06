@@ -51,13 +51,25 @@ libdactl_ui_0_3_la_includes = \
 	$(NULL)
 
 libdactl_ui_0_3_la_VALAFLAGS = \
+	--target-glib=2.44 \
+	--thread \
 	-H dactl-ui.h -C \
 	--library=dactl-ui-0.3 \
 	--gir=Dactl-0.3.gir \
 	--gresources $(gresource_file) \
 	--vapidir=$(top_srcdir)/vapi \
 	--pkg posix \
-	$(LIBDACTL_UI_DEPS_VALAFLAGS) \
+	--pkg gee-0.8 \
+	--pkg glib-2.0 \
+	--pkg gio-2.0 \
+	--pkg gtk+-3.0 \
+	--pkg gtksourceview-3.0 \
+	--pkg cld-0.3 \
+	--pkg libxml-2.0 \
+	--pkg libpeas-1.0 \
+	--pkg libpeas-gtk-1.0 \
+	--pkg libsoup-2.4 \
+	--pkg librsvg-2.0 \
 	$(DACTL_CLD_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
 	$(DACTL_COMMON_VALAFLAGS) \
@@ -68,7 +80,7 @@ libdactl_ui_0_3_la_CFLAGS = \
 	-DG_LOG_DOMAIN=\"libdactl-ui\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(AM_CFLAGS) \
-	$(LIBDACTL_UI_DEPS_CFLAGS) \
+	$(LIBDACTL_UI_CFLAGS) \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
 	$(OPTIMIZE_CFLAGS) \
@@ -89,7 +101,7 @@ libdactl_ui_0_3_la_LDFLAGS = \
 	$(NULL)
 
 libdactl_ui_0_3_la_LIBADD = \
-	$(LIBDACTL_UI_DEPS_LIBS) \
+	$(LIBDACTL_UI_LIBS) \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
 	$(NULL)

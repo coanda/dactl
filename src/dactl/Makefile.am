@@ -10,7 +10,9 @@ bin_PROGRAMS = dactl
 gresource_file = $(top_srcdir)/data/dactl.gresource.xml
 
 dactl_VALAFLAGS = \
-	-H $(srcdir)/libdactl.h -C -c --thread \
+	-H $(srcdir)/libdactl.h -C -c \
+	--target-glib=2.44 \
+	--thread \
 	--vapidir=$(top_srcdir)/vapi \
 	--pkg posix \
 	--pkg linux \
@@ -24,7 +26,7 @@ dactl_VALAFLAGS = \
 	$(NULL)
 
 dactl_CFLAGS = \
-	--include config.h \
+	-include config.h \
 	-DLOCALEDIR=\""$(datadir)/locale"\" \
 	-DG_LOG_DOMAIN=\"dactl\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
@@ -54,7 +56,7 @@ dactl_LDADD = \
 if ENABLE_WEBKIT
 dactl_VALAFLAGS += --pkg webkit2gtk-4.0
 dactl_CFLAGS += \
-	-DWEB_EXTENSIONS_DIR=\""$(extensionsdir)"\" \
+	-DWEB_EXTENSION_DIR=\""$(extensiondir)"\" \
 	$(WEBKIT_CFLAGS) \
 	$(NULL)
 dactl_LDADD += $(WEBKIT_LIBS)

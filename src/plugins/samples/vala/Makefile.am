@@ -28,9 +28,7 @@ nodist_libdactl_vala_la_SOURCES = \
 CLEANFILES = $(BUILT_SOURCES) $(nodist_libdactl_vala_la_SOURCES)
 
 libdactl_vala_la_VALAFLAGS = \
-	$(PLUGIN_VALAFLAGS) \
-	--pkg libpeas-gtk-1.0 \
-	$(NULL)
+	$(PLUGIN_VALAFLAGS)
 
 libdactl_vala_la_CFLAGS = \
 	-DVALA_VERSION=\""$(VALA_VERSION)"\" \
@@ -38,7 +36,6 @@ libdactl_vala_la_CFLAGS = \
 	-DG_LOG_DOMAIN=\"vala-plugin\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(PLUGIN_CFLAGS) \
-	$(LIBDACTL_CLI_CFLAGS) \
 	$(VALA_CFLAGS) \
 	-Wno-deprecated-declarations \
 	-Wno-discarded-qualifiers \
@@ -46,20 +43,16 @@ libdactl_vala_la_CFLAGS = \
 	-Wno-incompatible-pointer-types \
 	-Wno-unused-but-set-variable \
 	-Wno-unused-label \
-	-Wno-unused-function \
-	$(NULL)
+	-Wno-unused-function
 
 libdactl_vala_la_LIBADD = $(VALA_LIBS)
-
-libdactl_vala_la_LDFLAGS = \
-	$(PLUGIN_LDFLAGS) \
-	$(LIBDACTL_CLI_LDFLAGS) \
-	$(NULL)
+libdactl_vala_la_LDFLAGS = $(PLUGIN_LDFLAGS)
 
 if ENABLE_WEBKIT
 libdactl_vala_la_VALAFLAGS += --pkg webkit2gtk-4.0
 libdactl_vala_la_CFLAGS += $(WEBKIT_CFLAGS)
 libdactl_vala_la_LIBADD += $(WEBKIT_LIBS)
+libdactl_vala_la_LDFLAGS += $(WEBKIT_LDFLAGS)
 endif
 
 include $(top_srcdir)/src/plugins/Makefile.plugin

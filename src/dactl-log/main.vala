@@ -40,7 +40,7 @@ internal class Dactl.Recorder.Main : GLib.Object {
 
     private Dactl.Application app;
     private Dactl.Log log;
-    private Dactl.PluginManager plugin_manager;
+    //private Dactl.PluginManager plugin_manager;
 
     private int exit_code;
 
@@ -50,7 +50,7 @@ internal class Dactl.Recorder.Main : GLib.Object {
         this.log = Dactl.Log.get_default ();
         log.init (true, null);
 
-        plugin_manager = new Dactl.PluginManager ();
+        //plugin_manager = new Dactl.PluginManager ();
 
         this.exit_code = 0;
 
