@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/coanda/{{ project.name }}/plugins/{{ plugin.name }}">
+    <file preprocess="xml-stripblanks">{{ plugin.name }}-control.ui</file>
+  </gresource>
+</gresources>

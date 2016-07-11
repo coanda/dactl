@@ -38,7 +38,6 @@ libdactl_device_mccusb_la_CFLAGS = \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(DEVICE_CFLAGS) \
 	$(LIBDACTL_DAQ_CFLAGS) \
-	$(VALA_CFLAGS) \
 	-Wno-deprecated-declarations \
 	-Wno-discarded-qualifiers \
 	-Wno-implicit-function-declaration \
@@ -48,7 +47,7 @@ libdactl_device_mccusb_la_CFLAGS = \
 	-Wno-unused-function \
 	$(NULL)
 
-libdactl_device_mccusb_la_LIBADD = $(VALA_LIBS)
+libdactl_device_mccusb_la_LIBADD = $(DEVICE_LIBS)
 
 libdactl_device_mccusb_la_LDFLAGS = \
 	$(DEVICE_LDFLAGS) \

@@ -38,7 +38,6 @@ libdactl_backend_xml_la_CFLAGS = \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(BACKEND_CFLAGS) \
 	$(LIBDACTL_LOG_CFLAGS) \
-	$(VALA_CFLAGS) \
 	-Wno-deprecated-declarations \
 	-Wno-discarded-qualifiers \
 	-Wno-implicit-function-declaration \
@@ -48,7 +47,7 @@ libdactl_backend_xml_la_CFLAGS = \
 	-Wno-unused-function \
 	$(NULL)
 
-libdactl_backend_xml_la_LIBADD = $(VALA_LIBS)
+libdactl_backend_xml_la_LIBADD = $(BACKEND_LIBS)
 
 libdactl_backend_xml_la_LDFLAGS = \
 	$(BACKEND_LDFLAGS) \

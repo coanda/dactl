@@ -1,0 +1,13 @@
+## {{ plugin.uc_type }} README
+
+README for {{ project.name }} {{ plugin.type }} {{ plugin.name }}.
+
+### {{ plugin.type|title }} Configuration
+
+```xml
+<{{ plugin.namespace }}:{{ plugin.type }}s>
+  <{{ plugin.namespace }}:{{ plugin.type }} id="{{ plugin.id }}" type="{{ plugin.name }}">
+    {% block object %}{% endblock %}
+  </{{ plugin.namespace }}:{{ plugin.type }}>
+</{{ plugin.namespace }}:{{ plugin.type }}s>
+```

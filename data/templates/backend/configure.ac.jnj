@@ -1,0 +1,20 @@
+{% extends "../common/configure.ac.jnj" %}
+{% block packages %}
+{{ super() }}
+
+PKG_CHECK_MODULES({{ project.name|upper }}_{{ plugin.name|upper|replace("-", "_") }}),
+                  [gio-2.0 >= glib_required_version
+                   libpeas-1.0 >= peas_required_version])
+{% endblock %}
+
+{% block cflags %}
+{{ super() }}
+{% endblock %}
+
+{% block ldflags %}
+{{ super() }}
+{% endblock %}
+
+{% block valaflags %}
+{{ super() }}
+{% endblock %}

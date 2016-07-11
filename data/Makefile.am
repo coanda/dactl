@@ -1,4 +1,4 @@
-SUBDIRS = gsettings config glade icons mime systemd .
+SUBDIRS = gsettings config glade icons mime systemd templates .
 
 @APPSTREAM_XML_RULES@
 @INTLTOOL_XML_RULE@

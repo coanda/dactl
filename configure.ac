@@ -10,9 +10,9 @@ m4_define([dactl_micro_version],[5])
 m4_define([dactl_version],[dactl_major_version.dactl_minor_version.dactl_micro_version])
 m4_define([dactl_interface_age],[0])
 m4_define([dactl_bugreport_url],
-              [https://github.com/coanda/dactl/issues])
+          [https://github.com/coanda/dactl/issues])
 m4_define([dactl_debug_default],
-                    [m4_if(m4_eval(dactl_minor_version % 2), [1], [yes], [minimum])])
+          [m4_if(m4_eval(dactl_minor_version % 2), [1], [yes], [minimum])])
 
 
 dnl ***********************************************************************
@@ -405,7 +405,7 @@ AC_C_CONST
 
 
 dnl ***********************************************************************
-dnl Support for gtk-doc Documentation Engine
+dnl Support for valadoc Documentation Engine
 dnl ***********************************************************************
 AC_ARG_ENABLE(doc,
 	AS_HELP_STRING([--enable-doc],
@@ -586,6 +586,18 @@ AC_CONFIG_FILES([
     data/systemd/dactl-ctl.service
     data/systemd/dactl-daq.service
     data/systemd/dactl-log.service
+
+    data/templates/Makefile
+    data/templates/common/Makefile
+    data/templates/common/build/Makefile
+    data/templates/common/build/autotools/Makefile
+    data/templates/common/src/Makefile
+    data/templates/backend/Makefile
+    data/templates/backend/src/Makefile
+    data/templates/device/Makefile
+    data/templates/device/src/Makefile
+    data/templates/plugin/Makefile
+    data/templates/plugin/src/Makefile
 
     data/gsettings/Makefile
 	data/gsettings/org.coanda.dactl.gschema.xml
