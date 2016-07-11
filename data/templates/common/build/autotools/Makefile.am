@@ -1,12 +1,12 @@
 m4files = \
-	ax_append_compile_flags.m4 \
-	ax_append_flag.m4 \
-	ax_check_compile_flag.m4 \
-	ax_check_link_flag.m4 \
-	ax_require_defined.m4 \
-	introspection.m4 \
-	pkg.m4 \
-	tap-test
+	__ax_append_compile_flags.m4 \
+	__ax_append_flag.m4 \
+	__ax_check_compile_flag.m4 \
+	__ax_check_link_flag.m4 \
+	__ax_require_defined.m4 \
+	__introspection.m4 \
+	__pkg.m4 \
+	__tap-test
 
 templateautotoolsdir = $(datadir)/@PACKAGE@/templates/common/build/autotools
 templateautotools_DATA = \
