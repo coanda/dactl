@@ -8,6 +8,7 @@ SUBDIRS = \
 	dactl \
 	dactl-daq \
 	dactl-log \
+	dactl-plugin \
 	plugins \
 	backends \
 	devices \

@@ -80,6 +80,7 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 AC_PROG_CXX
 AM_PROG_VALAC([0.30.0])
+AM_PATH_PYTHON([2.5])
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
@@ -308,6 +309,17 @@ AS_IF([test "$enable_webkit" != no],[
 	enable_webkit=$have_webkit
 ])
 AM_CONDITIONAL(ENABLE_WEBKIT, [test "x$enable_webkit" = "xyes"])
+
+
+dnl ***********************************************************************
+dnl Check if we're building the Python plugin generator utility
+dnl ***********************************************************************
+AC_ARG_ENABLE([plugin-util],
+              [AS_HELP_STRING([--enable-plugin-util=@<:@yes.no@:>@],
+                              [Build the plugin generator.])],
+              [enable_plugin_util=$enableval],
+              [enable_plugin_util=no])
+AM_CONDITIONAL(ENABLE_PLUGIN_UTIL, [test "x$enable_plugin_util" = "xyes"])
 
 
 dnl ***********************************************************************
@@ -610,6 +622,8 @@ AC_CONFIG_FILES([
 	src/dactl/Makefile
 	src/dactl-daq/Makefile
 	src/dactl-log/Makefile
+	src/dactl-plugin/Makefile
+	src/dactl-plugin/setup.cfg
 
 	src/libdactl-core/Makefile
 	src/libdactl-cli/Makefile
