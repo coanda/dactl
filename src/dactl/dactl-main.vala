@@ -20,7 +20,7 @@ internal class Dactl.Main : GLib.Object {
     }
 
     private bool verbose_cb () {
-        Dactl.Log.increase_verbosity ();
+        Dactl.SysLog.increase_verbosity ();
         return true;
     }
 
@@ -46,7 +46,7 @@ internal class Dactl.Main : GLib.Object {
     private Dactl.Application app;
     private Dactl.ApplicationFactory factory;
     private Dactl.PluginLoader plugin_loader;
-    private Dactl.Log log;
+    private Dactl.SysLog log;
 
     /* XXX testing Peas plugin manager */
     private Dactl.PluginManager plugin_manager;
@@ -56,24 +56,24 @@ internal class Dactl.Main : GLib.Object {
     public bool need_restart;
 
     private Main () throws GLib.Error {
-        this.log = Dactl.Log.get_default ();
+        log = Dactl.SysLog.get_default ();
         log.init (true, null);
 
-        this.factory = Dactl.ApplicationFactory.get_default ();
-        this.plugin_loader = new Dactl.PluginLoader ();
+        factory = Dactl.ApplicationFactory.get_default ();
+        plugin_loader = new Dactl.PluginLoader ();
 
         /* XXX testing Peas plugin manager */
-        plugin_manager = new Dactl.PluginManager ();
+        plugin_manager = new Dactl.UI.PluginManager ();
 
-        this.exit_code = 0;
+        exit_code = 0;
 
         app = Dactl.UI.Application.get_default ();
 
-        this.plugin_loader.plugin_available.connect (this.on_plugin_loaded);
+        plugin_loader.plugin_available.connect (on_plugin_loaded);
 
-        Unix.signal_add (Posix.SIGHUP,  () => { this.restart (); return true; });
-        Unix.signal_add (Posix.SIGINT,  () => { this.exit (0);   return true; });
-        Unix.signal_add (Posix.SIGTERM, () => { this.exit (0);   return true; });
+        Unix.signal_add (Posix.SIGHUP,  () => { restart (); return true; });
+        Unix.signal_add (Posix.SIGINT,  () => { exit (0);   return true; });
+        Unix.signal_add (Posix.SIGTERM, () => { exit (0);   return true; });
     }
 
     /**
@@ -81,25 +81,25 @@ internal class Dactl.Main : GLib.Object {
      *     when this happens
      */
     public void exit (int exit_code) {
-        this.exit_code = exit_code;
-        Dactl.Log.shutdown ();
+        exit_code = exit_code;
+        Dactl.SysLog.shutdown ();
         (app as Dactl.UI.Application).shutdown ();
     }
 
     public void restart () {
-        this.need_restart = true;
-        this.exit (0);
+        need_restart = true;
+        exit (0);
     }
 
     private int run (string[] args) {
         debug (_("Dactl v%s starting..."), Config.PACKAGE_VERSION);
         app.launch (args);
 
-        return this.exit_code;
+        return exit_code;
     }
 
     internal void dbus_available () {
-        this.plugin_loader.load_modules ();
+        plugin_loader.load_modules ();
 
         var timeout = PLUGIN_TIMEOUT;
         //try {
@@ -113,7 +113,7 @@ internal class Dactl.Main : GLib.Object {
         //} catch (GLib.Error e) {};
 
         Timeout.add_seconds (timeout, () => {
-            if (this.plugin_loader.list_plugins ().size == 0) {
+            if (plugin_loader.list_plugins ().size == 0) {
                 warning (ngettext ("No plugins found in %d second; giving up...",
                                    "No plugins found in %d seconds; giving up...",
                                    PLUGIN_TIMEOUT),

@@ -1,4 +1,5 @@
-# Data Acquisition and Control Application [![Documentation Status](https://readthedocs.org/projects/dactl/badge/?version=latest)](https://readthedocs.org/projects/dactl/?badge=latest) [![Build Status](https://travis-ci.org/coanda/dactl.svg)](https://travis-ci.org/coanda/dactl) [![Issues Status](https://badge.waffle.io/coanda/dactl.png?label=ready&title=Ready)](https://waffle.io/coanda/dactl)
+# Data Acquisition and Control Application
+[![Documentation Status](https://readthedocs.org/projects/dactl/badge/?version=latest)](https://readthedocs.org/projects/dactl/?badge=latest) [![Build Status](https://travis-ci.org/coanda/dactl.svg)](https://travis-ci.org/coanda/dactl) [![Issues Status](https://badge.waffle.io/coanda/dactl.png?label=ready&title=Ready)](https://waffle.io/coanda/dactl)
 
 ## Description
 

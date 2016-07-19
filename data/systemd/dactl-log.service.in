@@ -1,0 +1,20 @@
+[Unit]
+Description=Data Recording Daemon
+After=network.target
+After=dbus.service
+Conflicts=
+Documentation=man:dactl-log(1)
+
+[Service]
+EnvironmentFile=-@sysconfdir@/dactl
+ExecStart=@sbindir@/dactl-log $LOGD_ARGS
+ExecReload=/bin/kill -HUP $MAINPID
+# supress to log debug and error also to /var/log/messages
+StandardOutput=null
+StandardError=null
+Type=dbus
+BusName=org.coanda.Dactl.Recorder
+
+[Install]
+WantedBy=basic.target
+Alias=dbus-org.coanda.Dactl.Recorder.service

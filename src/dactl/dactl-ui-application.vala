@@ -82,7 +82,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
         Gtk.Window.set_default_icon_name ("dactl");
 
-        WebKit.WebContext.get_default ().set_web_extensions_directory (Config.WEB_EXTENSIONS_DIR);
+        WebKit.WebContext.get_default ().set_web_extensions_directory (Config.WEB_EXTENSION_DIR);
 
         debug ("Creating application model using file %s", opt_cfgfile);
         model = new Dactl.ApplicationModel (opt_cfgfile);

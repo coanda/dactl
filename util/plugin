@@ -55,7 +55,7 @@ libdactl_$name_la_LIBADD = \
     $(DACTL_PLUGIN_$name_DEPS_LIBS) \
     $(DACTL_COMMON_LIBDACTL_SERVER_LIBS)
 libdactl_$name_la_LDFLAGS = \
-    $(DACTL_PLUGIN_LINKER_FLAGS)
+    $(PLUGIN_LDFLAGS)
 
 EXTRA_DIST=$name.plugin.in
 EOF

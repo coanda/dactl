@@ -31,6 +31,7 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-settable.vala \
     dactl-stripchart.vala \
     dactl-ui-factory.vala \
+    dactl-ui-plugin-manager.vala \
     dactl-video-processor.vala \
     dactl-widget.vala \
     dactl-zoom-window.vala
@@ -72,6 +73,7 @@ libdactl_ui_la_public_sources = \
     dactl-settable.c \
     dactl-stripchart.c \
     dactl-ui-factory.c \
+    dactl-ui-plugin-manager.c \
     dactl-video-processor.c \
     dactl-widget.c \
     dactl-zoom-window.c \

@@ -1,0 +1,9 @@
+[install_path]
+prefix = @prefix@
+libdir = @prefix@/lib
+datadir = @prefix@/share
+tmpldir = $datadir/@PACKAGE@/templates
+
+[local_path]
+localdatadir = @top_srcdir@/data
+localtmpldir = $localdatadir/templates/
