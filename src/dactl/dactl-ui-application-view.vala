@@ -28,6 +28,9 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
      */
     public bool using_default { get; private set; default = true; }
 
+    /* Current window state */
+    public bool fullscreen { get; set; default = false; }
+
     /* Model used to update the view */
     private Dactl.ApplicationModel model;
 
@@ -262,6 +265,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     private void fullscreen_action_activated_cb (SimpleAction action, Variant? parameter) {
         (this as Gtk.Window).fullscreen ();
         state = Dactl.UI.State.FULLSCREEN;
+        fullscreen = true;
     }
 
     [GtkCallback]
@@ -275,9 +279,11 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
             if (state == Dactl.UI.State.WINDOWED) {
                 (this as Gtk.Window).fullscreen ();
                 state = Dactl.UI.State.FULLSCREEN;
+                fullscreen = true;
             } else {
                 (this as Gtk.Window).unfullscreen ();
                 state = Dactl.UI.State.WINDOWED;
+                fullscreen = false;
             }
             return true;
         } else if (event.keyval == Gdk.Key.F1) {        // F1 -> open help

@@ -85,7 +85,6 @@ UI_SOURCES = \
 	dactl-settings-dialog.vala \
 	dactl-settings-listbox.vala \
 	dactl-settings-page.vala \
-	dactl-settings-propertybox.ui \
 	dactl-settings-sidebar.vala \
 	dactl-settings-topbar.vala \
 	dactl-settings-toolbar.vala \

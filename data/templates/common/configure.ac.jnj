@@ -205,7 +205,7 @@ dnl ***********************************************************************
 dnl Setup common cflags, valaflags and ldflags for plugins
 dnl ***********************************************************************
 {% block cflags %}
-PLUGIN_CFLAGS="$PLUGIN_CFLAGS ${{ project.name|upper }}_{{plugin.name|upper|replace("-", "_")}}_CFLAGS"
+PLUGIN_CFLAGS="$PLUGIN_CFLAGS ${{ project.name|upper }}_{{ plugin.name|upper|replace("-", "_") }}_CFLAGS"
 PLUGIN_CFLAGS="$PLUGIN_CFLAGS $DEBUG_CFLAGS"
 {% endblock %}
 AC_SUBST(PLUGIN_CFLAGS)
