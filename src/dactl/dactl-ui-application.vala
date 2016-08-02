@@ -85,7 +85,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         WebKit.WebContext.get_default ().set_web_extensions_directory (Config.WEB_EXTENSION_DIR);
 
         debug ("Creating application model using file %s", opt_cfgfile);
-        model = new Dactl.ApplicationModel (opt_cfgfile);
+        model = new Dactl.UI.ApplicationModel (opt_cfgfile);
         assert (model != null);
 
         (model as Dactl.Container).print_objects (0);
@@ -107,7 +107,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
          *});
          */
 
-        controller = new Dactl.ApplicationController (model, view);
+        controller = new Dactl.UI.ApplicationController ((Dactl.UI.ApplicationModel) model, (Dactl.UI.ApplicationView) view);
         assert (controller != null);
 
         debug (" > Finished constructing the controller");
