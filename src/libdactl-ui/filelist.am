@@ -34,6 +34,7 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-ui-plugin-manager.vala \
     dactl-video-processor.vala \
     dactl-widget.vala \
+    dactl-window.vala \
     dactl-zoom-window.vala
 
 LIBDACTL_UI_NONVAPI_SOURCE_FILES = \
@@ -76,6 +77,7 @@ libdactl_ui_la_public_sources = \
     dactl-ui-plugin-manager.c \
     dactl-video-processor.c \
     dactl-widget.c \
+    dactl-window.c \
     dactl-zoom-window.c \
     dactl-utility.c \
     dactl-widget-information.c

@@ -227,6 +227,7 @@ PKG_CHECK_MODULES(LIBDACTL_UI, [gio-2.0 >= glib_required_version
                                 gtk+-3.0 >= gtk_required_version
                                 gtksourceview-3.0 >= gtk_required_version
                                 cld-0.3 >= cld_required_version
+                                json-glib-1.0 >= json_required_version
                                 libxml-2.0 >= libxml_required_version
                                 libpeas-1.0 >= peas_required_version
                                 libpeas-gtk-1.0 >= peas_required_version

@@ -4,18 +4,10 @@
  */
 public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
 
+    private string _name = "Untitled";
     /**
-     * Default configuration file name.
+     * A name for the configuration
      */
-    public string config_filename { get; set; default = "dactl.xml"; }
-
-    /**
-     * Flag indicating thread activity... I think.
-     * XXX pretty sure this isn't being used anymore.
-     */
-    public bool active { get; set; default = false; }
-
-    /* A name for the configuration */
     public string name {
         get { return _name; }
         set {
@@ -26,7 +18,10 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
         }
     }
 
-    /* Allow administrative functionality */
+    private bool _admin = false;
+    /**
+     * Allow administrative functionality
+     */
     public bool admin {
         get { return _admin; }
         set {
@@ -37,7 +32,10 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
         }
     }
 
-    /* Which page to load on startup */
+    private string _startup_page = "pg0";
+    /**
+     * Which page to load on startup
+     */
     public string startup_page {
         get { return _startup_page; }
         set {
@@ -48,7 +46,10 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
         }
     }
 
-    /* Whether or not to use the dark theme */
+    private bool _dark_theme = true;
+    /**
+     * Whether or not to use the dark theme
+     */
     public bool dark_theme {
         get { return _dark_theme; }
         set {
@@ -58,6 +59,35 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
             }
         }
     }
+
+    private bool _def_enabled = false;
+    /**
+     * Flag to set if user has set the calibrations to <default>
+     */
+    public bool def_enabled {
+        get { return _def_enabled; }
+        set { _def_enabled = value; }
+    }
+
+    private Gee.Map<string, Dactl.Object> _objects;
+    /**
+     * {@inheritDoc}
+     */
+    public Gee.Map<string, Dactl.Object> objects {
+        get { return (_objects); }
+        set { update_objects (value); }
+    }
+
+    /**
+     * Default configuration file name.
+     */
+    public string config_filename { get; set; default = "dactl.xml"; }
+
+    /**
+     * Flag indicating thread activity... I think.
+     * XXX pretty sure this isn't being used anymore.
+     */
+    public bool active { get; set; default = false; }
 
     /* Basic output verbosity, should use an integer to allow for -vvv */
     public bool verbose { get; set; default = false; }
@@ -71,30 +101,6 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
 
     /* GSettings data */
     public Settings settings { get; private set; }
-
-    private bool _def_enabled = false;
-    private string _name = "Untitled";
-    private bool _admin = false;
-    private string _startup_page = "pg0";
-    private bool _dark_theme = true;
-
-    /* Flag to set if user has set the calibrations to <default> */
-    public bool def_enabled {
-        get { return _def_enabled; }
-        set { _def_enabled = value; }
-    }
-
-
-    private Gee.Map<string, Dactl.Object> _objects;
-    /**
-     * {@inheritDoc}
-     */
-    public Gee.Map<string, Dactl.Object> objects {
-        get { return (_objects); }
-        set { update_objects (value); }
-    }
-
-    //public Gee.Collection<Dactl.Plugin> plugins { get; set; }
 
     /**
      * Emitted whenever the data acquisition state is changed.
@@ -166,7 +172,6 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
     ~ApplicationModel () {
         /* Stop hardware threads. */
         stop_acquisition ();
-        //stop_device_output ();
     }
 
     /**
@@ -175,39 +180,6 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
      */
     private void config_property_changed_cb (string property) {
         //message ("Property '%s' was changed.\n", property);
-    }
-
-    /**
-     * Start the log file.
-     * XXX should really have id as parameter
-     */
-     public void start_log () {
-/*
- *        if (!(log as Cld.Log).active) {
- *            //(log as Cld.CsvLog).file_open ();
- *            (log as Cld.Log).start ();
- *
- *            message ("Started log %s", log.id);
- *            log_state_changed ((log as Cld.Log).id, true);
- *        }
- */
-    }
-
-    /**
-     * Stop the log file.
-     * XXX should really have id as parameter
-     */
-    public void stop_log () {
-        /*
-         *if ((log as Cld.Log).active) {
-         *    (log as Cld.Log).stop ();
-         *    if (log is Cld.CsvLog) {
-         *        (log as Cld.CsvLog).file_mv_and_date (false);
-         *    }
-         *    message ("Stopped log %s", log.id);
-         *    log_state_changed ((log as Cld.Log).id, false);
-         *}
-         */
     }
 
     /**
@@ -345,17 +317,4 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
     public void update_objects (Gee.Map<string, Dactl.Object> val) {
         _objects = val;
     }
-
-    /**
-     * ...
-     */
-    /*
-     *public Gee.Map<string, GLib.Object> get_object_map (Type type) {
-     *    if (type.is_a (typeof (Dactl.Object))) {
-     *        return (this as Dactl.Container).get_object_map (type);
-     *    } else if (type.is_a (typeof (Cld.Object))) {
-     *        return ctx.get_object_map (type);
-     *    }
-     *}
-     */
 }

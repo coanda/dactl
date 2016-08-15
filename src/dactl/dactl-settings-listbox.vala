@@ -20,10 +20,10 @@ public class Dactl.SettingsListBox : Gtk.ListBox {
             if (spec.owner_type.name ().contains ("Cld" ) ||
                 spec.owner_type.name ().contains ("Dactl")) {
 
-                debug ("%s: %s %s nick: %s\n", spec.get_name (),
-                                                    spec.value_type.name (),
-                                                    value.strdup_contents (),
-                                                    spec.get_nick ());
+                debug ("%s: %s %s nick: %s", spec.get_name (),
+                                             spec.value_type.name (),
+                                             value.strdup_contents (),
+                                             spec.get_nick ());
 
                 var box = new Dactl.PropertyBox.from_data (spec, value);
                 box.request_choices.connect ((source, type) => {

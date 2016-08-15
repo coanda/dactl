@@ -42,6 +42,11 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     public virtual Gee.ArrayList<Dactl.Plugin> plugins { get; set; }
 
     /**
+     * User interface layout manager.
+     */
+    private Dactl.UI.UxManager ux_manager;
+
+    /**
      * Used when the user requests a configuration save.
      */
     public signal void save_requested ();
@@ -91,13 +96,15 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         (model as Dactl.Container).print_objects (0);
         Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = model.dark_theme;
 
-        debug (" > Finished constructing the model");
+        debug ("Finished constructing the model");
 
         view = new Dactl.UI.ApplicationView (model);
         assert (view != null);
         (view as Gtk.Window).application = this;
 
-        debug (" > Finished constructing the view");
+        debug ("Finished constructing the view");
+
+        ux_manager = new Dactl.UI.UxManager ((Dactl.UI.ApplicationView) view);
 
         /**
          * FIXME: This hides the window and then shows the message box
@@ -107,14 +114,12 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
          *});
          */
 
-        controller = new Dactl.UI.ApplicationController ((Dactl.UI.ApplicationModel) model, (Dactl.UI.ApplicationView) view);
+        controller = new Dactl.UI.ApplicationController (
+                            (Dactl.UI.ApplicationModel) model,
+                            (Dactl.UI.ApplicationView) view);
         assert (controller != null);
 
-        debug (" > Finished constructing the controller");
-
-        //var menu = Dactl.ApplicationMenu.get_default () as GLib.Menu;
-        //(menu as Dactl.ApplicationMenu).show_admin = model.admin;
-        //this.app_menu = menu;
+        debug ("Finished constructing the controller");
 
         /* XXX would like to move this inside of the view but doesn't work until
          *     the application activate is performed */
@@ -130,7 +135,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         add_actions ();
 
         lock (model) {
-            debug (" > Starting device acquisition and output tasks");
+            debug ("Starting device acquisition and output tasks");
             model.start_acquisition ();
             model.start_device_output ();
         }

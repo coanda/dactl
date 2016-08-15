@@ -9,7 +9,7 @@ public enum Dactl.Orientation {
         switch (this) {
             case HORIZONTAL: return Gtk.Orientation.HORIZONTAL;
             case VERTICAL:   return Gtk.Orientation.VERTICAL;
-            default: assert_not_reached ();
+            default:         assert_not_reached ();
         }
     }
 
@@ -17,7 +17,7 @@ public enum Dactl.Orientation {
         switch (this) {
             case HORIZONTAL: return "horizontal";
             case VERTICAL:   return "vertical";
-            default: assert_not_reached ();
+            default:         assert_not_reached ();
         }
     }
 
@@ -56,21 +56,21 @@ public enum Dactl.PositionType {
 
     public Gtk.PositionType to_gtk () {
         switch (this) {
-            case LEFT: return Gtk.PositionType.LEFT;
-            case RIGHT:   return Gtk.PositionType.RIGHT;
-            case TOP:   return Gtk.PositionType.TOP;
-            case BOTTOM:   return Gtk.PositionType.BOTTOM;
-            default: assert_not_reached ();
+            case LEFT:   return Gtk.PositionType.LEFT;
+            case RIGHT:  return Gtk.PositionType.RIGHT;
+            case TOP:    return Gtk.PositionType.TOP;
+            case BOTTOM: return Gtk.PositionType.BOTTOM;
+            default:     assert_not_reached ();
         }
     }
 
     public string to_string () {
         switch (this) {
-            case LEFT: return "left";
-            case RIGHT:   return "right";
-            case TOP:   return "top";
-            case BOTTOM:   return "bottom";
-            default: assert_not_reached ();
+            case LEFT:   return "left";
+            case RIGHT:  return "right";
+            case TOP:    return "top";
+            case BOTTOM: return "bottom";
+            default:     assert_not_reached ();
         }
     }
 
@@ -113,8 +113,8 @@ public enum Dactl.PolarAxisType {
     public string to_string () {
         switch (this) {
             case MAGNITUDE: return "magnitude";
-            case ANGLE:   return "angle";
-            default: assert_not_reached ();
+            case ANGLE:     return "angle";
+            default:        assert_not_reached ();
         }
     }
 
@@ -149,8 +149,8 @@ public enum Dactl.ColorGradientType {
     public string to_string () {
         switch (this) {
             case RGB: return "rgb";
-            case HSV:   return "hsv";
-            default: assert_not_reached ();
+            case HSV: return "hsv";
+            default:  assert_not_reached ();
         }
     }
 
@@ -178,6 +178,13 @@ public enum Dactl.ColorGradientType {
     }
 }
 
+/**
+ * Interface for all widgets.
+ *
+ * XXX  Not all Dactl widgets are Gtk widgets so this is a lazy way of
+ *      enforcing classes that implement this to contain any properties
+ *      that are important.
+ */
 public interface Dactl.Widget : GLib.Object {
 
     //public abstract bool expand { get; set; }
@@ -185,6 +192,9 @@ public interface Dactl.Widget : GLib.Object {
     public abstract bool fill { get; set; }
 }
 
+/**
+ * Simple canvas class to use for packable widgets.
+ */
 public abstract class Dactl.Canvas : Gtk.DrawingArea, Dactl.Object {
 
     private Xml.Node* _node;
@@ -195,6 +205,69 @@ public abstract class Dactl.Canvas : Gtk.DrawingArea, Dactl.Object {
     public virtual string id { get; set; }
 }
 
+/**
+ * Window base class to use with buildable child windows.
+ *
+ * XXX  Probably unnecessary as there will probably only ever be a single class
+ *      that derives this.
+ */
+public abstract class Dactl.UI.WindowBase : Gtk.ApplicationWindow, Dactl.Container, Dactl.Buildable, Dactl.Object {
+
+    private Xml.Node* _node;
+
+    /**
+     * {@inheritDoc}
+     */
+    public virtual string id { get; set; }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected abstract string xml { get; }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected abstract string xsd { get; }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected virtual Xml.Node* node {
+        get {
+            return _node;
+        }
+        set {
+            _node = value;
+        }
+    }
+
+    public bool fullscreen { get; set; default = false; }
+
+    /**
+     * Current window state
+     */
+    public Dactl.UI.WindowState state { get; set; default = Dactl.UI.WindowState.WINDOWED; }
+
+    /**
+     * {@inheritDoc}
+     */
+    public abstract Gee.Map<string, Dactl.Object> objects { get; set; }
+
+    /**
+     * {@inheritDoc}
+     */
+    public abstract void build_from_xml_node (Xml.Node *node);
+
+    /**
+     * {@inheritDoc}
+     */
+    public abstract void update_objects (Gee.Map<string, Dactl.Object> val);
+}
+
+/**
+ *
+ */
 public abstract class Dactl.SimpleWidget : Gtk.Box, Dactl.Widget, Dactl.Buildable, Dactl.Object {
 
     private Xml.Node* _node;
@@ -239,6 +312,9 @@ public abstract class Dactl.SimpleWidget : Gtk.Box, Dactl.Widget, Dactl.Buildabl
     protected abstract void update_node ();
 }
 
+/**
+ *
+ */
 public abstract class Dactl.CustomWidget : Gtk.DrawingArea, Dactl.Widget, Dactl.Buildable, Dactl.Object {
 
     private Xml.Node* _node;
@@ -283,6 +359,9 @@ public abstract class Dactl.CustomWidget : Gtk.DrawingArea, Dactl.Widget, Dactl.
     protected abstract void update_node ();
 }
 
+/**
+ *
+ */
 public abstract class Dactl.CompositeWidget : Gtk.Box, Dactl.Widget, Dactl.Container, Dactl.Buildable, Dactl.Object {
 
     private Xml.Node* _node;

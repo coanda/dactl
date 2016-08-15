@@ -19,6 +19,7 @@ public interface Dactl.Container : GLib.Object {
      *
      * @param object object to add to the list
      */
+    //public abstract void add_child (Dactl.Object object);
     public virtual void add_child (Dactl.Object object) {
         objects.set (object.id, object);
     }

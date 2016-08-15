@@ -57,7 +57,10 @@ public class Dactl.UI.RichContent : Dactl.CompositeWidget, Dactl.CldAdapter {
      */
     public string uri {
         get { return _uri; }
-        set { _uri = value; }
+        set {
+            _uri = value;
+            view.load_uri (_uri);
+        }
     }
 
     public signal void div_clicked (string number);

@@ -6,6 +6,7 @@ GenericName=Data Acquisition and Control Application
 TryExec=dactl
 Exec=dactl
 Icon=dactl.png
+DBusActivatable=true
 Type=Application
 Categories=Utility;
 MimeType=application/x-dactl;

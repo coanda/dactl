@@ -3,6 +3,45 @@
  */
 namespace Dactl {
 
+    public Type type_from_name (string name) {
+        Type type;
+
+        string simplified = name.down ()
+                                .replace ("-", "")
+                                .replace ("dactl", "")
+                                .replace ("ui", "");
+        debug ("Get type %s", simplified);
+
+        switch (simplified) {
+			case "aicontrol":
+				type = typeof (Dactl.AIControl);
+				break;
+            case "aocontrol":
+                type = typeof (Dactl.AOControl);
+                break;
+			case "box":
+				type = typeof (Dactl.Box);
+				break;
+            case "channeltreeview":
+                type = typeof (Dactl.ChannelTreeView);
+                break;
+            case "page":
+                type = typeof (Dactl.Page);
+                break;
+            case "richcontent":
+                type = typeof (Dactl.UI.RichContent);
+                break;
+            case "window":
+                type = typeof (Dactl.UI.Window);
+                break;
+            default:
+                type = typeof (Dactl.Object);
+                break;
+        }
+
+        return type;
+    }
+
     public Gee.List<double?> hex_to_rgb (string hex) {
         Gee.ArrayList<double?> rgb = new Gee.ArrayList<double?> ();
 

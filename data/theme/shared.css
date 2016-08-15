@@ -81,8 +81,7 @@ DactlChannelTreeView {
 }
 
 DactlPage GtkViewport {
-    padding-left: 5px;
-    padding-top: 5px;
+    padding: 5px 5px 5px 5px;
 }
 
 DactlPnid {
