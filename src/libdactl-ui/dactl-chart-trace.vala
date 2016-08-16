@@ -32,15 +32,19 @@ public enum Dactl.TraceDrawType {
     }
 
     public static TraceDrawType parse (string value) {
-        var regex = new Regex ("bar|line|polyline|scatter",
-                               RegexCompileFlags.CASELESS, 0);
-        MatchInfo match;
-        regex.match (value, 0, out match);
-        switch (match.fetch (0)) {
-            case "bar":      return BAR;
-            case "line":     return LINE;
-            case "polyline": return POLYLINE;
-            case "scatter":  return SCATTER;
+        try {
+            var regex = new Regex ("bar|line|polyline|scatter",
+                                RegexCompileFlags.CASELESS, 0);
+            MatchInfo match;
+            regex.match (value, 0, out match);
+            switch (match.fetch (0)) {
+                case "bar":      return BAR;
+                case "line":     return LINE;
+                case "polyline": return POLYLINE;
+                case "scatter":  return SCATTER;
+            }
+        } catch (GLib.RegexError e) {
+            error (e.message);
         }
 
         return LINE;

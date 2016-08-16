@@ -97,8 +97,8 @@ public class Dactl.UI.UxManager : GLib.Object {
             Type type = Dactl.type_from_name (name);
             debug ("Received type: %s", type.name ());
 
-            //object = Json.gobject_deserialize (Type.from_name (name), node) as Dactl.Object;
-            object = Json.gobject_deserialize (type, node) as Dactl.Object;
+            object = Json.gobject_deserialize (Type.from_name (name), node) as Dactl.Object;
+            //object = Json.gobject_deserialize (type, node) as Dactl.Object;
         } catch (Error e) {
             warning ("Could not deserialize JSON data");
         }

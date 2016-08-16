@@ -4,54 +4,29 @@
 namespace Dactl {
 
     public Type type_from_name (string name) {
-        Type type;
+        Type? type;
 
         string simplified = name.down ()
                                 .replace ("-", "")
-                                .replace ("dactl", "")
-                                .replace ("ui", "");
-        debug ("Get type %s", simplified);
+                                .replace ("_", "")
+                                .replace ("dactl", "");
+
+        debug ("Get type: %s", simplified);
+
+        // Check if the type requested is in the UI namespace
+        type = Dactl.UI.type_from_name (simplified);
+        if (type != null) {
+            debug ("Got UI type: %s", type.name ());
+            return type;
+        }
 
         switch (simplified) {
-			case "aicontrol":
-				type = typeof (Dactl.AIControl);
-				break;
-            case "aocontrol":
-                type = typeof (Dactl.AOControl);
-                break;
-			case "box":
-				type = typeof (Dactl.Box);
-				break;
-            case "channeltreeview":
-                type = typeof (Dactl.ChannelTreeView);
-                break;
-            case "page":
-                type = typeof (Dactl.Page);
-                break;
-            case "richcontent":
-                type = typeof (Dactl.UI.RichContent);
-                break;
-            case "window":
-                type = typeof (Dactl.UI.Window);
-                break;
             default:
                 type = typeof (Dactl.Object);
                 break;
         }
 
         return type;
-    }
-
-    public Gee.List<double?> hex_to_rgb (string hex) {
-        Gee.ArrayList<double?> rgb = new Gee.ArrayList<double?> ();
-
-        Gdk.Color color = Gdk.Color ();
-        Gdk.Color.parse (hex, out color);
-        rgb.add (color.red / 65535.0);
-        rgb.add (color.green / 65535.0);
-        rgb.add (color.blue / 65535.0);
-
-        return rgb;
     }
 
     public Gtk.CssProvider load_css (string css) {
@@ -96,11 +71,5 @@ namespace Dactl {
         style.set_path (path);
         style.add_class ("dactl-bg");
         return style.get_background_color (0);
-    }
-
-    public Gdk.RGBA get_color (string desc) {
-        Gdk.RGBA color =  Gdk.RGBA ();
-        color.parse (desc);
-        return color;
     }
 }

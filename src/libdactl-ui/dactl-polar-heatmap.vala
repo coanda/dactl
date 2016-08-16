@@ -466,11 +466,11 @@ public class Dactl.PolarHeatMap : GLib.Object, Dactl.Object, Dactl.Container,
 
             switch (gradient) {
                 case Dactl.ColorGradientType.RGB:
-                    cell.color =  Dactl.rgb_lerp (value,
+                    cell.color =  Dactl.UI.rgb_lerp (value,
                                                     min_color, 0, max_color, 1);
                     break;
                 case Dactl.ColorGradientType.HSV:
-                    cell.color =  Dactl.hsv_lerp (value,
+                    cell.color =  Dactl.UI.hsv_lerp (value,
                                                     min_color, 0, max_color, 1);
                     break;
                 default:
@@ -529,7 +529,7 @@ public class Dactl.PolarHeatMap : GLib.Object, Dactl.Object, Dactl.Container,
          */
         for (int i = 0; i < data.size; i++) {
             var cell = data.get (i);
-            var sweep = Dactl.degrees_to_radians (data.cell_sweep);
+            var sweep = Dactl.UI.degrees_to_radians (data.cell_sweep);
             /*message ("cell.point.a: %.3f cell.point.b: %.3f", cell.point.a, cell.point.b);*/
 
             var t = GLib.Math.PI * cell.point.b / 180.0;

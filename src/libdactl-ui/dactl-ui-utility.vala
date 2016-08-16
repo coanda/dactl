@@ -1,64 +1,51 @@
 /**
- * Various helper utilities, some copied from Boxes.
+ * Helper utilities for the UI namespace, mainly an extension of others
+ * in the core or application areas.
  */
-/*internal class Dactl.Utility {*/
-namespace Dactl {
-/*
- *
- *    public static Gee.List<double?> hex_to_rgb (string hex) {
- *        Gee.ArrayList<double?> rgb = new Gee.ArrayList<double?> ();
- *
- *        Gdk.Color color = Gdk.Color ();
- *        Gdk.Color.parse (hex, out color);
- *        rgb.add (color.red / 65535.0);
- *        rgb.add (color.green / 65535.0);
- *        rgb.add (color.blue / 65535.0);
- *
- *        return rgb;
- *    }
- *
- *    public static Gdk.Pixbuf load_asset (string asset) throws GLib.Error {
- *        return new Gdk.Pixbuf.from_resource ("/org/coanda/libdactl/icons/" + asset);
- *    }
- *
- *    public static Gtk.Builder load_ui (string ui) {
- *        var builder = new Gtk.Builder ();
- *        try {
- *            builder.add_from_resource ("/org/coanda/libdactl/ui/".concat (ui, null));
- *        } catch (GLib.Error e) {
- *            GLib.error ("Failed to load UI file `%s': %s", ui, e.message);
- *        }
- *        return builder;
- *    }
- *
- *    public static Rsvg.Handle load_svg (string svg) {
- *        Rsvg.Handle rsvg;
- *        try {
- *            rsvg = new Rsvg.Handle.from_file (svg);
- *        } catch (GLib.Error e) {
- *            GLib.error ("Failed to load SVG file `%s': %s", svg, e.message);
- *        }
- *        return rsvg;
- *    }
- *
- *    public static Gdk.RGBA get_dactl_bg_color () {
- *        var style = new Gtk.StyleContext ();
- *        var path = new Gtk.WidgetPath ();
- *        path.append_type (typeof (Gtk.Window));
- *        style.set_path (path);
- *        style.add_class ("dactl-bg");
- *        return style.get_background_color (0);
- *    }
- *
- *    public static Gdk.RGBA get_color (string desc) {
- *        Gdk.RGBA color =  Gdk.RGBA ();
- *        color.parse (desc);
- *        return color;
- *    }
- */
+namespace Dactl.UI {
 
     /**
-     * sign or signum function
+     * Type of the object to test for.
+     *
+     * @param name Name of the type to check
+     * @return Valid type on success, null otherwise
+     */
+    public Type? type_from_name (string name) {
+        Type? type = null;
+
+        string simplified = name.replace ("ui", "");
+
+        switch (simplified) {
+			case "aicontrol":
+				type = typeof (Dactl.AIControl);
+				break;
+            case "aocontrol":
+                type = typeof (Dactl.AOControl);
+                break;
+			case "box":
+				type = typeof (Dactl.Box);
+				break;
+            case "channeltreeview":
+                type = typeof (Dactl.ChannelTreeView);
+                break;
+            case "page":
+                type = typeof (Dactl.Page);
+                break;
+            case "richcontent":
+                type = typeof (Dactl.UI.RichContent);
+                break;
+            case "window":
+                type = typeof (Dactl.UI.Window);
+                break;
+            default:
+                break;
+        }
+
+        return type;
+    }
+
+    /**
+     * A sign or signum function.
      *
      * @param x Any double precision number
      * @return 1 if x > 0, 0 if x = 0, -1 if x < 0
@@ -162,6 +149,36 @@ namespace Dactl {
 
         Gdk.RGBA color = Gdk.RGBA () { red = r, green = g, blue = b, alpha = a };
 
+        return color;
+    }
+
+	/**
+     * Convert a hexidecimal string into the corresponding RGB values.
+     *
+     * @param hex Hexidecimal string to convert
+     * @return A list of doubles representing the RGB values
+     */
+    public Gee.List<double?> hex_to_rgb (string hex) {
+        Gee.ArrayList<double?> rgb = new Gee.ArrayList<double?> ();
+
+        Gdk.Color color = Gdk.Color ();
+        Gdk.Color.parse (hex, out color);
+        rgb.add (color.red / 65535.0);
+        rgb.add (color.green / 65535.0);
+        rgb.add (color.blue / 65535.0);
+
+        return rgb;
+    }
+
+	/**
+     * Get the Gdk color value for a given descriptive value, eg. `blue'.
+     *
+     * @param desc The description value to convert.
+     * @return The color struct for the given descriptive value.
+     */
+    public Gdk.RGBA get_color (string desc) {
+        Gdk.RGBA color = Gdk.RGBA ();
+        color.parse (desc);
         return color;
     }
 }

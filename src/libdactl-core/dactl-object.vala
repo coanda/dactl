@@ -26,22 +26,18 @@ public interface Dactl.Object : GLib.Object {
      * @return  ``0`` if they contain the same id, ``1`` otherwise
      */
     public virtual int compare (Dactl.Object a) {
-        if (id == a.id) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return this.id.ascii_casecmp (a.id);
     }
 
     /**
      * Print all properties of the object.
      */
-    public string to_string () {
+    public virtual string to_string () {
         string result = "";
         Type type = get_type ();
         ObjectClass ocl = (ObjectClass)type.class_ref ();
         result += "[%s(@id=%s)]\n".printf (type.name (), id);
-        result += "Properties:\n";
+        result += " Properties:\n";
         result += " %-24s%-35s%-24s%-20s\n".printf ("Name:", "Value:", "Value Type:", "Owner Type:");
 
         foreach (ParamSpec spec in ocl.list_properties ()) {
@@ -60,4 +56,10 @@ public interface Dactl.Object : GLib.Object {
 
         return result;
     }
+
+    /**
+     * Get the nickname of the object.
+     * Used to clean up the output in the application configurations.
+     */
+    //public virtual
 }

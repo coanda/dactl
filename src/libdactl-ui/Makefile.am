@@ -104,8 +104,8 @@ libdactl_ui_0_3_la_LIBADD = \
 
 if ENABLE_WEBKIT
 libdactl_ui_0_3_la_SOURCES += \
-	dactl-webkit-widget.vala \
-	dactl-rich-content.vala \
+	dactl-ui-webkit-widget.vala \
+	dactl-ui-rich-content.vala \
 	$(NULL)
 libdactl_ui_0_3_la_VALAFLAGS += --pkg webkit2gtk-4.0
 libdactl_ui_0_3_la_CFLAGS += $(WEBKIT_CFLAGS)

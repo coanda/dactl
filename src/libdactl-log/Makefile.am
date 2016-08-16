@@ -26,11 +26,13 @@ libdactl_log_0_3_la_public_headers = \
 libdactl_log_0_3_la_public_sources = \
 	dactl-log-backend.c \
 	dactl-log-backend-manager.c \
+	dactl-log-factory.c \
 	$(NULL)
 
 libdactl_log_0_3_la_VALASOURCES = \
 	dactl-log-backend.vala \
 	dactl-log-backend-manager.vala \
+	dactl-log-factory.vala \
 	$(NULL)
 
 libdactl_log_0_3_la_SOURCES = \

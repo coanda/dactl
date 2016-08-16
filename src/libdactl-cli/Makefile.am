@@ -23,10 +23,12 @@ libdactl_cli_0_3_la_public_headers = \
 
 libdactl_cli_0_3_la_public_sources = \
 	dactl-cli-application.c \
+	dactl-cli-factory.c \
 	$(NULL)
 
 libdactl_cli_0_3_la_VALASOURCES = \
 	dactl-cli-application.vala \
+	dactl-cli-factory.vala \
 	$(NULL)
 
 libdactl_cli_0_3_la_SOURCES = \

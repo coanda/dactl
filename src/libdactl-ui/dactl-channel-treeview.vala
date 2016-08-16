@@ -365,37 +365,37 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
                             break;
                         case "show-tag":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.TAG);
                             break;
                         case "show-desc":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.DESCRIPTION);
                             break;
                         case "show-value":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.VALUE);
                             break;
                         case "show-avg":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.AVG);
                             break;
                         case "show-sample-sdev":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.SSDEV);
                             break;
                         case "show-sample-size":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.SSIZE);
                             break;
                         case "show-units":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.UNITS);
                             break;
                         default:

@@ -4,6 +4,8 @@ public errordomain Dactl.CmdlineConfigError {
 
 public class Dactl.CmdlineConfig : GLib.Object, Dactl.Configuration {
 
+    public Dactl.ConfigurationFormat format { get; set; default = Dactl.ConfigurationFormat.OPTIONS; }
+
     private static string log_levels;
 
     private static bool version;

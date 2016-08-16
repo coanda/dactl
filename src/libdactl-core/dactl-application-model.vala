@@ -32,34 +32,6 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
         }
     }
 
-    private string _startup_page = "pg0";
-    /**
-     * Which page to load on startup
-     */
-    public string startup_page {
-        get { return _startup_page; }
-        set {
-            _startup_page = value;
-            lock (config) {
-                config.set_string_property ("startup-page", value);
-            }
-        }
-    }
-
-    private bool _dark_theme = true;
-    /**
-     * Whether or not to use the dark theme
-     */
-    public bool dark_theme {
-        get { return _dark_theme; }
-        set {
-            _dark_theme = value;
-            lock (config) {
-                config.set_boolean_property ("dark-theme", value);
-            }
-        }
-    }
-
     private bool _def_enabled = false;
     /**
      * Flag to set if user has set the calibrations to <default>
@@ -101,11 +73,6 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
 
     /* GSettings data */
     public Settings settings { get; private set; }
-
-    /**
-     * Emitted whenever the data acquisition state is changed.
-     */
-    public signal void acquisition_state_changed (bool state);
 
     /**
      * Emitted whenever the state of a log has been changed.
@@ -161,17 +128,6 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
         /* Property loading */
         name = config.get_string_property ("app");
         admin = config.get_boolean_property ("admin");
-        startup_page = config.get_string_property ("startup-page");
-        dark_theme = config.get_boolean_property ("dark-theme");
-    }
-
-    /**
-     * Destruction occurs when object goes out of scope.
-     * XXX deprecated since CLD task addition
-     */
-    ~ApplicationModel () {
-        /* Stop hardware threads. */
-        stop_acquisition ();
     }
 
     /**
@@ -180,135 +136,6 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
      */
     private void config_property_changed_cb (string property) {
         //message ("Property '%s' was changed.\n", property);
-    }
-
-    /**
-     * Start the thread that handles data acquisition.
-     * XXX this is possibly more aptly placed in the controller
-     */
-    public void start_acquisition () {
-
-        var multiplexers = ctx.get_object_map (typeof (Cld.Multiplexer));
-        bool using_mux = (multiplexers.size > 0);
-
-        /* Manually open all of the devices */
-        var devices = ctx.get_object_map (typeof (Cld.Device));
-        foreach (var device in devices.values) {
-
-            if (!(device as Cld.ComediDevice).is_open) {
-                message ("  Opening Comedi Device: `%s'", device.id);
-                (device as Cld.ComediDevice).open ();
-                if (!(device as Cld.ComediDevice).is_open)
-                    error ("Failed to open Comedi device: `%s'", device.id);
-            }
-
-            if (!using_mux) {
-                message ("Starting tasks for: `%s'", device.id);
-                var tasks = (device as Cld.Container).get_object_map (typeof (Cld.Task));
-                foreach (var task in tasks.values) {
-                    //if ((task as Cld.ComediTask).direction == "read") {
-                        message ("  Starting task: `%s'", task.id);
-                        (task as Cld.ComediTask).run ();
-                    //}
-                }
-            }
-        }
-
-        if (using_mux) {
-            var acq_ctls = ctx.get_object_map (typeof (Cld.AcquisitionController));
-            foreach (var acq_ctl in acq_ctls.values) {
-                (acq_ctl as Cld.AcquisitionController).run ();
-            }
-        }
-
-        /* XXX should check that the task started properly */
-        acquisition_state_changed (true);
-    }
-
-    /**
-     * Stops the thread that handles data acquisition.
-     * XXX this is possibly more aptly placed in the controller
-     */
-    public void stop_acquisition () {
-
-        var multiplexers = ctx.get_object_map (typeof (Cld.Multiplexer));
-        bool using_mux = (multiplexers.size > 0);
-
-        /* Manually close all of the devices */
-        var devices = ctx.get_object_map (typeof (Cld.Device));
-        foreach (var device in devices.values) {
-
-            if (!using_mux) {
-                message ("Stopping tasks for: `%s'", device.id);
-                var tasks = (device as Cld.Container).get_object_map (typeof (Cld.Task));
-                foreach (var task in tasks.values) {
-                    if (task is Cld.ComediTask) {
-                        //if ((task as Cld.ComediTask).direction == "read") {
-                            message ("  Stopping task: `%s` ", task.id);
-                            (task as Cld.ComediTask).stop ();
-                        //}
-                    }
-                }
-            }
-
-            if ((device as Cld.ComediDevice).is_open) {
-                message ("Closing Comedi Device: %s", device.id);
-                (device as Cld.ComediDevice).close ();
-                if ((device as Cld.ComediDevice).is_open)
-                    error ("Failed to close Comedi device: %s", device.id);
-            }
-        }
-
-        /* XXX should check that the task stopped properly */
-        acquisition_state_changed (false);
-    }
-
-    /**
-     * Starts the thread that handles output channels.
-     */
-    public void start_device_output () {
-        var devices = ctx.get_object_map (typeof (Cld.Device));
-        foreach (var device in devices.values) {
-            if (!(device as Cld.ComediDevice).is_open) {
-                message ("Opening Comedi Device: %s", device.id);
-                (device as Cld.ComediDevice).open ();
-            }
-
-            if (!(device as Cld.ComediDevice).is_open)
-                error ("Failed to open Comedi device: %s", device.id);
-
-            foreach (var task in (device as Cld.Container).get_objects ().values) {
-                if (task is Cld.ComediTask) {
-                    if ((task as Cld.ComediTask).direction == "write")
-                        (task as Cld.ComediTask).run ();
-                }
-            }
-        }
-    }
-
-    /**
-     * Stops the thread that handles output channels.
-     */
-    public void stop_device_output () {
-        var devices = ctx.get_object_map (typeof (Cld.Device));
-        foreach (var device in devices.values) {
-            message ("Stopping tasks for: %s", device.id);
-            foreach (var task in (device as Cld.Container).get_objects ().values) {
-                if (task is Cld.ComediTask) {
-                    if ((task as Cld.ComediTask).direction == "write") {
-                        message ("  Stopping task: %s", task.id);
-                        (task as Cld.ComediTask).stop ();
-                    }
-                }
-            }
-            /*
-            (device as Cld.ComediDevice).close ();
-
-            if ((device as Cld.ComediDevice).is_open) {
-                GLib.message ("Failed to close Comedi device: %s", device.id);
-            }
-            */
-        }
     }
 
     /**

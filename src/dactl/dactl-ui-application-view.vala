@@ -150,7 +150,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
 
         layout.show_all ();
 
-        layout_change_page (model.startup_page);
+        layout_change_page ((model as Dactl.UI.ApplicationModel).startup_page);
         connect_signals ();
     }
 
@@ -290,7 +290,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         var default_modifiers = Gtk.accelerator_get_default_mod_mask ();
 
         if (event.keyval == Gdk.Key.Home) {             // Home -> go to default page
-            layout_change_page (model.startup_page);
+            layout_change_page ((model as Dactl.UI.ApplicationModel).startup_page);
         } else if (event.keyval == Gdk.Key.F11) {       // F11 -> fullscreen
             if (state == Dactl.UI.WindowState.WINDOWED) {
                 (this as Gtk.Window).fullscreen ();

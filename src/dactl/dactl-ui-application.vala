@@ -94,7 +94,8 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         assert (model != null);
 
         (model as Dactl.Container).print_objects (0);
-        Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = model.dark_theme;
+        Gtk.Settings.get_default ().gtk_application_prefer_dark_theme =
+            (model as Dactl.UI.ApplicationModel).dark_theme;
 
         debug ("Finished constructing the model");
 
@@ -134,10 +135,10 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         connect_signals ();
         add_actions ();
 
-        lock (model) {
+        lock (controller) {
             debug ("Starting device acquisition and output tasks");
-            model.start_acquisition ();
-            model.start_device_output ();
+            controller.start_acquisition ();
+            controller.start_device_output ();
         }
 
         debug ("Application activation completed");
@@ -330,8 +331,8 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
         lock (model) {
             debug ("Stopping device acquisition and output tasks");
-            model.stop_acquisition ();
-            //model.stop_device_output ();
+            controller.stop_acquisition ();
+            controller.stop_device_output ();
         }
 
         /* Let someone else deal with shutting down. */
@@ -409,36 +410,41 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     }
 
     public override void open (GLib.File[] files, string hint) {
+		try {
+            var tmp = File.new_for_path ("/tmp/dactl.out");
+            var ios = tmp.create_readwrite (FileCreateFlags.PRIVATE);
+            var os = ios.output_stream;
+            var dos = new DataOutputStream (os);
+            dos.put_string ("Test output:\n\n");
 
-        var tmp = File.new_for_path ("/tmp/dactl.out");
-        var ios = tmp.create_readwrite (FileCreateFlags.PRIVATE);
-        var os = ios.output_stream;
-        var dos = new DataOutputStream (os);
-        dos.put_string ("Test output:\n\n");
+            foreach (var file in files) {
+                stderr.printf ("Reading from file: %s\n", file.get_uri ());
+                dos.put_string ("Reading from file: %s\n".printf (file.get_uri ()));
 
-        foreach (var file in files) {
-            stderr.printf ("Reading from file: %s\n", file.get_uri ());
-            dos.put_string ("Reading from file: %s\n".printf (file.get_uri ()));
-
-            try {
-                //var arrangement = Tabler.load_from_file (file.get_uri ());
-                //create_window (arrangement);
-            } catch (GLib.Error e) {
-                stderr.printf (_("An error occured while reading file %s: %s\n"),
-                               file.get_uri (), e.message);
-                dos.put_string (_("An error occured while reading file %s: %s\n".printf (
-                                file.get_uri (), e.message)));
-                //create_window (new Arrangement ());
-                //show_error (_("Invalid file"), _("Error loading %s."),
-                            //file.get_basename ());
-                continue;
-            } catch (FileError e) {
-                //create_window (new Arrangement ());
-                //show_error (_("File not found or could not be read."),
-                            //_("%s not found or could not be read."), file.get_path ());
-                continue;
+                try {
+                    //var arrangement = Tabler.load_from_file (file.get_uri ());
+                    //create_window (arrangement);
+                } catch (GLib.Error e) {
+                    stderr.printf (_("An error occured while reading file %s: %s\n"),
+                                file.get_uri (), e.message);
+                    dos.put_string (_("An error occured while reading file %s: %s\n".printf (
+                                    file.get_uri (), e.message)));
+                    //create_window (new Arrangement ());
+                    //show_error (_("Invalid file"), _("Error loading %s."),
+                                //file.get_basename ());
+                    continue;
+                } catch (FileError e) {
+                    //create_window (new Arrangement ());
+                    //show_error (_("File not found or could not be read."),
+                                //_("%s not found or could not be read."), file.get_path ());
+                    continue;
+                }
             }
-        }
+		} catch (Error e) {
+            error ("Received error %s", e.message);
+		} catch (IOError e) {
+            error ("Received I/O error %s", e.message);
+		}
     }
 
     /**
@@ -618,11 +624,13 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         /* XXX locking the model may not be necessary, from older version */
         if (!active) {
             lock (model) {
-                model.start_acquisition ();
+                controller.start_acquisition ();
+                controller.start_device_output ();
             }
         } else {
             lock (model) {
-                model.stop_acquisition ();
+                controller.stop_acquisition ();
+                controller.stop_device_output ();
             }
         }
         this.release ();

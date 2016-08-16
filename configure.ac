@@ -219,9 +219,12 @@ PKG_CHECK_MODULES(LIBDACTL_LOG, [gio-2.0 >= glib_required_version
                                  libpeas-1.0 >= peas_required_version
                                  libzmq >= zmq_required_version
                                  cld-0.3 >= cld_required_version])
-PKG_CHECK_MODULES(LIBDACTL_NET, [libsoup-2.4 >= soup_required_version
+PKG_CHECK_MODULES(LIBDACTL_NET, [gee-0.8 >= gee_required_version
                                  json-glib-1.0 >= json_required_version
-                                 libzmq > zmq_required_version])
+                                 libpeas-1.0 >= peas_required_version
+                                 libsoup-2.4 >= soup_required_version
+                                 libzmq > zmq_required_version
+                                 cld-0.3 >= cld_required_version])
 PKG_CHECK_MODULES(LIBDACTL_UI, [gio-2.0 >= glib_required_version
                                 gee-0.8 >= gee_required_version
                                 gtk+-3.0 >= gtk_required_version

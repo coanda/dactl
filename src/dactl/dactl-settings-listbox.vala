@@ -289,7 +289,11 @@ public class Dactl.PropertyBox : Gtk.Box {
                     break;
             }
 
-            dialog.set_file (file);
+            try {
+                dialog.set_file (file);
+            } catch (GLib.Error e) {
+                GLib.warning ("Message: %s Error code: %d", e.message, e.code);
+            }
             button.set_label (file.get_basename ());
             debug ("file: %s folder: %s", file.get_uri (), dialog.get_uri ());
             value = file;

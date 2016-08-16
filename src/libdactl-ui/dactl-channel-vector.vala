@@ -193,7 +193,7 @@ public class Dactl.ChannelVector : GLib.Object, Dactl.Object,
             Dactl.ChannelVectorElement e = element as Dactl.ChannelVectorElement;
             references.add (e.chref);
             channel_xvalues.set (e.chref, e.xvalue);
-            data+= new Dactl.SimplePoint ();
+            data += Dactl.SimplePoint ();
             channel_indexes.set (e.chref, data.length - 1);
         }
 

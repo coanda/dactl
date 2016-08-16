@@ -26,11 +26,13 @@ libdactl_daq_0_3_la_public_headers = \
 libdactl_daq_0_3_la_public_sources = \
 	dactl-daq-channel.c \
 	dactl-daq-device-manager.c \
+	dactl-daq-factory.c \
 	$(NULL)
 
 libdactl_daq_0_3_la_VALASOURCES = \
 	dactl-daq-channel.vala \
 	dactl-daq-device-manager.vala \
+	dactl-daq-factory.vala \
 	$(NULL)
 
 libdactl_daq_0_3_la_SOURCES = \

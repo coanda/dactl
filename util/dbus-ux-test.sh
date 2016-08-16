@@ -26,7 +26,7 @@ function dbus_call {
 
 read -r -d '' JSON << EOM
 {
-  'type': 'DactlWindow',
+  'type': 'DactlUIWindow',
   'properties': {
     'dest': '',
     'id': 'win0'
@@ -50,9 +50,9 @@ read -r -d '' JSON << EOM
 }
 EOM
 
-dbus_call $SESSION $PATH "AddWidget" "$JSON"
+#dbus_call $SESSION $PATH "AddWidget" "$JSON"
 
-dbus_call $SESSION $PATH "AddWidget" "{ 'type': 'DactlWindow', 'properties': { 'dest': '', 'id': 'win0' } }"
+dbus_call $SESSION $PATH "AddWidget" "{ 'type': 'DactlUIWindow', 'properties': { 'dest': '', 'id': 'win0' } }"
 
 #dbus_call $SESSION $PATH "ListPages"
 dbus_call $SESSION $PATH "AddWidget" "{ 'type': 'DactlPage', 'properties': { 'dest': 'win0', 'id': 'pg1' } }"

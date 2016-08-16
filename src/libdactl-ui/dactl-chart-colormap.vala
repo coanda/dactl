@@ -372,10 +372,10 @@ protected class Dactl.ColorMap : Dactl.Canvas, Dactl.Buildable, Dactl.Object {
             Gdk.RGBA color = Gdk.RGBA ();
             switch (gradient) {
                 case Dactl.ColorGradientType.RGB:
-                    color = Dactl.rgb_lerp (value, min_color, 0, max_color, 1);
+                    color = Dactl.UI.rgb_lerp (value, min_color, 0, max_color, 1);
                     break;
                 case Dactl.ColorGradientType.HSV:
-                    color = Dactl.hsv_lerp (value, min_color, 0, max_color, 1);
+                    color = Dactl.UI.hsv_lerp (value, min_color, 0, max_color, 1);
                     break;
                 default:
                     break;

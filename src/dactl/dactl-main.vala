@@ -81,7 +81,7 @@ internal class Dactl.Main : GLib.Object {
      *     when this happens
      */
     public void exit (int exit_code) {
-        exit_code = exit_code;
+        this.exit_code = exit_code;
         Dactl.SysLog.shutdown ();
         (app as Dactl.UI.Application).shutdown ();
     }

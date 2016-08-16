@@ -23,16 +23,19 @@ libdactl_net_0_3_la_public_headers = \
 
 libdactl_net_0_3_la_public_sources = \
 	dactl-net-enum.c \
+	dactl-net-factory.c \
+	dactl-net-rest-service.c \
 	dactl-net-zmq-service.c \
 	dactl-net-zmq-client.c \
-	dactl-net-rest-service.c \
 	$(NULL)
 
 libdactl_net_0_3_la_VALASOURCES = \
 	dactl-net-enum.vala \
+	dactl-net-factory.vala \
+	dactl-net-rest-service.vala \
+	dactl-net-zmq-service.c \
 	dactl-net-zmq-service.vala \
 	dactl-net-zmq-client.vala \
-	dactl-net-rest-service.vala \
 	$(NULL)
 
 libdactl_net_0_3_la_SOURCES = \

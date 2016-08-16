@@ -199,8 +199,8 @@ public class Dactl.PolarChartGrid : Cairo.Context {
         Gsl.Vector x = new Gsl.Vector (4);
         Gsl.Vector y = new Gsl.Vector (4);
         /* Find the graphical boundaries that will contain the axis limits */
-        var t1 = Dactl.degrees_to_radians (angle_axis.min);
-        var t2 = Dactl.degrees_to_radians (angle_axis.max);
+        var t1 = Dactl.UI.degrees_to_radians (angle_axis.min);
+        var t2 = Dactl.UI.degrees_to_radians (angle_axis.max);
 
         x.set (0, mag_axis.min * GLib.Math.cos (t1));
         x.set (1, mag_axis.min * GLib.Math.cos (t2));
@@ -273,8 +273,8 @@ public class Dactl.PolarChartGrid : Cairo.Context {
         limits (mag_axis, angle_axis, w, h,
                                     out x_max, out x_min, out y_max, out y_min);
 
-        var t1 = Dactl.degrees_to_radians (angle_axis.min);
-        var t2 = Dactl.degrees_to_radians (angle_axis.max);
+        var t1 = Dactl.UI.degrees_to_radians (angle_axis.min);
+        var t2 = Dactl.UI.degrees_to_radians (angle_axis.max);
 
         /* scale the reference plane from magnitude units to pixels */
         var scale_x = (double)w / (x_max - x_min);
