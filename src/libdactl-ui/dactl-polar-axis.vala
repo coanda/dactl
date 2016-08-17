@@ -184,7 +184,7 @@ public class Dactl.PolarAxis : GLib.Object, Dactl.Buildable, Dactl.Object {
     /**
      * {@inheritDoc}
      */
-    public void build_from_xml_node (Xml.Node *node) {
+    internal void build_from_xml_node (Xml.Node *node) {
 
         string value;
 

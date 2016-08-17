@@ -60,7 +60,7 @@ public class Dactl.RTTrace : Dactl.Trace, Dactl.Container {
     /**
      * {@inheritDoc}
      */
-    public void build_from_xml_node (Xml.Node *node) {
+    internal void build_from_xml_node (Xml.Node *node) {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
             this.node = node;

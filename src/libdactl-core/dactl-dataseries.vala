@@ -103,22 +103,24 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
     /**
      * {@inheritDoc}
      */
-    public void build_from_xml_node (Xml.Node *node) {
+    internal void build_from_xml_node (Xml.Node *node) {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
             this.node = node;
             id = node->get_prop ("id");
             ch_ref = node->get_prop ("ref");
-            /* Iterate through node children */
 
+            /* Iterate through node children */
             for (Xml.Node *iter = node->children; iter != null; iter = iter->next) {
                 if (iter->name == "property") {
                     switch (iter->get_prop ("name")) {
                         case "buffer-size":
                             buffer_size = int.parse (iter->get_content ());
                             /* create an empty slot */
-                            var point = new Dactl.SimplePoint ()
-                                             { x = double.NAN, y = double.NAN };
+                            var point = Dactl.SimplePoint () {
+                                            x = double.NAN,
+                                            y = double.NAN
+                                        };
                             data += point;
                             break;
                         case "stride":
@@ -163,7 +165,7 @@ public class Dactl.DataSeries : GLib.Object, Dactl.Object, Dactl.Buildable, Dact
                 var now = GLib.get_monotonic_time ();
                 var dt = now - then;
                 then = now;
-                var point = new Dactl.SimplePoint () { x = dt, y = value };
+                var point = Dactl.SimplePoint () { x = dt, y = value };
 
                 if (end == buffer_size)
                     end = 0;

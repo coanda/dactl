@@ -58,7 +58,7 @@ public class Dactl.ChannelVectorElement : GLib.Object, Dactl.Object, Dactl.Build
     /**
      * {@inheritDoc}
      */
-    public void build_from_xml_node (Xml.Node *node) {
+    internal void build_from_xml_node (Xml.Node *node) {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
             this.node = node;
@@ -172,7 +172,7 @@ public class Dactl.ChannelVector : GLib.Object, Dactl.Object,
     /**
      * {@inheritDoc}
      */
-    public void build_from_xml_node (Xml.Node *node) {
+    internal void build_from_xml_node (Xml.Node *node) {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
             this.node = node;

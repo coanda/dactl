@@ -1,8 +1,8 @@
-/**
- * Based off of the example at - https://github.com/voldyman/plugin-app
- */
-
 public interface Dactl.Extension : GLib.Object {
+
+    /*
+     * Based off of the example at - "https://github.com/voldyman/plugin-app"
+     */
 
     /* Plugin construction */
     public abstract void activate ();

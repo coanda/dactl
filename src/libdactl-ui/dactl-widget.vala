@@ -181,9 +181,9 @@ public enum Dactl.ColorGradientType {
 /**
  * Interface for all widgets.
  *
- * XXX  Not all Dactl widgets are Gtk widgets so this is a lazy way of
- *      enforcing classes that implement this to contain any properties
- *      that are important.
+ * XXX Not all Dactl widgets are Gtk widgets so this is a lazy way of
+ * enforcing classes that implement this to contain any properties
+ * that are important.
  */
 public interface Dactl.Widget : GLib.Object {
 
@@ -208,8 +208,8 @@ public abstract class Dactl.Canvas : Gtk.DrawingArea, Dactl.Object {
 /**
  * Window base class to use with buildable child windows.
  *
- * XXX  Probably unnecessary as there will probably only ever be a single class
- *      that derives this.
+ * XXX Probably unnecessary as there will probably only ever be a single class
+ * that derives this.
  */
 public abstract class Dactl.UI.WindowBase : Gtk.ApplicationWindow, Dactl.Container, Dactl.Buildable, Dactl.Object {
 

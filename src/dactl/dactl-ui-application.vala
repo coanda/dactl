@@ -155,11 +155,14 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     }
 
     private void add_app_menu () {
-        //var view_menu = new GLib.Menu ();
-        //view_menu.append ("Data", "app.data");
-        //view_menu.append ("Configuration", "app.configuration");
-        //view_menu.append ("Recent", "app.recent");
-        //view_menu.append ("Digital I/O", "app.digio");
+        /*
+         *var view_menu = new GLib.Menu ();
+         *view_menu.append ("Configuration", "app.configuration");
+         *view_menu.append ("Loader", "app.loader");
+         *view_menu.append ("Data", "app.data");
+         *view_menu.append ("Recent", "app.recent");
+         *view_menu.append ("Digital I/O", "app.digio");
+         */
 
         var menu = new GLib.Menu ();
 
@@ -169,6 +172,10 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
             admin_menu.append ("Defaults", "app.defaults");
             menu.append_submenu ("Admin", admin_menu);
         }
+
+        /*
+         *menu.append_section (null, view_menu);
+         */
 
         //menu.append_section (null, settings_menu);
         var preferences_section = new GLib.Menu ();

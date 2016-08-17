@@ -210,7 +210,7 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
     /**
      * {@inheritDoc}
      */
-    public void build_from_xml_node (Xml.Node *node) {
+    internal void build_from_xml_node (Xml.Node *node) {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
             id = node->get_prop ("id");

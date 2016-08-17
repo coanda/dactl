@@ -27,5 +27,5 @@ public interface Dactl.Buildable : GLib.Object {
      *
      * @param node XML node to construction the object from
      */
-    public abstract void build_from_xml_node (Xml.Node *node);
+    internal abstract void build_from_xml_node (Xml.Node *node);
 }
