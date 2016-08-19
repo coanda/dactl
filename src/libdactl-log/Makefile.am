@@ -107,6 +107,7 @@ $(builddir)/DactlLog-0.3.gir: $(srcdir)/Dactl-0.3.gir
 	$(AM_V_GEN)$(SED) \
 		-e 's,Dactl\.,DactlLog.,g' \
 		-e 's,namespace name="Dactl",namespace name="DactlLog",g' \
+		-e 's,DactlLog\.Extension,DactlCore.Extension,g' \
 		-e 's,<package name="dactl-log-0.3"/>,<include name="DactlCore" version="0.3"/>\n<package name="dactl-log-0.3"/>,' \
 		$< >$@
 GIRS = DactlLog-0.3.gir

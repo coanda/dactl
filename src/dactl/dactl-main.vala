@@ -62,12 +62,12 @@ internal class Dactl.Main : GLib.Object {
         factory = Dactl.ApplicationFactory.get_default ();
         plugin_loader = new Dactl.PluginLoader ();
 
-        /* XXX testing Peas plugin manager */
-        plugin_manager = new Dactl.UI.PluginManager ();
-
         exit_code = 0;
 
         app = Dactl.UI.Application.get_default ();
+
+        /* XXX testing Peas plugin manager */
+        plugin_manager = new Dactl.UI.PluginManager (app.view);
 
         plugin_loader.plugin_available.connect (on_plugin_loaded);
 

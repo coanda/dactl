@@ -37,7 +37,6 @@ libdactl_device_arduino_la_CFLAGS = \
 	-DG_LOG_DOMAIN=\"arduino-device\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(DEVICE_CFLAGS) \
-	$(LIBDACTL_DAQ_CFLAGS) \
 	-Wno-deprecated-declarations \
 	-Wno-discarded-qualifiers \
 	-Wno-implicit-function-declaration \
@@ -51,7 +50,6 @@ libdactl_device_arduino_la_LIBADD = $(DEVICE_LIBS)
 
 libdactl_device_arduino_la_LDFLAGS = \
 	$(DEVICE_LDFLAGS) \
-	$(LIBDACTL_DAQ_LDFLAGS) \
 	$(NULL)
 
 include $(top_srcdir)/src/devices/Makefile.device

@@ -18,7 +18,9 @@ public class Dactl.MetaConfig : Dactl.AbstractConfig {
             try {
                 value = config.get_string (ns, key);
             } catch (Dactl.ConfigError e) {
-                debug (e.message);
+                if (!(e is Dactl.ConfigError.NO_VALUE_SET)) {
+                    throw e;
+                }
             }
         }
 
@@ -41,7 +43,9 @@ public class Dactl.MetaConfig : Dactl.AbstractConfig {
             try {
                 value = config.get_string_list (ns, key);
             } catch (Dactl.ConfigError e) {
-                debug (e.message);
+                if (!(e is Dactl.ConfigError.NO_VALUE_SET)) {
+                    throw e;
+                }
             }
         }
 
@@ -66,7 +70,9 @@ public class Dactl.MetaConfig : Dactl.AbstractConfig {
                 value = config.get_int (ns, key);
                 value_set = true;
             } catch (Dactl.ConfigError e) {
-                debug (e.message);
+                if (!(e is Dactl.ConfigError.NO_VALUE_SET)) {
+                    throw e;
+                }
             }
         }
 
@@ -89,7 +95,9 @@ public class Dactl.MetaConfig : Dactl.AbstractConfig {
             try {
                 value = config.get_int_list (ns, key);
             } catch (Dactl.ConfigError e) {
-                debug (e.message);
+                if (!(e is Dactl.ConfigError.NO_VALUE_SET)) {
+                    throw e;
+                }
             }
         }
 
@@ -114,7 +122,9 @@ public class Dactl.MetaConfig : Dactl.AbstractConfig {
                 value = config.get_bool (ns, key);
                 value_set = true;
             } catch (Dactl.ConfigError e) {
-                debug (e.message);
+                if (!(e is Dactl.ConfigError.NO_VALUE_SET)) {
+                    throw e;
+                }
             }
         }
 

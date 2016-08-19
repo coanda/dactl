@@ -26,6 +26,7 @@ dactl_VALAFLAGS = \
 	--pkg json-glib-1.0
 
 dactl_includes = \
+	$(DEBUG_CFLAGS) \
 	-include config.h \
 	-DLOCALEDIR=\""$(datadir)/locale"\" \
 	-DDATADIR=\""$(sharedir)"\"
@@ -38,8 +39,8 @@ dactl_CFLAGS = \
 	$(DACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS) \
+	$(LIBDACTL_CFLAGS) \
 	$(LIBDACTL_UI_CFLAGS) \
-	$(DEBUG_CFLAGS) \
 	$(OPTIMIZE_CFLAGS) \
 	$(dactl_includes) \
 	-Wno-deprecated-declarations \
@@ -56,6 +57,7 @@ dactl_LDADD = \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_UI_LIBS) \
+	$(LIBDACTL_LIBS) \
 	$(LIBDACTL_UI_LIBS)
 
 

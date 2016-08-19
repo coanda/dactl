@@ -27,6 +27,8 @@ public abstract class Dactl.Net.ZmqService : GLib.Object {
      */
     public string address { get; construct set; default = "*"; }
 
+    public signal void data_published (uint8[] data);
+
     public ZmqService () {
         try {
             zmq_init ();

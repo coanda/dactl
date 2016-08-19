@@ -1,4 +1,4 @@
-internal class Dactl.DAQ.ZmqService : Dactl.Net.ZmqService {
+public class Dactl.DAQ.ZmqService : Dactl.Net.ZmqService {
 
     public ZmqService () {
         base ();
@@ -31,6 +31,7 @@ internal class Dactl.DAQ.ZmqService : Dactl.Net.ZmqService {
                     string str = @"\"data\": { \"grp0\": [ 0.0, 1.0, 2.0 ] }";
                     var reply = ZMQ.Msg.with_data (str.data);
                     var n = reply.send (publisher);
+                    data_published (str.data);
                     Posix.sleep (1);
                     ntimes++;
                 }

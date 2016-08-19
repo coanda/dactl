@@ -23,11 +23,11 @@ public class Dactl.Log.BackendManager : Dactl.PluginManager {
                                             null);
 
         extensions.extension_added.connect ((info, extension) => {
-            (extension as Dactl.Extension).activate ();
+            (extension as Peas.Activatable).activate ();
         });
 
         extensions.extension_removed.connect ((info, extension) => {
-            (extension as Dactl.Extension).deactivate ();
+            (extension as Peas.Activatable).deactivate ();
         });
     }
 }

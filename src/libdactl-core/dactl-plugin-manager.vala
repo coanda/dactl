@@ -1,25 +1,35 @@
-public interface Dactl.Extension : GLib.Object {
+/*
+ *public abstract class Dactl.Extension : Peas.ExtensionBase, Peas.Activatable {
+ *
+ *    public abstract GLib.Object object { construct; owned get; }
+ *
+ *    [> Plugin construction <]
+ *    public abstract void activate ();
+ *
+ *    [> Plugin deconstruction <]
+ *    public abstract void deactivate ();
+ *
+ *    public abstract void update_state ();
+ *}
+ */
 
-    /*
-     * Based off of the example at - "https://github.com/voldyman/plugin-app"
-     */
+public abstract class Dactl.Extension : Peas.ExtensionBase {
 
-    /* Plugin construction */
-    public abstract void activate ();
-
-    /* Plugin deconstruction */
-    public abstract void deactivate ();
 }
 
-public class Dactl.PluginExtension : GLib.Object, Dactl.Extension {
+public class Dactl.PluginExtension : Dactl.Extension, Peas.Activatable {
 
-    public virtual void activate () {
+    public GLib.Object object { construct; owned get; }
+
+    public void activate () {
         message ("Extension added");
     }
 
-    public virtual void deactivate () {
+    public void deactivate () {
         message ("Extension removed");
     }
+
+    public void update_state () { }
 }
 
 public abstract class Dactl.PluginManager {
@@ -45,7 +55,7 @@ public abstract class Dactl.PluginManager {
     protected virtual void load_plugins () {
         foreach (var plug in engine.get_plugin_list ()) {
             if (engine.try_load_plugin (plug)) {
-                warning (_("Plugin loaded: " + plug.get_name ()));
+                debug (_("Plugin loaded: " + plug.get_name ()));
             }
         }
     }

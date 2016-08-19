@@ -47,6 +47,8 @@ libdactl_ui_0_3_la_SOURCES = \
 
 libdactl_ui_0_3_la_includes = \
 	$(DEBUG_CFLAGS) \
+	-I$(top_srcdir)/src/libdactl-core \
+	-I$(top_srcdir)/src/libdactl-net \
 	$(NULL)
 
 libdactl_ui_0_3_la_VALAFLAGS = \
@@ -78,6 +80,7 @@ libdactl_ui_0_3_la_CFLAGS = \
 	-DG_LOG_DOMAIN=\"libdactl-ui\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(AM_CFLAGS) \
+	$(LIBDACTL_CFLAGS) \
 	$(LIBDACTL_UI_CFLAGS) \
 	$(DACTL_CLD_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
@@ -97,6 +100,7 @@ libdactl_ui_0_3_la_LDFLAGS = \
 	-version-info $(LIBDACTL_UI_VERSION)
 
 libdactl_ui_0_3_la_LIBADD = \
+	$(LIBDACTL_LIBS) \
 	$(LIBDACTL_UI_LIBS) \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS)
@@ -124,12 +128,14 @@ INTROSPECTION_COMPILER_ARGS = \
 	--includedir=$(builddir)/../libdactl-core \
 	--includedir=$(srcdir)/../libdactl-core
 $(builddir)/DactlUI-0.3.gir: $(srcdir)/Dactl-0.3.gir
-	$(AM_V_GEN)$(SED) -e 's,Dactl\.,DactlUI.,g' \
+	$(AM_V_GEN)$(SED) \
+		-e 's,Dactl\.,DactlUI.,g' \
 		-e 's,namespace name="Dactl",namespace name="DactlUI",g' \
 		-e 's,DactlUI\.Object,DactlCore.Object,g' \
 		-e 's,DactlUI\.Buildable,DactlCore.Buildable,g' \
 		-e 's,DactlUI\.Container,DactlCore.Container,g' \
 		-e 's,DactlUI\.CldAdapter,DactlCore.CldAdapter,g' \
+		-e 's,DactlUI\.Extension,DactlCore.Extension,g' \
 		-e 's,DactlUI\.Factory,DactlCore.Factory,g' \
 		-e 's,<package name="dactl-ui-0.3"/>,<include name="DactlCore" version="0.3"/>\n<package name="dactl-ui-0.3"/>,' \
 		$< >$@

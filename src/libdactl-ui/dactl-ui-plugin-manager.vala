@@ -1,21 +1,33 @@
-public class Dactl.UI.Extension : GLib.Object, Dactl.Extension {
+public class Dactl.UI.Plugin : Dactl.Extension, Peas.Activatable {
 
-    public Dactl.Widget widget { get; construct set; }
+    public Dactl.ApplicationView view;
 
-    public virtual void activate () {
+    public GLib.Object object { construct; owned get; }
+
+    public Plugin (Dactl.ApplicationView view) {
+        this.view = view;
+    }
+
+    public void activate () {
         message ("UI extension added");
     }
 
-    public virtual void deactivate () {
+    public void deactivate () {
         message ("UI extension removed");
     }
+
+    public void update_state () { }
 }
 
 public class Dactl.UI.PluginManager : Dactl.PluginManager {
 
-    public PluginManager () {
+    private Dactl.ApplicationView view;
+
+    public PluginManager (Dactl.ApplicationView view) {
+        this.view = view;
+
         engine = Peas.Engine.get_default ();
-        ext = new Dactl.UI.Extension ();
+        ext = new Dactl.UI.Plugin (view);
 
         init ();
         add_extension ();
@@ -31,11 +43,11 @@ public class Dactl.UI.PluginManager : Dactl.PluginManager {
                                             null);
 
         extensions.extension_added.connect ((info, extension) => {
-            (extension as Dactl.UI.Extension).activate ();
+            (extension as Peas.Activatable).activate ();
         });
 
         extensions.extension_removed.connect ((info, extension) => {
-            (extension as Dactl.UI.Extension).deactivate ();
+            (extension as Peas.Activatable).deactivate ();
         });
     }
 }
