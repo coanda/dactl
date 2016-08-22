@@ -1,11 +1,3 @@
-namespace Dactl {
-    public errordomain ConfigError {
-        FILE_NOT_FOUND,
-        XML_DOCUMENT_EMPTY,
-        INVALID_XPATH_EXPR
-    }
-}
-
 /**
  * Configuration data that loads XML configuration and is used to retrieve user
  * defined settings.

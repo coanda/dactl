@@ -43,6 +43,8 @@ public abstract class Dactl.Net.ZmqClient : GLib.Object {
         }
     }
 
+    public signal void data_received (uint8[] data);
+
     public ZmqClient () {
         try {
             zmq_init ();

@@ -4,9 +4,9 @@ public class Dactl.DAQ.Server : Dactl.CLI.Application {
 
     private GLib.MainLoop loop;
 
-    private Dactl.DAQ.RestService rest_service;
+    public Dactl.DAQ.RestService rest_service;
 
-    private Dactl.DAQ.ZmqService zmq_service;
+    public Dactl.DAQ.ZmqService zmq_service;
 
     public static unowned Dactl.DAQ.Server get_default () {
         return _instance.once (() => {

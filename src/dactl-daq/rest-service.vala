@@ -1,4 +1,4 @@
-internal class Dactl.DAQ.RestService : Dactl.Net.RestService {
+public class Dactl.DAQ.RestService : Dactl.Net.RestService {
 
     /*
      *private const Dactl.Net.RouteEntry[] routes = {

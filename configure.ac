@@ -219,14 +219,18 @@ PKG_CHECK_MODULES(LIBDACTL_LOG, [gio-2.0 >= glib_required_version
                                  libpeas-1.0 >= peas_required_version
                                  libzmq >= zmq_required_version
                                  cld-0.3 >= cld_required_version])
-PKG_CHECK_MODULES(LIBDACTL_NET, [libsoup-2.4 >= soup_required_version
+PKG_CHECK_MODULES(LIBDACTL_NET, [gee-0.8 >= gee_required_version
                                  json-glib-1.0 >= json_required_version
-                                 libzmq > zmq_required_version])
+                                 libpeas-1.0 >= peas_required_version
+                                 libsoup-2.4 >= soup_required_version
+                                 libzmq > zmq_required_version
+                                 cld-0.3 >= cld_required_version])
 PKG_CHECK_MODULES(LIBDACTL_UI, [gio-2.0 >= glib_required_version
                                 gee-0.8 >= gee_required_version
                                 gtk+-3.0 >= gtk_required_version
                                 gtksourceview-3.0 >= gtk_required_version
                                 cld-0.3 >= cld_required_version
+                                json-glib-1.0 >= json_required_version
                                 libxml-2.0 >= libxml_required_version
                                 libpeas-1.0 >= peas_required_version
                                 libpeas-gtk-1.0 >= peas_required_version
@@ -517,6 +521,8 @@ DEVICE_CFLAGS="$DEVICE_CFLAGS -I\$(top_srcdir)/src/libdactl-core"
 DEVICE_CFLAGS="$DEVICE_CFLAGS -I\$(top_srcdir)/src/libdactl-daq"
 DEVICE_CFLAGS="$DEVICE_CFLAGS -I\$(top_srcdir)/src/libdactl-net"
 DEVICE_CFLAGS="$DEVICE_CFLAGS $LIBDACTL_CORE_CFLAGS"
+DEVICE_CFLAGS="$DEVICE_CFLAGS $LIBDACTL_NET_CFLAGS"
+DEVICE_CFLAGS="$DEVICE_CFLAGS $LIBDACTL_DAQ_CFLAGS"
 DEVICE_CFLAGS="$DEVICE_CFLAGS $DEBUG_CFLAGS"
 DEVICE_CFLAGS="$DEVICE_CFLAGS $OPTIMIZE_CFLAGS"
 AC_SUBST(DEVICE_CFLAGS)
@@ -547,6 +553,8 @@ BACKEND_CFLAGS="$BACKEND_CFLAGS -I\$(top_srcdir)/src/libdactl-core"
 BACKEND_CFLAGS="$BACKEND_CFLAGS -I\$(top_srcdir)/src/libdactl-log"
 BACKEND_CFLAGS="$BACKEND_CFLAGS -I\$(top_srcdir)/src/libdactl-net"
 BACKEND_CFLAGS="$BACKEND_CFLAGS $LIBDACTL_CORE_CFLAGS"
+BACKEND_CFLAGS="$BACKEND_CFLAGS $LIBDACTL_NET_CFLAGS"
+BACKEND_CFLAGS="$BACKEND_CFLAGS $LIBDACTL_LOG_CFLAGS"
 BACKEND_CFLAGS="$BACKEND_CFLAGS $DEBUG_CFLAGS"
 BACKEND_CFLAGS="$BACKEND_CFLAGS $OPTIMIZE_CFLAGS"
 AC_SUBST(BACKEND_CFLAGS)

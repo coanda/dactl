@@ -83,7 +83,9 @@ public class Dactl.Box : Dactl.CompositeWidget {
     /**
      * Default construction.
      */
-    public Box () { }
+    public Box () {
+        debug ("empty construction");
+    }
 
     /**
      * Construction using an XML node.
@@ -247,14 +249,17 @@ public class Dactl.Box : Dactl.CompositeWidget {
         objects.set (object.id, object);
         // FIXME: could probably just add them all as a Dactl.Widget
         if (object is Dactl.CustomWidget) {
+            debug ("Pack custom widget");
             pack_start (object as Dactl.CustomWidget,
                             (object as Gtk.Widget).expand,
                             (object as Dactl.Widget).fill, 0);
         } else if (object is Dactl.CompositeWidget) {
+            debug ("Pack composite widget");
             pack_start (object as Dactl.CompositeWidget,
                             (object as Gtk.Widget).expand,
                             (object as Dactl.Widget).fill, 0);
         } else if (object is Dactl.SimpleWidget) {
+            debug ("Pack simple widget");
             pack_start (object as Dactl.SimpleWidget,
                             (object as Gtk.Widget).expand,
                             (object as Dactl.Widget).fill, 0);
@@ -264,11 +269,14 @@ public class Dactl.Box : Dactl.CompositeWidget {
          * Without this the scaling of packed widgets doesn't always do what
          * you think it should.
          */
-        if (object is Dactl.Box) {
+        if (object is Dactl.UI.RichContent) {
+            debug ("Pack WebKit widget");
+            (parent as Gtk.Container).child_set_property (this as Gtk.Widget, "expand", true);
+            child_set_property (object as Gtk.Widget, "expand", true);
+        } else if (object is Dactl.Box) {
+            debug ("Pack box widget");
             //child_set_property (object as Gtk.Widget, "expand", true);
             child_set_property (object as Gtk.Widget, "fill", true);
-        } else if (object is Dactl.UI.RichContent) {
-            child_set_property (object as Gtk.Widget, "expand", true);
         }
 
         show_all ();

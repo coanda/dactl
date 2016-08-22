@@ -89,7 +89,7 @@ public class Dactl.ChannelTreeEntry : GLib.Object, Dactl.Object, Dactl.Buildable
     /**
      * {@inheritDoc}
      */
-    public void build_from_xml_node (Xml.Node *node) {
+    internal void build_from_xml_node (Xml.Node *node) {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
             id = node->get_prop ("id");
@@ -181,7 +181,7 @@ public class Dactl.ChannelTreeCategory : GLib.Object, Dactl.Object, Dactl.Builda
     /**
      * {@inheritDoc}
      */
-    public void build_from_xml_node (Xml.Node *node) {
+    internal void build_from_xml_node (Xml.Node *node) {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
             id = node->get_prop ("id");
@@ -365,37 +365,37 @@ public class Dactl.ChannelTreeView : Dactl.CompositeWidget, Dactl.CldAdapter {
                             break;
                         case "show-tag":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.TAG);
                             break;
                         case "show-desc":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.DESCRIPTION);
                             break;
                         case "show-value":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.VALUE);
                             break;
                         case "show-avg":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.AVG);
                             break;
                         case "show-sample-sdev":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.SSDEV);
                             break;
                         case "show-sample-size":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.SSIZE);
                             break;
                         case "show-units":
                             var value = iter->get_content ();
-                            if (bool.parse (value));
+                            if (bool.parse (value))
                                 columns.add (Columns.UNITS);
                             break;
                         default:

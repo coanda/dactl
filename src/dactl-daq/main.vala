@@ -51,11 +51,11 @@ internal class Dactl.DAQ.Main : GLib.Object {
         this.log = Dactl.SysLog.get_default ();
         log.init (true, null);
 
-        device_manager = new Dactl.DAQ.DeviceManager ();
-
         this.exit_code = 0;
 
         app = Dactl.DAQ.Server.get_default ();
+
+        device_manager = new Dactl.DAQ.DeviceManager ((app as Dactl.DAQ.Server).zmq_service);
 
         Unix.signal_add (Posix.SIGHUP,  () => { this.restart (); return true; });
         Unix.signal_add (Posix.SIGINT,  () => { this.exit (0);   return true; });

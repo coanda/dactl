@@ -43,6 +43,7 @@ public class Dactl.Recorder.ZmqClient : Dactl.Net.ZmqClient {
                     data[size - 1] = '\0';
                     var str = (string) data;
 
+                    data_received (data);
                     debug (_("received (%9d): %s"), ntimes, str);
                     ntimes++;
                 }

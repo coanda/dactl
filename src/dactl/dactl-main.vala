@@ -49,7 +49,7 @@ internal class Dactl.Main : GLib.Object {
     private Dactl.SysLog log;
 
     /* XXX testing Peas plugin manager */
-    private Dactl.PluginManager plugin_manager;
+    private Dactl.UI.PluginManager plugin_manager;
 
     private int exit_code;
 
@@ -62,12 +62,14 @@ internal class Dactl.Main : GLib.Object {
         factory = Dactl.ApplicationFactory.get_default ();
         plugin_loader = new Dactl.PluginLoader ();
 
-        /* XXX testing Peas plugin manager */
-        plugin_manager = new Dactl.UI.PluginManager ();
-
         exit_code = 0;
 
         app = Dactl.UI.Application.get_default ();
+
+        /* TODO transition to new Peas plugin manager */
+        (app as Dactl.UI.Application).view_constructed.connect (() => {
+            plugin_manager = new Dactl.UI.PluginManager (app.view);
+        });
 
         plugin_loader.plugin_available.connect (on_plugin_loaded);
 
@@ -81,7 +83,7 @@ internal class Dactl.Main : GLib.Object {
      *     when this happens
      */
     public void exit (int exit_code) {
-        exit_code = exit_code;
+        this.exit_code = exit_code;
         Dactl.SysLog.shutdown ();
         (app as Dactl.UI.Application).shutdown ();
     }

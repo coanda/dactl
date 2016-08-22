@@ -13,20 +13,25 @@ dactl_VALAFLAGS = \
 	-H $(srcdir)/libdactl.h -C -c \
 	--target-glib=2.44 \
 	--thread \
-	--vapidir=$(top_srcdir)/vapi \
-	--pkg posix \
-	--pkg linux \
 	--gresources $(gresource_file) \
 	$(DACTL_DEPS_VALAFLAGS) \
 	$(DACTL_CLD_DEPS_VALAFLAGS) \
 	$(DACTL_UI_DEPS_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_VALAFLAGS) \
-	$(DACTL_COMMON_VALAFLAGS)
+	$(DACTL_COMMON_VALAFLAGS) \
+	--vapidir=$(top_srcdir)/vapi \
+	--pkg posix \
+	--pkg linux \
+	--pkg json-glib-1.0
 
-dactl_CFLAGS = \
+dactl_includes = \
+	$(DEBUG_CFLAGS) \
 	-include config.h \
 	-DLOCALEDIR=\""$(datadir)/locale"\" \
+	-DDATADIR=\""$(sharedir)"\"
+
+dactl_CFLAGS = \
 	-DG_LOG_DOMAIN=\"dactl\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(DACTL_DEPS_CFLAGS) \
@@ -34,6 +39,10 @@ dactl_CFLAGS = \
 	$(DACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS) \
+	$(LIBDACTL_CFLAGS) \
+	$(LIBDACTL_UI_CFLAGS) \
+	$(OPTIMIZE_CFLAGS) \
+	$(dactl_includes) \
 	-Wno-deprecated-declarations \
 	-Wno-discarded-qualifiers \
 	-Wno-implicit-function-declaration \
@@ -47,7 +56,9 @@ dactl_LDADD = \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
-	$(DACTL_COMMON_LIBDACTL_UI_LIBS)
+	$(DACTL_COMMON_LIBDACTL_UI_LIBS) \
+	$(LIBDACTL_LIBS) \
+	$(LIBDACTL_UI_LIBS)
 
 
 if ENABLE_WEBKIT
@@ -95,7 +106,7 @@ UI_SOURCES = \
 	dactl-ui-application-model.vala \
 	dactl-ui-application-view.vala \
 	dactl-ui-application-controller.vala \
-	dactl-ux-manager.vala
+	dactl-ui-ux-manager.vala
 
 dactl_SOURCES = \
 	$(BUILT_SOURCES) \

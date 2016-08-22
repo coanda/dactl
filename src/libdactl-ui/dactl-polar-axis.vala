@@ -59,7 +59,7 @@ public class Dactl.PolarAxis : GLib.Object, Dactl.Buildable, Dactl.Object {
     public double min {
         get {
             if (axis_type == Dactl.PolarAxisType.ANGLE) {
-                var value = Dactl.degrees_to_positive (_min);
+                var value = Dactl.UI.degrees_to_positive (_min);
                 if (value == 360)
                     return 0;
                 else
@@ -79,7 +79,7 @@ public class Dactl.PolarAxis : GLib.Object, Dactl.Buildable, Dactl.Object {
     public double max {
         get {
             if (axis_type == Dactl.PolarAxisType.ANGLE) {
-                var value = Dactl.degrees_to_positive (_max);
+                var value = Dactl.UI.degrees_to_positive (_max);
                 if (value == 0)
                     return 360;
                 else
@@ -100,7 +100,7 @@ public class Dactl.PolarAxis : GLib.Object, Dactl.Buildable, Dactl.Object {
     public double intersect {
         get {
             if (axis_type == Dactl.PolarAxisType.ANGLE) {
-                var value = Dactl.degrees_to_positive (_intersect);
+                var value = Dactl.UI.degrees_to_positive (_intersect);
                 return value;
             } else {
                 return _intersect;
@@ -184,7 +184,7 @@ public class Dactl.PolarAxis : GLib.Object, Dactl.Buildable, Dactl.Object {
     /**
      * {@inheritDoc}
      */
-    public void build_from_xml_node (Xml.Node *node) {
+    internal void build_from_xml_node (Xml.Node *node) {
 
         string value;
 

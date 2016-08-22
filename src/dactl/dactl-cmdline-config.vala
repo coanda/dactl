@@ -2,9 +2,9 @@ public errordomain Dactl.CmdlineConfigError {
     VERSION_ONLY
 }
 
-public class Dactl.CmdlineConfig : GLib.Object, Dactl.Configuration {
+public class Dactl.CmdlineConfig : Dactl.AbstractConfig {
 
-    private static string log_levels;
+    public Dactl.ConfigFormat format { get; set; default = Dactl.ConfigFormat.OPTIONS; }
 
     private static bool version;
 
@@ -20,8 +20,6 @@ public class Dactl.CmdlineConfig : GLib.Object, Dactl.Configuration {
     const OptionEntry[] options = {
         { "version", 0, 0, OptionArg.NONE, ref version,
           "Display version number", null },
-        { "log-level", 'g', 0, OptionArg.STRING, ref log_levels,
-          N_ ("Comma-separated list of domain:level pairs. See dactl(1) for details") },
         { "plugin-path", 'u', 0, OptionArg.STRING, ref plugin_path,
           N_ ("Plugin Path"), "PLUGIN_PATH" },
         { "config", 'c', 0, OptionArg.FILENAME, ref config_file,
@@ -62,17 +60,9 @@ public class Dactl.CmdlineConfig : GLib.Object, Dactl.Configuration {
         }
     }
 
-    public string get_log_levels () throws GLib.Error {
-        if (log_levels == null) {
-            throw new ConfigurationError.NO_VALUE_SET (_("No value available"));
-        }
-
-        return log_levels;
-    }
-
     public string get_plugin_path () throws GLib.Error {
         if (plugin_path == null) {
-            throw new ConfigurationError.NO_VALUE_SET ("No value available");
+            throw new ConfigError.NO_VALUE_SET ("No value available");
         }
 
         return plugin_path;
@@ -80,147 +70,9 @@ public class Dactl.CmdlineConfig : GLib.Object, Dactl.Configuration {
 
     public string get_config_file () throws GLib.Error {
         if (config_file == null) {
-            throw new ConfigurationError.NO_VALUE_SET (_("No value available"));
+            throw new ConfigError.NO_VALUE_SET (_("No value available"));
         }
 
         return config_file;
-    }
-
-    public string get_string (string ns,
-                              string key) throws GLib.Error {
-        string value = null;
-        /*
-         *foreach (var option in plugin_options) {
-         *    var tokens = option.split (":", 3);
-         *    if (tokens[0] != null &&
-         *        tokens[1] != null &&
-         *        tokens[2] != null &&
-         *        tokens[0] == section &&
-         *        tokens[1] == key) {
-         *        value = tokens[2];
-         *        break;
-         *    }
-         *}
-         */
-
-        if (value != null) {
-            return value;
-        } else {
-            throw new ConfigurationError.NO_VALUE_SET (_("No value available"));
-        }
-    }
-
-    public Gee.ArrayList<string> get_string_list (string ns,
-                                                  string key)
-                                                  throws GLib.Error {
-        Gee.ArrayList<string> value = null;
-        /*
-         *foreach (var option in plugin_options) {
-         *    var tokens = option.split (":", 3);
-         *    if (tokens[0] != null &&
-         *        tokens[1] != null &&
-         *        tokens[2] != null &&
-         *        tokens[0] == section &&
-         *        tokens[1] == key) {
-         *        value = new ArrayList<string> ();
-         *        foreach (var val_token in tokens[2].split (",", -1)) {
-         *            value.add (val_token);
-         *        }
-         *        break;
-         *    }
-         *}
-         */
-
-        if (value != null) {
-            return value;
-        } else {
-            throw new ConfigurationError.NO_VALUE_SET (_("No value available"));
-        }
-    }
-
-    public int get_int (string ns,
-                        string key,
-                        int    min,
-                        int    max)
-                        throws GLib.Error {
-        int value = 0;
-        bool value_set = false;
-        /*
-         *foreach (var option in plugin_options) {
-         *    var tokens = option.split (":", 3);
-         *    if (tokens[0] != null &&
-         *        tokens[1] != null &&
-         *        tokens[2] != null &&
-         *        tokens[0] == section &&
-         *        tokens[1] == key) {
-         *        value = int.parse (tokens[2]);
-         *        if (value >= min && value <= max) {
-         *            value_set = true;
-         *        }
-         *        break;
-         *    }
-         *}
-         */
-
-        if (value_set) {
-            return value;
-        } else {
-            throw new ConfigurationError.NO_VALUE_SET (_("No value available"));
-        }
-    }
-
-    public Gee.ArrayList<int> get_int_list (string ns,
-                                            string key)
-                                            throws GLib.Error {
-        Gee.ArrayList<int> value = null;
-        /*
-         *foreach (var option in plugin_options) {
-         *    var tokens = option.split (":", 3);
-         *    if (tokens[0] != null &&
-         *        tokens[1] != null &&
-         *        tokens[2] != null &&
-         *        tokens[0] == section &&
-         *        tokens[1] == key) {
-         *        value = new ArrayList<int> ();
-         *        foreach (var val_token in tokens[2].split (",", -1)) {
-         *            value.add (int.parse (val_token));
-         *        }
-         *        break;
-         *    }
-         *}
-         */
-
-        if (value != null) {
-            return value;
-        } else {
-            throw new ConfigurationError.NO_VALUE_SET (_("No value available"));
-        }
-    }
-
-    public bool get_bool (string ns,
-                          string key)
-                          throws GLib.Error {
-        bool value = false;
-        bool value_set = false;
-        /*
-         *foreach (var option in plugin_options) {
-         *    var tokens = option.split (":", 3);
-         *    if (tokens[0] != null &&
-         *        tokens[1] != null &&
-         *        tokens[2] != null &&
-         *        tokens[0] == section &&
-         *        tokens[1] == key) {
-         *        value = bool.parse (tokens[2]);
-         *        value_set = true;
-         *        break;
-         *    }
-         *}
-         */
-
-        if (value_set) {
-            return value;
-        } else {
-            throw new ConfigurationError.NO_VALUE_SET (_("No value available"));
-        }
     }
 }

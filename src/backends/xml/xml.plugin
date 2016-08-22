@@ -1,5 +1,5 @@
 [Plugin]
-Module=dactl-xml
+Module=dactl-backend-xml
 Name=XML Backend Plugin
 Description=A backend plugin using an XML writer for logging.
 Authors=Geoff Johnson <geoff.johnson@coanda.ca>

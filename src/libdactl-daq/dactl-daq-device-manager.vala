@@ -1,20 +1,24 @@
-public class Dactl.DAQ.Extension : GLib.Object, Dactl.Extension {
+public class Dactl.DAQ.Device : GLib.Object {
 
-    public virtual void activate () {
-        message ("DAQ extension added");
-    }
+    public Dactl.Net.ZmqService zmq_service { get; construct set; }
 
-    public virtual void deactivate () {
-        message ("DAQ extension removed");
+    public Device (Dactl.Net.ZmqService zmq_service) {
+        debug ("Device constructor");
+        this.zmq_service = zmq_service;
     }
 }
 
 public class Dactl.DAQ.DeviceManager : Dactl.PluginManager {
 
-    public DeviceManager () {
+    private Dactl.Net.ZmqService zmq_service;
+
+    public Dactl.DAQ.Device ext { get; set; }
+
+    public DeviceManager (Dactl.Net.ZmqService zmq_service) {
+        this.zmq_service = zmq_service;
 
         engine = Peas.Engine.get_default ();
-        ext = new Dactl.DAQ.Extension ();
+        ext = new Dactl.DAQ.Device (zmq_service);
         search_path = Dactl.Config.DEVICE_DIR;
 
         init ();
@@ -24,9 +28,6 @@ public class Dactl.DAQ.DeviceManager : Dactl.PluginManager {
 
     protected override void add_extension () {
         // The extension set
-        Parameter param = GLib.Parameter ();
-        param.value = ext as Dactl.DAQ.Extension;
-        param.name = "object";
         extensions = new Peas.ExtensionSet (engine,
                                             typeof (Peas.Activatable),
                                             "object",
@@ -34,11 +35,11 @@ public class Dactl.DAQ.DeviceManager : Dactl.PluginManager {
                                             null);
 
         extensions.extension_added.connect ((info, extension) => {
-            (extension as Dactl.Extension).activate ();
+            (extension as Peas.Activatable).activate ();
         });
 
         extensions.extension_removed.connect ((info, extension) => {
-            (extension as Dactl.Extension).deactivate ();
+            (extension as Peas.Activatable).deactivate ();
         });
     }
 }

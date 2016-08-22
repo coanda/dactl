@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.19.0 -->
+<interface>
+  <requires lib="gtk+" version="3.16"/>
+  <template class="DactlUIWindow" parent="DactlUIWindowBase">
+    <property name="name">window</property>
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Dactl Child</property>
+    <signal name="configure-event" handler="configure_event_cb" swapped="no"/>
+    <signal name="delete-event" handler="delete_event_cb" swapped="no"/>
+    <signal name="key-press-event" handler="key_press_event_cb" swapped="no"/>
+    <signal name="window-state-event" handler="window_state_event_cb" swapped="no"/>
+    <child>
+      <object class="GtkBox" id="main_box">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkStack" id="layout">
+            <property name="name">layout</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

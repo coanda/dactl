@@ -27,6 +27,8 @@ public abstract class Dactl.Net.ZmqService : GLib.Object {
      */
     public string address { get; construct set; default = "*"; }
 
+    public signal void data_published (uint8[] data);
+
     public ZmqService () {
         try {
             zmq_init ();
@@ -82,4 +84,10 @@ public abstract class Dactl.Net.ZmqService : GLib.Object {
     public abstract void run ();
 
     protected abstract async void listen () throws ThreadError;
+
+    public string to_string () {
+        return "ZmqService: %s://%s:%d".printf (transport.to_string (),
+                                                address,
+                                                port);
+    }
 }

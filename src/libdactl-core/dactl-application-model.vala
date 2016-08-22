@@ -4,18 +4,10 @@
  */
 public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
 
+    private string _name = "Untitled";
     /**
-     * Default configuration file name.
+     * A name for the configuration
      */
-    public string config_filename { get; set; default = "dactl.xml"; }
-
-    /**
-     * Flag indicating thread activity... I think.
-     * XXX pretty sure this isn't being used anymore.
-     */
-    public bool active { get; set; default = false; }
-
-    /* A name for the configuration */
     public string name {
         get { return _name; }
         set {
@@ -26,7 +18,10 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
         }
     }
 
-    /* Allow administrative functionality */
+    private bool _admin = false;
+    /**
+     * Allow administrative functionality
+     */
     public bool admin {
         get { return _admin; }
         set {
@@ -37,27 +32,34 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
         }
     }
 
-    /* Which page to load on startup */
-    public string startup_page {
-        get { return _startup_page; }
-        set {
-            _startup_page = value;
-            lock (config) {
-                config.set_string_property ("startup-page", value);
-            }
-        }
+    private bool _def_enabled = false;
+    /**
+     * Flag to set if user has set the calibrations to <default>
+     */
+    public bool def_enabled {
+        get { return _def_enabled; }
+        set { _def_enabled = value; }
     }
 
-    /* Whether or not to use the dark theme */
-    public bool dark_theme {
-        get { return _dark_theme; }
-        set {
-            _dark_theme = value;
-            lock (config) {
-                config.set_boolean_property ("dark-theme", value);
-            }
-        }
+    private Gee.Map<string, Dactl.Object> _objects;
+    /**
+     * {@inheritDoc}
+     */
+    public Gee.Map<string, Dactl.Object> objects {
+        get { return (_objects); }
+        set { update_objects (value); }
     }
+
+    /**
+     * Default configuration file name.
+     */
+    public string config_filename { get; set; default = "dactl.xml"; }
+
+    /**
+     * Flag indicating thread activity... I think.
+     * XXX pretty sure this isn't being used anymore.
+     */
+    public bool active { get; set; default = false; }
 
     /* Basic output verbosity, should use an integer to allow for -vvv */
     public bool verbose { get; set; default = false; }
@@ -71,35 +73,6 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
 
     /* GSettings data */
     public Settings settings { get; private set; }
-
-    private bool _def_enabled = false;
-    private string _name = "Untitled";
-    private bool _admin = false;
-    private string _startup_page = "pg0";
-    private bool _dark_theme = true;
-
-    /* Flag to set if user has set the calibrations to <default> */
-    public bool def_enabled {
-        get { return _def_enabled; }
-        set { _def_enabled = value; }
-    }
-
-
-    private Gee.Map<string, Dactl.Object> _objects;
-    /**
-     * {@inheritDoc}
-     */
-    public Gee.Map<string, Dactl.Object> objects {
-        get { return (_objects); }
-        set { update_objects (value); }
-    }
-
-    //public Gee.Collection<Dactl.Plugin> plugins { get; set; }
-
-    /**
-     * Emitted whenever the data acquisition state is changed.
-     */
-    public signal void acquisition_state_changed (bool state);
 
     /**
      * Emitted whenever the state of a log has been changed.
@@ -155,18 +128,6 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
         /* Property loading */
         name = config.get_string_property ("app");
         admin = config.get_boolean_property ("admin");
-        startup_page = config.get_string_property ("startup-page");
-        dark_theme = config.get_boolean_property ("dark-theme");
-    }
-
-    /**
-     * Destruction occurs when object goes out of scope.
-     * XXX deprecated since CLD task addition
-     */
-    ~ApplicationModel () {
-        /* Stop hardware threads. */
-        stop_acquisition ();
-        //stop_device_output ();
     }
 
     /**
@@ -178,184 +139,9 @@ public class Dactl.ApplicationModel : GLib.Object, Dactl.Container {
     }
 
     /**
-     * Start the log file.
-     * XXX should really have id as parameter
-     */
-     public void start_log () {
-/*
- *        if (!(log as Cld.Log).active) {
- *            //(log as Cld.CsvLog).file_open ();
- *            (log as Cld.Log).start ();
- *
- *            message ("Started log %s", log.id);
- *            log_state_changed ((log as Cld.Log).id, true);
- *        }
- */
-    }
-
-    /**
-     * Stop the log file.
-     * XXX should really have id as parameter
-     */
-    public void stop_log () {
-        /*
-         *if ((log as Cld.Log).active) {
-         *    (log as Cld.Log).stop ();
-         *    if (log is Cld.CsvLog) {
-         *        (log as Cld.CsvLog).file_mv_and_date (false);
-         *    }
-         *    message ("Stopped log %s", log.id);
-         *    log_state_changed ((log as Cld.Log).id, false);
-         *}
-         */
-    }
-
-    /**
-     * Start the thread that handles data acquisition.
-     * XXX this is possibly more aptly placed in the controller
-     */
-    public void start_acquisition () {
-
-        var multiplexers = ctx.get_object_map (typeof (Cld.Multiplexer));
-        bool using_mux = (multiplexers.size > 0);
-
-        /* Manually open all of the devices */
-        var devices = ctx.get_object_map (typeof (Cld.Device));
-        foreach (var device in devices.values) {
-
-            if (!(device as Cld.ComediDevice).is_open) {
-                message ("  Opening Comedi Device: `%s'", device.id);
-                (device as Cld.ComediDevice).open ();
-                if (!(device as Cld.ComediDevice).is_open)
-                    error ("Failed to open Comedi device: `%s'", device.id);
-            }
-
-            if (!using_mux) {
-                message ("Starting tasks for: `%s'", device.id);
-                var tasks = (device as Cld.Container).get_object_map (typeof (Cld.Task));
-                foreach (var task in tasks.values) {
-                    //if ((task as Cld.ComediTask).direction == "read") {
-                        message ("  Starting task: `%s'", task.id);
-                        (task as Cld.ComediTask).run ();
-                    //}
-                }
-            }
-        }
-
-        if (using_mux) {
-            var acq_ctls = ctx.get_object_map (typeof (Cld.AcquisitionController));
-            foreach (var acq_ctl in acq_ctls.values) {
-                (acq_ctl as Cld.AcquisitionController).run ();
-            }
-        }
-
-        /* XXX should check that the task started properly */
-        acquisition_state_changed (true);
-    }
-
-    /**
-     * Stops the thread that handles data acquisition.
-     * XXX this is possibly more aptly placed in the controller
-     */
-    public void stop_acquisition () {
-
-        var multiplexers = ctx.get_object_map (typeof (Cld.Multiplexer));
-        bool using_mux = (multiplexers.size > 0);
-
-        /* Manually close all of the devices */
-        var devices = ctx.get_object_map (typeof (Cld.Device));
-        foreach (var device in devices.values) {
-
-            if (!using_mux) {
-                message ("Stopping tasks for: `%s'", device.id);
-                var tasks = (device as Cld.Container).get_object_map (typeof (Cld.Task));
-                foreach (var task in tasks.values) {
-                    if (task is Cld.ComediTask) {
-                        //if ((task as Cld.ComediTask).direction == "read") {
-                            message ("  Stopping task: `%s` ", task.id);
-                            (task as Cld.ComediTask).stop ();
-                        //}
-                    }
-                }
-            }
-
-            if ((device as Cld.ComediDevice).is_open) {
-                message ("Closing Comedi Device: %s", device.id);
-                (device as Cld.ComediDevice).close ();
-                if ((device as Cld.ComediDevice).is_open)
-                    error ("Failed to close Comedi device: %s", device.id);
-            }
-        }
-
-        /* XXX should check that the task stopped properly */
-        acquisition_state_changed (false);
-    }
-
-    /**
-     * Starts the thread that handles output channels.
-     */
-    public void start_device_output () {
-        var devices = ctx.get_object_map (typeof (Cld.Device));
-        foreach (var device in devices.values) {
-            if (!(device as Cld.ComediDevice).is_open) {
-                message ("Opening Comedi Device: %s", device.id);
-                (device as Cld.ComediDevice).open ();
-            }
-
-            if (!(device as Cld.ComediDevice).is_open)
-                error ("Failed to open Comedi device: %s", device.id);
-
-            foreach (var task in (device as Cld.Container).get_objects ().values) {
-                if (task is Cld.ComediTask) {
-                    if ((task as Cld.ComediTask).direction == "write")
-                        (task as Cld.ComediTask).run ();
-                }
-            }
-        }
-    }
-
-    /**
-     * Stops the thread that handles output channels.
-     */
-    public void stop_device_output () {
-        var devices = ctx.get_object_map (typeof (Cld.Device));
-        foreach (var device in devices.values) {
-            message ("Stopping tasks for: %s", device.id);
-            foreach (var task in (device as Cld.Container).get_objects ().values) {
-                if (task is Cld.ComediTask) {
-                    if ((task as Cld.ComediTask).direction == "write") {
-                        message ("  Stopping task: %s", task.id);
-                        (task as Cld.ComediTask).stop ();
-                    }
-                }
-            }
-            /*
-            (device as Cld.ComediDevice).close ();
-
-            if ((device as Cld.ComediDevice).is_open) {
-                GLib.message ("Failed to close Comedi device: %s", device.id);
-            }
-            */
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     public void update_objects (Gee.Map<string, Dactl.Object> val) {
         _objects = val;
     }
-
-    /**
-     * ...
-     */
-    /*
-     *public Gee.Map<string, GLib.Object> get_object_map (Type type) {
-     *    if (type.is_a (typeof (Dactl.Object))) {
-     *        return (this as Dactl.Container).get_object_map (type);
-     *    } else if (type.is_a (typeof (Cld.Object))) {
-     *        return ctx.get_object_map (type);
-     *    }
-     *}
-     */
 }

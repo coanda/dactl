@@ -26,7 +26,7 @@ dactl_daq_VALAFLAGS = \
 	$(NULL)
 
 dactl_daq_includes = \
-	--include config.h \
+	-include config.h \
 	-DLOCALEDIR=\""$(datadir)/locale"\" \
 	-DDATADIR=\""$(shareddir)"\" \
 	-I$(top_srcdir)/src/libdactl-core \

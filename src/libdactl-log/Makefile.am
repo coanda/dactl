@@ -26,11 +26,13 @@ libdactl_log_0_3_la_public_headers = \
 libdactl_log_0_3_la_public_sources = \
 	dactl-log-backend.c \
 	dactl-log-backend-manager.c \
+	dactl-log-factory.c \
 	$(NULL)
 
 libdactl_log_0_3_la_VALASOURCES = \
 	dactl-log-backend.vala \
 	dactl-log-backend-manager.vala \
+	dactl-log-factory.vala \
 	$(NULL)
 
 libdactl_log_0_3_la_SOURCES = \
@@ -45,6 +47,7 @@ libdactl_log_0_3_la_includes = \
 	-DBUILDDIR=\""${abs_top_builddir}"\" \
 	-DSRCDIR=\""${abs_top_srcdir}"\" \
 	-I$(top_srcdir)/src/libdactl-core \
+	-I$(top_srcdir)/src/libdactl-net \
 	$(NULL)
 
 libdactl_log_0_3_la_VALAFLAGS = \
@@ -53,12 +56,16 @@ libdactl_log_0_3_la_VALAFLAGS = \
 	--gir=Dactl-0.3.gir \
 	--vapidir=$(top_srcdir)/vapi \
 	--vapidir=$(top_srcdir)/src/libdactl-core \
+	--vapidir=$(top_srcdir)/src/libdactl-net \
 	--pkg posix \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
 	--pkg json-glib-1.0 \
 	--pkg libpeas-1.0 \
+	--pkg libsoup-2.4 \
+	--pkg libzmq \
 	--pkg dactl-core-0.3 \
+	--pkg dactl-net-0.3 \
 	--pkg dactl-config \
 	$(NULL)
 
@@ -69,6 +76,7 @@ libdactl_log_0_3_la_CFLAGS = \
 	$(AM_CFLAGS) \
 	$(LIBDACTL_CFLAGS) \
 	$(LIBDACTL_LOG_CFLAGS) \
+	$(LIBDACTL_NET_CFLAGS) \
 	$(OPTIMIZE_CFLAGS) \
 	$(DEBUG_CFLAGS) \
 	$(libdactl_log_0_3_la_includes) \
@@ -89,6 +97,7 @@ libdactl_log_0_3_la_LDFLAGS = \
 libdactl_log_0_3_la_LIBADD = \
 	$(LIBDACTL_LIBS) \
 	$(LIBDACTL_LOG_LIBS) \
+	$(LIBDACTL_NET_LIBS) \
 	$(NULL)
 
 
@@ -105,6 +114,7 @@ $(builddir)/DactlLog-0.3.gir: $(srcdir)/Dactl-0.3.gir
 	$(AM_V_GEN)$(SED) \
 		-e 's,Dactl\.,DactlLog.,g' \
 		-e 's,namespace name="Dactl",namespace name="DactlLog",g' \
+		-e 's,DactlLog\.Extension,DactlCore.Extension,g' \
 		-e 's,<package name="dactl-log-0.3"/>,<include name="DactlCore" version="0.3"/>\n<package name="dactl-log-0.3"/>,' \
 		$< >$@
 GIRS = DactlLog-0.3.gir

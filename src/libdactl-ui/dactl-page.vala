@@ -139,7 +139,8 @@ public class Dactl.Page : Dactl.CompositeWidget {
          *}
          */
 
-        objects.set (object.id, object);
+        (base as Dactl.Container).add_child (object);
+        //objects.set (object.id, object);
         GLib.message ("Attempting to add widget `%s' to page `%s'", object.id, id);
         if (object is Dactl.CustomWidget)
             viewport.add (object as Dactl.CustomWidget);
