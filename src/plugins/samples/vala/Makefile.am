@@ -32,7 +32,7 @@ libdactl_vala_la_VALAFLAGS = \
 
 libdactl_vala_la_CFLAGS = \
 	-DVALA_VERSION=\""$(VALA_VERSION)"\" \
-	-DPACKAGE_DATADIR=\""$(datadir)/dactl-0.3"\" \
+	-DPACKAGE_DATADIR=\""$(datadir)/dactl-0.4"\" \
 	-DG_LOG_DOMAIN=\"vala-plugin\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(PLUGIN_CFLAGS) \

@@ -19,10 +19,10 @@ dactl_log_VALAFLAGS = \
 	--pkg libsoup-2.4 \
 	--pkg libzmq \
 	--pkg dactl-config \
-	--pkg dactl-core-0.3 \
-	--pkg dactl-cli-0.3 \
-	--pkg dactl-log-0.3 \
-	--pkg dactl-net-0.3 \
+	--pkg dactl-core-0.4 \
+	--pkg dactl-cli-0.4 \
+	--pkg dactl-log-0.4 \
+	--pkg dactl-net-0.4 \
 	$(NULL)
 
 dactl_log_includes = \
@@ -58,10 +58,10 @@ dactl_log_LDADD = \
 	$(LIBDACTL_LIBS) \
 	$(LIBDACTL_CLI_LIBS) \
 	$(LIBDACTL_NET_LIBS) \
-	$(top_builddir)/src/libdactl-core/libdactl-core-0.3.la \
-	$(top_builddir)/src/libdactl-cli/libdactl-cli-0.3.la \
-	$(top_builddir)/src/libdactl-log/libdactl-log-0.3.la \
-	$(top_builddir)/src/libdactl-net/libdactl-net-0.3.la \
+	$(top_builddir)/src/libdactl-core/libdactl-core-0.4.la \
+	$(top_builddir)/src/libdactl-cli/libdactl-cli-0.4.la \
+	$(top_builddir)/src/libdactl-log/libdactl-log-0.4.la \
+	$(top_builddir)/src/libdactl-net/libdactl-net-0.4.la \
 	$(NULL)
 
 dactl_log_headers = \

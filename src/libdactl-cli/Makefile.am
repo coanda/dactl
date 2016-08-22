@@ -4,38 +4,38 @@ BUILT_SOURCES =
 EXTRA_DIST =
 
 pkglibdir = $(libdir)/dactl
-pkglib_LTLIBRARIES = libdactl-cli-0.3.la
+pkglib_LTLIBRARIES = libdactl-cli-0.4.la
 
 headersdir = $(includedir)/dactl-@VERSION@/libdactl-cli
 nobase_headers_DATA =
 
-pkgconfig_DATA = dactl-cli-0.3.pc
+pkgconfig_DATA = dactl-cli-0.4.pc
 pkgconfigdir = $(libdir)/pkgconfig
 
 EXTRA_DIST += \
-	dactl-cli-0.3.pc.in \
+	dactl-cli-0.4.pc.in \
 	$(NULL)
 
-LIBDACTL_CLI_VERSION=0:3:0
+LIBDACTL_CLI_VERSION=0:4:0
 
-libdactl_cli_0_3_la_public_headers = \
+libdactl_cli_0_4_la_public_headers = \
 	$(NULL)
 
-libdactl_cli_0_3_la_public_sources = \
+libdactl_cli_0_4_la_public_sources = \
 	dactl-cli-application.c \
 	dactl-cli-factory.c \
 	$(NULL)
 
-libdactl_cli_0_3_la_VALASOURCES = \
+libdactl_cli_0_4_la_VALASOURCES = \
 	dactl-cli-application.vala \
 	dactl-cli-factory.vala \
 	$(NULL)
 
-libdactl_cli_0_3_la_SOURCES = \
-	$(libdactl_cli_0_3_la_VALASOURCES) \
+libdactl_cli_0_4_la_SOURCES = \
+	$(libdactl_cli_0_4_la_VALASOURCES) \
 	$(NULL)
 
-libdactl_cli_0_3_la_includes = \
+libdactl_cli_0_4_la_includes = \
 	$(DEBUG_CFLAGS) \
 	-DPACKAGE_DATADIR="\"${datadir}\"" \
 	-DPACKAGE_LOCALE_DIR=\""${datadir}/locale"\" \
@@ -45,19 +45,19 @@ libdactl_cli_0_3_la_includes = \
 	-I$(top_srcdir)/src/libdactl-core \
 	$(NULL)
 
-libdactl_cli_0_3_la_VALAFLAGS = \
+libdactl_cli_0_4_la_VALAFLAGS = \
 	-H dactl-cli.h -C \
-	--library=dactl-cli-0.3 \
-	--gir=Dactl-0.3.gir \
+	--library=dactl-cli-0.4 \
+	--gir=Dactl-0.4.gir \
 	--vapidir=$(top_srcdir)/vapi \
 	--vapidir=$(top_srcdir)/src/libdactl-core \
 	--pkg posix \
 	--pkg gio-2.0 \
 	--pkg gee-0.8 \
-	--pkg dactl-core-0.3 \
+	--pkg dactl-core-0.4 \
 	$(NULL)
 
-libdactl_cli_0_3_la_CFLAGS = \
+libdactl_cli_0_4_la_CFLAGS = \
 	-DG_LOG_DOMAIN=\"libdactl-cli\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(AM_CFLAGS) \
@@ -65,7 +65,7 @@ libdactl_cli_0_3_la_CFLAGS = \
 	$(LIBDACTL_CLI_CFLAGS) \
 	$(OPTIMIZE_CFLAGS) \
 	$(DEBUG_CFLAGS) \
-	$(libdactl_cli_0_3_la_includes) \
+	$(libdactl_cli_0_4_la_includes) \
 	-Wno-deprecated-declarations \
 	-Wno-discarded-qualifiers \
 	-Wno-implicit-function-declaration \
@@ -75,12 +75,12 @@ libdactl_cli_0_3_la_CFLAGS = \
 	-Wno-unused-function \
 	$(NULL)
 
-libdactl_cli_0_3_la_LDFLAGS = \
+libdactl_cli_0_4_la_LDFLAGS = \
 	$(OPTIMIZE_LDFLAGS) \
 	-version-info $(LIBDACTL_CLI_VERSION) \
 	$(NULL)
 
-libdactl_cli_0_3_la_LIBADD = \
+libdactl_cli_0_4_la_LIBADD = \
 	$(LIBDACTL_LIBS) \
 	$(LIBDACTL_CLI_LIBS) \
 	$(NULL)
@@ -92,16 +92,16 @@ if HAVE_INTROSPECTION
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) --warn-all
 INTROSPECTION_COMPILER_ARGS = \
-	-l libdactl-cli-0.3.so.0 \
+	-l libdactl-cli-0.4.so.0 \
 	--includedir=$(builddir)/../libdactl-core \
 	--includedir=$(srcdir)/../libdactl-core
-$(builddir)/DactlCLI-0.3.gir: $(srcdir)/Dactl-0.3.gir
+$(builddir)/DactlCLI-0.4.gir: $(srcdir)/Dactl-0.4.gir
 	$(AM_V_GEN)$(SED) \
 		-e 's,Dactl\.,DactlCLI.,g' \
 		-e 's,namespace name="Dactl",namespace name="DactlCLI",g' \
-		-e 's,<package name="dactl-cli-0.3"/>,<include name="DactlCore" version="0.3"/>\n<package name="dactl-cli-0.3"/>,' \
+		-e 's,<package name="dactl-cli-0.4"/>,<include name="DactlCore" version="0.4"/>\n<package name="dactl-cli-0.4"/>,' \
 		$< >$@
-GIRS = DactlCLI-0.3.gir
+GIRS = DactlCLI-0.4.gir
 
 girdir = $(datadir)/dactl/gir-1.0
 gir_DATA = $(GIRS)
@@ -113,26 +113,26 @@ CLEANFILES += $(gir_DATA) $(typelib_DATA)
 endif
 
 
-libdactl_cli_0_3_vapi_DEPS = \
+libdactl_cli_0_4_vapi_DEPS = \
 	gio-2.0 \
 	libpeas-1.0
 
-dactl-cli-0.3.deps: Makefile
-	$(AM_V_GEN) echo $(libdactl_cli_0_3_vapi_DEPS) | tr ' ' '\n' > $@
+dactl-cli-0.4.deps: Makefile
+	$(AM_V_GEN) echo $(libdactl_cli_0_4_vapi_DEPS) | tr ' ' '\n' > $@
 
-VAPI_FILES = dactl-cli-0.3.vapi
-DEPS_FILES = dactl-cli-0.3.deps
+VAPI_FILES = dactl-cli-0.4.vapi
+DEPS_FILES = dactl-cli-0.4.deps
 
 vapidir = $(VAPIDIR)
 vapi_DATA = $(VAPI_FILES) $(DEPS_FILES)
-dactl-cli.h dactl-cli-0.3.vapi Dactl-0.3.gir: libdactl_cli_0_3_la_vala.stamp
+dactl-cli.h dactl-cli-0.4.vapi Dactl-0.4.gir: libdactl_cli_0_4_la_vala.stamp
 
 BUILT_SOURCES += \
 	dactl-cli.h \
 	$(VAPI_FILES) \
 	$(DEPS_FILES) \
-	DactlCLI-0.3.gir \
-	Dactl-0.3.gir \
+	DactlCLI-0.4.gir \
+	Dactl-0.4.gir \
 	$(NULL)
 
 -include $(top_srcdir)/git.mk

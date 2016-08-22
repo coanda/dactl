@@ -33,7 +33,7 @@ libdactl_device_mccusb_la_VALAFLAGS = \
 
 libdactl_device_mccusb_la_CFLAGS = \
 	-DVALA_VERSION=\""$(VALA_VERSION)"\" \
-	-DPACKAGE_DATADIR=\""$(datadir)/dactl-0.3"\" \
+	-DPACKAGE_DATADIR=\""$(datadir)/dactl-0.4"\" \
 	-DG_LOG_DOMAIN=\"mccusb-device\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(DEVICE_CFLAGS) \

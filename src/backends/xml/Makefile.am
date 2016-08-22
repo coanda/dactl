@@ -33,7 +33,7 @@ libdactl_backend_xml_la_VALAFLAGS = \
 
 libdactl_backend_xml_la_CFLAGS = \
 	-DVALA_VERSION=\""$(VALA_VERSION)"\" \
-	-DPACKAGE_DATADIR=\""$(datadir)/dactl-0.3"\" \
+	-DPACKAGE_DATADIR=\""$(datadir)/dactl-0.4"\" \
 	-DG_LOG_DOMAIN=\"xml-backend\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(BACKEND_CFLAGS) \

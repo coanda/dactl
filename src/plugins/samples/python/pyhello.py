@@ -4,8 +4,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('Peas', '1.0')
 gi.require_version('PeasGtk', '1.0')
-gi.require_version('DactlCore', '0.3')
-gi.require_version('DactlUI', '0.3')
+gi.require_version('DactlCore', '0.4')
+gi.require_version('DactlUI', '0.4')
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Peas

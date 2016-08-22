@@ -5,8 +5,8 @@ dnl ***********************************************************************
 dnl Define Versioning Information
 dnl ***********************************************************************
 m4_define([dactl_major_version],[0])
-m4_define([dactl_minor_version],[3])
-m4_define([dactl_micro_version],[5])
+m4_define([dactl_minor_version],[4])
+m4_define([dactl_micro_version],[0])
 m4_define([dactl_version],[dactl_major_version.dactl_minor_version.dactl_micro_version])
 m4_define([dactl_interface_age],[0])
 m4_define([dactl_bugreport_url],
@@ -505,9 +505,9 @@ PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_srcdir)/vapi"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-core"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-net"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-ui"
-PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-core-0.3"
-PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-net-0.3"
-PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-ui-0.3"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-core-0.4"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-net-0.4"
+PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg dactl-ui-0.4"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg libpeas-1.0"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg libpeas-gtk-1.0"
 PLUGIN_VALAFLAGS="$PLUGIN_VALAFLAGS --pkg libzmq"
@@ -539,9 +539,9 @@ DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_srcdir)/vapi"
 DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-core"
 DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-daq"
 DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-net"
-DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --pkg dactl-core-0.3"
-DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --pkg dactl-daq-0.3"
-DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --pkg dactl-net-0.3"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --pkg dactl-core-0.4"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --pkg dactl-daq-0.4"
+DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --pkg dactl-net-0.4"
 DEVICE_VALAFLAGS="$DEVICE_VALAFLAGS --pkg libpeas-1.0"
 AC_SUBST(DEVICE_VALAFLAGS)
 
@@ -571,9 +571,9 @@ BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --vapidir \$(top_srcdir)/vapi"
 BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-core"
 BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-log"
 BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --vapidir \$(top_builddir)/src/libdactl-net"
-BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --pkg dactl-core-0.3"
-BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --pkg dactl-log-0.3"
-BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --pkg dactl-net-0.3"
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --pkg dactl-core-0.4"
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --pkg dactl-log-0.4"
+BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --pkg dactl-net-0.4"
 BACKEND_VALAFLAGS="$BACKEND_VALAFLAGS --pkg libpeas-1.0"
 AC_SUBST(BACKEND_VALAFLAGS)
 
@@ -651,12 +651,12 @@ AC_CONFIG_FILES([
 
 	examples/Makefile
 
-	src/libdactl-core/dactl-core-0.3.pc
-	src/libdactl-cli/dactl-cli-0.3.pc
-	src/libdactl-daq/dactl-daq-0.3.pc
-	src/libdactl-log/dactl-log-0.3.pc
-	src/libdactl-net/dactl-net-0.3.pc
-	src/libdactl-ui/dactl-ui-0.3.pc
+	src/libdactl-core/dactl-core-0.4.pc
+	src/libdactl-cli/dactl-cli-0.4.pc
+	src/libdactl-daq/dactl-daq-0.4.pc
+	src/libdactl-log/dactl-log-0.4.pc
+	src/libdactl-net/dactl-net-0.4.pc
+	src/libdactl-ui/dactl-ui-0.4.pc
 ])
 AC_OUTPUT
 

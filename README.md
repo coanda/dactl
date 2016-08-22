@@ -5,7 +5,7 @@
 
 Dactl is a configurations based application for creating custom data acquisition and control systems in the GNOME desktop environment.
 
-### Release 0.3
+### Release 0.4
 
 The current public release brings many bug fixes and has separated out as libraries the core and UI components. These libraries include GIR output for use in other languages, the support of which is still a work in progress.
 
