@@ -1,0 +1,4 @@
+{% extends "../common/README.md.jnj" %}
+{% block object %}
+<{{ plugin.namespace }}:object id="{{ plugin.name }}-obj0" type="{{ plugin.type }}" parent="box0"/>
+{% endblock %}

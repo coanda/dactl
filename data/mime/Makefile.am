@@ -1,3 +1,5 @@
+if ENABLE_MIME
+
 mimexmldir = $(datadir)/mime/packages
 mimexml_DATA = dactl.xml
 
@@ -20,5 +22,7 @@ uninstall-local:
 			update-mime-database $(DESTDIR)$(datadir)/mime; \
 		fi \
 	fi
+
+endif
 
 -include $(top_srcdir)/git.mk

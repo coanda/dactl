@@ -10,10 +10,9 @@ bin_PROGRAMS = dactl
 gresource_file = $(top_srcdir)/data/dactl.gresource.xml
 
 dactl_VALAFLAGS = \
-	-H $(srcdir)/libdactl.h -C -c --thread \
-	--vapidir=$(top_srcdir)/vapi \
-	--pkg posix \
-	--pkg linux \
+	-H $(srcdir)/libdactl.h -C -c \
+	--target-glib=2.44 \
+	--thread \
 	--gresources $(gresource_file) \
 	$(DACTL_DEPS_VALAFLAGS) \
 	$(DACTL_CLD_DEPS_VALAFLAGS) \
@@ -21,11 +20,18 @@ dactl_VALAFLAGS = \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_VALAFLAGS) \
 	$(DACTL_COMMON_VALAFLAGS) \
-	$(NULL)
+	--vapidir=$(top_srcdir)/vapi \
+	--pkg posix \
+	--pkg linux \
+	--pkg json-glib-1.0
+
+dactl_includes = \
+	$(DEBUG_CFLAGS) \
+	-include config.h \
+	-DLOCALEDIR=\""$(datadir)/locale"\" \
+	-DDATADIR=\""$(sharedir)"\"
 
 dactl_CFLAGS = \
-	--include config.h \
-	-DLOCALEDIR=\""$(datadir)/locale"\" \
 	-DG_LOG_DOMAIN=\"dactl\" \
 	-DGETTEXT_PACKAGE=\"dactl\" \
 	$(DACTL_DEPS_CFLAGS) \
@@ -33,14 +39,17 @@ dactl_CFLAGS = \
 	$(DACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS) \
+	$(LIBDACTL_CFLAGS) \
+	$(LIBDACTL_UI_CFLAGS) \
+	$(OPTIMIZE_CFLAGS) \
+	$(dactl_includes) \
 	-Wno-deprecated-declarations \
 	-Wno-discarded-qualifiers \
 	-Wno-implicit-function-declaration \
 	-Wno-incompatible-pointer-types \
 	-Wno-unused-but-set-variable \
 	-Wno-unused-label \
-	-Wno-unused-function \
-	$(NULL)
+	-Wno-unused-function
 
 dactl_LDADD = \
 	$(DACTL_DEPS_LIBS) \
@@ -48,13 +57,14 @@ dactl_LDADD = \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_UI_LIBS) \
-	$(NULL)
+	$(LIBDACTL_LIBS) \
+	$(LIBDACTL_UI_LIBS)
 
 
 if ENABLE_WEBKIT
 dactl_VALAFLAGS += --pkg webkit2gtk-4.0
 dactl_CFLAGS += \
-	-DWEB_EXTENSIONS_DIR=\""$(extensionsdir)"\" \
+	-DWEB_EXTENSION_DIR=\""$(extensiondir)"\" \
 	$(WEBKIT_CFLAGS) \
 	$(NULL)
 dactl_LDADD += $(WEBKIT_LIBS)
@@ -70,7 +80,7 @@ resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies --sou
 resources.c: $(gresource_file) $(resource_files)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/data --generate-source $<
 
-BUILT_SOURCES = resources.c
+BUILT_SOURCES += resources.c
 
 UI_SOURCES = \
 	dactl-application-menu.vala \
@@ -86,7 +96,6 @@ UI_SOURCES = \
 	dactl-settings-dialog.vala \
 	dactl-settings-listbox.vala \
 	dactl-settings-page.vala \
-	dactl-settings-propertybox.ui \
 	dactl-settings-sidebar.vala \
 	dactl-settings-topbar.vala \
 	dactl-settings-toolbar.vala \
@@ -97,8 +106,7 @@ UI_SOURCES = \
 	dactl-ui-application-model.vala \
 	dactl-ui-application-view.vala \
 	dactl-ui-application-controller.vala \
-	dactl-ux-manager.vala \
-	$(NULL)
+	dactl-ui-ux-manager.vala
 
 dactl_SOURCES = \
 	$(BUILT_SOURCES) \
@@ -111,13 +119,13 @@ dactl_SOURCES = \
 
 MAINTAINERCLEANFILES += $(BUILT_SOURCES)
 
-CLEANFILES = \
+CLEANFILES += \
 	*.stamp \
 	stamp-h1 \
 	$(srcdir)/libdactl.h \
 	$(NULL)
 
-EXTRA_DIST = \
+EXTRA_DIST += \
 	$(gresource_file) \
 	$(BUILT_SOURCES) \
 	$(NULL)

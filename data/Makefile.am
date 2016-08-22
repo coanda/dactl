@@ -1,4 +1,4 @@
-SUBDIRS = gsettings config glade icons mime .
+SUBDIRS = gsettings config glade icons mime systemd templates .
 
 @APPSTREAM_XML_RULES@
 @INTLTOOL_XML_RULE@
@@ -17,12 +17,6 @@ servicedir = $(datadir)/dbus-1/services
 service_in_files = org.coanda.Dactl.service.in
 service_DATA = $(service_in_files:.service.in=.service)
 
-# pkg-config
-# pkgconfigdir = $(libdir)/dactl/pkgconfig
-# pkgconfig_DATA = \
-#	libdactl-ui-0.3.pc \
-#	libdactl-core-0.3.pc
-
 org.coanda.Dactl.service: org.coanda.Dactl.service.in
 	$(AM_V_GEN)	\
 		[ -d $(@D) ] || $(mkdir_p) $(@D) ; \
@@ -30,9 +24,6 @@ org.coanda.Dactl.service: org.coanda.Dactl.service.in
 
 gresource_file = dactl.gresource.xml
 resource_files = $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies $(gresource_file))
-
-CLEANFILES = \
-	$(desktop_DATA)
 
 EXTRA_DIST = \
 	$(gresource_file) \

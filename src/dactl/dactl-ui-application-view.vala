@@ -1,14 +1,14 @@
-public enum Dactl.UI.State {
-    WINDOWED,
-    FULLSCREEN,
-}
-
 /**
  * The Gtk.Application class expects an ApplicationWindow so a lot is being
  * moved here from outside of the actual view class.
  */
 [GtkTemplate (ui = "/org/coanda/dactl/ui/application-view.ui")]
-public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.ApplicationView {
+public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.ApplicationView, Dactl.Object {
+
+    /**
+     * {@inheritDoc}
+     */
+    public string id { get; set; }
 
     /* Property backing fields */
     private int _chan_scroll_min_width = 50;
@@ -28,8 +28,11 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
      */
     public bool using_default { get; private set; default = true; }
 
+    /* Current window state */
+    public bool fullscreen { get; set; default = false; }
+
     /* Model used to update the view */
-    private Dactl.ApplicationModel model;
+    public Dactl.ApplicationModel model { get; construct set; }
 
     [GtkChild]
     private Dactl.Topbar topbar;
@@ -61,10 +64,14 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
 
     private string previous_page;
 
-    public Dactl.UI.State state { get; set; default = Dactl.UI.State.WINDOWED; }
+    public Dactl.UI.WindowState state { get; set; default = Dactl.UI.WindowState.WINDOWED; }
 
     // The application page is intentionally left out
     private string[] pages = { "loader", "configuration", "export", "settings" };
+
+    construct {
+        id = "rootwin0";
+    }
 
     /**
      * Default construction.
@@ -103,9 +110,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
      * Load the application styling from CSS.
      */
     private void load_style () {
-
         /* XXX use resource instead - see gtk3-demo for example */
-
         /* Apply stylings from CSS resource */
         var provider = Dactl.load_css ("theme/shared.css");
         Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (),
@@ -145,14 +150,22 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
 
         layout.show_all ();
 
-        layout_change_page (model.startup_page);
+        layout_change_page ((model as Dactl.UI.ApplicationModel).startup_page);
         connect_signals ();
     }
 
-    private void layout_add_page (Dactl.Page page) {
+    public void add_window (Dactl.UI.Window window) {
+        model.add_child (window as Dactl.Object);
+        window.add_actions ();
+        window.show_all ();
+    }
+
+    public void layout_add_page (Dactl.Page page) {
         message ("Adding page `%s' with title `%s'", page.id, page.title);
         layout.add_titled (page, page.id, page.title);
         pages += page.id;
+
+        model.add_child (page);
     }
 
     public void layout_change_page (string id) {
@@ -260,8 +273,15 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
      * Action callback to set fullscreen window mode.
      */
     private void fullscreen_action_activated_cb (SimpleAction action, Variant? parameter) {
-        (this as Gtk.Window).fullscreen ();
-        state = Dactl.UI.State.FULLSCREEN;
+        if (state == Dactl.UI.WindowState.WINDOWED) {
+            (this as Gtk.Window).fullscreen ();
+            state = Dactl.UI.WindowState.FULLSCREEN;
+            fullscreen = true;
+        } else {
+            (this as Gtk.Window).unfullscreen ();
+            state = Dactl.UI.WindowState.WINDOWED;
+            fullscreen = false;
+        }
     }
 
     [GtkCallback]
@@ -270,14 +290,16 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         var default_modifiers = Gtk.accelerator_get_default_mod_mask ();
 
         if (event.keyval == Gdk.Key.Home) {             // Home -> go to default page
-            layout_change_page (model.startup_page);
+            layout_change_page ((model as Dactl.UI.ApplicationModel).startup_page);
         } else if (event.keyval == Gdk.Key.F11) {       // F11 -> fullscreen
-            if (state == Dactl.UI.State.WINDOWED) {
+            if (state == Dactl.UI.WindowState.WINDOWED) {
                 (this as Gtk.Window).fullscreen ();
-                state = Dactl.UI.State.FULLSCREEN;
+                state = Dactl.UI.WindowState.FULLSCREEN;
+                fullscreen = true;
             } else {
                 (this as Gtk.Window).unfullscreen ();
-                state = Dactl.UI.State.WINDOWED;
+                state = Dactl.UI.WindowState.WINDOWED;
+                fullscreen = false;
             }
             return true;
         } else if (event.keyval == Gdk.Key.F1) {        // F1 -> open help
@@ -322,7 +344,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
 
     [GtkCallback]
     private bool configure_event_cb () {
-        if (state == Dactl.UI.State.FULLSCREEN)
+        if (state == Dactl.UI.WindowState.FULLSCREEN)
             return false;
 
         if (configure_id != 0)
@@ -335,14 +357,14 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         });
 
         return false;
-     }
+    }
 
     [GtkCallback]
     private bool window_state_event_cb (Gdk.EventWindowState event) {
-        if (Dactl.UI.State.FULLSCREEN in event.changed_mask)
+        if (Dactl.UI.WindowState.FULLSCREEN in event.changed_mask)
             this.notify_property ("fullscreen");
 
-        if (state == Dactl.UI.State.FULLSCREEN)
+        if (state == Dactl.UI.WindowState.FULLSCREEN)
             return false;
 
         //settings.set_boolean ("window-maximized", maximized);

@@ -1,9 +1,7 @@
-/**
- * @deprecated [0.4.0]
- *
- * Changed name from Trace to StripChartTrace while refactoring
- */
+[Deprecated (since = "0.4.0")]
 public class Dactl.StripChartTrace : GLib.Object, Dactl.Object, Dactl.Buildable {
+
+    /* Changed name from Trace to StripChartTrace while refactoring */
 
     private Xml.Node* _node;
 
@@ -241,7 +239,7 @@ public class Dactl.StripChartTrace : GLib.Object, Dactl.Object, Dactl.Buildable 
     /**
      * {@inheritDoc}
      */
-    public void build_from_xml_node (Xml.Node *node) {
+    internal void build_from_xml_node (Xml.Node *node) {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&
             node->type != Xml.ElementType.COMMENT_NODE) {
             id = node->get_prop ("id");

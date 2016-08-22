@@ -1,66 +1,48 @@
 /**
- * Based off of the example at - https://github.com/voldyman/plugin-app
+ * XXX I think this is probably completely unnecessary and should be removed
  */
+public interface Dactl.Extension : GLib.Object {
 
-public class Dactl.PluginAPI : GLib.Object {
-    public PluginAPI () {
-        /* Nothing yet */
-    }
 }
 
-public class Dactl.PluginManager {
+public class Dactl.PluginExtension : Peas.ExtensionBase, Dactl.Extension, Peas.Activatable {
 
-    /* FIXME: Should load controller as API from the app, later. */
+    public GLib.Object object { construct; owned get; }
 
-    Peas.Engine engine;
-    Peas.ExtensionSet exts;
+    public void activate () {
+        message ("Extension added");
+    }
 
-    public Dactl.PluginAPI plugin_iface { private set; public get; }
+    public void deactivate () {
+        message ("Extension removed");
+    }
 
-    public PluginManager () {
+    public void update_state () { }
+}
 
-        plugin_iface = new Dactl.PluginAPI ();
+public abstract class Dactl.PluginManager {
 
-        engine = Peas.Engine.get_default ();
+    protected Peas.Engine engine;
+    protected Peas.ExtensionSet extensions;
+    protected string search_path = Config.PLUGIN_DIR;
 
-        GLib.Environment.set_variable ("PEAS_ALLOW_ALL_LOADERS", "1", true);
-        engine.enable_loader ("python3");
+    //public Dactl.Extension ext { protected set; public get; }
 
-        message ("Loading peas plugins from: %s", Config.PLUGIN_DIR);
-        engine.add_search_path (Config.PLUGIN_DIR, null);
+    protected virtual void init () {
+		GLib.Environment.set_variable ("PEAS_ALLOW_ALL_LOADERS", "1", true);
+		engine.enable_loader ("python3");
 
-        /* Our extension set */
-        Parameter param = GLib.Parameter ();
-        param.value = plugin_iface;
-        param.name = "object";
-        exts = new Peas.ExtensionSet (engine,
-                                      typeof (Peas.Activatable),
-                                      "object",
-                                      plugin_iface,
-                                      null);
+		debug ("Loading peas plugins from: %s", search_path);
+		engine.add_search_path (search_path, null);
+    }
 
-        // Load all the plugins found
+    protected abstract void add_extension ();
+
+    protected virtual void load_plugins () {
         foreach (var plug in engine.get_plugin_list ()) {
             if (engine.try_load_plugin (plug)) {
-                warning ("Plugin Loaded: " + plug.get_name ());
-            } else {
-                warning ("Could not load plugin: " + plug.get_name ());
+                debug (_("Plugin loaded: " + plug.get_name ()));
             }
         }
-
-        exts.extension_removed.connect (on_extension_removed);
-        exts.foreach (extension_foreach);
-
-    }
-
-    void extension_foreach (Peas.ExtensionSet set,
-                            Peas.PluginInfo info,
-                            Peas.Extension extension) {
-        debug ("Extension added");
-        ((Peas.Activatable) extension).activate ();
-    }
-
-    void on_extension_removed (Peas.PluginInfo info, GLib.Object extension) {
-        ((Peas.Activatable) extension).deactivate ();
     }
 }

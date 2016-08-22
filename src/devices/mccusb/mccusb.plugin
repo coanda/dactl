@@ -1,0 +1,7 @@
+[Plugin]
+Module=dactl-device-mccusb
+Name=Measurement Computing Device Plugin
+Description=A device plugin using the Measurement Computing USB driver.
+Authors=Geoff Johnson <geoff.johnson@coanda.ca>
+Copyright=Copyright © 2016 Geoff Johnson
+Builtin=true

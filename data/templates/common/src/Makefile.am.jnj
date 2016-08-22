@@ -1,0 +1,36 @@
+EXTRA_DIST = $(plugin_DATA)
+
+plugindir = $(libdir)/dactl/plugins
+plugin_LTLIBRARIES = lib{{ project.name }}-{{ plugin.name }}.la
+dist_plugin_DATA = {{ plugin.name }}.plugin
+
+{% block sources %}
+lib{{ project.name }}_{{ plugin.name|replace("-", "_") }}_la_SOURCES = \
+	$(BUILT_SOURCES) \
+	{{ project.name }}-{{ plugin.name }}-plugin.vala
+{% endblock %}
+
+lib{{ project.name }}_{{ plugin.name|replace("-", "_") }}_la_VALAFLAGS = \
+	--gresources $(gresource_file) \
+	--vapidir=$(srcdir) \
+	$(PLUGIN_VALAFLAGS)
+
+lib{{ project.name }}_{{ plugin.name|replace("-", "_") }}_la_CFLAGS = \
+	-include config.h \
+	-DG_LOG_DOMAIN='"{{ project.name }}-{{ plugin.name }}-{{ plugin.type }}"' \
+	$(PLUGIN_CFLAGS)
+
+lib{{ project.name }}_{{ plugin.name|replace("-", "_") }}_la_LIBADD = \
+	$(PLUGIN_LIBS)
+
+lib{{ project.name }}_{{ plugin.name|replace("-", "_") }}_la_LDFLAGS = \
+	$(PLUGIN_LDFLAGS)
+
+MAINTAINERCLEANFILES += $(lib{{ project.name }}_{{ plugin.name|replace("-", "_") }}_la_SOURCES:.vala=.c)
+
+{% block dist %}
+EXTRA_DIST += \
+	{{ plugin.name }}.plugin.in
+{% endblock %}
+
+-include $(top_srcdir)/git.mk

@@ -42,9 +42,19 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     public virtual Gee.ArrayList<Dactl.Plugin> plugins { get; set; }
 
     /**
+     * User interface layout manager.
+     */
+    private Dactl.UI.UxManager ux_manager;
+
+    /**
      * Used when the user requests a configuration save.
      */
     public signal void save_requested ();
+
+    /**
+     * Used to inform anything when the view has been constructed.
+     */
+    public signal void view_constructed ();
 
     /**
      * Returns the singleton for this class creating it first if it hasn't
@@ -82,22 +92,25 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
         Gtk.Window.set_default_icon_name ("dactl");
 
-        WebKit.WebContext.get_default ().set_web_extensions_directory (Config.WEB_EXTENSIONS_DIR);
+        WebKit.WebContext.get_default ().set_web_extensions_directory (Config.WEB_EXTENSION_DIR);
 
         debug ("Creating application model using file %s", opt_cfgfile);
         model = new Dactl.UI.ApplicationModel (opt_cfgfile);
         assert (model != null);
 
         (model as Dactl.Container).print_objects (0);
-        Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = model.dark_theme;
+        Gtk.Settings.get_default ().gtk_application_prefer_dark_theme =
+            (model as Dactl.UI.ApplicationModel).dark_theme;
 
-        debug (" > Finished constructing the model");
+        debug ("Finished constructing the model");
 
         view = new Dactl.UI.ApplicationView (model);
         assert (view != null);
         (view as Gtk.Window).application = this;
 
-        debug (" > Finished constructing the view");
+        debug ("Finished constructing the view");
+
+        ux_manager = new Dactl.UI.UxManager ((Dactl.UI.ApplicationView) view);
 
         /**
          * FIXME: This hides the window and then shows the message box
@@ -107,14 +120,12 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
          *});
          */
 
-        controller = new Dactl.UI.ApplicationController ((Dactl.UI.ApplicationModel) model, (Dactl.UI.ApplicationView) view);
+        controller = new Dactl.UI.ApplicationController (
+                            (Dactl.UI.ApplicationModel) model,
+                            (Dactl.UI.ApplicationView) view);
         assert (controller != null);
 
-        debug (" > Finished constructing the controller");
-
-        //var menu = Dactl.ApplicationMenu.get_default () as GLib.Menu;
-        //(menu as Dactl.ApplicationMenu).show_admin = model.admin;
-        //this.app_menu = menu;
+        debug ("Finished constructing the controller");
 
         /* XXX would like to move this inside of the view but doesn't work until
          *     the application activate is performed */
@@ -126,13 +137,15 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         /* Load the layout from either the configuration or use the default */
         (view as Dactl.UI.ApplicationView).construct_layout ();
 
+        view_constructed ();
+
         connect_signals ();
         add_actions ();
 
-        lock (model) {
-            debug (" > Starting device acquisition and output tasks");
-            model.start_acquisition ();
-            model.start_device_output ();
+        lock (controller) {
+            debug ("Starting device acquisition and output tasks");
+            controller.start_acquisition ();
+            controller.start_device_output ();
         }
 
         debug ("Application activation completed");
@@ -149,11 +162,14 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     }
 
     private void add_app_menu () {
-        //var view_menu = new GLib.Menu ();
-        //view_menu.append ("Data", "app.data");
-        //view_menu.append ("Configuration", "app.configuration");
-        //view_menu.append ("Recent", "app.recent");
-        //view_menu.append ("Digital I/O", "app.digio");
+        /*
+         *var view_menu = new GLib.Menu ();
+         *view_menu.append ("Configuration", "app.configuration");
+         *view_menu.append ("Loader", "app.loader");
+         *view_menu.append ("Data", "app.data");
+         *view_menu.append ("Recent", "app.recent");
+         *view_menu.append ("Digital I/O", "app.digio");
+         */
 
         var menu = new GLib.Menu ();
 
@@ -163,6 +179,10 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
             admin_menu.append ("Defaults", "app.defaults");
             menu.append_submenu ("Admin", admin_menu);
         }
+
+        /*
+         *menu.append_section (null, view_menu);
+         */
 
         //menu.append_section (null, settings_menu);
         var preferences_section = new GLib.Menu ();
@@ -325,8 +345,8 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
         lock (model) {
             debug ("Stopping device acquisition and output tasks");
-            model.stop_acquisition ();
-            //model.stop_device_output ();
+            controller.stop_acquisition ();
+            controller.stop_device_output ();
         }
 
         /* Let someone else deal with shutting down. */
@@ -404,36 +424,41 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     }
 
     public override void open (GLib.File[] files, string hint) {
+		try {
+            var tmp = File.new_for_path ("/tmp/dactl.out");
+            var ios = tmp.create_readwrite (FileCreateFlags.PRIVATE);
+            var os = ios.output_stream;
+            var dos = new DataOutputStream (os);
+            dos.put_string ("Test output:\n\n");
 
-        var tmp = File.new_for_path ("/tmp/dactl.out");
-        var ios = tmp.create_readwrite (FileCreateFlags.PRIVATE);
-        var os = ios.output_stream;
-        var dos = new DataOutputStream (os);
-        dos.put_string ("Test output:\n\n");
+            foreach (var file in files) {
+                stderr.printf ("Reading from file: %s\n", file.get_uri ());
+                dos.put_string ("Reading from file: %s\n".printf (file.get_uri ()));
 
-        foreach (var file in files) {
-            stderr.printf ("Reading from file: %s\n", file.get_uri ());
-            dos.put_string ("Reading from file: %s\n".printf (file.get_uri ()));
-
-            try {
-                //var arrangement = Tabler.load_from_file (file.get_uri ());
-                //create_window (arrangement);
-            } catch (GLib.Error e) {
-                stderr.printf (_("An error occured while reading file %s: %s\n"),
-                               file.get_uri (), e.message);
-                dos.put_string (_("An error occured while reading file %s: %s\n".printf (
-                                file.get_uri (), e.message)));
-                //create_window (new Arrangement ());
-                //show_error (_("Invalid file"), _("Error loading %s."),
-                            //file.get_basename ());
-                continue;
-            } catch (FileError e) {
-                //create_window (new Arrangement ());
-                //show_error (_("File not found or could not be read."),
-                            //_("%s not found or could not be read."), file.get_path ());
-                continue;
+                try {
+                    //var arrangement = Tabler.load_from_file (file.get_uri ());
+                    //create_window (arrangement);
+                } catch (GLib.Error e) {
+                    stderr.printf (_("An error occured while reading file %s: %s\n"),
+                                file.get_uri (), e.message);
+                    dos.put_string (_("An error occured while reading file %s: %s\n".printf (
+                                    file.get_uri (), e.message)));
+                    //create_window (new Arrangement ());
+                    //show_error (_("Invalid file"), _("Error loading %s."),
+                                //file.get_basename ());
+                    continue;
+                } catch (FileError e) {
+                    //create_window (new Arrangement ());
+                    //show_error (_("File not found or could not be read."),
+                                //_("%s not found or could not be read."), file.get_path ());
+                    continue;
+                }
             }
-        }
+		} catch (Error e) {
+            error ("Received error %s", e.message);
+		} catch (IOError e) {
+            error ("Received I/O error %s", e.message);
+		}
     }
 
     /**
@@ -613,11 +638,13 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         /* XXX locking the model may not be necessary, from older version */
         if (!active) {
             lock (model) {
-                model.start_acquisition ();
+                controller.start_acquisition ();
+                controller.start_device_output ();
             }
         } else {
             lock (model) {
-                model.stop_acquisition ();
+                controller.stop_acquisition ();
+                controller.stop_device_output ();
             }
         }
         this.release ();

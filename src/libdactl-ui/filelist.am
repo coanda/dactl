@@ -11,7 +11,6 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-chart-colormap.vala \
     dactl-chart-trace.vala \
     dactl-chart-widget.vala \
-    dactl-dataseries.vala \
     dactl-digital-control.vala \
     dactl-exec-control.vala \
     dactl-log-control.vala \
@@ -31,12 +30,13 @@ LIBDACTL_UI_VAPI_SOURCE_FILES = \
     dactl-settable.vala \
     dactl-stripchart.vala \
     dactl-ui-factory.vala \
+    dactl-ui-plugin-manager.vala \
+    dactl-ui-window.vala \
     dactl-video-processor.vala \
-    dactl-widget.vala \
-    dactl-zoom-window.vala
+    dactl-widget.vala
 
 LIBDACTL_UI_NONVAPI_SOURCE_FILES = \
-    dactl-utility.vala \
+    dactl-ui-utility.vala \
     dactl-widget-information.vala
 
 libdactl_ui_la_public_sources = \
@@ -52,7 +52,6 @@ libdactl_ui_la_public_sources = \
     dactl-chart-colormap.c \
     dactl-chart-trace.c \
     dactl-chart-widget.c \
-    dactl-dataseries.c \
     dactl-digital-control.c \
     dactl-exec-control.c \
     dactl-log-control.c \
@@ -72,8 +71,9 @@ libdactl_ui_la_public_sources = \
     dactl-settable.c \
     dactl-stripchart.c \
     dactl-ui-factory.c \
+    dactl-ui-plugin-manager.c \
+    dactl-ui-utility.c \
+    dactl-ui-window.c \
     dactl-video-processor.c \
     dactl-widget.c \
-    dactl-zoom-window.c \
-    dactl-utility.c \
     dactl-widget-information.c

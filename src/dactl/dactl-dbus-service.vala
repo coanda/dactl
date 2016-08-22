@@ -1,4 +1,4 @@
-[DBus (name = "org.gnome.Dactl")]
+[DBus (name = "org.coanda.Dactl")]
 internal class Dactl.DBusService : GLib.Object, Dactl.DBusInterface {
 
     private Dactl.Main main;

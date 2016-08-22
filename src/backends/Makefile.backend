@@ -1,0 +1,23 @@
+# Because some files are needed by backends
+# in the builddir like .plugin files this
+# copies them to the builddir if they don't
+# exist so that make distcheck works.
+all-local:
+	@test -z "$(dist_plugin_DATA)" || \
+	 for backend in $(dist_plugin_DATA) ; do \
+	   if test -e $(srcdir)/$$backend ; then \
+	     if ! test -e $(builddir)/$$backend ; then \
+	       cp -p $(srcdir)/$$backend $(builddir)/ ; \
+	     fi ; \
+	   fi ; \
+	 done
+
+clean-local:
+	@rm -f gschemas.compiled ; \
+	 test -z "$(dist_plugin_DATA)" || \
+	 test $(srcdir) = $(builddir) || \
+	 for backend in $(dist_plugin_DATA) ; do \
+	   if test -e $(builddir)/$$backend ; then \
+	     rm -f $(builddir)/$$backend ; \
+	   fi ; \
+	 done

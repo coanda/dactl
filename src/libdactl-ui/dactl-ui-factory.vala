@@ -4,14 +4,14 @@
 public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
 
     /* Factory singleton */
-    private static Dactl.UI.Factory ui_factory;
+    private static Dactl.UI.Factory factory;
 
     public static Dactl.UI.Factory get_default () {
-        if (ui_factory == null) {
-            ui_factory = new Dactl.UI.Factory ();
+        if (factory == null) {
+            factory = new Dactl.UI.Factory ();
         }
 
-        return ui_factory;
+        return factory;
     }
 
     /**
@@ -67,6 +67,7 @@ public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
             case "DactlChannelTreeEntry":       break;
             case "DactlVideoProcessor":         break;
             case "DactlRichContent":            break;
+            case "DactlUIWindow":               break;
             default:
                 throw new Dactl.FactoryError.TYPE_NOT_FOUND (
                     _("The type requested is not a known Dactl type"));
@@ -87,27 +88,28 @@ public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
             if (node->name == "object") {
                 var type = node->get_prop ("type");
                 switch (type) {
-                    case "ai":              return make_ai (node);
-                    case "ao":              return make_ao (node);
-                    case "axis":            return make_axis (node);
-                    case "box":             return make_box (node);
-                    case "chart":           return make_chart (node);
-                    case "exec":            return make_exec (node);
-                    case "log":             return make_log (node);
-                    case "page":            return make_page (node);
-                    case "pid":             return make_pid (node);
-                    case "pnid":            return make_pnid (node);
-                    case "pnid-element":    return make_pnid_element (node);
-                    case "polar-chart":     return make_polar_chart (node);
-                    case "rt-chart":        return make_rt_chart (node);
-                    case "stripchart":      return make_stripchart (node);
-                    case "stripchart-trace":return make_stripchart_trace (node);
-                    case "trace":           return make_trace (node);
-                    case "tree":            return make_tree (node);
-                    case "tree-category":   return make_tree_category (node);
-                    case "tree-entry":      return make_tree_entry (node);
-                    case "video":           return make_video_processor (node);
-                    case "rich-content":    return make_rich_content (node);
+                    case "ai":                  return make_ai (node);
+                    case "ao":                  return make_ao (node);
+                    case "axis":                return make_axis (node);
+                    case "box":                 return make_box (node);
+                    case "chart":               return make_chart (node);
+                    case "exec":                return make_exec (node);
+                    case "log":                 return make_log (node);
+                    case "page":                return make_page (node);
+                    case "pid":                 return make_pid (node);
+                    case "pnid":                return make_pnid (node);
+                    case "pnid-element":        return make_pnid_element (node);
+                    case "polar-chart":         return make_polar_chart (node);
+                    case "rt-chart":            return make_rt_chart (node);
+                    case "stripchart":          return make_stripchart (node);
+                    case "stripchart-trace":    return make_stripchart_trace (node);
+                    case "trace":               return make_trace (node);
+                    case "tree":                return make_tree (node);
+                    case "tree-category":       return make_tree_category (node);
+                    case "tree-entry":          return make_tree_entry (node);
+                    case "video":               return make_video_processor (node);
+                    case "rich-content":        return make_rich_content (node);
+                    case "window":              return make_window (node);
                     default:
                         throw new Dactl.FactoryError.TYPE_NOT_FOUND (
                             _("The type requested is not a known Dactl type"));
@@ -206,5 +208,9 @@ public class Dactl.UI.Factory : GLib.Object, Dactl.Factory {
 
     private Dactl.Object make_video_processor (Xml.Node *node) {
         return new Dactl.VideoProcessor.from_xml_node (node);
+    }
+
+    private Dactl.Object make_window (Xml.Node *node) {
+        return new Dactl.UI.Window.from_xml_node (node);
     }
 }

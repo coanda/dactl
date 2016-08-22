@@ -1,10 +1,16 @@
 shareddir = $(datadir)/dactl
 sysconfigdir = $(sysconfdir)
 desktopdir = $(datadir)/applications
-plugindir = @DACTL_PLUGIN_DIR@
-extensionsdir = @WEB_EXTENSIONS_DIR@
+plugindir = @PLUGIN_DIR@
+devicedir = @DEVICE_DIR@
+backenddir = @BACKEND_DIR@
+extensiondir = @WEB_EXTENSION_DIR@
 
 libdactlcoredir = $(top_srcdir)/src/libdactl-core
+libdactlclidir = $(top_srcdir)/src/libdactl-cli
+libdactldaqdir = $(top_srcdir)/src/libdactl-daq
+libdactllogdir = $(top_srcdir)/src/libdactl-log
+libdactlnetdir = $(top_srcdir)/src/libdactl-net
 libdactluidir = $(top_srcdir)/src/libdactl-ui
 
 MAINTAINERCLEANFILES = Makefile.in
@@ -15,7 +21,7 @@ DACTL_COMMON_DEFINES_CFLAGS = \
 
 DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS = \
 	--vapidir=$(libdactlcoredir) \
-	--pkg dactl-core-0.3
+	--pkg dactl-core-0.4
 
 DACTL_COMMON_LIBDACTL_CORE_CFLAGS = \
 	$(DACTL_COMMON_DEFINES_CFLAGS) \
@@ -23,11 +29,11 @@ DACTL_COMMON_LIBDACTL_CORE_CFLAGS = \
 	-I$(top_srcdir)/src/libdactl-core
 
 DACTL_COMMON_LIBDACTL_CORE_LIBS = \
-	$(top_builddir)/src/libdactl-core/libdactl-core-0.3.la
+	$(top_builddir)/src/libdactl-core/libdactl-core-0.4.la
 
 DACTL_COMMON_LIBDACTL_UI_VALAFLAGS = \
 	--vapidir=$(libdactluidir) \
-	--pkg dactl-ui-0.3 \
+	--pkg dactl-ui-0.4 \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS)
 
 DACTL_COMMON_LIBDACTL_UI_CFLAGS = \
@@ -37,7 +43,7 @@ DACTL_COMMON_LIBDACTL_UI_CFLAGS = \
 
 DACTL_COMMON_LIBDACTL_UI_LIBS = \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
-	$(top_builddir)/src/libdactl-ui/libdactl-ui-0.3.la
+	$(top_builddir)/src/libdactl-ui/libdactl-ui-0.4.la
 
 DACTL_COMMON_CONFIG_VALAFLAGS = \
 	--vapidir=$(libdactlcoredir) \

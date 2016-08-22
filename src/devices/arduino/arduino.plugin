@@ -1,0 +1,7 @@
+[Plugin]
+Module=dactl-device-arduino
+Name=Arduino Device Plugin
+Description=A Firmata enabled Arduino device plugin.
+Authors=Geoff Johnson <geoff.johnson@coanda.ca>
+Copyright=Copyright © 2016 Geoff Johnson
+Builtin=true

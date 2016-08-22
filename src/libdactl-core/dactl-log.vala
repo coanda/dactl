@@ -6,11 +6,11 @@ public enum Dactl.LogLevel {
     LEVEL_TRACE = LogLevelFlags.LEVEL_DEBUG + 1;
 }
 
-public class Dactl.Log : GLib.Object {
+public class Dactl.SysLog : GLib.Object {
 
     public static int verbosity { get; set; default = 0; }
 
-    private static Once<Dactl.Log> _instance;
+    private static Once<Dactl.SysLog> _instance;
 
     private static LogFunc last_handler;
 
@@ -159,8 +159,8 @@ public class Dactl.Log : GLib.Object {
      *
      * @return Instance of the logging subsystem.
      */
-    public static unowned Dactl.Log get_default () {
-        return _instance.once (() => { return new Dactl.Log (); });
+    public static unowned Dactl.SysLog get_default () {
+        return _instance.once (() => { return new Dactl.SysLog (); });
     }
 
     /**

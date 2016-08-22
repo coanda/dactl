@@ -1,11 +1,3 @@
-namespace Dactl {
-    public errordomain ConfigError {
-        FILE_NOT_FOUND,
-        XML_DOCUMENT_EMPTY,
-        INVALID_XPATH_EXPR
-    }
-}
-
 /**
  * Configuration data that loads XML configuration and is used to retrieve user
  * defined settings.
@@ -128,7 +120,7 @@ public class Dactl.ApplicationConfig : GLib.Object {
                 iter->type != Xml.ElementType.COMMENT_NODE) {
                 if (iter->name == "object") {
                     var type = iter->get_prop ("type");
-                    stdout.printf (@"[$type]");
+                    debug (@"[$type]");
                 }
             }
         }
@@ -150,7 +142,7 @@ public class Dactl.ApplicationConfig : GLib.Object {
         try {
             node = get_xml_node (xpath);
         } catch (Dactl.ConfigError e) {
-            GLib.error ("Configuration error: %s", e.message);
+            error ("Configuration error: %s", e.message);
         }
 
         return bool.parse (node->get_content ());
@@ -163,7 +155,7 @@ public class Dactl.ApplicationConfig : GLib.Object {
         try {
             node = get_xml_node (xpath);
         } catch (Dactl.ConfigError e) {
-            GLib.error ("Configuration error: %s", e.message);
+            error ("Configuration error: %s", e.message);
         }
 
         return node->get_content ();
@@ -176,7 +168,7 @@ public class Dactl.ApplicationConfig : GLib.Object {
         try {
             node = get_xml_node (xpath);
         } catch (Dactl.ConfigError e) {
-            GLib.error ("Configuration error: %s", e.message);
+            error ("Configuration error: %s", e.message);
         }
 
         return int.parse (node->get_content ());
@@ -189,7 +181,7 @@ public class Dactl.ApplicationConfig : GLib.Object {
         try {
             node = get_xml_node (xpath);
         } catch (Dactl.ConfigError e) {
-            GLib.error ("Configuration error: %s", e.message);
+            error ("Configuration error: %s", e.message);
         }
 
         return double.parse (node->get_content ());
@@ -202,7 +194,7 @@ public class Dactl.ApplicationConfig : GLib.Object {
         try {
             node = get_xml_node (xpath);
         } catch (Dactl.ConfigError e) {
-            GLib.error ("Configuration error: %s", e.message);
+            error ("Configuration error: %s", e.message);
         }
 
         return (float)double.parse (node->get_content ());
@@ -215,7 +207,7 @@ public class Dactl.ApplicationConfig : GLib.Object {
             edit_node (get_xml_node (xpath), value.to_string ());
             property_changed (property);
         } catch (Dactl.ConfigError e) {
-            GLib.error ("Configuration error: %s", e.message);
+            error ("Configuration error: %s", e.message);
         }
     }
 
@@ -226,7 +218,7 @@ public class Dactl.ApplicationConfig : GLib.Object {
             edit_node (get_xml_node (xpath), value.to_string ());
             property_changed (property);
         } catch (Dactl.ConfigError e) {
-            GLib.error ("Configuration error: %s", e.message);
+            error ("Configuration error: %s", e.message);
         }
     }
 
@@ -237,7 +229,7 @@ public class Dactl.ApplicationConfig : GLib.Object {
             edit_node (get_xml_node (xpath), value.to_string ());
             property_changed (property);
         } catch (Dactl.ConfigError e) {
-            GLib.error ("Configuration error: %s", e.message);
+            error ("Configuration error: %s", e.message);
         }
     }
 
@@ -248,7 +240,7 @@ public class Dactl.ApplicationConfig : GLib.Object {
             edit_node (get_xml_node (xpath), value.to_string ());
             property_changed (property);
         } catch (Dactl.ConfigError e) {
-            GLib.error ("Configuration error: %s", e.message);
+            error ("Configuration error: %s", e.message);
         }
     }
 
@@ -259,7 +251,7 @@ public class Dactl.ApplicationConfig : GLib.Object {
             edit_node (get_xml_node (xpath), value.to_string ());
             property_changed (property);
         } catch (Dactl.ConfigError e) {
-            GLib.error ("Configuration error: %s", e.message);
+            error ("Configuration error: %s", e.message);
         }
     }
 
@@ -271,7 +263,7 @@ public class Dactl.ApplicationConfig : GLib.Object {
             _node = get_xml_node (xpath);
             _node->replace (node);
         } catch (Dactl.ConfigError e) {
-            GLib.error ("Configuration error: %s", e.message);
+            error ("Configuration error: %s", e.message);
         }
         _node->replace (node);
     }

@@ -1,35 +1,46 @@
 language: c
 compiler: gcc
 
+sudo: required
+dist: trusty
+
+env:
+  global:
+    - MAKE_CMD="make -j2"
+
+before_script:  .ci/before_script.sh
+script:         .ci/script.sh
+
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:vala-team/ppa'
+      - sourceline: 'ppa:webkit-team/ppa'
+    packages:
+      - autoconf
+      - automake
+      - autoconf-archive
+      - gnome-common
+      - gobject-introspection
+      - libglib2.0-dev
+      - libjson-glib-dev
+      - libgee-0.8-dev
+      - libvala-0.30-dev
+      - libgsl0-dev
+      - libsqlite3-dev
+      - libxml2-dev
+      - libmatheval-dev
+      - libmodbus-dev
+      - libcomedi-dev
+      - librsvg2-dev
+      - libgirepository1.0-dev
+      - libpeas-dev
+      - libsoup2.4-dev
+      - libgtk-3-dev
+      - libgtksourceview-3.0-dev
+      - python-gi-dev
+      - valac-0.30
+      - webkit2gtk-4.0-dev
+
 notifications:
-  email:
-    - geoff.johnson@coanda.ca
-
-before_install:
-  - sudo add-apt-repository ppa:vala-team/ppa -y
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq git gnome-common gobject-introspection valac-0.30
-  - sudo apt-get install -qq libglib2.0-dev libjson-glib-dev libgee-0.8-dev
-    libvala-0.30-dev libgsl0-dev libsqlite3-dev libxml2-dev libmatheval-dev
-    libmodbus-dev libcomedi-dev librsvg2-dev libgirepository1.0-dev libpeas-dev
-    libsoup2.4-dev libgtk-3-dev libgtksourceview-3.0-dev autoconf-archive
-    python-gi-dev
-  - mkdir ~/src && cd ~/src
-  - git clone https://github.com/geoffjay/libcld.git
-  - cd libcld
-  - git checkout develop
-  - sed -i 's/\(\[pygobject_required_version\]\,\s\[3\.\)18\(\.0\]\)/\112\2/' configure.ac
-  - sudo cp deps/comedi.pc /usr/local/lib/pkgconfig/
-  - ./autogen.sh
-  - sed -i 's/\sdactl-rich-content.vala//' src/libdactl-ui/Makefile
-  - sed -i 's/UI\.RichContent/Box/' src/libdactl-ui/dactl-box.vala
-  - sed -i 's/UI\.RichContent/Box/' src/libdactl-ui/dactl-ui-factory.vala
-  - sed -i 's/\(WebKit.*\)/\/\/\1/' src/dactl/dactl-ui-application.vala
-  - make && sudo make install
-  - echo "/usr/local/lib" | sudo tee --append /etc/ld.so.conf
-  - sudo ldconfig
-  - cd
-
-script:
-  - ./autogen.sh
-  - make
+  slack: opendcs:3d3YMfezT8S8vBHlpyJvTAic

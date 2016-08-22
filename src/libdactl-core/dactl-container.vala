@@ -19,6 +19,7 @@ public interface Dactl.Container : GLib.Object {
      *
      * @param object object to add to the list
      */
+    //public abstract void add_child (Dactl.Object object);
     public virtual void add_child (Dactl.Object object) {
         objects.set (object.id, object);
     }
@@ -132,7 +133,7 @@ public interface Dactl.Container : GLib.Object {
     public virtual void print_objects (int depth = 0) {
         foreach (var object in objects.values) {
             string indent = string.nfill (depth * 2, ' ');
-            stdout.printf ("%s[%s: %s]\n", indent, object.get_type ().name (), object.id);
+            debug ("%s[%s: %s]", indent, object.get_type ().name (), object.id);
             if (object is Dactl.Container) {
                 (object as Dactl.Container).print_objects (depth + 1);
             }

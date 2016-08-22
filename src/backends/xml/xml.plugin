@@ -1,0 +1,7 @@
+[Plugin]
+Module=dactl-backend-xml
+Name=XML Backend Plugin
+Description=A backend plugin using an XML writer for logging.
+Authors=Geoff Johnson <geoff.johnson@coanda.ca>
+Copyright=Copyright © 2016 Geoff Johnson
+Builtin=true

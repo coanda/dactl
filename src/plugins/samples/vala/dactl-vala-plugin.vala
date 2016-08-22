@@ -1,16 +1,23 @@
 /**
  * Sample plugin using libpeas.
  */
-public class Dactl.Sample.Plugin : GLib.Object, Peas.Activatable, PeasGtk.Configurable {
+public class Dactl.Sample.Plugin : Peas.ExtensionBase, Peas.Activatable, PeasGtk.Configurable {
+
+    private Dactl.UI.Plugin plugin;
 
     public GLib.Object object { owned get; construct; }
 
+    public Plugin (Dactl.ApplicationView view) {
+        debug ("UI Plugin constructor");
+    }
+
     public void activate () {
-        GLib.message ("Dactl.Sample.Plugin activated.");
+        debug ("Sample Vala plugin activated.");
+        plugin = (Dactl.UI.Plugin) object;
     }
 
     public void deactivate () {
-        GLib.message ("Dactl.Sample.Plugin deactivated.");
+        debug ("Sample vala lugin deactivated.");
     }
 
     public void update_state () { }

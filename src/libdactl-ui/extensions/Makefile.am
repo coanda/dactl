@@ -29,7 +29,9 @@ nodist_libdactl_ui_extension_dom_la_SOURCES = \
 CLEANFILES = $(BUILT_SOURCES) $(nodist_libdactl_ui_extension_dom_la_SOURCES)
 
 libdactl_ui_extension_dom_la_VALAFLAGS = \
+	--vapidir=$(top_srcdir)/vapi \
 	--pkg webkit2gtk-web-extension-4.0 \
+	--pkg javascriptcoregtk-3.0 \
 	$(NULL)
 
 libdactl_ui_extension_dom_la_CFLAGS = \

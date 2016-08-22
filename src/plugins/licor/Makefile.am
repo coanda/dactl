@@ -19,7 +19,6 @@ libdactl_licor_la_SOURCES = \
 	$(NULL)
 
 libdactl_licor_la_VALAFLAGS = \
-	--target-glib=2.38 \
 	--gresources $(gresource_file) \
 	--vapidir=$(top_srcdir)/vapi \
 	$(DACTL_PLUGIN_COMMON_VALAFLAGS) \
@@ -28,7 +27,7 @@ libdactl_licor_la_VALAFLAGS = \
 	$(DACTL_COMMON_LIBDACTL_CORE_VALAFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_VALAFLAGS) \
 	$(DACTL_COMMON_VALAFLAGS) \
-	$(NULL)
+	$(PLUGIN_VALAFLAGS)
 
 libdactl_licor_la_CFLAGS = \
 	-DG_LOG_DOMAIN=\"libdactl-licor\" \
@@ -37,31 +36,30 @@ libdactl_licor_la_CFLAGS = \
 	$(DACTL_UI_DEPS_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_CFLAGS) \
 	$(DACTL_COMMON_LIBDACTL_UI_CFLAGS) \
+	$(PLUGIN_CFLAGS) \
 	-Wno-deprecated-declarations \
 	-Wno-discarded-qualifiers \
 	-Wno-implicit-function-declaration \
 	-Wno-incompatible-pointer-types \
 	-Wno-unused-but-set-variable \
 	-Wno-unused-label \
-	-Wno-unused-function \
-	$(NULL)
+	-Wno-unused-function
 
 libdactl_licor_la_LIBADD = \
 	$(DACTL_CLD_DEPS_LIBS) \
 	$(DACTL_UI_DEPS_LIBS) \
 	$(DACTL_COMMON_LIBDACTL_CORE_LIBS) \
-	$(DACTL_COMMON_LIBDACTL_UI_LIBS) \
-	$(NULL)
+	$(DACTL_COMMON_LIBDACTL_UI_LIBS)
 
 libdactl_licor_la_LDFLAGS = \
-	$(DACTL_PLUGIN_LINKER_FLAGS) \
-	$(NULL)
+	$(PLUGIN_LDFLAGS)
 
 
 if ENABLE_WEBKIT
 libdactl_licor_la_VALAFLAGS += --pkg webkit2gtk-4.0
 libdactl_licor_la_CFLAGS += $(WEBKIT_CFLAGS)
 libdactl_licor_la_LIBADD += $(WEBKIT_LIBS)
+libdactl_licor_la_LDFLAGS += $(WEBKIT_LDFLAGS)
 endif
 
 
