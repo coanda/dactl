@@ -6,7 +6,7 @@ public class Dactl.Recorder.Server : Dactl.CLI.Application {
 
     private Dactl.Recorder.RestService rest_service;
 
-    private Dactl.Recorder.ZmqClient zmq_client;
+    public Dactl.Recorder.ZmqClient zmq_client;
 
     public static unowned Dactl.Recorder.Server get_default () {
         return _instance.once (() => {

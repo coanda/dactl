@@ -50,11 +50,11 @@ internal class Dactl.Recorder.Main : GLib.Object {
         this.log = Dactl.SysLog.get_default ();
         log.init (true, null);
 
-        backend_manager = new Dactl.Log.BackendManager ();
-
         this.exit_code = 0;
 
         app = Dactl.Recorder.Server.get_default ();
+
+        backend_manager = new Dactl.Log.BackendManager ((app as Dactl.Recorder.Server).zmq_client);
 
         Unix.signal_add (Posix.SIGHUP,  () => { this.restart (); return true; });
         Unix.signal_add (Posix.SIGINT,  () => { this.exit (0);   return true; });
@@ -74,6 +74,9 @@ internal class Dactl.Recorder.Main : GLib.Object {
     public void restart () {
         this.need_restart = true;
         this.exit (0);
+    }
+
+    public void load_configuration (string filename) {
     }
 
     private int run (string[] args) {

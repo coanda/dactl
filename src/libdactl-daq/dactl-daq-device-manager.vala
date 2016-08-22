@@ -1,27 +1,18 @@
-public class Dactl.DAQ.Device : Dactl.Extension, Peas.Activatable {
+public class Dactl.DAQ.Device : GLib.Object {
 
-    public Dactl.Net.ZmqService zmq_service;
-
-    public GLib.Object object { construct; owned get; }
+    public Dactl.Net.ZmqService zmq_service { get; construct set; }
 
     public Device (Dactl.Net.ZmqService zmq_service) {
+        debug ("Device constructor");
         this.zmq_service = zmq_service;
     }
-
-    public void activate () {
-        message ("DAQ extension added");
-    }
-
-    public void deactivate () {
-        message ("DAQ extension removed");
-    }
-
-    public void update_state () { }
 }
 
 public class Dactl.DAQ.DeviceManager : Dactl.PluginManager {
 
     private Dactl.Net.ZmqService zmq_service;
+
+    public Dactl.DAQ.Device ext { get; set; }
 
     public DeviceManager (Dactl.Net.ZmqService zmq_service) {
         this.zmq_service = zmq_service;
@@ -37,9 +28,6 @@ public class Dactl.DAQ.DeviceManager : Dactl.PluginManager {
 
     protected override void add_extension () {
         // The extension set
-        Parameter param = GLib.Parameter ();
-        param.value = ext as Dactl.DAQ.Device;
-        param.name = "object";
         extensions = new Peas.ExtensionSet (engine,
                                             typeof (Peas.Activatable),
                                             "object",

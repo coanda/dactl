@@ -1,33 +1,25 @@
-public class Dactl.UI.Plugin : Dactl.Extension, Peas.Activatable {
+public class Dactl.UI.Plugin : GLib.Object {
 
-    public Dactl.ApplicationView view;
-
-    public GLib.Object object { construct; owned get; }
+    public Dactl.ApplicationView view { get; construct set; }
 
     public Plugin (Dactl.ApplicationView view) {
+        debug ("UI Plugin constructor");
         this.view = view;
     }
-
-    public void activate () {
-        message ("UI extension added");
-    }
-
-    public void deactivate () {
-        message ("UI extension removed");
-    }
-
-    public void update_state () { }
 }
 
 public class Dactl.UI.PluginManager : Dactl.PluginManager {
 
     private Dactl.ApplicationView view;
 
+    public Dactl.UI.Plugin ext { get; set; }
+
     public PluginManager (Dactl.ApplicationView view) {
         this.view = view;
 
         engine = Peas.Engine.get_default ();
         ext = new Dactl.UI.Plugin (view);
+        // XXX UI plugins are installed to the default location - change???
 
         init ();
         add_extension ();
@@ -38,7 +30,7 @@ public class Dactl.UI.PluginManager : Dactl.PluginManager {
         // The extension set
         extensions = new Peas.ExtensionSet (engine,
                                             typeof (Peas.Activatable),
-                                            "widget",
+                                            "object",
                                             ext,
                                             null);
 

@@ -1,18 +1,19 @@
-public class Dactl.DAQ.Arduino.Device : Dactl.Extension, Peas.Activatable {
+public class Dactl.DAQ.Arduino.Device : Peas.ExtensionBase, Peas.Activatable {
 
-    public Dactl.Net.ZmqService zmq_service;
+    private Dactl.DAQ.Device device;
 
-    public GLib.Object object { owned get; construct; }
+    public GLib.Object object { construct; owned get; }
 
     public Device (Dactl.Net.ZmqService zmq_service) {
-        //base (zmq_service);
-        this.zmq_service = zmq_service;
+        debug ("Arduino device constructor");
     }
 
     public void activate () {
-        stdout.printf ("Arduino device activated");
-        zmq_service.data_published.connect ((data) => {
-            stdout.write (data);
+        debug ("Arduino device activated");
+        device = (Dactl.DAQ.Device) object;
+        debug (device.zmq_service.to_string ());
+        device.zmq_service.data_published.connect ((data) => {
+            debug ((string) data);
         });
     }
 

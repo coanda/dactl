@@ -1,23 +1,11 @@
-/*
- *public abstract class Dactl.Extension : Peas.ExtensionBase, Peas.Activatable {
- *
- *    public abstract GLib.Object object { construct; owned get; }
- *
- *    [> Plugin construction <]
- *    public abstract void activate ();
- *
- *    [> Plugin deconstruction <]
- *    public abstract void deactivate ();
- *
- *    public abstract void update_state ();
- *}
+/**
+ * XXX I think this is probably completely unnecessary and should be removed
  */
-
-public abstract class Dactl.Extension : Peas.ExtensionBase {
+public interface Dactl.Extension : GLib.Object {
 
 }
 
-public class Dactl.PluginExtension : Dactl.Extension, Peas.Activatable {
+public class Dactl.PluginExtension : Peas.ExtensionBase, Dactl.Extension, Peas.Activatable {
 
     public GLib.Object object { construct; owned get; }
 
@@ -34,19 +22,17 @@ public class Dactl.PluginExtension : Dactl.Extension, Peas.Activatable {
 
 public abstract class Dactl.PluginManager {
 
-    /* FIXME: Should load controller as API from the app, later. */
-
     protected Peas.Engine engine;
     protected Peas.ExtensionSet extensions;
     protected string search_path = Config.PLUGIN_DIR;
 
-    public Dactl.Extension ext { protected set; public get; }
+    //public Dactl.Extension ext { protected set; public get; }
 
     protected virtual void init () {
 		GLib.Environment.set_variable ("PEAS_ALLOW_ALL_LOADERS", "1", true);
 		engine.enable_loader ("python3");
 
-		message ("Loading peas plugins from: %s", search_path);
+		debug ("Loading peas plugins from: %s", search_path);
 		engine.add_search_path (search_path, null);
     }
 

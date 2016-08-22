@@ -52,6 +52,11 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     public signal void save_requested ();
 
     /**
+     * Used to inform anything when the view has been constructed.
+     */
+    public signal void view_constructed ();
+
+    /**
      * Returns the singleton for this class creating it first if it hasn't
      * been yet.
      */
@@ -131,6 +136,8 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
 
         /* Load the layout from either the configuration or use the default */
         (view as Dactl.UI.ApplicationView).construct_layout ();
+
+        view_constructed ();
 
         connect_signals ();
         add_actions ();

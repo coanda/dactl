@@ -1,9 +1,14 @@
 public class Dactl.Log.BackendManager : Dactl.PluginManager {
 
-    public BackendManager () {
+    private Dactl.Net.ZmqClient zmq_client;
+
+    public Dactl.Log.BackendProxy ext { get; set; }
+
+    public BackendManager (Dactl.Net.ZmqClient zmq_client) {
+        this.zmq_client = zmq_client;
 
         engine = Peas.Engine.get_default ();
-        ext = new Dactl.Log.Backend ();
+        ext = new Dactl.Log.BackendProxy (zmq_client);
         search_path = Dactl.Config.BACKEND_DIR;
 
         init ();
@@ -13,9 +18,6 @@ public class Dactl.Log.BackendManager : Dactl.PluginManager {
 
     protected override void add_extension () {
 		// The extension set
-        Parameter param = GLib.Parameter ();
-        param.value = ext as Dactl.Log.Backend;
-        param.name = "object";
         extensions = new Peas.ExtensionSet (engine,
                                             typeof (Peas.Activatable),
                                             "object",
