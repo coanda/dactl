@@ -97,7 +97,6 @@ public class Dactl.DigitalControl : Dactl.CompositeWidget, Dactl.CldAdapter {
      */
     public void offer_cld_object (Cld.Object object) {
         if (object.uri == ch_ref) {
-            debug ("uri: %s id: %s", object.uri, object.id);
             if (!(object is Cld.DChannel)) {
                 warning ("Object %s is not a digital channel", object.uri);
             } else {
@@ -123,7 +122,6 @@ public class Dactl.DigitalControl : Dactl.CompositeWidget, Dactl.CldAdapter {
      */
     protected async void request_data () {
         while (!satisfied) {
-            debug ("requesting %s", ch_ref);
             request_object (ch_ref);
             // Try again in a second
             yield nap (1000);

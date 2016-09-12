@@ -248,7 +248,6 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
 
         foreach (ParamSpec spec in ocl.list_properties ()) {
             notify[spec.get_name ()].connect ((s, p) => {
-            debug ("type: %s spec: %s", type.name (), spec.get_name ());
                 update_node ();
             });
         }

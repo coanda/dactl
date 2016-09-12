@@ -221,7 +221,6 @@ private class Dactl.PnidCanvas : Dactl.Canvas {
 
                     var tokens = (element as Dactl.PnidElement).cld_ref.split (":");
                     var prop = (tokens.length > 1) ? tokens[1] : "value";
-                    debug (" > %s : %d", (element as Dactl.PnidElement).cld_ref, tokens.length);
 
                     /* Check if a property was requested, use the channel scaled value if not */
                     double fval;
@@ -235,7 +234,6 @@ private class Dactl.PnidCanvas : Dactl.Canvas {
                     }
                     var value = val;
 
-                    debug ("%s - %s value: %s", tokens[0], prop, val);
                     node->set_content (value);
                 } catch (Cld.XmlError e) {
                     warning (e.message);
@@ -253,10 +251,8 @@ private class Dactl.PnidCanvas : Dactl.Canvas {
                         var style = node->get_prop ("style");
                         Regex regex = new Regex ("fill:#......");
                         if ((element as Dactl.PnidElement).sensor.threshold_alarm_state) {
-                            debug ("1) alarm state: %s", (element as Dactl.PnidElement).sensor.threshold_alarm_state.to_string());
                             style = regex.replace (style, style.length, 0, "fill:#00ff00");
                         } else {
-                            debug ("2) alarm state: %s", (element as Dactl.PnidElement).sensor.threshold_alarm_state.to_string());
                             style = regex.replace (style, style.length, 0, "fill:#ffffff");
                         }
                         node->set_prop ("style", style);
