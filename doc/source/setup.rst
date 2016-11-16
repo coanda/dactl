@@ -95,6 +95,7 @@ Compile and Install dactl
 
    git clone https://github.com/coanda/dactl.git
    cd dactl
+   git checkout v0.3.x-hotfix-002
    export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
    ./autogen.sh
    make && sudo make install
