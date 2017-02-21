@@ -424,35 +424,34 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     }
 
     public override void open (GLib.File[] files, string hint) {
-		try {
-            var tmp = File.new_for_path ("/tmp/dactl.out");
-            var ios = tmp.create_readwrite (FileCreateFlags.PRIVATE);
-            var os = ios.output_stream;
-            var dos = new DataOutputStream (os);
-            dos.put_string ("Test output:\n\n");
 
-            foreach (var file in files) {
-                stderr.printf ("Reading from file: %s\n", file.get_uri ());
-                dos.put_string ("Reading from file: %s\n".printf (file.get_uri ()));
+        var tmp = File.new_for_path ("/tmp/dactl.out");
+        var ios = tmp.create_readwrite (FileCreateFlags.PRIVATE);
+        var os = ios.output_stream;
+        var dos = new DataOutputStream (os);
+        dos.put_string ("Test output:\n\n");
 
-                try {
-                    //var arrangement = Tabler.load_from_file (file.get_uri ());
-                    //create_window (arrangement);
-                } catch (GLib.Error e) {
-                    stderr.printf (_("An error occured while reading file %s: %s\n"),
-                                file.get_uri (), e.message);
-                    dos.put_string (_("An error occured while reading file %s: %s\n".printf (
-                                    file.get_uri (), e.message)));
-                    //create_window (new Arrangement ());
-                    //show_error (_("Invalid file"), _("Error loading %s."),
-                                //file.get_basename ());
-                    continue;
-                } catch (FileError e) {
-                    //create_window (new Arrangement ());
-                    //show_error (_("File not found or could not be read."),
-                                //_("%s not found or could not be read."), file.get_path ());
-                    continue;
-                }
+        foreach (var file in files) {
+            stderr.printf ("Reading from file: %s\n", file.get_uri ());
+            dos.put_string ("Reading from file: %s\n".printf (file.get_uri ()));
+
+            try {
+                //var arrangement = Tabler.load_from_file (file.get_uri ());
+                //create_window (arrangement);
+            } catch (GLib.Error e) {
+                stderr.printf (("An error occured while reading file %s: %s\n"),
+                               file.get_uri (), e.message);
+                dos.put_string (_("An error occured while reading file %s: %s\n".printf (
+                                file.get_uri (), e.message)));
+                //create_window (new Arrangement ());
+                //show_error (("Invalid file"), _("Error loading %s."),
+                            //file.get_basename ());
+                continue;
+            } catch (FileError e) {
+                //create_window (new Arrangement ());
+                //show_error (("File not found or could not be read."),
+                            //("%s not found or could not be read."), file.get_path ());
+                continue;
             }
 		} catch (Error e) {
             error ("Received error %s", e.message);
@@ -578,12 +577,11 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     private void save_activated_cb (SimpleAction action, Variant? parameter) {
         /* Warn the user if <defaults> are currently enabled */
         if (model.def_enabled) {
-            var msg = "Calibrations are set to defaults.\nDo you still want to save?";
             var dialog = new Gtk.MessageDialog (null,
                                                 Gtk.DialogFlags.MODAL,
                                                 Gtk.MessageType.QUESTION,
                                                 Gtk.ButtonsType.YES_NO,
-                                                msg);
+                                                "Calibrations are set to defaults.\nDo you still want to save?");
 
             (dialog as Gtk.Dialog).response.connect ((response_id) => {
                 switch (response_id) {

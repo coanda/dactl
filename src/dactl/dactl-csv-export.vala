@@ -535,13 +535,12 @@ private class Dactl.CsvExport : Gtk.Box {
         var output = true;
 
         if (FileUtils.test (filename, FileTest.EXISTS)) {
-            var prompt = "The file $filename exists.\nOverwrite?";
             var window = (this as Gtk.Widget).get_toplevel () as Gtk.Window;
             var dialog = new Gtk.MessageDialog (window,
                                                 Gtk.DialogFlags.MODAL,
                                                 Gtk.MessageType.WARNING,
                                                 Gtk.ButtonsType.YES_NO,
-                                                prompt);
+                                                "The file %s exists. \nOverwrite?", filename);
             dialog.response.connect ((response_id) => {
                 switch (response_id) {
                     case Gtk.ResponseType.YES:
