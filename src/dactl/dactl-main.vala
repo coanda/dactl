@@ -94,7 +94,7 @@ internal class Dactl.Main : GLib.Object {
     }
 
     private int run (string[] args) {
-        debug (_("Dactl v%s starting..."), Config.PACKAGE_VERSION);
+        debug (("Dactl v%s starting..."), Config.PACKAGE_VERSION);
         app.launch (args);
 
         return exit_code;
@@ -115,11 +115,9 @@ internal class Dactl.Main : GLib.Object {
         //} catch (GLib.Error e) {};
 
         Timeout.add_seconds (timeout, () => {
-            if (plugin_loader.list_plugins ().size == 0) {
-                warning (ngettext ("No plugins found in %d second; giving up...",
-                                   "No plugins found in %d seconds; giving up...",
-                                   PLUGIN_TIMEOUT),
-                         PLUGIN_TIMEOUT);
+            if (this.plugin_loader.list_plugins ().size == 0) {
+                warning ("No plugins found in %d seconds; giving up...",
+                                   PLUGIN_TIMEOUT);
 
                 // FIXME: this causes the application to close the device connections
                 //this.exit (-82);

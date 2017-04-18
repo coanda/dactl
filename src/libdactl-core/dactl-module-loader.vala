@@ -125,7 +125,7 @@ public abstract class Dactl.ModuleLoader : GLib.Object {
                                                        Priority.DEFAULT,
                                                        null);
         } catch (Error error) {
-            critical (_("Error listing contents of folder '%s': %s"),
+            critical (("Error listing contents of folder '%s': %s"),
                       folder.get_path (),
                       error.message);
 
@@ -169,7 +169,7 @@ public abstract class Dactl.ModuleLoader : GLib.Object {
                         this.done = true;
                     }
                 } catch (Error error) {
-                    warning (_("Could not load plugin: %s"),
+                    warning (("Could not load plugin: %s"),
                              error.message);
                 }
             }
@@ -197,7 +197,7 @@ public abstract class Dactl.ModuleLoader : GLib.Object {
 
             return this.is_folder_eligible (file_info);
         } catch (Error error) {
-            critical (_("Failed to query content type for '%s'"),
+            critical (("Failed to query content type for '%s'"),
                       file.get_path ());
 
             return false;

@@ -30,7 +30,7 @@ Install Fedora 19 .. 23 dependencies
     json-glib-devel clutter-devel clutter-gtk-devel gsl-devel gtksourceview3-devel \
     libmatheval-devel sqlite-devel gobject-introspection-devel gettext-devel \
     gettext-common-devel libmodbus-devel comedilib-devel librsvg2-devel \
-    python3-devel pygobject3-devel
+    python3-devel pygobject3-devel libpeas-devel libsoup-devel webkitgtk4-devel
 
 Install Ubuntu 14.04 dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -73,7 +73,7 @@ Install libcld
 
    git clone https://github.com/geoffjay/libcld.git
    cd libcld
-   git checkout v0.3.1
+   git checkout ca85cde6f53632bcf6b298cd10f336e31f071f2c
    export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
    ./autogen.sh
    make && sudo make install
@@ -95,9 +95,10 @@ Compile and Install dactl
 
    git clone https://github.com/coanda/dactl.git
    cd dactl
-   git checkout v0.3.x-hotfix-002
+   git checkout v0.3.x-hotfix
    export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
    ./autogen.sh
+   sudo cp vapi/glib-extra.vapi /usr/share/vala-0.32/vapi/
    make && sudo make install
 
 Post-installation Configuration

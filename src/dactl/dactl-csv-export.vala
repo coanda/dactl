@@ -498,6 +498,7 @@ private class Dactl.CsvExport : Gtk.Box {
                                                     Gtk.ResponseType.CANCEL,
                                                     "_Open",
                                                     Gtk.ResponseType.ACCEPT);
+
             dialog.modal = true;
             dialog.do_overwrite_confirmation = true;
             dialog.action = Gtk.FileChooserAction.SELECT_FOLDER;
@@ -534,7 +535,7 @@ private class Dactl.CsvExport : Gtk.Box {
         var output = true;
 
         if (FileUtils.test (filename, FileTest.EXISTS)) {
-            var prompt = @"The file $filename exists.\nOverwrite?";
+            var prompt = "The file $filename exists.\nOverwrite?";
             var window = (this as Gtk.Widget).get_toplevel () as Gtk.Window;
             var dialog = new Gtk.MessageDialog (window,
                                                 Gtk.DialogFlags.MODAL,

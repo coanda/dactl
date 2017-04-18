@@ -470,7 +470,6 @@ private class Dactl.Polyline : Cairo.Context {
             var point = data[i];
             x = point.x;
             y = point.y;
-            debug ("x: %.3f y: %.3f", x, y);
 
             if ((i != 0) && (i != data.length - 1)) {
                 // calculate left hand point data

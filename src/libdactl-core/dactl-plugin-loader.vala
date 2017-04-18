@@ -60,7 +60,7 @@ public class Dactl.PluginLoader : Dactl.ModuleLoader {
     }
 
     public void add_plugin (Dactl.Plugin plugin) {
-        debug (_("New plugin '%s' available"), plugin.name);
+        debug (("New plugin '%s' available"), plugin.name);
         this.plugin_hash.set (plugin.name, plugin);
         this.plugin_available (plugin);
     }
@@ -75,7 +75,7 @@ public class Dactl.PluginLoader : Dactl.ModuleLoader {
 
     protected override bool load_module_from_file (File module_file) {
         if (module_file.get_basename () in this.loaded_modules) {
-            warning (_("A module named %s is already loaded"),
+            warning (("A module named %s is already loaded"),
                      module_file.get_basename ());
 
             return true;
@@ -84,7 +84,7 @@ public class Dactl.PluginLoader : Dactl.ModuleLoader {
         Module module = Module.open (module_file.get_path (),
                                      ModuleFlags.BIND_LOCAL);
         if (module == null) {
-            warning (_("Failed to load module from path '%s': %s"),
+            warning (("Failed to load module from path '%s': %s"),
                      module_file.get_path (),
                      Module.error ());
 
@@ -94,7 +94,7 @@ public class Dactl.PluginLoader : Dactl.ModuleLoader {
         void* function;
 
         if (!module.symbol("module_init", out function)) {
-            warning (_("Failed to find entry point function '%s' in '%s': %s"),
+            warning (("Failed to find entry point function '%s' in '%s': %s"),
                      "module_init",
                      module_file.get_path (),
                      Module.error ());

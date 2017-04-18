@@ -64,7 +64,7 @@ internal class Dactl.DBusService : GLib.Object, Dactl.DBusInterface {
     /*** Test Methods ***/
 
     public void ping (GLib.BusName sender) {
-        message (_("Received ping from: %s"), sender);
+        message (("Received ping from: %s"), sender);
         pong ();
     }
 
