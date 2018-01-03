@@ -48,11 +48,6 @@
     color: @tango_scarlet_red3;
 }
 
-.separator {
-    -GtkWidget-wide-separators: true;
-    -GtkWidget-separator-height: 1;
-}
-
 DactlChannelTreeView:selected {
     background-color: @dactl_selected_color;
     border-width: 1px 0 1px 0;
@@ -139,19 +134,19 @@ DactlLogControl .stop-button {
 
 .destructive-action.button {
     text-shadow: 0 1px @destructive_action_button_shadow;
-    icon-shadow: 0 1px @destructive_action_button_shadow;
+    -gtk-icon-shadow: 0 1px @destructive_action_button_shadow;
 }
 
 .destructive-action.button:active,
 .destructive-action.button:hover:active {
     text-shadow: 0 1px shade(@destructive_action_button_shadow, 1.15);
-    icon-shadow: 0 1px shade(@destructive_action_button_shadow, 1.15);
+    -gtk-icon-shadow: 0 1px shade(@destructive_action_button_shadow, 1.15);
 }
 
 .destructive-action.button:backdrop {
     background-image: none;
     text-shadow: none;
-    icon-shadow: none;
+    -gtk-icon-shadow: none;
     color: @theme_unfocused_text_color;
 }
 /***************************/
@@ -217,7 +212,7 @@ DactlLogControl .stop-button {
                                      to (darker (@dactl_selected_color)));
 }
 
-.dactl-continue:insensitive {
+.dactl-continue:disabled {
     background-image: none;
 }
 
@@ -254,7 +249,7 @@ DactlLogControl .stop-button {
     border-radius: 0 0 15px 15px;
 }
 
-.dactl-menu-row:prelight, .dactl-menu-row:focus {
+.dactl-menu-row:hover, .dactl-menu-row:focus {
     background-color: shade (@dactl_bg2_color, 1.2);
 }
 
@@ -272,7 +267,7 @@ DactlLogControl .stop-button {
 
 .dactl-empty-image {
     color: #2e3436;
-    icon-shadow: 0 -1px rgba(0,0,0,0.5);
+    -gtk-icon-shadow: 0 -1px rgba(0,0,0,0.5);
 }
 
 .dactl-empty-details-label {

@@ -265,10 +265,10 @@ AC_ARG_WITH(cld,
 
 HAVE_CLD=no
 AS_IF([test "x$try_cld" = "xyes"],
-      [PKG_CHECK_MODULES([DACTL_CLD_DEPS], [cld-0.3 comedi gio-2.0 gsl sqlite3 gee-0.8 libxml-2.0],
+      [PKG_CHECK_MODULES([DACTL_CLD_DEPS], [cld-1.0 comedi gio-2.0 gsl sqlite3 gee-0.8 libxml-2.0],
 	    [
-           DACTL_CHECK_PACKAGES([cld-0.3 comedi gio-2.0 gsl sqlite3 gee-0.8 libxml-2.0], [HAVE_CLD=yes])
-           DACTL_CLD_DEPS_VALAFLAGS="--pkg cld-0.3 --pkg comedi --pkg gio-2.0 --pkg gsl --pkg sqlite3 --pkg gee-0.8 --pkg libxml-2.0"
+           DACTL_CHECK_PACKAGES([cld-1.0 comedi gio-2.0 gsl sqlite3 gee-0.8 libxml-2.0], [HAVE_CLD=yes])
+           DACTL_CLD_DEPS_VALAFLAGS="--pkg cld-1.0 --pkg comedi --pkg gio-2.0 --pkg gsl --pkg sqlite3 --pkg gee-0.8 --pkg libxml-2.0"
 	       DACTL_PLUGIN_COMMON_VALAFLAGS="$DACTL_PLUGIN_COMMON_VALAFLAGS $DACTL_CLD_DEPS_VALAFLAGS"
            AC_SUBST([DACTL_CLD_DEPS_VALAFLAGS])
         ],
