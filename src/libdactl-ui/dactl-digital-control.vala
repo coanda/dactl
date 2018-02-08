@@ -69,7 +69,7 @@ public class Dactl.DigitalControl : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     construct {
         id = "d-ctl0";
-        objects = new Gee.TreeMap<string, Cld.Object> ();
+        objects = new Gee.TreeMap<string, Dactl.Object> ();
     }
 
     //public AOControl (string ai_ref) {}

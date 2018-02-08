@@ -88,7 +88,7 @@ public class Dactl.AOControl : Dactl.CompositeWidget, Dactl.CldAdapter {
         content.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
         content.transition_duration = 400;
 
-        objects = new Gee.TreeMap<string, Cld.Object> ();
+        objects = new Gee.TreeMap<string, Dactl.Object> ();
     }
 
     //public AOControl (string ai_ref) {}
