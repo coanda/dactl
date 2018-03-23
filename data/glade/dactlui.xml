@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<glade-catalog version="3.14" name="dactl" library="libdactl-ui-0.4.so" depends="gtk+">
+<glade-catalog version="3.14" name="dactl" library="libdactl-1.0.so" depends="gtk+">
 
   <glade-widget-classes>
 
