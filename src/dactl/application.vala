@@ -453,11 +453,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
                             //("%s not found or could not be read."), file.get_path ());
                 continue;
             }
-		} catch (Error e) {
-            error ("Received error %s", e.message);
-		} catch (IOError e) {
-            error ("Received I/O error %s", e.message);
-		}
+        }
     }
 
     /**
