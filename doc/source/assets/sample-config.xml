@@ -22,6 +22,156 @@
      -->
   <property name="log-level">*:5</property>
 
+  <plugins>
+    <plugin id="arduino-udp0" type="arduino-udp">
+      <ui:object id="arduino-udp-ctl00" type="plugin-control" parent="box0-0-2">
+        <ui:property name="port">3000</ui:property>
+        <ui:property name="enabled">true</ui:property>
+        <ui:property name="ref">/udp00</ui:property>
+        <ui:property name="ref">/udp01</ui:property>
+        <ui:property name="ref">/udp02</ui:property>
+        <ui:property name="ref">/udp03</ui:property>
+        <ui:property name="ref">/udp04</ui:property>
+        <ui:property name="ref">/udp05</ui:property>
+        <ui:property name="ref">/udp06</ui:property>
+        <ui:property name="ref">/udp07</ui:property>
+      </ui:object>
+      <ui:object id="arduino-udp-ctl01" type="plugin-control" parent="box0-0-2">
+        <ui:property name="port">3001</ui:property>
+        <ui:property name="enabled">true</ui:property>
+        <ui:property name="ref">/udp08</ui:property>
+        <ui:property name="ref">/udp09</ui:property>
+        <ui:property name="ref">/udp10</ui:property>
+        <ui:property name="ref">/udp11</ui:property>
+        <ui:property name="ref">/udp12</ui:property>
+        <ui:property name="ref">/udp13</ui:property>
+        <ui:property name="ref">/udp14</ui:property>
+        <ui:property name="ref">/udp15</ui:property>
+      </ui:object>
+      <ui:object id="arduino-udp-ctl02" type="plugin-control" parent="box0-0-2">
+        <ui:property name="port">3002</ui:property>
+        <ui:property name="enabled">true</ui:property>
+        <ui:property name="ref">/udp16</ui:property>
+        <ui:property name="ref">/udp17</ui:property>
+        <ui:property name="ref">/udp18</ui:property>
+        <ui:property name="ref">/udp19</ui:property>
+        <ui:property name="ref">/udp20</ui:property>
+        <ui:property name="ref">/udp21</ui:property>
+        <ui:property name="ref">/udp22</ui:property>
+        <ui:property name="ref">/udp23</ui:property>
+      </ui:object>
+      <ui:object id="arduino-udp-ctl03" type="plugin-control" parent="box0-0-2">
+        <ui:property name="port">3003</ui:property>
+        <ui:property name="enabled">true</ui:property>
+        <ui:property name="ref">/udp24</ui:property>
+        <ui:property name="ref">/udp25</ui:property>
+        <ui:property name="ref">/udp26</ui:property>
+        <ui:property name="ref">/udp27</ui:property>
+        <ui:property name="ref">/udp28</ui:property>
+        <ui:property name="ref">/udp29</ui:property>
+        <ui:property name="ref">/udp30</ui:property>
+        <ui:property name="ref">/udp31</ui:property>
+      </ui:object>
+      <ui:object id="arduino-udp-ctl04" type="plugin-control" parent="box0-0-2">
+        <ui:property name="port">3004</ui:property>
+        <ui:property name="enabled">true</ui:property>
+        <ui:property name="ref">/udp32</ui:property>
+        <ui:property name="ref">/udp33</ui:property>
+        <ui:property name="ref">/udp34</ui:property>
+        <ui:property name="ref">/udp35</ui:property>
+        <ui:property name="ref">/udp36</ui:property>
+        <ui:property name="ref">/udp37</ui:property>
+        <ui:property name="ref">/udp38</ui:property>
+        <ui:property name="ref">/udp39</ui:property>
+      </ui:object>
+      <ui:object id="arduino-udp-ctl05" type="plugin-control" parent="box0-0-2">
+        <ui:property name="port">3005</ui:property>
+        <ui:property name="enabled">true</ui:property>
+        <ui:property name="ref">/udp40</ui:property>
+        <ui:property name="ref">/udp41</ui:property>
+        <ui:property name="ref">/udp42</ui:property>
+        <ui:property name="ref">/udp43</ui:property>
+        <ui:property name="ref">/udp44</ui:property>
+        <ui:property name="ref">/udp45</ui:property>
+        <ui:property name="ref">/udp46</ui:property>
+        <ui:property name="ref">/udp47</ui:property>
+      </ui:object>
+      <ui:object id="arduino-udp-ctl06" type="plugin-control" parent="box0-0-2">
+        <ui:property name="port">3006</ui:property>
+        <ui:property name="enabled">true</ui:property>
+        <ui:property name="ref">/udp48</ui:property>
+        <ui:property name="ref">/udp49</ui:property>
+        <ui:property name="ref">/udp50</ui:property>
+        <ui:property name="ref">/udp51</ui:property>
+        <ui:property name="ref">/udp52</ui:property>
+        <ui:property name="ref">/udp53</ui:property>
+        <ui:property name="ref">/udp54</ui:property>
+        <ui:property name="ref">/udp55</ui:property>
+      </ui:object>
+      <ui:object id="arduino-udp-ctl07" type="plugin-control" parent="box0-0-2">
+        <ui:property name="port">3007</ui:property>
+        <ui:property name="enabled">true</ui:property>
+        <ui:property name="ref">/udp56</ui:property>
+        <ui:property name="ref">/udp57</ui:property>
+        <ui:property name="ref">/udp58</ui:property>
+        <ui:property name="ref">/udp59</ui:property>
+        <ui:property name="ref">/udp60</ui:property>
+        <ui:property name="ref">/udp61</ui:property>
+        <ui:property name="ref">/udp62</ui:property>
+        <ui:property name="ref">/udp63</ui:property>
+      </ui:object>
+      <ui:object id="arduino-udp-ctl08" type="plugin-control" parent="box0-0-2">
+        <ui:property name="port">3008</ui:property>
+        <ui:property name="enabled">true</ui:property>
+        <ui:property name="ref">/udp64</ui:property>
+        <ui:property name="ref">/udp65</ui:property>
+        <ui:property name="ref">/udp66</ui:property>
+        <ui:property name="ref">/udp67</ui:property>
+        <ui:property name="ref">/udp68</ui:property>
+        <ui:property name="ref">/udp69</ui:property>
+        <ui:property name="ref">/udp70</ui:property>
+        <ui:property name="ref">/udp71</ui:property>
+        <ui:property name="ref">/udp72</ui:property>
+      </ui:object>
+      <ui:object id="arduino-udp-ctl09" type="plugin-control" parent="box0-0-3">
+        <ui:property name="port">3009</ui:property>
+        <ui:property name="enabled">true</ui:property>
+        <ui:property name="ref">/udp73</ui:property>
+        <ui:property name="ref">/udp74</ui:property>
+        <ui:property name="ref">/udp75</ui:property>
+        <ui:property name="ref">/udp76</ui:property>
+      </ui:object>
+      <ui:object id="arduino-udp-ctl10" type="plugin-control" parent="box0-0-3">
+        <ui:property name="port">3010</ui:property>
+        <ui:property name="enabled">true</ui:property>
+        <ui:property name="ref">/udp77</ui:property>
+        <ui:property name="ref">/udp78</ui:property>
+        <ui:property name="ref">/udp79</ui:property>
+        <ui:property name="ref">/udp80</ui:property>
+      </ui:object>
+      <ui:object id="arduino-udp-ctl11" type="plugin-control" parent="box0-0-3">
+        <ui:property name="port">3011</ui:property>
+        <ui:property name="enabled">false</ui:property>
+        <ui:property name="ref">/udp81</ui:property>
+        <ui:property name="ref">/udp82</ui:property>
+        <ui:property name="ref">/udp83</ui:property>
+        <ui:property name="ref">/udp84</ui:property>
+        <ui:property name="ref">/udp85</ui:property>
+        <ui:property name="ref">/udp86</ui:property>
+        <ui:property name="ref">/udp87</ui:property>
+        <ui:property name="ref">/udp88</ui:property>
+        <ui:property name="ref">/udp89</ui:property>
+        <ui:property name="ref">/udp90</ui:property>
+        <ui:property name="ref">/udp91</ui:property>
+        <ui:property name="ref">/udp92</ui:property>
+      </ui:object>
+      <ui:object id="arduino-udp-ctl12" type="plugin-control" parent="box0-0-3">
+        <ui:property name="port">3012</ui:property>
+        <ui:property name="enabled">false</ui:property>
+        <ui:property name="ref">/udp93</ui:property>
+      </ui:object>
+    </plugin>
+  </plugins>
   <!-- UI configuration -->
   <ui:objects>
     <ui:object id="pg0" type="page">
@@ -41,6 +191,7 @@
           <ui:property name="fill">false</ui:property>
 
           <ui:object id="log-ctl0" type="log" ref="/logctl0/log0"/>
+          <ui:object id="ai-ctl0" type="ai" ref="/daqctl0/dev0/ai00"/>
 
           <ui:object id="tree0" type="tree">
             <ui:property name="show-header">true</ui:property>
@@ -67,22 +218,24 @@
               <ui:object id="cat0ent13" type="tree-entry" chref="/daqctl0/dev0/ai13"/>
               <ui:object id="cat0ent14" type="tree-entry" chref="/daqctl0/dev0/ai14"/>
               <ui:object id="cat0ent15" type="tree-entry" chref="/daqctl0/dev0/ai15"/>
-              <ui:object id="cat0ent16" type="tree-entry" chref="/daqctl0/dev1/ai00"/>
-              <ui:object id="cat0ent17" type="tree-entry" chref="/daqctl0/dev1/ai01"/>
-              <ui:object id="cat0ent18" type="tree-entry" chref="/daqctl0/dev1/ai02"/>
-              <ui:object id="cat0ent19" type="tree-entry" chref="/daqctl0/dev1/ai03"/>
-              <ui:object id="cat0ent20" type="tree-entry" chref="/daqctl0/dev1/ai04"/>
-              <ui:object id="cat0ent21" type="tree-entry" chref="/daqctl0/dev1/ai05"/>
-              <ui:object id="cat0ent22" type="tree-entry" chref="/daqctl0/dev1/ai06"/>
-              <ui:object id="cat0ent23" type="tree-entry" chref="/daqctl0/dev1/ai07"/>
-              <ui:object id="cat0ent24" type="tree-entry" chref="/daqctl0/dev1/ai08"/>
-              <ui:object id="cat0ent25" type="tree-entry" chref="/daqctl0/dev1/ai09"/>
-              <ui:object id="cat0ent26" type="tree-entry" chref="/daqctl0/dev1/ai10"/>
-              <ui:object id="cat0ent27" type="tree-entry" chref="/daqctl0/dev1/ai11"/>
-              <ui:object id="cat0ent28" type="tree-entry" chref="/daqctl0/dev1/ai12"/>
-              <ui:object id="cat0ent29" type="tree-entry" chref="/daqctl0/dev1/ai13"/>
-              <ui:object id="cat0ent30" type="tree-entry" chref="/daqctl0/dev1/ai14"/>
-              <ui:object id="cat0ent31" type="tree-entry" chref="/daqctl0/dev1/ai15"/>
+              <!--
+                 -<ui:object id="cat0ent16" type="tree-entry" chref="/daqctl0/dev1/ai00"/>
+                 -<ui:object id="cat0ent17" type="tree-entry" chref="/daqctl0/dev1/ai01"/>
+                 -<ui:object id="cat0ent18" type="tree-entry" chref="/daqctl0/dev1/ai02"/>
+                 -<ui:object id="cat0ent19" type="tree-entry" chref="/daqctl0/dev1/ai03"/>
+                 -<ui:object id="cat0ent20" type="tree-entry" chref="/daqctl0/dev1/ai04"/>
+                 -<ui:object id="cat0ent21" type="tree-entry" chref="/daqctl0/dev1/ai05"/>
+                 -<ui:object id="cat0ent22" type="tree-entry" chref="/daqctl0/dev1/ai06"/>
+                 -<ui:object id="cat0ent23" type="tree-entry" chref="/daqctl0/dev1/ai07"/>
+                 -<ui:object id="cat0ent24" type="tree-entry" chref="/daqctl0/dev1/ai08"/>
+                 -<ui:object id="cat0ent25" type="tree-entry" chref="/daqctl0/dev1/ai09"/>
+                 -<ui:object id="cat0ent26" type="tree-entry" chref="/daqctl0/dev1/ai10"/>
+                 -<ui:object id="cat0ent27" type="tree-entry" chref="/daqctl0/dev1/ai11"/>
+                 -<ui:object id="cat0ent28" type="tree-entry" chref="/daqctl0/dev1/ai12"/>
+                 -<ui:object id="cat0ent29" type="tree-entry" chref="/daqctl0/dev1/ai13"/>
+                 -<ui:object id="cat0ent30" type="tree-entry" chref="/daqctl0/dev1/ai14"/>
+                 -<ui:object id="cat0ent31" type="tree-entry" chref="/daqctl0/dev1/ai15"/>
+                 -->
             </ui:object>
           </ui:object>
 
@@ -109,11 +262,12 @@
               <ui:property name="width-min">100</ui:property>
               <ui:property name="show-grid">true</ui:property>
               <ui:property name="show-title">true</ui:property>
+              <ui:property name="points-per-second">10</ui:property>
               <ui:object id="ax0" type="chart-axis">
                 <ui:property name="label">Time (s)</ui:property>
                 <ui:property name="orientation">horizontal</ui:property>
                 <ui:property name="min">0</ui:property>
-                <ui:property name="max">2</ui:property>
+                <ui:property name="max">100.000</ui:property>
                 <ui:property name="div-major">10</ui:property>
                 <ui:property name="div-minor">5</ui:property>
                 <ui:property name="show-label">true</ui:property>
@@ -126,13 +280,13 @@
                 <ui:property name="min">0</ui:property>
                 <ui:property name="max">10</ui:property>
                 <ui:property name="div-major">8</ui:property>
-                <ui:property name="div-minor">1</ui:property>
+                <ui:property name="div-minor">2</ui:property>
                 <ui:property name="show-label">true</ui:property>
                 <ui:property name="show-minor-ticks">false</ui:property>
                 <ui:property name="show-major-ticks">false</ui:property>
                 <ui:property name="rotate-label">true</ui:property>
               </ui:object>
-              <ui:object id="tr0" type="chart-trace" ref="/daqctl0/dev0/ai00">
+              <ui:object id="tr0" type="stripchart-trace" ref="/daqctl0/dev0/ai00">
                 <ui:property name="buffer-size">100</ui:property>
                 <ui:property name="color">rgba(164,0,0,1.0)</ui:property>
                 <ui:property name="line-weight">1.0</ui:property>
@@ -141,12 +295,14 @@
                 <ui:property name="stride">2</ui:property>
               </ui:object>
             </ui:object>
+
             <ui:object id="chart1" type="stripchart">
               <ui:property name="title">Air Flow</ui:property>
               <ui:property name="height-min">100</ui:property>
               <ui:property name="width-min">100</ui:property>
               <ui:property name="show-grid">true</ui:property>
               <ui:property name="show-title">true</ui:property>
+              <ui:property name="points-per-second">10</ui:property>
               <ui:object id="ax0" type="chart-axis">
                 <ui:property name="label">Time (s)</ui:property>
                 <ui:property name="orientation">horizontal</ui:property>
@@ -164,13 +320,13 @@
                 <ui:property name="min">0</ui:property>
                 <ui:property name="max">400</ui:property>
                 <ui:property name="div-major">8</ui:property>
-                <ui:property name="div-minor">1</ui:property>
+                <ui:property name="div-minor">2</ui:property>
                 <ui:property name="show-label">true</ui:property>
                 <ui:property name="show-minor-ticks">false</ui:property>
                 <ui:property name="show-major-ticks">false</ui:property>
                 <ui:property name="rotate-label">true</ui:property>
               </ui:object>
-              <ui:object id="tr0" type="chart-trace" ref="/daqctl0/dev0/ai01">
+              <ui:object id="tr0" type="stripchart-trace" ref="/daqctl0/dev0/ai01">
                 <ui:property name="buffer-size">100</ui:property>
                 <ui:property name="color">rgba(78,154,6,1.0)</ui:property>
                 <ui:property name="line-weight">1.0</ui:property>
@@ -179,17 +335,25 @@
                 <ui:property name="stride">2</ui:property>
               </ui:object>
             </ui:object>
-            <ui:object id="chart2" type="stripchart">
-              <ui:property name="title">Pressure</ui:property>
+
+            <ui:object id="chart2" type="rt-chart">
+              <ui:property name="title">Speed</ui:property>
               <ui:property name="height-min">100</ui:property>
               <ui:property name="width-min">100</ui:property>
+              <ui:property name="refresh-ms">33</ui:property>
               <ui:property name="show-grid">true</ui:property>
-              <ui:property name="show-title">false</ui:property>
+              <ui:property name="show-grid-border">true</ui:property>
+              <ui:property name="show-title">true</ui:property>
+              <ui:property name="reverse-x-axis">false</ui:property>
+              <ui:property name="show-x-axis-label">true</ui:property>
+              <ui:property name="rotate-x-axis-label">false</ui:property>
+              <ui:property name="show-y-axis-label">true</ui:property>
+              <ui:property name="rotate-y-axis-label">true</ui:property>
               <ui:object id="ax0" type="chart-axis">
                 <ui:property name="label">Time (s)</ui:property>
                 <ui:property name="orientation">horizontal</ui:property>
                 <ui:property name="min">0</ui:property>
-                <ui:property name="max">2</ui:property>
+                <ui:property name="max">10</ui:property>
                 <ui:property name="div-major">10</ui:property>
                 <ui:property name="div-minor">5</ui:property>
                 <ui:property name="show-label">true</ui:property>
@@ -197,24 +361,26 @@
                 <ui:property name="show-major-ticks">false</ui:property>
               </ui:object>
               <ui:object id="ax1" type="chart-axis">
-                <ui:property name="label">Pressure (PSI)</ui:property>
+                <ui:property name="label">Voltage [V]</ui:property>
                 <ui:property name="orientation">vertical</ui:property>
                 <ui:property name="min">0</ui:property>
-                <ui:property name="max">2000</ui:property>
+                <ui:property name="max">20</ui:property>
                 <ui:property name="div-major">8</ui:property>
-                <ui:property name="div-minor">1</ui:property>
+                <ui:property name="div-minor">2</ui:property>
                 <ui:property name="show-label">true</ui:property>
                 <ui:property name="show-minor-ticks">false</ui:property>
                 <ui:property name="show-major-ticks">false</ui:property>
                 <ui:property name="rotate-label">true</ui:property>
               </ui:object>
-              <ui:object id="tr0" type="chart-trace" ref="/daqctl0/dev0/ai02">
-                <ui:property name="buffer-size">100</ui:property>
-                <ui:property name="color">rgba(32,74,135,1.0)</ui:property>
-                <ui:property name="line-weight">1.0</ui:property>
+              <ui:object id="tr0-0" type="trace" ttype="real-time">
+                <ui:property name="color">rgb(255,0,0)</ui:property>
+                <ui:property name="line-weight">1</ui:property>
                 <ui:property name="draw-type">line</ui:property>
-                <ui:property name="window-size">500</ui:property>
-                <ui:property name="stride">2</ui:property>
+                <ui:property name="points">1000</ui:property>
+                <ui:object id="ds0-0" type="dataseries" ref="/daqctl0/dev0/ai02">
+                  <ui:property name="buffer-size">1000</ui:property>
+                  <ui:property name="stride">1</ui:property>
+                </ui:object>
               </ui:object>
             </ui:object>
           </ui:object>
@@ -222,6 +388,679 @@
       </ui:object>
     </ui:object>
 
+    <ui:object id="pg1" type="page">
+      <ui:property name="index">0</ui:property>
+      <ui:property name="title">Bin Pressures</ui:property>
+      <ui:property name="visible">true</ui:property>
+      <ui:object id="box0" type="box">
+        <ui:property name="orientation">vertical</ui:property>
+        <ui:property name="spacing">5</ui:property>
+        <ui:object id="pg1chart0" type="polar-chart">
+          <ui:property name="title">Bin Heat Map</ui:property>
+          <ui:property name="refresh-ms">30</ui:property>
+          <ui:property name="height-min">100</ui:property>
+          <ui:property name="width-min">100</ui:property>
+          <ui:property name="show-grid">true</ui:property>
+          <ui:property name="show-grid-border">true</ui:property>
+          <ui:property name="show-title">true</ui:property>
+          <ui:property name="zoom">0.9</ui:property>
+          <ui:object id="ax0" type="polar-chart-axis">
+            <ui:property name="label">Angle [deg]</ui:property>
+            <ui:property name="polar-axis-type">angle</ui:property>
+            <ui:property name="min">10</ui:property>
+            <ui:property name="max">75</ui:property>
+            <ui:property name="div-major">8</ui:property>
+            <ui:property name="div-minor">4</ui:property>
+            <ui:property name="color">rgb(240,206,206)</ui:property>
+            <ui:property name="show-major-ticks">true</ui:property>
+            <ui:property name="show-major-labels">true</ui:property>
+            <ui:property name="intersect-value">45</ui:property>
+          </ui:object>
+          <ui:object id="ax1" type="polar-chart-axis">
+            <ui:property name="label">Distance [in]</ui:property>
+            <ui:property name="polar-axis-type">magnitude</ui:property>
+            <ui:property name="min">5</ui:property>
+            <ui:property name="max">10</ui:property>
+            <ui:property name="div-major">10</ui:property>
+            <ui:property name="div-minor">4</ui:property>
+            <ui:property name="color">rgb(114,159,207)</ui:property>
+            <ui:property name="show-major-ticks">true</ui:property>
+            <ui:property name="show-major-labels">true</ui:property>
+            <ui:property name="intersect-value">10</ui:property>
+          </ui:object>
+        </ui:object>
+      </ui:object>
+    </ui:object>
+
+    <ui:object id="pg2" type="page">
+      <ui:property name="index">0</ui:property>
+      <ui:property name="title">Bin Pressures</ui:property>
+      <ui:property name="visible">true</ui:property>
+      <ui:object id="box0" type="box">
+        <ui:property name="orientation">vertical</ui:property>
+        <ui:property name="spacing">5</ui:property>
+        <ui:object id="pg2chart0" type="polar-chart">
+          <ui:property name="title">Bin Heat Map</ui:property>
+          <ui:property name="refresh-ms">30</ui:property>
+          <ui:property name="height-min">100</ui:property>
+          <ui:property name="width-min">100</ui:property>
+          <ui:property name="show-grid">true</ui:property>
+          <ui:property name="show-grid-border">true</ui:property>
+          <ui:property name="show-title">true</ui:property>
+          <ui:property name="zoom">0.9</ui:property>
+          <ui:object id="ax0" type="polar-chart-axis">
+            <ui:property name="label">Angle [deg]</ui:property>
+            <ui:property name="polar-axis-type">angle</ui:property>
+            <ui:property name="min">0</ui:property>
+            <ui:property name="max">360</ui:property>
+            <ui:property name="div-major">8</ui:property>
+            <ui:property name="div-minor">4</ui:property>
+            <ui:property name="color">rgb(240,206,206)</ui:property>
+            <ui:property name="show-major-ticks">true</ui:property>
+            <ui:property name="show-major-labels">true</ui:property>
+            <ui:property name="intersect-value">45</ui:property>
+          </ui:object>
+          <ui:object id="ax1" type="polar-chart-axis">
+            <ui:property name="label">Distance [in]</ui:property>
+            <ui:property name="polar-axis-type">magnitude</ui:property>
+            <ui:property name="min">0</ui:property>
+            <ui:property name="max">10</ui:property>
+            <ui:property name="div-major">10</ui:property>
+            <ui:property name="div-minor">4</ui:property>
+            <ui:property name="color">rgb(114,159,207)</ui:property>
+            <ui:property name="show-major-ticks">true</ui:property>
+            <ui:property name="show-major-labels">true</ui:property>
+            <ui:property name="intersect-value">10</ui:property>
+          </ui:object>
+          <ui:object id="cm0" type="colormap">
+            <ui:property name="label">Color Map Label</ui:property>
+            <ui:property name="min">0</ui:property>
+            <ui:property name="max">10</ui:property>
+            <ui:property name="div-major">10</ui:property>
+            <ui:property name="div-minor">4</ui:property>
+            <ui:property name="show-major-ticks">true</ui:property>
+            <ui:property name="show-minor-ticks">true</ui:property>
+            <ui:property name="show-label">true</ui:property>
+            <ui:property name="show-major-labels">true</ui:property>
+            <ui:property name="min-color">rgba(0,0,255,0.8)</ui:property>
+            <ui:property name="max-color">rgba(255,0,0,0.8)</ui:property>
+            <ui:property name="gradient">hsv</ui:property>
+          </ui:object>
+          <ui:object id="pg2chart0hm0" type="heatmap" subtype="polar">
+            <ui:property name="magnitude-min">0</ui:property>
+            <ui:property name="magnitude-max">10</ui:property>
+            <ui:property name="angle-min">0</ui:property>
+            <ui:property name="angle-max">360</ui:property>
+            <ui:property name="zmin">0</ui:property>
+            <ui:property name="zmax">10</ui:property>
+            <ui:property name="interpolation-type">none</ui:property>
+            <ui:property name="rings">10</ui:property>
+            <ui:property name="sectors">8</ui:property>
+            <ui:object id="pg2chart0hm0ary0" type="channel-matrix">
+              <ui:object id="pg2chart0hm0ary0p00" type="channel-matrix-element">
+                <ui:property name="a">0.5</ui:property>
+                <ui:property name="b">22.5</ui:property>
+                <ui:property name="chref">/udp64</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p01" type="channel-matrix-element">
+                <ui:property name="a">0.5</ui:property>
+                <ui:property name="b">67.5</ui:property>
+                <ui:property name="chref">/mc09</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p02" type="channel-matrix-element">
+                <ui:property name="a">0.5</ui:property>
+                <ui:property name="b">112.5</ui:property>
+                <ui:property name="chref">/mc10</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p03" type="channel-matrix-element">
+                <ui:property name="a">0.5</ui:property>
+                <ui:property name="b">157.5</ui:property>
+                <ui:property name="chref">/mc11</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p04" type="channel-matrix-element">
+                <ui:property name="a">0.5</ui:property>
+                <ui:property name="b">202.5</ui:property>
+                <ui:property name="chref">/mc12</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p05" type="channel-matrix-element">
+                <ui:property name="a">0.5</ui:property>
+                <ui:property name="b">247.5</ui:property>
+                <ui:property name="chref">/mc13</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p06" type="channel-matrix-element">
+                <ui:property name="a">0.5</ui:property>
+                <ui:property name="b">292.5</ui:property>
+                <ui:property name="chref">/mc14</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p07" type="channel-matrix-element">
+                <ui:property name="a">0.5</ui:property>
+                <ui:property name="b">337.5</ui:property>
+                <ui:property name="chref">/mc15</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p08" type="channel-matrix-element">
+                <ui:property name="a">1.5</ui:property>
+                <ui:property name="b">292.5</ui:property>
+                <ui:property name="chref">/udp65</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p09" type="channel-matrix-element">
+                <ui:property name="a">1.5</ui:property>
+                <ui:property name="b">337.5</ui:property>
+                <ui:property name="chref">/udp66</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p10" type="channel-matrix-element">
+                <ui:property name="a">1.5</ui:property>
+                <ui:property name="b">22.5</ui:property>
+                <ui:property name="chref">/udp67</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p11" type="channel-matrix-element">
+                <ui:property name="a">1.5</ui:property>
+                <ui:property name="b">67.5</ui:property>
+                <ui:property name="chref">/udp68</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p12" type="channel-matrix-element">
+                <ui:property name="a">1.5</ui:property>
+                <ui:property name="b">112.5</ui:property>
+                <ui:property name="chref">/udp69</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p13" type="channel-matrix-element">
+                <ui:property name="a">1.5</ui:property>
+                <ui:property name="b">157.5</ui:property>
+                <ui:property name="chref">/udp70</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p14" type="channel-matrix-element">
+                <ui:property name="a">1.5</ui:property>
+                <ui:property name="b">202.5</ui:property>
+                <ui:property name="chref">/udp71</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p15" type="channel-matrix-element">
+                <ui:property name="a">1.5</ui:property>
+                <ui:property name="b">247.5</ui:property>
+                <ui:property name="chref">/udp72</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p16" type="channel-matrix-element">
+                <ui:property name="a">2.5</ui:property>
+                <ui:property name="b">292.5</ui:property>
+                <ui:property name="chref">/udp00</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p17" type="channel-matrix-element">
+                <ui:property name="a">3.5</ui:property>
+                <ui:property name="b">292.5</ui:property>
+                <ui:property name="chref">/udp01</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p18" type="channel-matrix-element">
+                <ui:property name="a">4.5</ui:property>
+                <ui:property name="b">292.5</ui:property>
+                <ui:property name="chref">/udp02</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p19" type="channel-matrix-element">
+                <ui:property name="a">5.5</ui:property>
+                <ui:property name="b">292.5</ui:property>
+                <ui:property name="chref">/udp03</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p20" type="channel-matrix-element">
+                <ui:property name="a">6.5</ui:property>
+                <ui:property name="b">292.5</ui:property>
+                <ui:property name="chref">/udp04</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p21" type="channel-matrix-element">
+                <ui:property name="a">7.5</ui:property>
+                <ui:property name="b">292.5</ui:property>
+                <ui:property name="chref">/udp05</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p22" type="channel-matrix-element">
+                <ui:property name="a">8.5</ui:property>
+                <ui:property name="b">292.5</ui:property>
+                <ui:property name="chref">/udp06</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p23" type="channel-matrix-element">
+                <ui:property name="a">9.5</ui:property>
+                <ui:property name="b">292.5</ui:property>
+                <ui:property name="chref">/udp07</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p24" type="channel-matrix-element">
+                <ui:property name="a">2.5</ui:property>
+                <ui:property name="b">337.5</ui:property>
+                <ui:property name="chref">/udp08</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p25" type="channel-matrix-element">
+                <ui:property name="a">3.5</ui:property>
+                <ui:property name="b">337.5</ui:property>
+                <ui:property name="chref">/udp09</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p26" type="channel-matrix-element">
+                <ui:property name="a">4.5</ui:property>
+                <ui:property name="b">337.5</ui:property>
+                <ui:property name="chref">/udp10</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p27" type="channel-matrix-element">
+                <ui:property name="a">5.5</ui:property>
+                <ui:property name="b">337.5</ui:property>
+                <ui:property name="chref">/udp11</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p28" type="channel-matrix-element">
+                <ui:property name="a">6.5</ui:property>
+                <ui:property name="b">337.5</ui:property>
+                <ui:property name="chref">/udp12</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p29" type="channel-matrix-element">
+                <ui:property name="a">7.5</ui:property>
+                <ui:property name="b">337.5</ui:property>
+                <ui:property name="chref">/udp13</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p30" type="channel-matrix-element">
+                <ui:property name="a">8.5</ui:property>
+                <ui:property name="b">337.5</ui:property>
+                <ui:property name="chref">/udp14</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p31" type="channel-matrix-element">
+                <ui:property name="a">9.5</ui:property>
+                <ui:property name="b">337.5</ui:property>
+                <ui:property name="chref">/udp15</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p32" type="channel-matrix-element">
+                <ui:property name="a">2.5</ui:property>
+                <ui:property name="b">22.5</ui:property>
+                <ui:property name="chref">/udp16</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p33" type="channel-matrix-element">
+                <ui:property name="a">3.5</ui:property>
+                <ui:property name="b">22.5</ui:property>
+                <ui:property name="chref">/udp17</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p34" type="channel-matrix-element">
+                <ui:property name="a">4.5</ui:property>
+                <ui:property name="b">22.5</ui:property>
+                <ui:property name="chref">/udp18</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p35" type="channel-matrix-element">
+                <ui:property name="a">5.5</ui:property>
+                <ui:property name="b">22.5</ui:property>
+                <ui:property name="chref">/udp19</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p36" type="channel-matrix-element">
+                <ui:property name="a">6.5</ui:property>
+                <ui:property name="b">22.5</ui:property>
+                <ui:property name="chref">/udp20</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p37" type="channel-matrix-element">
+                <ui:property name="a">7.5</ui:property>
+                <ui:property name="b">22.5</ui:property>
+                <ui:property name="chref">/udp21</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p38" type="channel-matrix-element">
+                <ui:property name="a">8.5</ui:property>
+                <ui:property name="b">22.5</ui:property>
+                <ui:property name="chref">/udp22</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p39" type="channel-matrix-element">
+                <ui:property name="a">9.5</ui:property>
+                <ui:property name="b">22.5</ui:property>
+                <ui:property name="chref">/udp23</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p40" type="channel-matrix-element">
+                <ui:property name="a">2.5</ui:property>
+                <ui:property name="b">67.5</ui:property>
+                <ui:property name="chref">/udp24</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p41" type="channel-matrix-element">
+                <ui:property name="a">3.5</ui:property>
+                <ui:property name="b">67.5</ui:property>
+                <ui:property name="chref">/udp25</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p42" type="channel-matrix-element">
+                <ui:property name="a">4.5</ui:property>
+                <ui:property name="b">67.5</ui:property>
+                <ui:property name="chref">/udp26</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p43" type="channel-matrix-element">
+                <ui:property name="a">5.5</ui:property>
+                <ui:property name="b">67.5</ui:property>
+                <ui:property name="chref">/udp27</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p44" type="channel-matrix-element">
+                <ui:property name="a">6.5</ui:property>
+                <ui:property name="b">67.5</ui:property>
+                <ui:property name="chref">/udp28</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p45" type="channel-matrix-element">
+                <ui:property name="a">7.5</ui:property>
+                <ui:property name="b">67.5</ui:property>
+                <ui:property name="chref">/udp29</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p46" type="channel-matrix-element">
+                <ui:property name="a">8.5</ui:property>
+                <ui:property name="b">67.5</ui:property>
+                <ui:property name="chref">/udp30</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p47" type="channel-matrix-element">
+                <ui:property name="a">9.5</ui:property>
+                <ui:property name="b">67.5</ui:property>
+                <ui:property name="chref">/udp31</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p48" type="channel-matrix-element">
+                <ui:property name="a">2.5</ui:property>
+                <ui:property name="b">112.5</ui:property>
+                <ui:property name="chref">/udp32</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p49" type="channel-matrix-element">
+                <ui:property name="a">3.5</ui:property>
+                <ui:property name="b">112.5</ui:property>
+                <ui:property name="chref">/udp33</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p50" type="channel-matrix-element">
+                <ui:property name="a">4.5</ui:property>
+                <ui:property name="b">112.5</ui:property>
+                <ui:property name="chref">/udp34</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p51" type="channel-matrix-element">
+                <ui:property name="a">5.5</ui:property>
+                <ui:property name="b">112.5</ui:property>
+                <ui:property name="chref">/udp35</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p52" type="channel-matrix-element">
+                <ui:property name="a">6.5</ui:property>
+                <ui:property name="b">112.5</ui:property>
+                <ui:property name="chref">/udp36</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p53" type="channel-matrix-element">
+                <ui:property name="a">7.5</ui:property>
+                <ui:property name="b">112.5</ui:property>
+                <ui:property name="chref">/udp37</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p54" type="channel-matrix-element">
+                <ui:property name="a">8.5</ui:property>
+                <ui:property name="b">112.5</ui:property>
+                <ui:property name="chref">/udp38</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p55" type="channel-matrix-element">
+                <ui:property name="a">9.5</ui:property>
+                <ui:property name="b">112.5</ui:property>
+                <ui:property name="chref">/udp39</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p56" type="channel-matrix-element">
+                <ui:property name="a">2.5</ui:property>
+                <ui:property name="b">157.5</ui:property>
+                <ui:property name="chref">/udp40</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p57" type="channel-matrix-element">
+                <ui:property name="a">3.5</ui:property>
+                <ui:property name="b">157.5</ui:property>
+                <ui:property name="chref">/udp41</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p58" type="channel-matrix-element">
+                <ui:property name="a">4.5</ui:property>
+                <ui:property name="b">157.5</ui:property>
+                <ui:property name="chref">/udp42</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p59" type="channel-matrix-element">
+                <ui:property name="a">5.5</ui:property>
+                <ui:property name="b">157.5</ui:property>
+                <ui:property name="chref">/udp43</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p60" type="channel-matrix-element">
+                <ui:property name="a">6.5</ui:property>
+                <ui:property name="b">157.5</ui:property>
+                <ui:property name="chref">/udp44</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p61" type="channel-matrix-element">
+                <ui:property name="a">7.5</ui:property>
+                <ui:property name="b">157.5</ui:property>
+                <ui:property name="chref">/udp45</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p62" type="channel-matrix-element">
+                <ui:property name="a">8.5</ui:property>
+                <ui:property name="b">157.5</ui:property>
+                <ui:property name="chref">/udp46</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p63" type="channel-matrix-element">
+                <ui:property name="a">9.5</ui:property>
+                <ui:property name="b">157.5</ui:property>
+                <ui:property name="chref">/udp47</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p64" type="channel-matrix-element">
+                <ui:property name="a">2.5</ui:property>
+                <ui:property name="b">202.5</ui:property>
+                <ui:property name="chref">/udp48</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p65" type="channel-matrix-element">
+                <ui:property name="a">3.5</ui:property>
+                <ui:property name="b">202.5</ui:property>
+                <ui:property name="chref">/udp49</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p66" type="channel-matrix-element">
+                <ui:property name="a">4.5</ui:property>
+                <ui:property name="b">202.5</ui:property>
+                <ui:property name="chref">/udp50</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p67" type="channel-matrix-element">
+                <ui:property name="a">5.5</ui:property>
+                <ui:property name="b">202.5</ui:property>
+                <ui:property name="chref">/udp51</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p68" type="channel-matrix-element">
+                <ui:property name="a">6.5</ui:property>
+                <ui:property name="b">202.5</ui:property>
+                <ui:property name="chref">/udp52</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p69" type="channel-matrix-element">
+                <ui:property name="a">7.5</ui:property>
+                <ui:property name="b">202.5</ui:property>
+                <ui:property name="chref">/udp53</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p70" type="channel-matrix-element">
+                <ui:property name="a">8.5</ui:property>
+                <ui:property name="b">202.5</ui:property>
+                <ui:property name="chref">/udp54</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p71" type="channel-matrix-element">
+                <ui:property name="a">9.5</ui:property>
+                <ui:property name="b">202.5</ui:property>
+                <ui:property name="chref">/udp55</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p72" type="channel-matrix-element">
+                <ui:property name="a">2.5</ui:property>
+                <ui:property name="b">247.5</ui:property>
+                <ui:property name="chref">/udp56</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p73" type="channel-matrix-element">
+                <ui:property name="a">3.5</ui:property>
+                <ui:property name="b">247.5</ui:property>
+                <ui:property name="chref">/udp57</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p74" type="channel-matrix-element">
+                <ui:property name="a">4.5</ui:property>
+                <ui:property name="b">247.5</ui:property>
+                <ui:property name="chref">/udp58</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p75" type="channel-matrix-element">
+                <ui:property name="a">5.5</ui:property>
+                <ui:property name="b">247.5</ui:property>
+                <ui:property name="chref">/udp59</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p76" type="channel-matrix-element">
+                <ui:property name="a">6.5</ui:property>
+                <ui:property name="b">247.5</ui:property>
+                <ui:property name="chref">/udp60</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p77" type="channel-matrix-element">
+                <ui:property name="a">7.5</ui:property>
+                <ui:property name="b">247.5</ui:property>
+                <ui:property name="chref">/udp61</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p78" type="channel-matrix-element">
+                <ui:property name="a">8.5</ui:property>
+                <ui:property name="b">247.5</ui:property>
+                <ui:property name="chref">/udp62</ui:property>
+              </ui:object>
+              <ui:object id="pg2chart0hm0ary0p79" type="channel-matrix-element">
+                <ui:property name="a">9.5</ui:property>
+                <ui:property name="b">247.5</ui:property>
+                <ui:property name="chref">/udp63</ui:property>
+              </ui:object>
+            </ui:object>
+          </ui:object>
+        </ui:object>
+      </ui:object>
+    </ui:object>
+
+    <ui:object id="pg3" type="page">
+      <ui:property name="index">0</ui:property>
+      <ui:property name="title">Page 3</ui:property>
+      <ui:property name="visible">true</ui:property>
+
+      <ui:object id="box0" type="box">
+        <ui:property name="orientation">vertical</ui:property>
+        <ui:property name="spacing">5</ui:property>
+
+        <ui:object id="chart0" type="rt-chart">
+          <ui:property name="title">Heat Map</ui:property>
+          <ui:property name="height-min">100</ui:property>
+          <ui:property name="width-min">100</ui:property>
+          <ui:property name="refresh-ms">33</ui:property>
+          <ui:property name="show-grid">true</ui:property>
+          <ui:property name="show-grid-border">true</ui:property>
+          <ui:property name="show-title">true</ui:property>
+          <ui:property name="reverse-x-axis">false</ui:property>
+          <ui:property name="show-x-axis-label">true</ui:property>
+          <ui:property name="rotate-x-axis-label">false</ui:property>
+          <ui:property name="show-y-axis-label">true</ui:property>
+          <ui:property name="rotate-y-axis-label">true</ui:property>
+
+          <ui:object id="ax0" type="chart-axis">
+            <ui:property name="label">Distance [cm]</ui:property>
+            <ui:property name="orientation">horizontal</ui:property>
+            <ui:property name="min">0.000000</ui:property>
+            <ui:property name="max">10.000000</ui:property>
+            <ui:property name="div-major">10</ui:property>
+            <ui:property name="div-minor">4</ui:property>
+            <ui:property name="show-label">true</ui:property>
+            <ui:property name="show-major-labels">true</ui:property>
+          </ui:object>
+
+          <ui:object id="ax1" type="chart-axis">
+            <ui:property name="label">Distance [cm]</ui:property>
+            <ui:property name="orientation">vertical</ui:property>
+            <ui:property name="min">0.000000</ui:property>
+            <ui:property name="max">10.000000</ui:property>
+            <ui:property name="div-major">10</ui:property>
+            <ui:property name="div-minor">4</ui:property>
+            <ui:property name="show-label">true</ui:property>
+          </ui:object>
+
+          <ui:object id="hmap-0" type="heatmap">
+            <ui:property name="xmin">0</ui:property>
+            <ui:property name="xmax">10</ui:property>
+            <ui:property name="ymin">0</ui:property>
+            <ui:property name="ymax">10</ui:property>
+            <ui:property name="zmin">0</ui:property>
+            <ui:property name="zmax">10</ui:property>
+            <ui:property name="min-color">rgba(114,159,207,0.8)</ui:property>
+            <ui:property name="max-color">rgba(239,41,41,0.8)</ui:property>
+            <ui:property name="interpolation-type">none</ui:property>
+            <ui:property name="rows">4</ui:property>
+            <ui:property name="columns">4</ui:property>
+            <ui:object id="ary-0" type="channel-matrix">
+
+              <ui:object id="pg1chart0tr0ary0p00" type="channel-matrix-element">
+                <ui:property name="a">0.0</ui:property>
+                <ui:property name="b">0.0"</ui:property>
+                <ui:property name="chref">/udp49</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p01" type="channel-matrix-element">
+                <ui:property name="a">2.5</ui:property>
+                <ui:property name="b">0.0</ui:property>
+                <ui:property name="chref">/udp50</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p02" type="channel-matrix-element">
+                <ui:property name="a">5.0</ui:property>
+                <ui:property name="b">0.0</ui:property>
+                <ui:property name="chref">/udp51</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p03" type="channel-matrix-element">
+                <ui:property name="a">7.5</ui:property>
+                <ui:property name="b">0.0</ui:property>
+                <ui:property name="chref">/udp52</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p04" type="channel-matrix-element">
+                <ui:property name="a">0.00</ui:property>
+                <ui:property name="b">2.50</ui:property>
+                <ui:property name="chref">/udp53</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p05" type="channel-matrix-element">
+                <ui:property name="a">2.5</ui:property>
+                <ui:property name="b">2.5</ui:property>
+                <ui:property name="chref">/udp54</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p06" type="channel-matrix-element">
+                <ui:property name="a">5.00</ui:property>
+                <ui:property name="b">2.50</ui:property>
+                <ui:property name="chref">/udp55</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p07" type="channel-matrix-element">
+                <ui:property name="a">7.50</ui:property>
+                <ui:property name="b">2.50</ui:property>
+                <ui:property name="chref">/udp56</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p08" type="channel-matrix-element">
+                <ui:property name="a">0.00</ui:property>
+                <ui:property name="b">5.00</ui:property>
+                <ui:property name="chref">/udp56</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p09" type="channel-matrix-element">
+                <ui:property name="a">2.50</ui:property>
+                <ui:property name="b">5.00</ui:property>
+                <ui:property name="chref">/udp57</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p10" type="channel-matrix-element">
+                <ui:property name="a">5.00</ui:property>
+                <ui:property name="b">5.00</ui:property>
+                <ui:property name="chref">/udp58</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p11" type="channel-matrix-element">
+                <ui:property name="a">7.50</ui:property>
+                <ui:property name="b">5.00</ui:property>
+                <ui:property name="chref">/udp59</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p12" type="channel-matrix-element">
+                <ui:property name="a">0.00</ui:property>
+                <ui:property name="b">7.50</ui:property>
+                <ui:property name="chref">/udp60</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p13" type="channel-matrix-element">
+                <ui:property name="a">2.50</ui:property>
+                <ui:property name="b">7.50</ui:property>
+                <ui:property name="chref">/udp61</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p14" type="channel-matrix-element">
+                <ui:property name="a">5.00</ui:property>
+                <ui:property name="b">7.50</ui:property>
+                <ui:property name="chref">/udp62</ui:property>
+              </ui:object>
+
+              <ui:object id="pg1chart0tr0ary0p15" type="channel-matrix-element">
+                <ui:property name="a">7.50</ui:property>
+                <ui:property name="b">7.50</ui:property>
+                <ui:property name="chref">/udp63</ui:property>
+              </ui:object>
+            </ui:object>
+          </ui:object>
+        </ui:object>
+      </ui:object>
+    </ui:object>
   </ui:objects>
   <!-- End UI configuration -->
 
@@ -426,200 +1265,202 @@
           <cld:property name="subdevnum">1</cld:property>
         </cld:object>
       </cld:object>
-      <cld:object id="dev1" type="device" driver="comedi">
-        <cld:property name="hardware">PCI-ADV1710</cld:property>
-        <cld:property name="type">input</cld:property>
-        <cld:property name="filename">/dev/comedi1</cld:property>
-        <cld:object id="tk3" type="task" ttype="comedi">
-          <cld:property name="exec-type">polling</cld:property>
-          <cld:property name="devref">/daqctl0/dev1</cld:property>
-          <cld:property name="subdevice">0</cld:property>
-          <cld:property name="direction">read</cld:property>
-          <cld:property name="interval-ms">100</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai00</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai01</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai02</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai03</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai04</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai05</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai06</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai07</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai08</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai09</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai10</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai11</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai12</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai13</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai14</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ai15</cld:property>
-        </cld:object>
-        <cld:object id="tk4" type="task" ttype="comedi">
-          <cld:property name="exec-type">polling</cld:property>
-          <cld:property name="devref">/daqctl0/dev1</cld:property>
-          <cld:property name="subdevice">2</cld:property>
-          <cld:property name="direction">write</cld:property>
-          <cld:property name="interval-ms">100</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ao00</cld:property>
-          <cld:property name="chref">/daqctl0/dev1/ao01</cld:property>
-        </cld:object>
-        <!-- Input channels -->
-        <cld:object id="ai00" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">TT09</cld:property>
-          <cld:property name="desc">Sample Input</cld:property>
-          <cld:property name="num">0</cld:property>
-          <cld:property name="subdevnum">0</cld:property>
-          <cld:property name="calref">/cal16</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai01" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">TT10</cld:property>
-          <cld:property name="desc">Sample Input</cld:property>
-          <cld:property name="num">1</cld:property>
-          <cld:property name="calref">/cal17</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai02" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">TT11</cld:property>
-          <cld:property name="desc">Sample Input</cld:property>
-          <cld:property name="num">2</cld:property>
-          <cld:property name="calref">/cal18</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai03" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP01</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">3</cld:property>
-          <cld:property name="calref">/cal19</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai04" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP02</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">4</cld:property>
-          <cld:property name="calref">/cal20</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai05" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP03</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">5</cld:property>
-          <cld:property name="calref">/cal21</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai06" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP04</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">6</cld:property>
-          <cld:property name="calref">/cal22</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai07" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP05</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">7</cld:property>
-          <cld:property name="calref">/cal23</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai08" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP06</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">8</cld:property>
-          <cld:property name="calref">/cal24</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai09" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP07</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">9</cld:property>
-          <cld:property name="calref">/cal25</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai10" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP08</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">10</cld:property>
-          <cld:property name="calref">/cal26</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai11" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP09</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">11</cld:property>
-          <cld:property name="calref">/cal27</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai12" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP10</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">12</cld:property>
-          <cld:property name="calref">/cal28</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai13" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP11</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">13</cld:property>
-          <cld:property name="calref">/cal29</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ai14" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP12</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">14</cld:property>
-          <cld:property name="calref">/cal30</cld:property>
-          <cld:property name="range">4</cld:property>
-        </cld:object>
-        <cld:object id="ai15" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
-          <cld:property name="tag">SP13</cld:property>
-          <cld:property name="desc">Spare channel</cld:property>
-          <cld:property name="num">15</cld:property>
-          <cld:property name="calref">/cal31</cld:property>
-          <cld:property name="range">4</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <!-- Analog output channels -->
-        <cld:object id="ao00" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="output">
-          <cld:property name="tag">OUT02</cld:property>
-          <cld:property name="desc">Sample Output</cld:property>
-          <cld:property name="num">0</cld:property>
-          <cld:property name="calref">/ao_cal00</cld:property>
-          <cld:property name="subdevnum">1</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-        <cld:object id="ao01" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="output">
-          <cld:property name="tag">OUT03</cld:property>
-          <cld:property name="desc">Sample Output</cld:property>
-          <cld:property name="num">1</cld:property>
-          <cld:property name="calref">/ao_cal00</cld:property>
-          <cld:property name="subdevnum">1</cld:property>
-          <cld:property name="naverage">10</cld:property>
-        </cld:object>
-      </cld:object>
+      <!--
+         -<cld:object id="dev1" type="device" driver="comedi">
+         -  <cld:property name="hardware">PCI-ADV1710</cld:property>
+         -  <cld:property name="type">input</cld:property>
+         -  <cld:property name="filename">/dev/comedi1</cld:property>
+         -  <cld:object id="tk3" type="task" ttype="comedi">
+         -    <cld:property name="exec-type">polling</cld:property>
+         -    <cld:property name="devref">/daqctl0/dev1</cld:property>
+         -    <cld:property name="subdevice">0</cld:property>
+         -    <cld:property name="direction">read</cld:property>
+         -    <cld:property name="interval-ms">100</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai00</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai01</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai02</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai03</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai04</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai05</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai06</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai07</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai08</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai09</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai10</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai11</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai12</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai13</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai14</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ai15</cld:property>
+         -  </cld:object>
+         -  <cld:object id="tk4" type="task" ttype="comedi">
+         -    <cld:property name="exec-type">polling</cld:property>
+         -    <cld:property name="devref">/daqctl0/dev1</cld:property>
+         -    <cld:property name="subdevice">2</cld:property>
+         -    <cld:property name="direction">write</cld:property>
+         -    <cld:property name="interval-ms">100</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ao00</cld:property>
+         -    <cld:property name="chref">/daqctl0/dev1/ao01</cld:property>
+         -  </cld:object>
+         -  [> Input channels <]
+         -  <cld:object id="ai00" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">TT09</cld:property>
+         -    <cld:property name="desc">Sample Input</cld:property>
+         -    <cld:property name="num">0</cld:property>
+         -    <cld:property name="subdevnum">0</cld:property>
+         -    <cld:property name="calref">/cal16</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai01" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">TT10</cld:property>
+         -    <cld:property name="desc">Sample Input</cld:property>
+         -    <cld:property name="num">1</cld:property>
+         -    <cld:property name="calref">/cal17</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai02" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">TT11</cld:property>
+         -    <cld:property name="desc">Sample Input</cld:property>
+         -    <cld:property name="num">2</cld:property>
+         -    <cld:property name="calref">/cal18</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai03" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP01</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">3</cld:property>
+         -    <cld:property name="calref">/cal19</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai04" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP02</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">4</cld:property>
+         -    <cld:property name="calref">/cal20</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai05" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP03</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">5</cld:property>
+         -    <cld:property name="calref">/cal21</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai06" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP04</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">6</cld:property>
+         -    <cld:property name="calref">/cal22</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai07" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP05</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">7</cld:property>
+         -    <cld:property name="calref">/cal23</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai08" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP06</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">8</cld:property>
+         -    <cld:property name="calref">/cal24</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai09" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP07</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">9</cld:property>
+         -    <cld:property name="calref">/cal25</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai10" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP08</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">10</cld:property>
+         -    <cld:property name="calref">/cal26</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai11" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP09</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">11</cld:property>
+         -    <cld:property name="calref">/cal27</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai12" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP10</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">12</cld:property>
+         -    <cld:property name="calref">/cal28</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai13" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP11</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">13</cld:property>
+         -    <cld:property name="calref">/cal29</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai14" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP12</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">14</cld:property>
+         -    <cld:property name="calref">/cal30</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ai15" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="input">
+         -    <cld:property name="tag">SP13</cld:property>
+         -    <cld:property name="desc">Spare channel</cld:property>
+         -    <cld:property name="num">15</cld:property>
+         -    <cld:property name="calref">/cal31</cld:property>
+         -    <cld:property name="range">4</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  [> Analog output channels <]
+         -  <cld:object id="ao00" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="output">
+         -    <cld:property name="tag">OUT02</cld:property>
+         -    <cld:property name="desc">Sample Output</cld:property>
+         -    <cld:property name="num">0</cld:property>
+         -    <cld:property name="calref">/ao_cal00</cld:property>
+         -    <cld:property name="subdevnum">1</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -  <cld:object id="ao01" type="channel" ref="/daqctl0/dev1" ctype="analog" direction="output">
+         -    <cld:property name="tag">OUT03</cld:property>
+         -    <cld:property name="desc">Sample Output</cld:property>
+         -    <cld:property name="num">1</cld:property>
+         -    <cld:property name="calref">/ao_cal00</cld:property>
+         -    <cld:property name="subdevnum">1</cld:property>
+         -    <cld:property name="naverage">10</cld:property>
+         -  </cld:object>
+         -</cld:object>
+         -->
     </cld:object>
 
     <cld:object id="ao_cal00" type="calibration">
       <cld:property name="units">Volts</cld:property>
       <cld:object id="cft0" type="coefficient">
         <cld:property name="n">0</cld:property>
-        <cld:property name="value">-1.6057</cld:property>
+        <cld:property name="value">0</cld:property>
       </cld:object>
       <cld:object id="cft1" type="coefficient">
         <cld:property name="n">1</cld:property>
-        <cld:property name="value">0.7281</cld:property>
+        <cld:property name="value">1</cld:property>
       </cld:object>
     </cld:object>
 
@@ -627,11 +1468,11 @@
       <cld:property name="units">Volts</cld:property>
       <cld:object id="cft0" type="coefficient">
         <cld:property name="n">0</cld:property>
-        <cld:property name="value">-103.0000</cld:property>
+        <cld:property name="value">0</cld:property>
       </cld:object>
       <cld:object id="cft1" type="coefficient">
         <cld:property name="n">1</cld:property>
-        <cld:property name="value">51.5000</cld:property>
+        <cld:property name="value">1</cld:property>
       </cld:object>
     </cld:object>
 
@@ -639,11 +1480,11 @@
       <cld:property name="units">Volts</cld:property>
       <cld:object id="cft0" type="coefficient">
         <cld:property name="n">0</cld:property>
-        <cld:property name="value">-498.8526</cld:property>
+        <cld:property name="value">100</cld:property>
       </cld:object>
       <cld:object id="cft1" type="coefficient">
         <cld:property name="n">1</cld:property>
-        <cld:property name="value">250.3442</cld:property>
+        <cld:property name="value">50</cld:property>
       </cld:object>
     </cld:object>
 
@@ -655,7 +1496,7 @@
       </cld:object>
       <cld:object id="cft1" type="coefficient">
         <cld:property name="n">1</cld:property>
-        <cld:property name="value">1.000</cld:property>
+        <cld:property name="value">3.000</cld:property>
       </cld:object>
     </cld:object>
 
@@ -1054,6 +1895,895 @@
       </cld:object>
     </cld:object>
 
+    <cld:object id="udp00" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC01S1</cld:property>
+      <cld:property name="desc">PTC01 Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r1s0</cld:property>
+    </cld:object>
+    <cld:object id="udp01" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC01S2</cld:property>
+      <cld:property name="desc">PTC01 Sensor 2</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r2s0</cld:property>
+    </cld:object>
+    <cld:object id="udp02" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC01S3</cld:property>
+      <cld:property name="desc">PTC01 Sensor 3</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r3s0</cld:property>
+    </cld:object>
+    <cld:object id="udp03" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC01S4</cld:property>
+      <cld:property name="desc">PTC01 Sensor 4</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r4s0</cld:property>
+    </cld:object>
+    <cld:object id="udp04" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC01S5</cld:property>
+      <cld:property name="desc">PTC01 Sensor 5</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r5s0</cld:property>
+    </cld:object>
+    <cld:object id="udp05" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC01S6</cld:property>
+      <cld:property name="desc">PTC01 Sensor 6</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r6s0</cld:property>
+    </cld:object>
+    <cld:object id="udp06" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC01S7</cld:property>
+      <cld:property name="desc">PTC01 Sensor 7</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r7s0</cld:property>
+    </cld:object>
+    <cld:object id="udp07" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC01S8</cld:property>
+      <cld:property name="desc">PTC01 Sensor 8</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r8s0</cld:property>
+    </cld:object>
+    <cld:object id="udp08" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC02S1</cld:property>
+      <cld:property name="desc">PTC02 Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r1s1</cld:property>
+    </cld:object>
+    <cld:object id="udp09" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC02S2</cld:property>
+      <cld:property name="desc">PTC02 Sensor 2</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r2s1</cld:property>
+    </cld:object>
+    <cld:object id="udp10" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC02S3</cld:property>
+      <cld:property name="desc">PTC02 Sensor 3</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r3s1</cld:property>
+    </cld:object>
+    <cld:object id="udp11" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC02S4</cld:property>
+      <cld:property name="desc">PTC02 Sensor 4</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r4s1</cld:property>
+    </cld:object>
+    <cld:object id="udp12" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC02S5</cld:property>
+      <cld:property name="desc">PTC02 Sensor 5</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r5s1</cld:property>
+    </cld:object>
+    <cld:object id="udp13" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC02S6</cld:property>
+      <cld:property name="desc">PTC02 Sensor 6</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r6s1</cld:property>
+    </cld:object>
+    <cld:object id="udp14" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC02S7</cld:property>
+      <cld:property name="desc">PTC02 Sensor 7</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r7s1</cld:property>
+    </cld:object>
+    <cld:object id="udp15" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC02S8</cld:property>
+      <cld:property name="desc">PTC02 Sensor 8</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r8s1</cld:property>
+    </cld:object>
+    <cld:object id="udp16" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC03S1</cld:property>
+      <cld:property name="desc">PTC03 Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r1s2</cld:property>
+    </cld:object>
+    <cld:object id="udp17" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC03S2</cld:property>
+      <cld:property name="desc">PTC03 Sensor 2</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r2s2</cld:property>
+    </cld:object>
+    <cld:object id="udp18" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC03S3</cld:property>
+      <cld:property name="desc">PTC03 Sensor 3</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r3s2</cld:property>
+    </cld:object>
+    <cld:object id="udp19" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC03S4</cld:property>
+      <cld:property name="desc">PTC03 Sensor 4</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r4s2</cld:property>
+    </cld:object>
+    <cld:object id="udp20" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC03S5</cld:property>
+      <cld:property name="desc">PTC03 Sensor 5</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r5s2</cld:property>
+    </cld:object>
+    <cld:object id="udp21" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC03S6</cld:property>
+      <cld:property name="desc">PTC03 Sensor 6</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r6s2</cld:property>
+    </cld:object>
+    <cld:object id="udp22" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC03S7</cld:property>
+      <cld:property name="desc">PTC03 Sensor 7</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r7s2</cld:property>
+    </cld:object>
+    <cld:object id="udp23" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC03S8</cld:property>
+      <cld:property name="desc">PTC03 Sensor 8</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r8s2</cld:property>
+    </cld:object>
+    <cld:object id="udp24" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC04S1</cld:property>
+      <cld:property name="desc">PTC04 Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r1s3</cld:property>
+    </cld:object>
+    <cld:object id="udp25" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC04S2</cld:property>
+      <cld:property name="desc">PTC04 Sensor 2</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r2s3</cld:property>
+    </cld:object>
+    <cld:object id="udp26" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC04S3</cld:property>
+      <cld:property name="desc">PTC04 Sensor 3</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r3s3</cld:property>
+    </cld:object>
+    <cld:object id="udp27" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC04S4</cld:property>
+      <cld:property name="desc">PTC04 Sensor 4</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r4s3</cld:property>
+    </cld:object>
+    <cld:object id="udp28" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC04S5</cld:property>
+      <cld:property name="desc">PTC04 Sensor 5</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r5s3</cld:property>
+    </cld:object>
+    <cld:object id="udp29" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC04S6</cld:property>
+      <cld:property name="desc">PTC04 Sensor 6</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r6s3</cld:property>
+    </cld:object>
+    <cld:object id="udp30" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC04S7</cld:property>
+      <cld:property name="desc">PTC04 Sensor 7</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r7s3</cld:property>
+    </cld:object>
+    <cld:object id="udp31" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC04S8</cld:property>
+      <cld:property name="desc">PTC04 Sensor 8</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r8s3</cld:property>
+    </cld:object>
+    <cld:object id="udp32" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC05S1</cld:property>
+      <cld:property name="desc">PTC05 Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r1s4</cld:property>
+    </cld:object>
+    <cld:object id="udp33" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC05S2</cld:property>
+      <cld:property name="desc">PTC05 Sensor 2</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r2s4</cld:property>
+    </cld:object>
+    <cld:object id="udp34" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC05S3</cld:property>
+      <cld:property name="desc">PTC05 Sensor 3</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r3s4</cld:property>
+    </cld:object>
+    <cld:object id="udp35" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC05S4</cld:property>
+      <cld:property name="desc">PTC05 Sensor 4</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r4s4</cld:property>
+    </cld:object>
+    <cld:object id="udp36" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC05S5</cld:property>
+      <cld:property name="desc">PTC05 Sensor 5</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r5s4</cld:property>
+    </cld:object>
+    <cld:object id="udp37" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC05S6</cld:property>
+      <cld:property name="desc">PTC05 Sensor 6</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r6s4</cld:property>
+    </cld:object>
+    <cld:object id="udp38" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC05S7</cld:property>
+      <cld:property name="desc">PTC05 Sensor 7</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r7s4</cld:property>
+    </cld:object>
+    <cld:object id="udp39" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC05S8</cld:property>
+      <cld:property name="desc">PTC05 Sensor 8</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r8s4</cld:property>
+    </cld:object>
+    <cld:object id="udp40" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC06S1</cld:property>
+      <cld:property name="desc">PTC06 Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r1s5</cld:property>
+    </cld:object>
+    <cld:object id="udp41" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC06S2</cld:property>
+      <cld:property name="desc">PTC06 Sensor 2</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r2s5</cld:property>
+    </cld:object>
+    <cld:object id="udp42" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC06S3</cld:property>
+      <cld:property name="desc">PTC06 Sensor 3</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r3s5</cld:property>
+    </cld:object>
+    <cld:object id="udp43" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC06S4</cld:property>
+      <cld:property name="desc">PTC06 Sensor 4</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r4s5</cld:property>
+    </cld:object>
+    <cld:object id="udp44" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC06S5</cld:property>
+      <cld:property name="desc">PTC06 Sensor 5</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r5s5</cld:property>
+    </cld:object>
+    <cld:object id="udp45" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC06S6</cld:property>
+      <cld:property name="desc">PTC06 Sensor 6</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r6s5</cld:property>
+    </cld:object>
+    <cld:object id="udp46" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC06S7</cld:property>
+      <cld:property name="desc">PTC06 Sensor 7</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r7s5</cld:property>
+    </cld:object>
+    <cld:object id="udp47" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC06S8</cld:property>
+      <cld:property name="desc">PTC06 Sensor 8</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r8s5</cld:property>
+    </cld:object>
+    <cld:object id="udp48" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC07S1</cld:property>
+      <cld:property name="desc">PTC07 Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r1s6</cld:property>
+    </cld:object>
+    <cld:object id="udp49" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC07S2</cld:property>
+      <cld:property name="desc">PTC07 Sensor 2</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r2s6</cld:property>
+    </cld:object>
+    <cld:object id="udp50" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC07S3</cld:property>
+      <cld:property name="desc">PTC07 Sensor 3</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r3s6</cld:property>
+    </cld:object>
+    <cld:object id="udp51" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC07S4</cld:property>
+      <cld:property name="desc">PTC07 Sensor 4</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r4s6</cld:property>
+    </cld:object>
+    <cld:object id="udp52" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC07S5</cld:property>
+      <cld:property name="desc">PTC07 Sensor 5</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r5s6</cld:property>
+    </cld:object>
+    <cld:object id="udp53" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC07S6</cld:property>
+      <cld:property name="desc">PTC07 Sensor 6</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r6s6</cld:property>
+    </cld:object>
+    <cld:object id="udp54" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC07S7</cld:property>
+      <cld:property name="desc">PTC07 Sensor 7</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r7s6</cld:property>
+    </cld:object>
+    <cld:object id="udp55" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC07S8</cld:property>
+      <cld:property name="desc">PTC07 Sensor 8</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r8s6</cld:property>
+    </cld:object>
+    <cld:object id="udp56" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC08S1</cld:property>
+      <cld:property name="desc">PTC08 Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r1s7</cld:property>
+    </cld:object>
+    <cld:object id="udp57" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC08S2</cld:property>
+      <cld:property name="desc">PTC08 Sensor 2</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r2s7</cld:property>
+    </cld:object>
+    <cld:object id="udp58" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC08S3</cld:property>
+      <cld:property name="desc">PTC08 Sensor 3</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r3s7</cld:property>
+    </cld:object>
+    <cld:object id="udp59" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC08S4</cld:property>
+      <cld:property name="desc">PTC08 Sensor 4</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r4s7</cld:property>
+    </cld:object>
+    <cld:object id="udp60" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC08S5</cld:property>
+      <cld:property name="desc">PTC08 Sensor 5</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r5s7</cld:property>
+    </cld:object>
+    <cld:object id="udp61" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC08S6</cld:property>
+      <cld:property name="desc">PTC08 Sensor 6</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r6s7</cld:property>
+    </cld:object>
+    <cld:object id="udp62" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC08S7</cld:property>
+      <cld:property name="desc">PTC08 Sensor 7</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r7s7</cld:property>
+    </cld:object>
+    <cld:object id="udp63" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC08S8</cld:property>
+      <cld:property name="desc">PTC08 Sensor 8</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r8s7</cld:property>
+    </cld:object>
+    <cld:object id="udp64" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC09S1</cld:property>
+      <cld:property name="desc">Octagon Center</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">centerpt</cld:property>
+    </cld:object>
+    <cld:object id="udp65" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC09S2</cld:property>
+      <cld:property name="desc">Octagon Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r0s0</cld:property>
+    </cld:object>
+    <cld:object id="udp66" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC09S3</cld:property>
+      <cld:property name="desc">Octagon Sensor 2</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r0s1</cld:property>
+    </cld:object>
+    <cld:object id="udp67" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC09S4</cld:property>
+      <cld:property name="desc">Octagon Sensor 3</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r0s2</cld:property>
+    </cld:object>
+    <cld:object id="udp68" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC09S5</cld:property>
+      <cld:property name="desc">Octagon Sensor 4</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r0s3</cld:property>
+    </cld:object>
+    <cld:object id="udp69" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC09S6</cld:property>
+      <cld:property name="desc">Octagon Sensor 5</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r0s4</cld:property>
+    </cld:object>
+    <cld:object id="udp70" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC09S7</cld:property>
+      <cld:property name="desc">Octagon Sensor 6</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r0s5</cld:property>
+    </cld:object>
+    <cld:object id="udp71" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC09S8</cld:property>
+      <cld:property name="desc">Octagon Sensor 7</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r0s6</cld:property>
+    </cld:object>
+    <cld:object id="udp72" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC09S9</cld:property>
+      <cld:property name="desc">Octagon Sensor 8</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">r0s7</cld:property>
+    </cld:object>
+    <cld:object id="udp73" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC10S1</cld:property>
+      <cld:property name="desc">Vert 4x Unit 1 Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">v0s0</cld:property>
+    </cld:object>
+    <cld:object id="udp74" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC10S2</cld:property>
+      <cld:property name="desc">Vert 4x Unit 1 Sensor 2</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">v0s1</cld:property>
+    </cld:object>
+    <cld:object id="udp75" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC10S3</cld:property>
+      <cld:property name="desc">Vert 4x Unit 1 Sensor 3</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">v0s2</cld:property>
+    </cld:object>
+    <cld:object id="udp76" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC10S4</cld:property>
+      <cld:property name="desc">Vert 4x Unit 1 Sensor 4</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">v0s3</cld:property>
+    </cld:object>
+    <cld:object id="udp77" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC11S1</cld:property>
+      <cld:property name="desc">Vert 4x Unit 2 Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">v1s0</cld:property>
+    </cld:object>
+    <cld:object id="udp78" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC11S2</cld:property>
+      <cld:property name="desc">Vert 4x Unit 2 Sensor 2</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">v1s1</cld:property>
+    </cld:object>
+    <cld:object id="udp79" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC11S3</cld:property>
+      <cld:property name="desc">Vert 4x Unit 2 Sensor 3</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">v1s2</cld:property>
+    </cld:object>
+    <cld:object id="udp80" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">PTC11S4</cld:property>
+      <cld:property name="desc">Vert 4x Unit 2 Sensor 4</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">v1s3</cld:property>
+    </cld:object>
+    <cld:object id="udp81" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">12xPkS1</cld:property>
+      <cld:property name="desc">12x Poking Stick Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk0s00</cld:property>
+    </cld:object>
+    <cld:object id="udp82" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">12xPkS2</cld:property>
+      <cld:property name="desc">12x Poking Stick Sensor 2</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk0s01</cld:property>
+    </cld:object>
+    <cld:object id="udp83" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">12xPkS3</cld:property>
+      <cld:property name="desc">12x Poking Stick Sensor 3</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk0s02</cld:property>
+    </cld:object>
+    <cld:object id="udp84" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">12xPkS4</cld:property>
+      <cld:property name="desc">12x Poking Stick Sensor 4</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk0s03</cld:property>
+    </cld:object>
+    <cld:object id="udp85" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">12xPkS5</cld:property>
+      <cld:property name="desc">12x Poking Stick Sensor 5</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk0s04</cld:property>
+    </cld:object>
+    <cld:object id="udp86" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">12xPkS6</cld:property>
+      <cld:property name="desc">12x Poking Stick Sensor 6</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk0s05</cld:property>
+    </cld:object>
+    <cld:object id="udp87" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">12xPkS7</cld:property>
+      <cld:property name="desc">12x Poking Stick Sensor 7</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk0s06</cld:property>
+    </cld:object>
+    <cld:object id="udp88" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">12xPkS8</cld:property>
+      <cld:property name="desc">12x Poking Stick Sensor 8</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk0s07</cld:property>
+    </cld:object>
+    <cld:object id="udp89" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">12xPkS9</cld:property>
+      <cld:property name="desc">12x Poking Stick Sensor 9</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk0s08</cld:property>
+    </cld:object>
+    <cld:object id="udp90" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">12xPkS10</cld:property>
+      <cld:property name="desc">12x Poking Stick Sensor 10</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk0s09</cld:property>
+    </cld:object>
+    <cld:object id="udp91" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">12xPkS11</cld:property>
+      <cld:property name="desc">12x Poking Stick Sensor 11</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk0s10</cld:property>
+    </cld:object>
+    <cld:object id="udp92" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">12xPkS12</cld:property>
+      <cld:property name="desc">12x Poking Stick Sensor 12</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk0s11</cld:property>
+    </cld:object>
+    <cld:object id="udp93" type="channel" ctype="analog" direction="input">
+      <cld:property name="tag">1xPkS1</cld:property>
+      <cld:property name="desc">1x Poking Stick Sensor 1</cld:property>
+      <cld:property name="calref">/udp_cal00</cld:property>
+      <cld:property name="naverage">1</cld:property>
+      <cld:property name="alias">pk1s0</cld:property>
+    </cld:object>
+    <cld:object id="udp_cal00" type="calibration">
+      <cld:property name="units">Volts</cld:property>
+      <cld:object id="cft0" type="coefficient">
+        <cld:property name="n">0</cld:property>
+        <cld:property name="value">0</cld:property>
+      </cld:object>
+      <cld:object id="cft1" type="coefficient">
+        <cld:property name="n">1</cld:property>
+        <cld:property name="value">1</cld:property>
+      </cld:object>
+    </cld:object>
+
+    <cld:object id="mc00" type="channel" ctype="calculation">
+      <cld:property name="tag">AVGR1</cld:property>
+      <cld:property name="desc">Ring 1 Average</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">(r0s0 + r0s1 + r0s2 + r0s3 + r0s4 + r0s5 + r0s6 + r0s7) / 8</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ravg0</cld:property>
+      <cld:property name="dref">/udp65</cld:property>
+      <cld:property name="dref">/udp66</cld:property>
+      <cld:property name="dref">/udp67</cld:property>
+      <cld:property name="dref">/udp68</cld:property>
+      <cld:property name="dref">/udp69</cld:property>
+      <cld:property name="dref">/udp70</cld:property>
+      <cld:property name="dref">/udp71</cld:property>
+      <cld:property name="dref">/udp72</cld:property>
+    </cld:object>
+    <cld:object id="mc01" type="channel" ctype="calculation">
+      <cld:property name="tag">AVGR2</cld:property>
+      <cld:property name="desc">Ring 2 Average</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">(r1s0 + r1s1 + r1s2 + r1s3 + r1s4 + r1s5 + r1s6 + r1s7) / 8</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ravg1</cld:property>
+      <cld:property name="dref">/udp00</cld:property>
+      <cld:property name="dref">/udp08</cld:property>
+      <cld:property name="dref">/udp16</cld:property>
+      <cld:property name="dref">/udp24</cld:property>
+      <cld:property name="dref">/udp32</cld:property>
+      <cld:property name="dref">/udp40</cld:property>
+      <cld:property name="dref">/udp48</cld:property>
+      <cld:property name="dref">/udp56</cld:property>
+    </cld:object>
+    <cld:object id="mc02" type="channel" ctype="calculation">
+      <cld:property name="tag">AVGR3</cld:property>
+      <cld:property name="desc">Ring 3 Average</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">(r2s0 + r2s1 + r2s2 + r2s3 + r2s4 + r2s5 + r2s6 + r2s7) / 8</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ravg2</cld:property>
+      <cld:property name="dref">/udp01</cld:property>
+      <cld:property name="dref">/udp09</cld:property>
+      <cld:property name="dref">/udp17</cld:property>
+      <cld:property name="dref">/udp25</cld:property>
+      <cld:property name="dref">/udp33</cld:property>
+      <cld:property name="dref">/udp41</cld:property>
+      <cld:property name="dref">/udp49</cld:property>
+      <cld:property name="dref">/udp57</cld:property>
+    </cld:object>
+    <cld:object id="mc03" type="channel" ctype="calculation">
+      <cld:property name="tag">AVGR4</cld:property>
+      <cld:property name="desc">Ring 4 Average</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">(r3s0 + r3s1 + r3s2 + r3s3 + r3s4 + r3s5 + r3s6 + r3s7) / 8</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ravg3</cld:property>
+      <cld:property name="dref">/udp02</cld:property>
+      <cld:property name="dref">/udp10</cld:property>
+      <cld:property name="dref">/udp18</cld:property>
+      <cld:property name="dref">/udp26</cld:property>
+      <cld:property name="dref">/udp34</cld:property>
+      <cld:property name="dref">/udp42</cld:property>
+      <cld:property name="dref">/udp50</cld:property>
+      <cld:property name="dref">/udp58</cld:property>
+    </cld:object>
+    <cld:object id="mc04" type="channel" ctype="calculation">
+      <cld:property name="tag">AVGR5</cld:property>
+      <cld:property name="desc">Ring 5 Average</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">(r4s0 + r4s1 + r4s2 + r4s3 + r4s4 + r4s5 + r4s6 + r4s7) / 8</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ravg4</cld:property>
+      <cld:property name="dref">/udp03</cld:property>
+      <cld:property name="dref">/udp11</cld:property>
+      <cld:property name="dref">/udp19</cld:property>
+      <cld:property name="dref">/udp27</cld:property>
+      <cld:property name="dref">/udp35</cld:property>
+      <cld:property name="dref">/udp43</cld:property>
+      <cld:property name="dref">/udp51</cld:property>
+      <cld:property name="dref">/udp59</cld:property>
+    </cld:object>
+    <cld:object id="mc05" type="channel" ctype="calculation">
+      <cld:property name="tag">AVGR6</cld:property>
+      <cld:property name="desc">Ring 6 Average</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">(r5s0 + r5s1 + r5s2 + r5s3 + r5s4 + r5s5 + r5s6 + r5s7) / 8</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ravg5</cld:property>
+      <cld:property name="dref">/udp04</cld:property>
+      <cld:property name="dref">/udp12</cld:property>
+      <cld:property name="dref">/udp20</cld:property>
+      <cld:property name="dref">/udp28</cld:property>
+      <cld:property name="dref">/udp36</cld:property>
+      <cld:property name="dref">/udp44</cld:property>
+      <cld:property name="dref">/udp52</cld:property>
+      <cld:property name="dref">/udp60</cld:property>
+    </cld:object>
+    <cld:object id="mc06" type="channel" ctype="calculation">
+      <cld:property name="tag">AVGR7</cld:property>
+      <cld:property name="desc">Ring 7 Average</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">(r6s0 + r6s1 + r6s2 + r6s3 + r6s4 + r6s5 + r6s6 + r6s7) / 8</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ravg6</cld:property>
+      <cld:property name="dref">/udp05</cld:property>
+      <cld:property name="dref">/udp13</cld:property>
+      <cld:property name="dref">/udp21</cld:property>
+      <cld:property name="dref">/udp29</cld:property>
+      <cld:property name="dref">/udp37</cld:property>
+      <cld:property name="dref">/udp45</cld:property>
+      <cld:property name="dref">/udp53</cld:property>
+      <cld:property name="dref">/udp61</cld:property>
+    </cld:object>
+    <cld:object id="mc07" type="channel" ctype="calculation">
+      <cld:property name="tag">AVGR8</cld:property>
+      <cld:property name="desc">Ring 8 Average</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">(r7s0 + r7s1 + r7s2 + r7s3 + r7s4 + r7s5 + r7s6 + r7s7) / 8</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ravg7</cld:property>
+      <cld:property name="dref">/udp06</cld:property>
+      <cld:property name="dref">/udp14</cld:property>
+      <cld:property name="dref">/udp22</cld:property>
+      <cld:property name="dref">/udp30</cld:property>
+      <cld:property name="dref">/udp38</cld:property>
+      <cld:property name="dref">/udp46</cld:property>
+      <cld:property name="dref">/udp54</cld:property>
+      <cld:property name="dref">/udp62</cld:property>
+    </cld:object>
+    <cld:object id="mc08" type="channel" ctype="calculation">
+      <cld:property name="tag">AVGR9</cld:property>
+      <cld:property name="desc">Ring 9 Average</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">(r8s0 + r8s1 + r8s2 + r8s3 + r8s4 + r8s5 + r8s6 + r8s7) / 8</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ravg8</cld:property>
+      <cld:property name="dref">/udp07</cld:property>
+      <cld:property name="dref">/udp15</cld:property>
+      <cld:property name="dref">/udp23</cld:property>
+      <cld:property name="dref">/udp31</cld:property>
+      <cld:property name="dref">/udp39</cld:property>
+      <cld:property name="dref">/udp47</cld:property>
+      <cld:property name="dref">/udp55</cld:property>
+      <cld:property name="dref">/udp63</cld:property>
+    </cld:object>
+    <cld:object id="mc09" type="channel" ctype="calculation">
+      <cld:property name="tag">CTR2</cld:property>
+      <cld:property name="desc">Ring Center</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">centerpt * 1.0</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ctr2</cld:property>
+      <cld:property name="dref">/udp64</cld:property>
+    </cld:object>
+    <cld:object id="mc10" type="channel" ctype="calculation">
+      <cld:property name="tag">CTR3</cld:property>
+      <cld:property name="desc">Ring Center</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">centerpt * 2.0</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ctr3</cld:property>
+      <cld:property name="dref">/udp64</cld:property>
+    </cld:object>
+    <cld:object id="mc11" type="channel" ctype="calculation">
+      <cld:property name="tag">CTR4</cld:property>
+      <cld:property name="desc">Ring Center</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">centerpt * 3.0</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ctr3</cld:property>
+      <cld:property name="dref">/udp64</cld:property>
+    </cld:object>
+    <cld:object id="mc12" type="channel" ctype="calculation">
+      <cld:property name="tag">CTR5</cld:property>
+      <cld:property name="desc">Ring Center</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">centerpt * 4.0</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ctr4</cld:property>
+      <cld:property name="dref">/udp64</cld:property>
+    </cld:object>
+    <cld:object id="mc13" type="channel" ctype="calculation">
+      <cld:property name="tag">CTR6</cld:property>
+      <cld:property name="desc">Ring Center</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">centerpt * 5.0</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ctr5</cld:property>
+      <cld:property name="dref">/udp64</cld:property>
+    </cld:object>
+    <cld:object id="mc14" type="channel" ctype="calculation">
+      <cld:property name="tag">CTR7</cld:property>
+      <cld:property name="desc">Ring Center</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">centerpt * 6.0</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ctr6</cld:property>
+      <cld:property name="dref">/udp64</cld:property>
+    </cld:object>
+    <cld:object id="mc15" type="channel" ctype="calculation">
+      <cld:property name="tag">CTR8</cld:property>
+      <cld:property name="desc">Ring Center</cld:property>
+      <cld:property name="calref">/mc_cal00</cld:property>
+      <cld:property name="expression">centerpt * 7.0</cld:property>
+      <cld:property name="naverage">10</cld:property>
+      <cld:property name="alias">ctr7</cld:property>
+      <cld:property name="dref">/udp64</cld:property>
+    </cld:object>
+    <cld:object id="mc_cal00" type="calibration">
+      <cld:property name="units">Volts</cld:property>
+      <cld:object id="cft0" type="coefficient">
+        <cld:property name="n">0</cld:property>
+        <cld:property name="value">0</cld:property>
+      </cld:object>
+      <cld:object id="cft1" type="coefficient">
+        <cld:property name="n">1</cld:property>
+        <cld:property name="value">1</cld:property>
+      </cld:object>
+    </cld:object>
+
     <cld:object id="logctl0" type="controller" ctype="log">
       <cld:object id="log0" type="log" ltype="sqlite">
         <cld:property name="title">Data Log</cld:property>
@@ -1078,26 +2808,30 @@
         <cld:object id="col13" type="column" chref="/daqctl0/dev0/ai13"/>
         <cld:object id="col14" type="column" chref="/daqctl0/dev0/ai14"/>
         <cld:object id="col15" type="column" chref="/daqctl0/dev0/ai15"/>
-        <cld:object id="col16" type="column" chref="/daqctl0/dev1/ai00"/>
-        <cld:object id="col17" type="column" chref="/daqctl0/dev1/ai01"/>
-        <cld:object id="col18" type="column" chref="/daqctl0/dev1/ai02"/>
-        <cld:object id="col19" type="column" chref="/daqctl0/dev1/ai03"/>
-        <cld:object id="col20" type="column" chref="/daqctl0/dev1/ai04"/>
-        <cld:object id="col21" type="column" chref="/daqctl0/dev1/ai05"/>
-        <cld:object id="col22" type="column" chref="/daqctl0/dev1/ai06"/>
-        <cld:object id="col23" type="column" chref="/daqctl0/dev1/ai07"/>
-        <cld:object id="col24" type="column" chref="/daqctl0/dev1/ai08"/>
-        <cld:object id="col25" type="column" chref="/daqctl0/dev1/ai09"/>
-        <cld:object id="col26" type="column" chref="/daqctl0/dev1/ai10"/>
-        <cld:object id="col27" type="column" chref="/daqctl0/dev1/ai11"/>
-        <cld:object id="col28" type="column" chref="/daqctl0/dev1/ai12"/>
-        <cld:object id="col29" type="column" chref="/daqctl0/dev1/ai13"/>
-        <cld:object id="col30" type="column" chref="/daqctl0/dev1/ai14"/>
-        <cld:object id="col31" type="column" chref="/daqctl0/dev1/ai15"/>
+        <!--
+           -<cld:object id="col16" type="column" chref="/daqctl0/dev1/ai00"/>
+           -<cld:object id="col17" type="column" chref="/daqctl0/dev1/ai01"/>
+           -<cld:object id="col18" type="column" chref="/daqctl0/dev1/ai02"/>
+           -<cld:object id="col19" type="column" chref="/daqctl0/dev1/ai03"/>
+           -<cld:object id="col20" type="column" chref="/daqctl0/dev1/ai04"/>
+           -<cld:object id="col21" type="column" chref="/daqctl0/dev1/ai05"/>
+           -<cld:object id="col22" type="column" chref="/daqctl0/dev1/ai06"/>
+           -<cld:object id="col23" type="column" chref="/daqctl0/dev1/ai07"/>
+           -<cld:object id="col24" type="column" chref="/daqctl0/dev1/ai08"/>
+           -<cld:object id="col25" type="column" chref="/daqctl0/dev1/ai09"/>
+           -<cld:object id="col26" type="column" chref="/daqctl0/dev1/ai10"/>
+           -<cld:object id="col27" type="column" chref="/daqctl0/dev1/ai11"/>
+           -<cld:object id="col28" type="column" chref="/daqctl0/dev1/ai12"/>
+           -<cld:object id="col29" type="column" chref="/daqctl0/dev1/ai13"/>
+           -<cld:object id="col30" type="column" chref="/daqctl0/dev1/ai14"/>
+           -<cld:object id="col31" type="column" chref="/daqctl0/dev1/ai15"/>
+           -->
         <cld:object id="col32" type="column" chref="/daqctl0/dev0/ao00"/>
         <cld:object id="col33" type="column" chref="/daqctl0/dev0/ao01"/>
-        <cld:object id="col34" type="column" chref="/daqctl0/dev1/ao00"/>
-        <cld:object id="col35" type="column" chref="/daqctl0/dev1/ao01"/>
+        <!--
+           -<cld:object id="col34" type="column" chref="/daqctl0/dev1/ao00"/>
+           -<cld:object id="col35" type="column" chref="/daqctl0/dev1/ao01"/>
+           -->
       </cld:object>
     </cld:object>
 

@@ -7,7 +7,7 @@ Usage
 Page Selection
 ^^^^^^^^^^^^^^
 
-The following figure shows the page selection bottom:
+The following figure shows the page selection button:
 
 .. figure:: assets/page-selection.png
 
@@ -28,6 +28,6 @@ The following figure shows the setting page:
 Configuration
 ^^^^^^^^^^^^^
 
-The following figure shows the configuration:
+The following figure shows the preferences button:
 
 .. figure:: assets/configuration.png

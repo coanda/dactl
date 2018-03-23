@@ -25,8 +25,8 @@ Install Fedora 19 .. 23 dependencies
 .. code-block:: none
    :linenos:
 
-   sudo yum install -y automake autoconf libtool gnome-common intltool gcc vala
-   sudo yum install -y glib2-devel gtk3-devel libxml2-devel libgee-devel \
+   sudo dnf install -y automake autoconf libtool gnome-common intltool gcc vala
+   sudo dnf install -y glib2-devel gtk3-devel libxml2-devel libgee-devel \
     json-glib-devel clutter-devel clutter-gtk-devel gsl-devel gtksourceview3-devel \
     libmatheval-devel sqlite-devel gobject-introspection-devel gettext-devel \
     gettext-common-devel libmodbus-devel comedilib-devel librsvg2-devel \
@@ -126,7 +126,7 @@ but not Fedora. The instructions that we use for compiling comedi using dkms are
    :linenos:
 
    su -
-   yum install -y automake autoconf libtool git dkms kernel-devel kernel-headers
+   dnf install -y automake autoconf libtool git dkms kernel-devel kernel-headers
    git clone git://comedi.org/git/comedi/comedi.git
    cp -R comedi/ /usr/src/comedi-0.7.76+20120626git-1.nodist
    cd /usr/src/
@@ -144,7 +144,7 @@ If not, a test device can be created by:
    :linenos:
 
    su -
-   yum install -y comedilib comedilib-devel
+   dnf install -y comedilib comedilib-devel
    modprobe comedi comedi_num_legacy_minors=4
    modprobe comedi_test
    comedi_config /dev/comedi0 comedi_test
