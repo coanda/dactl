@@ -1,0 +1,3 @@
+src/libdactl/*.vala
+src/dactl/*.vala
+src/dactl/ui/*.ui

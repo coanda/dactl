@@ -1,0 +1,11 @@
+option('enable-tracing', type: 'boolean', value: false)
+option('enable-profiling', type: 'boolean', value: false)
+
+option('with-ui', type: 'boolean')
+option('with-webkit', type: 'boolean')
+option('with-help', type: 'boolean')
+option('with-docs', type: 'boolean', value: false)
+option('with-examples', type: 'boolean', value: false)
+option('with-tests', type: 'boolean')
+
+option('with-valadoc', type: 'boolean', value: false)
