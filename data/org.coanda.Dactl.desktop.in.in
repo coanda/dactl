@@ -1,14 +1,11 @@
 [Desktop Entry]
 Name=Dactl
 Comment=Collect, display, and log data from measurement hardware
-Version=0.2
 GenericName=Data Acquisition and Control Application
 TryExec=dactl
 Exec=dactl
-Icon=dactl.png
+Icon=dactl
 DBusActivatable=true
 Type=Application
 Categories=Utility;
 MimeType=application/x-dactl;
-
-_Keywords=Acquisition;Control;Logging
