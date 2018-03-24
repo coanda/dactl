@@ -2,7 +2,7 @@
 %global schemaid org.coanda.dactl
 
 Name:    dactl
-Version: 0.4.1
+Version: 0.4.2
 Release: 1%{?dist}
 Summary: Data Acquisition and Control Application
 
