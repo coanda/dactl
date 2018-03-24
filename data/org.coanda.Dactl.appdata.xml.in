@@ -22,7 +22,7 @@
 
   <screenshots>
     <screenshot type="default">
-      <image width="1920" height="1080">https://github.com/coanda/dactl/data/appdata/dactl.png</image>
+      <image width="1920" height="1080">https://raw.githubusercontent.com/coanda/dactl/master/data/appdata/dactl.png</image>
     </screenshot>
   </screenshots>
 
