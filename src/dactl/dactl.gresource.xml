@@ -6,7 +6,7 @@
   </gresource>
 
   <gresource prefix="/org/coanda/dactl/icons">
-    <file compressed="true" alias="dactl.svg">../../data/icons/scalable/dactl.svg</file>
+    <file compressed="true" alias="dactl.svg">../../data/icons/src/org.coanda.Dactl.svg</file>
   </gresource>
 
   <gresource prefix="/org/coanda/dactl/ui">

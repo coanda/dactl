@@ -1,8 +1,9 @@
 libdactl_header_subdir = join_paths('dactl', 'libdactl')
 libdactl_header_dir = pkg_includedir + '/libdactl'
 
-libdactl_sources = []
+libdactl_generated_sources = []
 libdactl_generated_headers = []
+libdactl_sources = []
 libdactl_headers = []
 libdactl_vala_args = dactl_vala_args
 
@@ -39,7 +40,9 @@ subdir('core')
 #subdir('net')
 subdir('ui')
 
-libdactl = library('dactl-' + api_version, libdactl_sources + libdactl_headers + libdactl_generated_headers,
+sources = libdactl_sources + libdactl_headers + libdactl_generated_sources + libdactl_generated_headers
+
+libdactl = library('dactl-' + api_version, sources,
   dependencies: libdactl_deps,
    vala_header: 'dactl.h',
      vala_args: libdactl_vala_args,
@@ -48,6 +51,7 @@ libdactl = library('dactl-' + api_version, libdactl_sources + libdactl_headers +
    install_dir: [true, true, true],
 )
 
+# XXX: Pretty sure this can just be headers
 gir_sources = libdactl_sources + libdactl_headers + libdactl_generated_headers + [
   join_paths(meson.current_build_dir(), 'dactl.h')
 ]
