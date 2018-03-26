@@ -1,6 +1,6 @@
 project('dactl', [ 'c', 'vala' ],
           license: 'LGPL3+',
-          version: '0.4.2',
+          version: '0.4.3',
     meson_version: '>= 0.40.1',
   default_options: [
                      'c_std=gnu11',
