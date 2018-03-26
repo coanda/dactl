@@ -10,6 +10,7 @@ ui_resources = gnome.compile_resources('ui-resources',
 ui_headers = []
 ui_vala_args = []
 
+libdactl_generated_sources += [ ui_resources[0] ]
 libdactl_generated_headers += [ ui_resources[1] ]
 
 ui_sources = [

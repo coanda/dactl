@@ -8,11 +8,12 @@ Summary: Data Acquisition and Control Application
 
 License: MIT
 URL:     http://github.com/coanda/dactl
-Source0: %{name}-%{version}.tar.xz
+Source0: %{url}/archive/v%{version}.tar.gz
 
 BuildRequires: gcc
 BuildRequires: vala
 BuildRequires: meson
+BuildRequires: pkgconfig(cld-1.0)
 BuildRequires: pkgconfig(gee-0.8)
 BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: pkgconfig(gio-2.0)
@@ -28,10 +29,10 @@ BuildRequires: pkgconfig(libpeas-gtk-1.0)
 BuildRequires: pkgconfig(librsvg-2.0)
 BuildRequires: pkgconfig(webkit2gtk-4.0)
 
-Requires: cld
 Requires: comedilib
 Requires: glib2
 Requires: json-glib
+Requires: libcld
 Requires: libgee
 Requires: libpeas
 Requires: libsoup
@@ -74,10 +75,17 @@ fi
 %posttrans
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &> /dev/null || :
 
+# TODO: use release instead of hard coding API version
 %files
-%license COPYING
+%license LICENSE
 %doc README.md
 %{_bindir}/%{name}
+%{_includedir}/%{name}.h
+%{_libdir}/libdactl-1.0.so
+%{_libdir}/pkgconfig/libdactl-1.0.pc
+%{_libdir}/girepository-1.0/Dactl-1.0.typelib
+%{_datadir}/gir-1.0/Dactl-1.0.gir
+%{_datadir}/vala/vapi/%{name}-1.0.vapi
 %{_datadir}/applications/%{appid}.desktop
 %{_datadir}/appdata/%{appid}.appdata.xml
 %{_datadir}/dbus-1/services/%{appid}.service
@@ -86,5 +94,8 @@ fi
 %{_datadir}/icons/hicolor/**/apps/%{appid}.png
 
 %changelog
+* Mon Mar 26 2018 - 0.4.2-1
+- update for copr
+
 * Fri Mar 23 2018 - 0.1.0-1
 - initial spec

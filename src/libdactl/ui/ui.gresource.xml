@@ -1,23 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/org/coanda/libdactl">
-    <file preprocess="xml-stripblanks">ui/ai-control.ui</file>
-    <file preprocess="xml-stripblanks">ui/ao-control.ui</file>
-    <file preprocess="xml-stripblanks">ui/box.ui</file>
-    <file preprocess="xml-stripblanks">ui/channel-tree.ui</file>
-    <file preprocess="xml-stripblanks">ui/chart.ui</file>
-    <file preprocess="xml-stripblanks">ui/chart-widget.ui</file>
-    <file preprocess="xml-stripblanks">ui/digital-control.ui</file>
-    <file preprocess="xml-stripblanks">ui/exec-control.ui</file>
-    <file preprocess="xml-stripblanks">ui/log-control.ui</file>
-    <file preprocess="xml-stripblanks">ui/page.ui</file>
-    <file preprocess="xml-stripblanks">ui/pid-control.ui</file>
-    <file preprocess="xml-stripblanks">ui/polar-chart.ui</file>
-    <file preprocess="xml-stripblanks">ui/rich-content.ui</file>
-    <file preprocess="xml-stripblanks">ui/rt-chart-settings.ui</file>
-    <file preprocess="xml-stripblanks">ui/stripchart.ui</file>
-    <file preprocess="xml-stripblanks">ui/video-processor.ui</file>
-    <file preprocess="xml-stripblanks">ui/widget.ui</file>
-    <file preprocess="xml-stripblanks">ui/window.ui</file>
+  <gresource prefix="/org/coanda/libdactl/ui">
+    <!--
+       -<file compressed="true" preprocess="xml-stripblanks" alias="ai-control.ui">ui/ai-control.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="ao-control.ui">ui/ao-control.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="box.ui">ui/box.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="channel-tree.ui">ui/channel-tree.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="chart.ui">ui/chart.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="chart-widget.ui">ui/chart-widget.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="digital-control.ui">ui/digital-control.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="exec-control.ui">ui/exec-control.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="log-control.ui">ui/log-control.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="page.ui">ui/page.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="pid-control.ui">ui/pid-control.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="polar-chart.ui">ui/polar-chart.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="rich-content.ui">ui/rich-content.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="rt-chart-settings.ui">ui/rt-chart-settings.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="stripchart.ui">ui/stripchart.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="video-processor.ui">ui/video-processor.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="widget.ui">ui/widget.ui</file>
+       -<file compressed="true" preprocess="xml-stripblanks" alias="window.ui">ui/window.ui</file>
+       -->
+    <file compressed="true" alias="ai-control.ui">ui/ai-control.ui</file>
+    <file compressed="true" alias="ao-control.ui">ui/ao-control.ui</file>
+    <file compressed="true" alias="box.ui">ui/box.ui</file>
+    <file compressed="true" alias="channel-tree.ui">ui/channel-tree.ui</file>
+    <file compressed="true" alias="chart.ui">ui/chart.ui</file>
+    <file compressed="true" alias="chart-widget.ui">ui/chart-widget.ui</file>
+    <file compressed="true" alias="digital-control.ui">ui/digital-control.ui</file>
+    <file compressed="true" alias="exec-control.ui">ui/exec-control.ui</file>
+    <file compressed="true" alias="log-control.ui">ui/log-control.ui</file>
+    <file compressed="true" alias="page.ui">ui/page.ui</file>
+    <file compressed="true" alias="pid-control.ui">ui/pid-control.ui</file>
+    <file compressed="true" alias="polar-chart.ui">ui/polar-chart.ui</file>
+    <file compressed="true" alias="rich-content.ui">ui/rich-content.ui</file>
+    <file compressed="true" alias="rt-chart-settings.ui">ui/rt-chart-settings.ui</file>
+    <file compressed="true" alias="stripchart.ui">ui/stripchart.ui</file>
+    <file compressed="true" alias="video-processor.ui">ui/video-processor.ui</file>
+    <file compressed="true" alias="widget.ui">ui/widget.ui</file>
+    <file compressed="true" alias="window.ui">ui/window.ui</file>
   </gresource>
 </gresources>
