@@ -2,15 +2,53 @@
 internal class Dactl.DBusService : GLib.Object, Dactl.DBusInterface {
 
     private Dactl.Main main;
+    private Dactl.SysLog log;
     private uint name_id;
     private uint connection_id;
 
     public DBusService (Dactl.Main main) {
         this.main = main;
+        log = Dactl.SysLog.get_default ();
     }
 
     public void shutdown () throws IOError {
         this.main.exit (0);
+    }
+
+    public int log_get_verbosity () {
+        return log.verbosity;
+    }
+
+    public void log_set_verbosity (int level) {
+        log.verbosity = level;
+    }
+
+    public void log_init (bool stdout, string filename) {
+        log.init (stdout, filename);
+    }
+
+    public void log_remove (string filename) {
+        log.remove (filename);
+    }
+
+    public void log_test_message () {
+        message ("test message");
+    }
+
+    public void log_test_debug () {
+        debug ("test message");
+    }
+
+    public void log_test_warning () {
+        warning ("test message");
+    }
+
+    public void log_test_critical () {
+        critical ("test message");
+    }
+
+    public void log_test_error () {
+        error ("test message");
     }
 
     internal void publish () {

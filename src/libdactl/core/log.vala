@@ -14,7 +14,7 @@ public class Dactl.SysLog : GLib.Object {
 
     private static LogFunc last_handler;
 
-    private static GenericArray<IOChannel> channels;
+    private static Gee.Map<string, IOChannel> channels;
 
     private delegate string LevelStrFunc (LogLevelFlags log_level);
 
@@ -107,11 +107,9 @@ public class Dactl.SysLog : GLib.Object {
         TimeVal tv = TimeVal ();
         time_t t;
         Time tt;
-        string level;
         char ftime[32];
-        string buffer;
 
-        if (GLib.likely (channels.length > 0)) {
+        if (GLib.likely (channels.size > 0)) {
             switch ((int) log_level) {
                 case LogLevelFlags.LEVEL_MESSAGE:
                     if (verbosity < 1)
@@ -134,23 +132,30 @@ public class Dactl.SysLog : GLib.Object {
             }
         }
 
-        level = level_str_func (log_level);
         tv.get_current_time ();
         t = (time_t) tv.tv_sec;
         tt = Time.local (t);
         tt.strftime (ftime, "%H:%M:%S");
-        buffer = "%s.%04ld  %30s[%d]: %s: %s\n".printf (
-                    (string) ftime,
-                    tv.tv_usec / 1000,
-                    log_domain,
-                    get_thread (),
-                    level,
-                    message);
 
         lock (channels) {
-            channels.foreach ((channel) => {
+            foreach (var entry in channels.entries) {
+                var channel = entry.value;
+                if (Posix.isatty (channel.unix_get_fd ())) {
+                    level_str_func = level_str_with_color;
+                } else {
+                    level_str_func = level_str;
+                }
+
+                var level = level_str_func (log_level);
+                var buffer = "%s.%04ld  %30s[%d]: %s: %s\n".printf (
+                            (string) ftime,
+                            tv.tv_usec / 1000,
+                            log_domain,
+                            get_thread (),
+                            level,
+                            message);
                 write_to_channel (channel, buffer);
-            });
+            }
         }
     }
 
@@ -172,26 +177,39 @@ public class Dactl.SysLog : GLib.Object {
     public static void init (bool stdout, string? filename) {
         IOChannel channel = null;
 
-        level_str_func = level_str;
-        channels = new GenericArray<IOChannel> ();
-        if (filename != null) {
+        if (channels == null) {
+            channels = new Gee.HashMap<string, IOChannel> ();
+        }
+
+        if (stdout) {
+            channel = new IOChannel.unix_new (Posix.STDOUT_FILENO);
+            if (!(channels.has_key ("stdout"))) {
+                channels.set ("stdout", channel);
+            }
+        } else if (filename != null) {
             try {
-                channel = new IOChannel.file (filename, "a");
-                channels.add (channel);
+                if (!(channels.has_key (filename))) {
+                    channel = new IOChannel.file (filename, "a");
+                    channels.set (filename, channel);
+                }
             } catch (FileError e) {
                 error ("File error: %s", e.message);
             }
-        }
-        if (stdout) {
-            channel = new IOChannel.unix_new (Posix.STDOUT_FILENO);
-            channels.add (channel);
-            if ((filename == null) && Posix.isatty (Posix.STDOUT_FILENO))
-                level_str_func = level_str_with_color;
+        } else {
+            critical ("filename is null");
         }
 
         GLib.Log.set_default_handler (log_handler);
     }
 
+    /**
+     * Remove a channel from the log
+     */
+    public static void remove (string filename) {
+        if (channels != null && channels.has_key (filename)) {
+            channels.unset (filename, null);
+        }
+    }
     /**
      * Cleans up after the logging subsystem.
      */
