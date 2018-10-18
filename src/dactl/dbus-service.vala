@@ -23,8 +23,8 @@ internal class Dactl.DBusService : GLib.Object, Dactl.DBusInterface {
         log.verbosity = level;
     }
 
-    public void log_init (bool stdout, string filename) {
-        log.init (stdout, filename);
+    public void log_add (string filename) {
+        log.add (filename);
     }
 
     public void log_remove (string filename) {

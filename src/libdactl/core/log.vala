@@ -177,16 +177,16 @@ public class Dactl.SysLog : GLib.Object {
     public static void init (bool stdout, string? filename) {
         IOChannel channel = null;
 
-        if (channels == null) {
-            channels = new Gee.HashMap<string, IOChannel> ();
-        }
+        channels = new Gee.HashMap<string, IOChannel> ();
 
         if (stdout) {
             channel = new IOChannel.unix_new (Posix.STDOUT_FILENO);
             if (!(channels.has_key ("stdout"))) {
                 channels.set ("stdout", channel);
             }
-        } else if (filename != null) {
+        }
+
+        if (filename != null) {
             try {
                 if (!(channels.has_key (filename))) {
                     channel = new IOChannel.file (filename, "a");
@@ -196,10 +196,28 @@ public class Dactl.SysLog : GLib.Object {
                 error ("File error: %s", e.message);
             }
         } else {
-            critical ("filename is null");
+            warning ("filename is null");
         }
 
         GLib.Log.set_default_handler (log_handler);
+    }
+
+    /**
+     * Remove a channel from the log
+     */
+    public static void add (string filename) {
+        IOChannel channel = null;
+
+        if (filename != null) {
+            try {
+                if (!(channels.has_key (filename))) {
+                    channel = new IOChannel.file (filename, "a");
+                    channels.set (filename, channel);
+                }
+            } catch (FileError e) {
+                error ("File error: %s", e.message);
+            }
+        }
     }
 
     /**
