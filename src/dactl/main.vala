@@ -46,7 +46,7 @@ internal class Dactl.Main : GLib.Object {
     private Dactl.Application app;
     private Dactl.ApplicationFactory factory;
     private Dactl.PluginLoader plugin_loader;
-    private Dactl.SysLog log;
+    public Dactl.SysLog log;
 
     /* XXX testing Peas plugin manager */
     private Dactl.UI.PluginManager plugin_manager;
