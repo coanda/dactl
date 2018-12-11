@@ -2,7 +2,7 @@
 %global schemaid org.coanda.dactl
 
 Name:    dactl
-Version: 0.4.3
+Version: 0.4.4
 Release: 1%{?dist}
 Summary: Data Acquisition and Control Application
 
@@ -94,6 +94,9 @@ fi
 %{_datadir}/icons/hicolor/**/apps/%{appid}.png
 
 %changelog
+* Tue Dec 11 2018 - 0.4.3-1
+- add DBus logging features
+
 * Mon Mar 26 2018 - 0.4.2-1
 - update for copr
 
