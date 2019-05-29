@@ -44,7 +44,6 @@ public class Dactl.PolarAxis : GLib.Object, Dactl.Buildable, Dactl.Object {
         set {
             _label = value;
         }
-        default = "Axis";
     }
 
     public Dactl.AxisFlag flags { get; set; }

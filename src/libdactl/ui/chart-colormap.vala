@@ -35,7 +35,6 @@ protected class Dactl.ColorMap : Dactl.Canvas, Dactl.Buildable, Dactl.Object {
         set {
             _label = value;
         }
-        default = "Axis";
     }
 
     public Dactl.AxisFlag flags { get; set; }
