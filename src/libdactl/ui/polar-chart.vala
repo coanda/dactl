@@ -90,7 +90,6 @@ public class Dactl.PolarChart : Dactl.CompositeWidget {
             _zoom = value;
             canvas.zoom = value;
         }
-        default = 0.8;
     }
 
     public Dactl.ChartFlag flags { get; set; }
