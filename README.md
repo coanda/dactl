@@ -67,3 +67,17 @@ echo "/usr/local/lib" | sudo tee --append /etc/ld.so.conf
 echo "/usr/local/lib64" | sudo tee --append /etc/ld.so.conf
 sudo ldconfig
 ```
+
+## Docker build
+
+```sh
+// base image
+docker build --build-arg pc_token=<some-packagecloud-token> -t dactl-debian -f docker/Dockerfile .
+
+// post install image
+docker build --build-arg pc_token=<some-packagecloud-token> -t dactl-debian-post -f docker/Dockerfile-post .
+
+// test install image
+docker build -t dactl-debian-test-install -f docker/Dockerfile-test-apt-install .
+```
+
