@@ -49,9 +49,9 @@ public abstract class Dactl.ModuleLoader : GLib.Object {
         assert (Module.supported());
 
         var folder = File.new_for_path (this.base_path);
-        assert (folder != null && this.is_folder (folder));
-
-        this.load_modules_from_folder.begin (folder);
+        if (folder != null && this.is_folder (folder)) {
+            this.load_modules_from_folder.begin (folder);
+        }
     }
 
     /**

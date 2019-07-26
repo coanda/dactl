@@ -411,7 +411,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         }
 
         if (opt_cfgfile == null) {
-            opt_cfgfile = Path.build_filename (Dactl.DATADIR, "dactl.xml");
+            opt_cfgfile = Path.build_filename (Dactl.CONFDIR, "dactl.xml");
             GLib.message ("Configuration file not provided, using %s", opt_cfgfile);
         }
 

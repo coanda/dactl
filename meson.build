@@ -103,7 +103,7 @@ subst = configuration_data()
 # Installation paths
 pkg_datadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
 pkg_libdir = join_paths(get_option('prefix'), get_option('libdir'))
-pkg_sysconfdir = join_paths(get_option('sysconfdir'), meson.project_name())
+pkg_sysconfdir = join_paths(get_option('prefix'), get_option('sysconfdir'), meson.project_name())
 pkg_plugindir = join_paths(get_option('prefix'), get_option('libdir'), meson.project_name(), 'plugins')
 pkg_includedir = join_paths(get_option('includedir'), 'dactl')
 pkg_typelibdir = join_paths(get_option('libdir'), 'girepository-1.0')
