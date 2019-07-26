@@ -1,6 +1,10 @@
 # Desktop launcher and description file.
 if get_option('with-ui')
 
+install_data('config/dactl.xml',
+  install_dir: join_paths (get_option('sysconfdir'), meson.project_name()),
+)
+
 desktop_file = i18n.merge_file(
   input: 'org.coanda.Dactl.desktop.in.in',
   output: 'org.coanda.Dactl.desktop',

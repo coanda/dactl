@@ -1,11 +1,13 @@
 internal class Dactl.Main : GLib.Object {
 
     private struct Options {
+        // This is only here to satisfy error about empty struct
+        public string name;
 
         public static bool cli = false;
-        public static  bool version = false;
+        public static bool version = false;
 
-        public static const GLib.OptionEntry[] entries = {{
+        public const GLib.OptionEntry[] entries = {{
             "cli", 'c', 0, OptionArg.NONE, ref cli,
             "Start the application with a command line interface", null
         },{
