@@ -16,7 +16,6 @@ libdactl_reqs = [
   'libpeas-1.0',
   'libsoup-2.4',
   'libxml-2.0',
-  #'libzmq',
 ]
 
 # TODO: remove this, it's only needed by the old plugin loader
@@ -33,11 +32,7 @@ libdactl_deps = dactl_deps + [
   #'--pkg', 'dactl-plugin',
 #]
 
-#subdir('cli')
 subdir('core')
-#subdir('daq')
-#subdir('log')
-#subdir('net')
 subdir('ui')
 
 sources = libdactl_sources + libdactl_headers + libdactl_generated_sources + libdactl_generated_headers

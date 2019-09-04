@@ -1,7 +1,0 @@
-[Plugin]
-Version = @VERSION@
-Module = parker
-Name = Parker
-License = LGPL
-Description = Implementation of the Parker specification
-Copyright = Copyright © Dactl maintainers

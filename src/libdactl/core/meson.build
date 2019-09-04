@@ -6,7 +6,6 @@ core_sources = [
   'application-controller.vala',
   'application-factory.vala',
   'application-model.vala',
-  'application.vala',
   'application-view.vala',
   'buildable.vala',
   'cld-adapter.vala',

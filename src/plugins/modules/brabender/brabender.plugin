@@ -1,7 +1,0 @@
-[Plugin]
-Version = @VERSION@
-Module = brabender
-Name = Brabender
-License = LGPL
-Description = Implementation of the Brabender specification
-Copyright = Copyright © Dactl maintainers

@@ -45,7 +45,7 @@ internal class Dactl.Main : GLib.Object {
 
     private static int PLUGIN_TIMEOUT = 5;
 
-    private Dactl.Application app;
+    private Dactl.UI.Application app;
     private Dactl.ApplicationFactory factory;
     private Dactl.PluginLoader plugin_loader;
     public Dactl.SysLog log;

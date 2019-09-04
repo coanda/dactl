@@ -5,7 +5,7 @@
  * XXX should consider adding signals where necessary in the model and only
  *     update the view when it fires a signal to improve performance.
  */
-public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
+public class Dactl.UI.Application : Gtk.Application {
 
     /* Application singleton */
     private static Dactl.UI.Application app;
@@ -22,24 +22,27 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     }
 
     /**
-     * {@inheritDoc}
+     * Model used to update the view.
      */
-    public virtual Dactl.ApplicationModel model { get; set; }
+    public Dactl.ApplicationModel model { get; set; }
 
     /**
-     * {@inheritDoc}
+     * View to provide the user access to the data in the model.
      */
-    public virtual Dactl.ApplicationView view { get; set; }
+    public Dactl.ApplicationView view { get; set; }
 
     /**
-     * {@inheritDoc}
+     * Controller to update the model and perform any functionality requested
+     * by the view.
      */
-    public virtual Dactl.ApplicationController controller { get; set; }
+    public Dactl.ApplicationController controller { get; set; }
 
-    /**
-     * {@inheritDoc}
-     */
     public virtual Gee.ArrayList<Dactl.Plugin> plugins { get; set; }
+
+    /**
+     * Emitted when the application has been stopped.
+     */
+    public signal void closed ();
 
     /**
      * User interface layout manager.
@@ -353,7 +356,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         closed ();
     }
 
-    public virtual int launch (string[] args) {
+    public int launch (string[] args) {
         return (this as Gtk.Application).run (args);
     }
 

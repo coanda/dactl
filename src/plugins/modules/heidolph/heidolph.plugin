@@ -1,7 +1,0 @@
-[Plugin]
-Version = @VERSION@
-Module = heidolph
-Name = Heidolph
-License = LGPL
-Description = Implementation of the Heidolph specification
-Copyright = Copyright © Dactl maintainers
