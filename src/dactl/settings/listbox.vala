@@ -382,7 +382,6 @@ public class Dactl.PropertyBox : Gtk.Box {
         button.set_title ("Color");
         button.set_use_alpha (true);
         button.color_set.connect (() => {
-            uint16 alpha = button.get_alpha ();
             value = button.rgba;
         });
         pack_start (button, true, true, 0);

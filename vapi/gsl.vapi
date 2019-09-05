@@ -2478,7 +2478,7 @@ namespace Gsl
 	}
 
 	[Compact]
-	[CCode (cname="gsl_integration_qaws_table", cheader_filaname="gsl/gsl_integration.h")]
+	[CCode (cname="gsl_integration_qaws_table", cheader_filename="gsl/gsl_integration.h")]
 	public class IntegrationQAWSTable
 	{
 		public double alpha;
