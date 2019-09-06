@@ -49,8 +49,10 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     [GtkChild]
     private Dactl.ConfigurationEditor configuration;
 
-    [GtkChild]
-    private Dactl.CsvExport export;
+    /*
+     *[GtkChild]
+     *private Dactl.CsvExport export;
+     */
 
     [GtkChild]
     private Gtk.Box main_vbox;
@@ -179,10 +181,12 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
                 previous_page = layout.visible_child_name;
                 layout.visible_child = configuration;
                 topbar.set_visible_child_name (id);
-            } else if (id == "export" && layout.visible_child != export) {
-                previous_page = layout.visible_child_name;
-                layout.visible_child = export;
-                topbar.set_visible_child_name (id);
+            /*
+             *} else if (id == "export" && layout.visible_child != export) {
+             *    previous_page = layout.visible_child_name;
+             *    layout.visible_child = export;
+             *    topbar.set_visible_child_name (id);
+             */
             } else {
                 layout.set_visible_child_name (id);
                 topbar.set_visible_child_name ("application");
