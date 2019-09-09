@@ -153,7 +153,6 @@ subdir('po')
 subdir('src')
 subdir('data')
 #subdir('doc')
-#subdir('tests')
 
 meson.add_install_script('build-aux/meson/post-install.py')
 
