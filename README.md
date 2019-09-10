@@ -81,3 +81,41 @@ docker build --build-arg pc_token=<some-packagecloud-token> -t dactl-debian-post
 docker build -t dactl-debian-test-install -f docker/Dockerfile-test-apt-install .
 ```
 
+### Fedora 30 Installation
+
+## Update and Install Dependencies
+
+```bash
+sudo dnf update
+sudo dnf install  -y libtool gnome-common intltool gcc vala \
+ glib2-devel gtk3-devel libxml2-devel libgee-devel \
+ json-glib-devel clutter-devel clutter-gtk-devel gsl-devel gtksourceview3-devel \
+ libmatheval-devel gobject-introspection-devel gettext-devel \
+ gettext-common-devel comedilib-devel librsvg2-devel \
+ python3-devel pygobject3-devel libpeas-devel libsoup-devel webkitgtk4-devel
+
+
+sudo dnf install -y git                         \
+                    meson                       \
+                    ninja-build                 \
+                    gnome-common                \
+                    intltool                    \
+                    gcc                         \
+                    vala                        \
+                    libgee-devel                \
+                    json-glib-devel             \
+                    gsl-devel                   \
+                    libxml2-devel               \
+                    libmatheval-devel           \
+                    comedilib-devel             \
+                    libpeas-devel               \
+                    libsoup-devel               \
+                    gtksourceview-devel         \
+                    librsvg2-devel              \
+                    webkit2gtk3-devel
+
+export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig/
+sudo ninja -C _build install
+echo "/usr/local/lib64" | sudo tee --append /etc/ld.so.conf
+sudo ldconfig
+```
