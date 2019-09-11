@@ -49,11 +49,6 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     [GtkChild]
     private Dactl.ConfigurationEditor configuration;
 
-    /*
-     *[GtkChild]
-     *private Dactl.CsvExport export;
-     */
-
     [GtkChild]
     private Gtk.Box main_vbox;
 
@@ -69,7 +64,7 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     public Dactl.UI.WindowState state { get; set; default = Dactl.UI.WindowState.WINDOWED; }
 
     // The application page is intentionally left out
-    private string[] pages = { "loader", "configuration", "export", "settings" };
+    private string[] pages = { "loader", "configuration", "settings" };
 
     construct {
         id = "rootwin0";
@@ -95,6 +90,14 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         topbar.application_toolbar.subtitle = model.config_filename;
 
         settings.set_transition_type (Gtk.RevealerTransitionType.SLIDE_LEFT);
+
+        /* *
+         * FIXME: This have been set from the template XML configuration -
+         *
+         * <property name="show-menubar">False</property>
+         *
+         */
+        set_show_menubar (false);
 
         setup ();
         load_style ();
@@ -181,12 +184,6 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
                 previous_page = layout.visible_child_name;
                 layout.visible_child = configuration;
                 topbar.set_visible_child_name (id);
-            /*
-             *} else if (id == "export" && layout.visible_child != export) {
-             *    previous_page = layout.visible_child_name;
-             *    layout.visible_child = export;
-             *    topbar.set_visible_child_name (id);
-             */
             } else {
                 layout.set_visible_child_name (id);
                 topbar.set_visible_child_name ("application");
@@ -318,11 +315,6 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
         } else if (event.keyval == Gdk.Key.o &&         // CTRL + o -> open loader
                    (event.state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
             layout_change_page ("loader");
-
-            return true;
-        } else if (event.keyval == Gdk.Key.x &&         // CTRL + x -> open CSV export
-                   (event.state & default_modifiers) == Gdk.ModifierType.CONTROL_MASK) {
-            layout_change_page ("export");
 
             return true;
         } else if (event.keyval == Gdk.Key.Left &&      // ALT + Left -> back

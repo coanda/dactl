@@ -16,8 +16,6 @@
     <file compressed="true" alias="application-toolbar.ui">ui/application-toolbar.ui</file>
     <file compressed="true" alias="configuration.ui">ui/configuration.ui</file>
     <file compressed="true" alias="configuration-toolbar.ui">ui/configuration-toolbar.ui</file>
-    <file compressed="true" alias="csv-export.ui">ui/csv-export.ui</file>
-    <file compressed="true" alias="csv-export-toolbar.ui">ui/csv-export-toolbar.ui</file>
     <file compressed="true" alias="loader.ui">ui/loader.ui</file>
     <file compressed="true" alias="loader-toolbar.ui">ui/loader-toolbar.ui</file>
     <file compressed="true" alias="sidebar.ui">ui/sidebar.ui</file>

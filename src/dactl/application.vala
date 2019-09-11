@@ -288,14 +288,6 @@ public class Dactl.UI.Application : Gtk.Application {
         configuration_back_action.activate.connect (configuration_back_activated_cb);
         this.add_action (configuration_back_action);
 
-        var export_action = new SimpleAction ("export", null);
-        export_action.activate.connect (export_action_activated_cb);
-        this.add_action (export_action);
-
-        var export_back_action = new SimpleAction ("export-back", null);
-        export_back_action.activate.connect (export_back_activated_cb);
-        this.add_action (export_back_action);
-
         var loader_action = new SimpleAction ("loader", null);
         loader_action.activate.connect (loader_action_activated_cb);
         this.add_action (loader_action);
@@ -525,20 +517,6 @@ public class Dactl.UI.Application : Gtk.Application {
      * Action callback for going back to previous page from configuration.
      */
     private void configuration_back_activated_cb (SimpleAction action, Variant? parameter) {
-        (view as Dactl.UI.ApplicationView).layout_back_page ();
-    }
-
-    /**
-     * Action callback for CSV export.
-     */
-    private void export_action_activated_cb (SimpleAction action, Variant? parameter) {
-        (view as Dactl.UI.ApplicationView).layout_change_page ("export");
-    }
-
-    /**
-     * Action callback for going back to previous page from the CSV export.
-     */
-    private void export_back_activated_cb (SimpleAction action, Variant? parameter) {
         (view as Dactl.UI.ApplicationView).layout_back_page ();
     }
 

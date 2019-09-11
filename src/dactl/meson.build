@@ -23,8 +23,6 @@ dactl_sources = [
   'ux-manager.vala',
   'configuration/editor.vala',
   'configuration/toolbar.vala',
-  #'csv/export-toolbar.vala',
-  #'csv/export.vala',
   'settings/data.vala',
   'settings/dialog.vala',
   'settings/general.vala',

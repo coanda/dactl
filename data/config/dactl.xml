@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!--
-  - Configuration file
-  - Geoff Johnson <geoff.johnson@coanda.ca>
-  - 2016-06-02
-  -->
 <dactl xmlns:cld="urn:libcld" xmlns:ui="urn:libdactl-ui">
   <property name="app">Test Config</property>
   <property name="admin">true</property>
