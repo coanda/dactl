@@ -16,7 +16,7 @@ libdactl_reqs = [
   'libpeas-1.0',
   'libsoup-2.4',
   'libxml-2.0',
-  'libzmq',
+  #'libzmq',
 ]
 
 # TODO: remove this, it's only needed by the old plugin loader

@@ -3,3 +3,22 @@
 \#*.*\#
 
 _build/
+debian/dactl-1.0-0.debhelper.log
+debian/dactl-1.0-dev.debhelper.log
+debian/gir1.2-dactl-1.0.debhelper.log
+obj-x86_64-linux-gnu/
+debian/.debhelper/
+debian/debhelper-build-stamp
+debian/tmp/
+debian/files
+debian/gir1.2-dactl-1.0.substvars
+debian/gir1.2-dactl-1.0/
+debian/libdactl-1.0-0.debhelper.log
+debian/libdactl-1.0-0.substvars
+debian/libdactl-1.0-0/
+debian/libdactl-1.0-dev.debhelper.log
+debian/libdactl-1.0-dev.substvars
+debian/libdactl-1.0-dev/
+debian/dactl.debhelper.log
+debian/dactl.substvars
+debian/dactl/

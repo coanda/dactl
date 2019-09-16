@@ -1,0 +1,7 @@
+usr/share/icons/hicolor/*/apps/*.png
+usr/share/applications/org.coanda.Dactl.desktop
+usr/share/dbus-1/services/org.coanda.Dactl.service
+usr/share/glib-2.0/schemas/org.coanda.dactl.gschema.xml
+usr/share/appdata/org.coanda.Dactl.appdata.xml
+usr/bin/dactl
+etc/dactl/dactl.xml

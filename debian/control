@@ -1,0 +1,75 @@
+Source: libdactl
+Section: libs
+Priority: optional
+Maintainer: Stephen Roy <sroy1966@gmail.com>
+Build-Depends: debhelper-compat (= 12),
+               meson,
+               cmake,
+               valac,
+               libpeas-dev,
+               libsoup2.4-dev,
+               libgtksourceview-3.0-dev,
+               librsvg2-dev,
+               libwebkit2gtk-4.0-dev,
+               libcld-1.0-dev,
+Standards-Version: 4.3.0
+Homepage: https://github.com/coanda/dactl
+Vcs-Git: https://github.com/coanda/dactl.git
+Vcs-Browser: https://github.com/coanda/dactl
+
+Package: libdactl-1.0-0
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         libpeas-1.0-0,
+         libsoup2.4-1,
+         libgtksourceview-3.0-1,
+         librsvg2-2,
+         libwebkit2gtk-4.0-37,
+         libcld-1.0-0,
+Description: Dactl is a configurations based application for creating
+ custom data acquisition and control systems in the GNOME desktop environment.
+
+Package: libdactl-1.0-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         libdactl-1.0-0 (= ${binary:Version}),
+         gir1.2-dactl-1.0 (= ${binary:Version}),
+         libpeas-dev,
+         libsoup2.4-dev,
+         libgtksourceview-3.0-dev,
+         librsvg2-dev,
+         libwebkit2gtk-4.0-dev,
+         libcld-1.0-dev,
+Description: Dactl is a configurations based application for creating
+ custom data acquisition and control systems in the GNOME desktop environment.
+ .
+ The package contains the development files.
+
+Package: gir1.2-dactl-1.0
+Section: introspection
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${gir:Depends}
+Description: GObject introspection data for dactl
+ This package contains GObject introspection information.
+ .
+ It can be used by packages using the GIRepository format to generate
+ dynamic bindings.
+
+Package: dactl
+Section: misc
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         libdactl-1.0-0 (= ${binary:Version})
+Description: Dactl is a configurations based application for creating
+ custom data acquisition and control systems in the GNOME desktop environment.
+ .
+ The package contains the application files.
