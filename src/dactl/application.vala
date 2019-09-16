@@ -5,7 +5,7 @@
  * XXX should consider adding signals where necessary in the model and only
  *     update the view when it fires a signal to improve performance.
  */
-public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
+public class Dactl.UI.Application : Gtk.Application {
 
     /* Application singleton */
     private static Dactl.UI.Application app;
@@ -22,24 +22,27 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
     }
 
     /**
-     * {@inheritDoc}
+     * Model used to update the view.
      */
-    public virtual Dactl.ApplicationModel model { get; set; }
+    public Dactl.ApplicationModel model { get; set; }
 
     /**
-     * {@inheritDoc}
+     * View to provide the user access to the data in the model.
      */
-    public virtual Dactl.ApplicationView view { get; set; }
+    public Dactl.ApplicationView view { get; set; }
 
     /**
-     * {@inheritDoc}
+     * Controller to update the model and perform any functionality requested
+     * by the view.
      */
-    public virtual Dactl.ApplicationController controller { get; set; }
+    public Dactl.ApplicationController controller { get; set; }
 
-    /**
-     * {@inheritDoc}
-     */
     public virtual Gee.ArrayList<Dactl.Plugin> plugins { get; set; }
+
+    /**
+     * Emitted when the application has been stopped.
+     */
+    public signal void closed ();
 
     /**
      * User interface layout manager.
@@ -285,14 +288,6 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         configuration_back_action.activate.connect (configuration_back_activated_cb);
         this.add_action (configuration_back_action);
 
-        var export_action = new SimpleAction ("export", null);
-        export_action.activate.connect (export_action_activated_cb);
-        this.add_action (export_action);
-
-        var export_back_action = new SimpleAction ("export-back", null);
-        export_back_action.activate.connect (export_back_activated_cb);
-        this.add_action (export_back_action);
-
         var loader_action = new SimpleAction ("loader", null);
         loader_action.activate.connect (loader_action_activated_cb);
         this.add_action (loader_action);
@@ -353,7 +348,7 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
         closed ();
     }
 
-    public virtual int launch (string[] args) {
+    public int launch (string[] args) {
         return (this as Gtk.Application).run (args);
     }
 
@@ -522,20 +517,6 @@ public class Dactl.UI.Application : Gtk.Application, Dactl.Application {
      * Action callback for going back to previous page from configuration.
      */
     private void configuration_back_activated_cb (SimpleAction action, Variant? parameter) {
-        (view as Dactl.UI.ApplicationView).layout_back_page ();
-    }
-
-    /**
-     * Action callback for CSV export.
-     */
-    private void export_action_activated_cb (SimpleAction action, Variant? parameter) {
-        (view as Dactl.UI.ApplicationView).layout_change_page ("export");
-    }
-
-    /**
-     * Action callback for going back to previous page from the CSV export.
-     */
-    private void export_back_activated_cb (SimpleAction action, Variant? parameter) {
         (view as Dactl.UI.ApplicationView).layout_back_page ();
     }
 

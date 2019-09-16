@@ -7,5 +7,3 @@ dactl_vala_args = [
 
 subdir('libdactl')
 subdir('dactl')
-#subdir('services')
-#subdir('plugins')

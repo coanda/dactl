@@ -16,7 +16,6 @@ libdactl_reqs = [
   'libpeas-1.0',
   'libsoup-2.4',
   'libxml-2.0',
-  #'libzmq',
 ]
 
 # TODO: remove this, it's only needed by the old plugin loader
@@ -33,11 +32,7 @@ libdactl_deps = dactl_deps + [
   #'--pkg', 'dactl-plugin',
 #]
 
-#subdir('cli')
 subdir('core')
-#subdir('daq')
-#subdir('log')
-#subdir('net')
 subdir('ui')
 
 sources = libdactl_sources + libdactl_headers + libdactl_generated_sources + libdactl_generated_headers
@@ -57,27 +52,28 @@ gir_sources = libdactl_sources + libdactl_headers + libdactl_generated_headers +
 ]
 
 libdactl_gir = gnome.generate_gir(libdactl,
-            sources: gir_sources,
-          namespace: 'Dactl',
-          nsversion: '@0@'.format(api_version),
-       dependencies: dactl_deps,
-           includes: [
-             'cairo-1.0',
-             'Cld-1.0',
-             'GObject-2.0',
-             'Gee-0.8',
-             'Json-1.0',
-             'Peas-1.0',
-             'Soup-2.4',
-             'libxml2-2.0',
+              sources: gir_sources,
+            namespace: 'Dactl',
+            nsversion: '@0@'.format(api_version),
+         dependencies: dactl_deps,
+  include_directories: [include_directories('/usr/local/share/gir-1.0')],
+             includes: [
+               'cairo-1.0',
+               'Cld-1.0',
+               'GObject-2.0',
+               'Gee-0.8',
+               'Json-1.0',
+               'Peas-1.0',
+               'Soup-2.4',
+               'libxml2-2.0',
+             ],
+        symbol_prefix: 'dactl',
+    identifier_prefix: 'Dactl',
+              install: true,
+           extra_args: [
+             '--warn-all',
+             '--c-include', 'dactl.h',
            ],
-      symbol_prefix: 'dactl',
-  identifier_prefix: 'Dactl',
-            install: true,
-         extra_args: [
-           '--warn-all',
-           '--c-include', 'dactl.h',
-         ],
 )
 
 pkgconfig = import('pkgconfig')

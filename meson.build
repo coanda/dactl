@@ -62,6 +62,7 @@ dir_vapi = join_paths(meson.current_source_dir(), 'vapi')
 
 add_project_arguments([
   ['--vapidir', dir_vapi],
+  '--disable-warnings',
 ], language: 'vala')
 
 dep_cld = dependency('cld-1.0')
@@ -152,7 +153,6 @@ subdir('po')
 subdir('src')
 subdir('data')
 #subdir('doc')
-#subdir('tests')
 
 meson.add_install_script('build-aux/meson/post-install.py')
 

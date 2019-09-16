@@ -7,7 +7,7 @@ public enum Dactl.TopbarPage {
 private class Dactl.Topbar : Gtk.Stack {
 
     private const string[] page_names = {
-        "application", "loader", "configuration", "export", "settings"
+        "application", "loader", "configuration", "settings"
     };
 
     [GtkChild]
@@ -18,9 +18,6 @@ private class Dactl.Topbar : Gtk.Stack {
 
     [GtkChild]
     public Dactl.ConfigurationToolbar configuration_toolbar;
-
-    [GtkChild]
-    public Dactl.CsvExportToolbar export_toolbar;
 
     //[GtkChild]
     //public Dactl.SettingsToolbar settings_toolbar;

@@ -1,6 +1,5 @@
 FROM dactl-debian
 
-
 RUN apt install --no-install-recommends -qq -y libcomedi-dev
 RUN updatedb
 

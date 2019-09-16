@@ -13,60 +13,12 @@ The current public release brings many bug fixes and has separated out as
 libraries the core and UI components. These libraries include GIR output for use
 in other languages, the support of which is still a work in progress.
 
-### Installation Instructions:
+### Configuration
 
-!! These need to be updated !! Use the following instructions for Fedora 27.
-
-Instructions for installing dactl and it's dependencies can be read at
+Instructions for configuring dactl can be found at
 https://dactl.readthedocs.org/en/latest/setup.html.
 
-### Fedora 27 instructions:
-
-## Install Fedora 27 dependencies
-
-```
-sudo dnf install -y automake autoconf libtool gnome-common intltool gcc vala
-sudo dnf install -y glib2-devel gtk3-devel libxml2-devel libgee-devel \
- json-glib-devel clutter-devel clutter-gtk-devel gsl-devel gtksourceview3-devel \
- libmatheval-devel sqlite-devel gobject-introspection-devel gettext-devel \
- gettext-common-devel libmodbus-devel comedilib-devel librsvg2-devel \
- python3-devel pygobject3-devel libpeas-devel libsoup-devel webkitgtk4-devel
-```
-
-## Install vala dependencies
-
-```
-git clone https://github.com/geoffjay/modbus-vapi.git
-git clone https://github.com/geoffjay/comedi-vapi.git
-sudo mkdir -p /usr/local/lib/pkgconfig
-sudo cp comedi-vapi/comedi.pc /usr/local/lib/pkgconfig/
-ver=`vala --version | sed -e 's/.*\([0-9]\.[0-9][0-9]\).*/\1/'`
-sudo cp comedi-vapi/comedi.vapi /usr/share/vala-$ver/vapi/
-sudo cp modbus-vapi/libmodbus.vapi /usr/share/vala-$ver/vapi/
-```
-
-## Install libcld
-
-```
-sudo dnf copr enable geoffjay/libcld
-sudo dnf install libcld-devel
-```
-
-## Compile and install dactl
-
-```
-git clone https://github.com/coanda/dactl.git
-cd dactl
-sudo mkdir /usr/local/lib64/pkgconfig
-sudo mkdir /usr/local/lib/pkgconfig
-PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/:/usr/local/lib64/pkgconfig/
-meson _build
-ninja -C _build
-sudo ninja -C _build install
-echo "/usr/local/lib" | sudo tee --append /etc/ld.so.conf
-echo "/usr/local/lib64" | sudo tee --append /etc/ld.so.conf
-sudo ldconfig
-```
+Note: The documentation also include installation instructions which are out of date. Use the instructions given below instead.
 
 ## Docker build
 
@@ -81,3 +33,78 @@ docker build --build-arg pc_token=<some-packagecloud-token> -t dactl-debian-post
 docker build -t dactl-debian-test-install -f docker/Dockerfile-test-apt-install .
 ```
 
+### Installation
+
+## Fedora 30 (from source)
+
+```bash
+sudo dnf update
+sudo dnf install -y git                         \
+                    meson                       \
+                    ninja-build                 \
+                    gnome-common                \
+                    intltool                    \
+                    gcc                         \
+                    vala                        \
+                    libgee-devel                \
+                    json-glib-devel             \
+                    gsl-devel                   \
+                    libxml2-devel               \
+                    libmatheval-devel           \
+                    comedilib-devel             \
+                    libpeas-devel               \
+                    libsoup-devel               \
+                    gtksourceview-devel         \
+                    librsvg2-devel              \
+                    webkit2gtk3-devel
+
+export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig/
+sudo ninja -C _build install
+echo "/usr/local/lib64" | sudo tee --append /etc/ld.so.conf
+sudo ldconfig
+```
+
+## Debian 10 (from source)
+
+```bash
+# Install dependencies
+sudo apt install  -y git                        \
+                     meson                      \
+                     gcc                        \
+                     valac                      \
+                     libpeas-dev                \
+                     libsoup2.4-dev             \
+                     libgtksourceview-3.0-dev   \
+                     librsvg2-dev               \
+                     libwebkit2gtk-4.0-dev      \
+                     gettext
+
+export PKG_CONFIG_PATH=/usr/local/lib/x86_64-linux-gnu/pkgconfig/
+git clone git@github.com:coanda/dactl.git
+cd dactl
+meson _build
+sudo ninja -C _build install
+echo "/usr/local/lib/x86_64-linux-gnu" | sudo tee --append /etc/ld.so.conf
+sudo ldconfig
+```
+
+### Debian 10 (packagecloud)
+
+Alternatively, it can be installed as a Debian package which is hosted on packagecloud.
+
+```bash
+# from packagecloud
+
+sudo apt update
+sudo apt install --no-install-recommends -qq -y curl ca-certificates
+sudo curl -s https://packagecloud.io/install/repositories/coanda/public/script.deb.sh | sudo bash
+
+# just dactl
+sudo apt install dactl
+
+# libdactl
+sudo apt install -y libdactl-1.0
+
+# devlopment
+sudo apt install -y libdactl-1.0-dev
+```
