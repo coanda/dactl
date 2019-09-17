@@ -26,6 +26,8 @@ core_sources = [
   'view.vala',
 ]
 
+libdactl_core_sources = files(core_sources)
+
 libdactl_headers += files(core_headers)
 libdactl_sources += files(core_sources)
 
