@@ -31,7 +31,7 @@ public abstract class Dactl.ModuleLoader : GLib.Object {
      *
      * @param path base path of the loader.
      */
-    public ModuleLoader (string path) {
+    protected ModuleLoader (string path) {
         GLib.Object (base_path : path);
     }
 
