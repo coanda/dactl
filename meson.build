@@ -1,7 +1,7 @@
 project('dactl', [ 'c', 'vala' ],
           license: 'LGPL3+',
           version: '0.4.4',
-    meson_version: '>= 0.50.0',
+    meson_version: '>= 0.49.2',
   default_options: [
                      'c_std=gnu11',
                      'warning_level=2',

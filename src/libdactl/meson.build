@@ -51,12 +51,14 @@ gir_sources = libdactl_sources + libdactl_headers + libdactl_generated_headers +
   join_paths(meson.current_build_dir(), 'dactl.h')
 ]
 
+dir_gir = join_paths(get_option('prefix'), 'share', 'gir-1.0')
+
 libdactl_gir = gnome.generate_gir(libdactl,
               sources: gir_sources,
             namespace: 'Dactl',
             nsversion: '@0@'.format(api_version),
          dependencies: dactl_deps,
-  include_directories: [include_directories('/usr/local/share/gir-1.0')],
+  include_directories: [include_directories(dir_gir)],
              includes: [
                'cairo-1.0',
                'Cld-1.0',
