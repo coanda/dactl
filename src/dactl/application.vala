@@ -3,7 +3,7 @@
  * on the changes made to the model.
  *
  * XXX should consider adding signals where necessary in the model and only
- *     update the view when it fires a signal to improve performance.
+ * update the view when it fires a signal to improve performance.
  */
 public class Dactl.UI.Application : Gtk.Application {
 
