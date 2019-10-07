@@ -53,6 +53,7 @@ ui_sources = [
   'window.vala',
 ]
 
+
 gsl_lib = meson.get_compiler('c').find_library('gsl')
 gsl_vapi = meson.get_compiler('vala').find_library('gsl', dirs: dir_vapi)
 dep_gsl = declare_dependency(dependencies: [gsl_lib, gsl_vapi])
@@ -95,5 +96,7 @@ libdactl_sources += files(ui_sources)
 install_headers(ui_headers,
   subdir: join_paths(libdactl_header_subdir, 'ui')
 )
+
+ui_sources_object = files(ui_sources)
 
 endif
