@@ -563,11 +563,6 @@ public class Dactl.HeatMap : GLib.Object, Dactl.Object, Dactl.Container,
         }
     }
 
-    /* Set a color for cells that have no channel reference (ie. raw data) */
-    private void interpolate () {
-        /* XXX TBD */
-    }
-
     /**
      * {@inheritDoc}
      */

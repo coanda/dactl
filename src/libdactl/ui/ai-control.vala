@@ -11,31 +11,10 @@ public class Dactl.AIControl : Dactl.CompositeWidget, Dactl.CldAdapter {
     private Gtk.Box box_secondary;
 
     [GtkChild]
-    private Gtk.Button btn_primary;
-
-    [GtkChild]
-    private Gtk.Button btn_secondary;
-
-    [GtkChild]
     private Gtk.Label lbl_tag;
 
     [GtkChild]
     private Gtk.Label lbl_value;
-
-    [GtkChild]
-    private Gtk.Label lbl_avg;
-
-    [GtkChild]
-    private Gtk.Label lbl_stddev;
-
-    [GtkChild]
-    private Gtk.Label lbl_variance;
-
-    [GtkChild]
-    private Gtk.Image img_primary;
-
-    [GtkChild]
-    private Gtk.Image img_secondary;
 
     private Gee.Map<string, Dactl.Object> _objects;
 

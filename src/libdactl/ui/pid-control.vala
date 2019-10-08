@@ -23,28 +23,10 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
     private Gtk.Viewport viewport_off;
 
     [GtkChild]
-    private Gtk.Button btn_control_start;
-
-    [GtkChild]
-    private Gtk.Button btn_control_stop;
-
-    [GtkChild]
-    private Gtk.Button btn_settings;
-
-    [GtkChild]
     private Gtk.SpinButton btn_output;
 
     [GtkChild]
     private Gtk.SpinButton btn_sp;
-
-    [GtkChild]
-    private Gtk.SpinButton btn_kp;
-
-    [GtkChild]
-    private Gtk.SpinButton btn_ki;
-
-    [GtkChild]
-    private Gtk.SpinButton btn_kd;
 
     [GtkChild]
     private Gtk.Label lbl_input;
@@ -57,15 +39,6 @@ public class Dactl.PidControl : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     [GtkChild]
     private Gtk.Revealer settings;
-
-    [GtkChild]
-    private Gtk.Image img_control_start;
-
-    [GtkChild]
-    private Gtk.Image img_control_stop;
-
-    [GtkChild]
-    private Gtk.Image img_settings;
 
     [GtkChild]
     private Gtk.Label lbl_id;

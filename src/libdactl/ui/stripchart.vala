@@ -685,12 +685,6 @@ private class Dactl.StripChartCanvas : Dactl.Canvas {
         return false;
     }
 
-    private bool update () {
-        redraw ();
-
-        return true;
-    }
-
     public void redraw () {
         var window = get_window ();
         if (window == null) {
@@ -727,7 +721,6 @@ public class Dactl.StripChart : Dactl.CompositeWidget, Dactl.CldAdapter {
     private int stride_min = int.MAX;
     /* The number of data points per second */
     private double pps = 0;
-    bool once = false;
 
     private Gee.Map<string, Dactl.Object> _objects;
 

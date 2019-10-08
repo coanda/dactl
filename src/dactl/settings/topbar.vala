@@ -23,9 +23,11 @@ private class Dactl.SettingsTopbar : Gtk.Stack {
         settings_toolbar.cancel.connect (do_cancel);
     }
 
-    public void set_subtitle (string subtitle) {
-      settings_toolbar.set_subtitle (subtitle);
-    }
+    /*
+     *public void set_subtitle (string subtitle) {
+     *  settings_toolbar.set_subtitle (subtitle);
+     *}
+     */
 
     private void do_ok () {
         ok ();

@@ -496,11 +496,6 @@ public class Dactl.PolarHeatMap : GLib.Object, Dactl.Object, Dactl.Container,
         }
     }
 
-    /* Set a color for cells that have no channel reference (ie. raw data) */
-    private void interpolate () {
-        /* XXX TBD */
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -512,7 +507,6 @@ public class Dactl.PolarHeatMap : GLib.Object, Dactl.Object, Dactl.Container,
         var scale_y = (double)h / (y_max - y_min);
         var scale = scale_x < scale_y ? scale_x : scale_y;
         scale = scale * zoom;
-        var d = w < h ? w : h;
         /* calculate the offset from the center of the window */
         var dx = (w - scale * (x_max - x_min)) / 2;
         var dy = (h - scale * (y_max - y_min)) / 2;

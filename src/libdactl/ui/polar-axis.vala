@@ -126,19 +126,11 @@ public class Dactl.PolarAxis : GLib.Object, Dactl.Buildable, Dactl.Object {
 
     public int div_minor { get; set; default = 2; }
 
-    private bool dragging = false;
-
     public signal void range_changed (double min, double max);
 
     public signal void label_changed (string label);
 
     public signal void orientation_changed (Dactl.Orientation orientation);
-
-    private double start_drag_x;
-
-    private double start_drag_y;
-
-    private bool reversed = false;
 
     /**
      * {@inheritDoc}

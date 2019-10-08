@@ -203,8 +203,6 @@ public class Dactl.ChannelMatrix : GLib.Object, Dactl.Object,
         }
     }
 
-    private int index = 0;
-
     /**
      * {@inheritDoc}
      */

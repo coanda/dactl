@@ -197,7 +197,7 @@ private class Dactl.PnidCanvas : Dactl.Canvas {
      */
     public override bool draw (Cairo.Context cr) {
 
-        string xmlstr, hi;
+        string xmlstr;
 
         // All of the SVG manipulations happen on each iteration, couldn't find
         // a more efficient way of using XPath on a file stream
@@ -544,15 +544,6 @@ public class Dactl.Pnid : Dactl.CompositeWidget, Dactl.CldAdapter {
             yield nap (1000);
         }
         message ("`%s' satisfied now", id);
-    }
-
-    /**
-     * Connect any signals including the notifications from the model.
-     */
-    private void connect_signals () {
-        /*
-         *canvas.draw.connect (on_draw);
-         */
     }
 
     /**

@@ -268,11 +268,7 @@ public class Dactl.RTChartSettings : Gtk.ScrolledWindow, Dactl.SettingsWidget {
     [GtkChild]
     private Gtk.Adjustment adj_y_max;
 
-    [GtkChild]
-    private Gtk.ListBox listbox_traces;
-
     construct {
-        populate_traces ();
         show_all ();
         connect_notify_signals ();
     }
@@ -325,32 +321,6 @@ public class Dactl.RTChartSettings : Gtk.ScrolledWindow, Dactl.SettingsWidget {
         notify["x-axis-div-minor"].connect (() => {
             spinbutton_x_minor.set_value (x_axis_div_minor);
         });
-    }
-
-    private void populate_traces () {
-        /*var traces = (parent as Dactl.Container).get_object_map (typeof (Dactl.RTTrace));*/
-        /*var app = Dactl.UI.Application.get_default ();*/
-/*
- *        var channels = app.model.ctx.get_object_map (typeof (Cld.Channel));
- *        foreach (var row in listbox_traces.get_children ())
- *            remove (row);
- *
- *        foreach (var trace in traces.values) {
- *            var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 5);
- *            var btn_remove = new Gtk.Button.with_label (Remove);
- *            var combo = new Gtk.ComboBoxText.with_entry ("???");
- *            var btn_edit = new Gtk.Button.with_label (Edit);
- *            foreach (var channel in channels.values) {
- *                combo.append (null, channel.uri);
- *            }
- *            box.pack_start (btn_remove);
- *            box_pack_start (combo);
- *            box.pack_start (btn_edit);
- *
- *            var row = new Gtk.ListBoxRow ();
- *            row.add (box);
- *        }
- */
     }
 
     [GtkCallback]

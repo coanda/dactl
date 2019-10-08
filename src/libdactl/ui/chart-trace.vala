@@ -347,10 +347,12 @@ public class Dactl.Trace : GLib.Object, Dactl.Object,
             pixel_data.clear ();
             for (int i = 0; i < points; i++) {
                 var x = (int)(i * width / (points - 1));
-                var t1 = accel.find (scaled_xdata, x);
-                var x1 = scaled_xdata[t1];
-                var x2 = scaled_xdata[t1 + 1];
-                var t =(double)t1 * (1 + (x - x1)/(x2 - x1));
+                //var t1 = accel.find (scaled_xdata, x);
+                /*
+                 *var x1 = scaled_xdata[t1];
+                 *var x2 = scaled_xdata[t1 + 1];
+                 *var t =(double)t1 * (1 + (x - x1)/(x2 - x1));
+                 */
                 var deque = pixel_data as Gee.Deque<Dactl.Point>;
                 var point = new Dactl.Point (0, 0);
                 /* Check if x value is inside the x range of the raw data */

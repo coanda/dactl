@@ -41,7 +41,6 @@ public interface Dactl.Object : GLib.Object {
         result += " %-24s%-35s%-24s%-20s\n".printf ("Name:", "Value:", "Value Type:", "Owner Type:");
 
         foreach (ParamSpec spec in ocl.list_properties ()) {
-            string value;
             Type ptype = spec.value_type;
             string name = spec.get_name ();
             Value number = Value (ptype);

@@ -6,7 +6,6 @@ public class Dactl.RTMultiChannelTrace : Dactl.Trace, Dactl.Container {
     private Gee.Map<string, Dactl.Object> _objects;
     public Dactl.ChannelVector channel_vector { get; private set; }
     public bool highlight { get; set; default = false; }
-    private Dactl.SimplePoint [] points_array;
 
     /**
      * {@inheritDoc}

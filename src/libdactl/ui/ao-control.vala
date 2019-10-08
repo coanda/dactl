@@ -23,12 +23,6 @@ public class Dactl.AOControl : Dactl.CompositeWidget, Dactl.CldAdapter {
     private Gtk.Box box_secondary;
 
     [GtkChild]
-    private Gtk.Button btn_next;
-
-    [GtkChild]
-    private Gtk.Button btn_previous;
-
-    [GtkChild]
     private Gtk.Label lbl_tag;
 
     [GtkChild]

@@ -1,9 +1,6 @@
 [GtkTemplate (ui = "/org/coanda/libdactl/ui/video-processor.ui")]
 public class Dactl.VideoProcessor : Dactl.CompositeWidget, Dactl.CldAdapter {
 
-    [GtkChild]
-    private Gtk.Image img_capture;
-
     private Gee.Map<string, Dactl.Object> _objects;
 
     private string _xml = """
