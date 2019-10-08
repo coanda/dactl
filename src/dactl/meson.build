@@ -34,6 +34,8 @@ dactl_sources = [
   'settings/treeview.vala',
 ]
 
+dactl_sources_object = files(dactl_sources)
+
 dactl_c_args = [
   '-DG_LOG_DOMAIN="dactl"',
 ]

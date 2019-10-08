@@ -38,7 +38,6 @@ protected class Dactl.PolarChartCanvas : Dactl.Canvas {
 
         var w = get_allocated_width ();
         var h = get_allocated_height ();
-        var parent = get_parent ();
         var grid_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, w, h);
         grid = new Dactl.PolarChartGrid (grid_surface);
 

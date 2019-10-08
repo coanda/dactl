@@ -93,8 +93,6 @@ public class Dactl.Axis : Dactl.Canvas, Dactl.Buildable, Dactl.Object {
 
     public int div_minor { get; set; default = 2; }
 
-    private bool dragging = false;
-
     public signal void range_changed (double min, double max);
 
     public signal void label_changed (string label);
@@ -108,12 +106,6 @@ public class Dactl.Axis : Dactl.Canvas, Dactl.Buildable, Dactl.Object {
     //private double cursor_x;
 
     //private double cursor_y;
-
-    private double start_drag_x;
-
-    private double start_drag_y;
-
-    private bool reversed = false;
 
     /**
      * {@inheritDoc}

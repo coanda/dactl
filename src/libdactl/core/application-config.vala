@@ -82,9 +82,6 @@ public class Dactl.ApplicationConfig : GLib.Object {
         return nodes;
     }
 
-    private int depth = 0;
-    private int indent = 0;
-
     /**
      * XXX this doesn't work
      *

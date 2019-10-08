@@ -197,8 +197,6 @@ public interface Dactl.Widget : GLib.Object {
  */
 public abstract class Dactl.Canvas : Gtk.DrawingArea, Dactl.Object {
 
-    private Xml.Node* _node;
-
     /**
      * {@inheritDoc}
      */

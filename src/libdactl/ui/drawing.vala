@@ -281,7 +281,6 @@ public class Dactl.PolarChartGrid : Cairo.Context {
         var scale_y = (double)h / (y_max - y_min);
         scale = scale_x < scale_y ? scale_x : scale_y;
         scale = scale * zoom;
-        var d = w < h ? w : h;
         /* reposition it in the center of the window */
         var dx = (w - scale * (x_max - x_min)) / 2;
         var dy = (h - scale * (y_max - y_min)) / 2;
@@ -609,9 +608,6 @@ private class Dactl.Vector : Cairo.Context {
     public Vector (Cairo.Surface target) {
         base (target);
     }
-
-    public void draw () {
-    }
 }
 
 [Compact]
@@ -619,9 +615,6 @@ private class Dactl.VectorField : Cairo.Context {
 
     public VectorField (Cairo.Surface target) {
         base (target);
-    }
-
-    public void draw () {
     }
 }
 

@@ -1,7 +1,7 @@
 project('dactl', [ 'c', 'vala' ],
           license: 'LGPL3+',
           version: '0.4.4',
-    meson_version: '>= 0.50.0',
+    meson_version: '>= 0.49.2',
   default_options: [
                      'c_std=gnu11',
                      'warning_level=2',
@@ -62,7 +62,7 @@ dir_vapi = join_paths(meson.current_source_dir(), 'vapi')
 
 add_project_arguments([
   ['--vapidir', dir_vapi],
-  '--disable-warnings',
+  #'--disable-warnings',
 ], language: 'vala')
 
 dep_cld = dependency('cld-1.0')

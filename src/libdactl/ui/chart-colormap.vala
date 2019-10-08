@@ -102,8 +102,6 @@ protected class Dactl.ColorMap : Dactl.Canvas, Dactl.Buildable, Dactl.Object {
 
     public int div_minor { get; set; default = 2; }
 
-    private bool dragging = false;
-
     public signal void range_changed (double min, double max);
 
     public signal void label_changed (string label);
@@ -365,7 +363,6 @@ protected class Dactl.ColorMap : Dactl.Canvas, Dactl.Buildable, Dactl.Object {
         var x = 0;
         var y = 0;
 
-        Cairo.Pattern pat1 = new Cairo.Pattern.linear (0.0, 0.0,  0.0, h);
         for (int i = 0; i < h; i++) {
             double value = (double)i / (double)h;
             Gdk.RGBA color = Gdk.RGBA ();
@@ -416,7 +413,6 @@ protected class Dactl.ColorMap : Dactl.Canvas, Dactl.Buildable, Dactl.Object {
             layout.set_font_description (desc);
             string markup = "<span font='8'>%s</span>".printf (tick_label);
             layout.set_markup (markup, -1);
-            var context = layout.get_context ();
 
             tick_layout_list.append (layout);
         }

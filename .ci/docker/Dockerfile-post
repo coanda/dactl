@@ -1,7 +1,7 @@
-FROM dactl-debian
+FROM dactl-debian:latest
 
-RUN apt install --no-install-recommends -qq -y libcomedi-dev
-RUN updatedb
+RUN apt install --no-install-recommends -qq -y \
+        libcomedi-dev
 
 RUN useradd -ms /bin/bash user
 
@@ -9,13 +9,11 @@ USER user
 WORKDIR /home/user
 
 COPY --chown=user:user . dactl
-
-RUN tar -zcvf libdactl_1.0.orig.tar.gz ./dactl
-
 WORKDIR /home/user/dactl
-
+RUN meson -Dprefix=/usr _build \
+    && ninja -C _build
+RUN tar -zcvf ../libdactl_1.0.orig.tar.gz ./
 RUN export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/
-
 RUN debuild
 
 WORKDIR /home/user

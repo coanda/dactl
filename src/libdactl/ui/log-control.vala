@@ -23,12 +23,6 @@ public class Dactl.LogControl : Dactl.CompositeWidget, Dactl.CldAdapter {
     private Gtk.Box box_secondary;
 
     [GtkChild]
-    private Gtk.Button btn_start;
-
-    [GtkChild]
-    private Gtk.Button btn_stop;
-
-    [GtkChild]
     private Gtk.Label lbl_id;
 
     [GtkChild]
@@ -36,12 +30,6 @@ public class Dactl.LogControl : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     [GtkChild]
     private Gtk.Label lbl_logging_path;
-
-    [GtkChild]
-    private Gtk.Image img_start;
-
-    [GtkChild]
-    private Gtk.Image img_stop;
 
     public string log_ref { get; set; }
 

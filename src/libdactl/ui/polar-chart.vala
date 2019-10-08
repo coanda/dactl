@@ -144,8 +144,9 @@ public class Dactl.PolarChart : Dactl.CompositeWidget {
         drawables = get_object_map (typeof (Dactl.Drawable));
         foreach (var drawable in drawables.values) {
             if (drawable is Dactl.PolarHeatMap) {
-                var binding = bind_property ("zoom", drawable as Dactl.PolarHeatMap,
-                                             "zoom", GLib.BindingFlags.DEFAULT);
+                bind_property ("zoom", drawable as Dactl.PolarHeatMap,
+                               "zoom", GLib.BindingFlags.DEFAULT);
+
                 (drawable as Dactl.PolarHeatMap).zoom = zoom;
             }
         }
@@ -422,10 +423,7 @@ public class Dactl.PolarChart : Dactl.CompositeWidget {
         double x_max, x_min, y_max, y_min;
         var w = canvas.get_allocated_width ();
         var h = canvas.get_allocated_height ();
-        var mag_min = mag_axis.min;
-        var mag_max = mag_axis.max;
-        var angle_min = angle_axis.min;
-        var angle_max = angle_axis.max;
+
         /* XXX can image surface set be put in Dactl.Drawable as virtual */
         var image_surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, w, h);
 

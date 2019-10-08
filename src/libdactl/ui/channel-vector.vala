@@ -154,8 +154,6 @@ public class Dactl.ChannelVector : GLib.Object, Dactl.Object,
         }
     }
 
-    private int index = 0;
-
     /**
      * {@inheritDoc}
      */
@@ -235,7 +233,6 @@ public class Dactl.ChannelVector : GLib.Object, Dactl.Object,
         }
     }
 
-    int count = 0;
     private void new_value_cb (string uri, double value) {
         var xvalue = channel_xvalues.get (uri);
         int ix = channel_indexes.get (uri);

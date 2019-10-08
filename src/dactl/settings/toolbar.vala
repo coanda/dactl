@@ -4,9 +4,6 @@ private class Dactl.SettingsToolbar : Gtk.HeaderBar {
     [GtkChild]
     private Gtk.Button btn_ok;
 
-    [GtkChild]
-    private Gtk.Button btn_cancel;
-
     public signal void ok ();
 
     public signal void cancel ();

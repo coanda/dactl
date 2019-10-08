@@ -227,7 +227,6 @@ public class Dactl.StripChartWidget : Dactl.ChartWidget {
     }
 
     public override void add_point_to_series (string id, double x, double y) {
-        bool has_next;
 
         if (!(chart_area as Dactl.ChartArea).data_series.has_key (id))
             return;
@@ -276,7 +275,7 @@ public class Dactl.XAxisArea : Gtk.DrawingArea {
 
     public override bool draw (Cairo.Context cr) {
         var w = get_allocated_width ();
-        var h = get_allocated_height ();
+        //var h = get_allocated_height ();
 
         /* ticks */
         var x = 0;
@@ -434,8 +433,10 @@ public class Dactl.ChartArea : Gtk.DrawingArea {
     }
 
     public override bool draw (Cairo.Context cr) {
-        var w = get_allocated_width ();
-        var h = get_allocated_height ();
+        /*
+         *var w = get_allocated_width ();
+         *var h = get_allocated_height ();
+         */
         Gee.List<double?> color = new Gee.ArrayList<double?> ();
 
         /* Chart back */
