@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<gresources>
-  <gresource prefix="/org/coanda/dactl/plugins/velmex">
-    <file preprocess="xml-stripblanks">velmex-control.ui</file>
-    <file preprocess="xml-stripblanks">velmex-settings.ui</file>
-  </gresource>
-</gresources>

@@ -6,7 +6,6 @@ core_sources = [
   'application-controller.vala',
   'application-factory.vala',
   'application-model.vala',
-  'application.vala',
   'application-view.vala',
   'buildable.vala',
   'cld-adapter.vala',
@@ -26,6 +25,8 @@ core_sources = [
   'point.vala',
   'view.vala',
 ]
+
+libdactl_core_sources = files(core_sources)
 
 libdactl_headers += files(core_headers)
 libdactl_sources += files(core_sources)

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<gresources>
-  <gresource prefix="/org/coanda/dactl/plugins/brabender">
-    <file preprocess="xml-stripblanks">brabender_control.ui</file>
-  </gresource>
-</gresources>

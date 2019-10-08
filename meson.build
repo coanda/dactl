@@ -1,7 +1,7 @@
 project('dactl', [ 'c', 'vala' ],
           license: 'LGPL3+',
           version: '0.4.4',
-    meson_version: '>= 0.40.1',
+    meson_version: '>= 0.50.0',
   default_options: [
                      'c_std=gnu11',
                      'warning_level=2',
@@ -62,6 +62,7 @@ dir_vapi = join_paths(meson.current_source_dir(), 'vapi')
 
 add_project_arguments([
   ['--vapidir', dir_vapi],
+  '--disable-warnings',
 ], language: 'vala')
 
 dep_cld = dependency('cld-1.0')
@@ -151,8 +152,7 @@ gnome = import('gnome')
 subdir('po')
 subdir('src')
 subdir('data')
-#subdir('doc')
-#subdir('tests')
+subdir('doc')
 
 meson.add_install_script('build-aux/meson/post-install.py')
 

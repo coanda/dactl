@@ -84,8 +84,6 @@ public class Dactl.CldSettingsTreeView : Dactl.SettingsTreeView {
     }
 
     public void generate (Cld.Object object, int d) {
-        GLib.Type type = object.get_type ();
-        GLib.ObjectClass ocl = (ObjectClass)type.class_ref ();
         if (d > 0)
             treestore.append (out treeiter[d], treeiter[d - 1]);
         else
@@ -157,8 +155,6 @@ public class Dactl.NativeSettingsTreeView : Dactl.SettingsTreeView {
     }
 
     public void generate_from_object (Dactl.Object object, int d) {
-        GLib.Type type = object.get_type ();
-        GLib.ObjectClass ocl = (ObjectClass)type.class_ref ();
         void* o = object;
 
         if (d > 0)
