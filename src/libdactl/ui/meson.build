@@ -89,6 +89,8 @@ endif
 libdactl_deps += ui_deps
 libdactl_vala_args += ui_vala_args
 
+libdactl_ui_sources = files(ui_sources)
+
 libdactl_headers += files(ui_headers)
 libdactl_sources += files(ui_sources)
 
