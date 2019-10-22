@@ -49,12 +49,6 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
     [GtkChild]
     private Dactl.ConfigurationEditor configuration;
 
-    [GtkChild]
-    private Gtk.Box main_vbox;
-
-    [GtkChild]
-    private Gtk.Overlay overlay;
-
     private uint configure_id;
 
     public static const uint configure_id_timeout = 100;    // ms
@@ -254,7 +248,6 @@ public class Dactl.UI.ApplicationView : Gtk.ApplicationWindow, Dactl.Application
 
     private void treeview_channel_selected_cb (string id) {
         debug ("Selected channel `%s' to be highlighted on chart", id);
-        var channel = model.ctx.get_object (id);
 
         /**
          * FIXME: the stripchart class doesn't use the chart as its base yet

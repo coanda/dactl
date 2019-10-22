@@ -1,5 +1,40 @@
 /**
  * Box class used to act as a layout for other interface classes.
+ *
+ * Example XML code:
+ * {{{
+ *
+ * <ui:object id="box0" type="box">
+ *   <ui:property name="homogeneous">true</ui:property>
+ *   <ui:property name="orientation">horizontal</ui:property>
+ *   <ui:property name="expand">false</ui:property>
+ *   <ui:property name="fill">false</ui:property>
+ *   <ui:property name="spacing">5</ui:property>
+ *   <ui:property name="margin-top">5</ui:property>
+ *   <ui:property name="marin-right">5</ui:property>
+ *   <ui:property name="marin-bottom">5</ui:property>
+ *   <ui:property name="marin-left">5</ui:property>
+ *   <ui:property name="hexpand">true</ui:property>
+ *   <ui:property name="vexpand">false</ui:property>
+ *   <!--
+ *      - Can contain <ui:object> elements of type:
+ *      -
+ *      -  * "ai":         Dactl.AIControl
+ *      -  * "ao":         Dactl.AOControl
+ *      -  * "box":        Dactl.Box
+ *      -  * "tree":       Dactl.ChannelTreeView
+ *      -  * "chart":      Dactl.Chart
+ *      -  * "stripchart": Dactl.StripChart
+ *      -  * "rt-chart":   Dactl.RTChart
+ *      -  * "polarchart": Dactl.PolarChart
+ *      -  * "pnid":       Dactl.Pnid
+ *      -  * "pid":        Dactl.PidControl
+ *      -  * "exec":       Dactl.ExecControl
+ *      -  * "log":        Dactl.LogControl
+ *      -  * "video":      Dactl.VideoProcessor
+ *      -->
+ * </ui:object>
+ * }}}
  */
 [GtkTemplate (ui = "/org/coanda/libdactl/ui/box.ui")]
 public class Dactl.Box : Dactl.CompositeWidget {
@@ -96,6 +131,9 @@ public class Dactl.Box : Dactl.CompositeWidget {
 
     /**
      * {@inheritDoc}
+     * Alternate construction that uses an XML node to set the object up.
+     * @param node an {@link Xml.Node}
+     * @see Dactl.CompositeWidget
      */
     public override void build_from_xml_node (Xml.Node *node) {
         string type;

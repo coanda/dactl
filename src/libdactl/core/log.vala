@@ -1,7 +1,6 @@
 /*
  * This file is a modified version taken from gnome-builder.
  */
-
 public enum Dactl.LogLevel {
     LEVEL_TRACE = LogLevelFlags.LEVEL_DEBUG + 1;
 }

@@ -1,3 +1,12 @@
+/**
+ * Displays the values of a {@link Cld.AIChannel}
+ *
+ * Example XML code:
+ * {{{
+ * <cld:object id="ao-ctl0" type="ao" ref="/daqctl0/dev0/ao00"/>
+ * }}}
+ *
+ */
 [GtkTemplate (ui = "/org/coanda/libdactl/ui/ao-control.ui")]
 public class Dactl.AOControl : Dactl.CompositeWidget, Dactl.CldAdapter {
 
@@ -87,6 +96,12 @@ public class Dactl.AOControl : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     //public AOControl (string ai_ref) {}
 
+    /**
+     * Alternate construction that uses an XML node to set the object up.
+     *
+     * @param node an {@link Xml.Node}
+     * @see Dactl.Box
+     */
     public AOControl.from_xml_node (Xml.Node *node) {
         build_from_xml_node (node);
 
@@ -96,6 +111,8 @@ public class Dactl.AOControl : Dactl.CompositeWidget, Dactl.CldAdapter {
 
     /**
      * {@inheritDoc}
+     * @param node an {@link Xml.Node}
+     * @see Dactl.Box
      */
     public override void build_from_xml_node (Xml.Node *node) {
         if (node->type == Xml.ElementType.ELEMENT_NODE &&

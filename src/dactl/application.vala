@@ -603,29 +603,6 @@ public class Dactl.UI.Application : Gtk.Application {
     }
 
     /**
-     * Action callback for acquire.
-     */
-    private void acquire_activated_cb (SimpleAction action, Variant? parameter) {
-        this.hold ();
-        Variant state = action.get_state ();
-        bool active = state.get_boolean ();
-        action.set_state (new Variant.boolean (!active));
-        /* XXX locking the model may not be necessary, from older version */
-        if (!active) {
-            lock (model) {
-                controller.start_acquisition ();
-                controller.start_device_output ();
-            }
-        } else {
-            lock (model) {
-                controller.stop_acquisition ();
-                controller.stop_device_output ();
-            }
-        }
-        this.release ();
-    }
-
-    /**
      * Action callback for defaults.
      */
     private void defaults_activated_cb (SimpleAction action, Variant? parameter) {

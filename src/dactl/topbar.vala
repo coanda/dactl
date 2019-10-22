@@ -13,15 +13,6 @@ private class Dactl.Topbar : Gtk.Stack {
     [GtkChild]
     public Dactl.ApplicationToolbar application_toolbar;
 
-    [GtkChild]
-    public Dactl.LoaderToolbar loader_toolbar;
-
-    [GtkChild]
-    public Dactl.ConfigurationToolbar configuration_toolbar;
-
-    //[GtkChild]
-    //public Dactl.SettingsToolbar settings_toolbar;
-
     construct {
         // FIXME: doesn't work from .ui file
         transition_type = Gtk.StackTransitionType.CROSSFADE;

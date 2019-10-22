@@ -13,8 +13,6 @@ public class Dactl.GeneralSettings : Gtk.Box {
     [GtkChild]
     private Gtk.Entry entry_name;
 
-    private Gtk.StackSwitcher switcher;
-
     private Dactl.UI.Application app;
 
     construct {

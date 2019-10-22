@@ -11,95 +11,92 @@ Requirements
 * GNOME 3 is the only tested DE
 * Vala
 
+Install from PackageCloud
+==========================
+
+.. code-block:: none
+   :linenos:
+
+   sudo apt update
+   sudo apt install --no-install-recommends -qq -y curl ca-certificates
+   sudo curl -s https://packagecloud.io/install/repositories/coanda/public/script.deb.sh | sudo bash
+
+   # just dactl
+   sudo apt install dactl
+
+   # libdactl
+   sudo apt install -y libdactl-1.0
+
+   # devlopment
+   sudo apt install -y libdactl-1.0-dev
+
 Building from Source
 ====================
 
 The source code is hosted on `GitHub <https://github.com/coanda/dactl.git>`_.
+The api documentation is hosted on `GitHub <https://coanda.github.io>`_.
 
-Pre-installation Setup
-----------------------
-
-Install Fedora 19 .. 23 dependencies
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Install Fedora 30
+-------------------------------
 
 .. code-block:: none
    :linenos:
 
-   sudo dnf install -y automake autoconf libtool gnome-common intltool gcc vala
-   sudo dnf install -y glib2-devel gtk3-devel libxml2-devel libgee-devel \
-    json-glib-devel clutter-devel clutter-gtk-devel gsl-devel gtksourceview3-devel \
-    libmatheval-devel sqlite-devel gobject-introspection-devel gettext-devel \
-    gettext-common-devel libmodbus-devel comedilib-devel librsvg2-devel \
-    python3-devel pygobject3-devel libpeas-devel libsoup-devel webkitgtk4-devel
+   sudo dnf update
+   sudo dnf install -y git                       \
+                     meson                       \
+                     ninja-build                 \
+                     gnome-common                \
+                     intltool                    \
+                     gcc                         \
+                     vala                        \
+                     libgee-devel                \
+                     json-glib-devel             \
+                     gsl-devel                   \
+                     libxml2-devel               \
+                     libmatheval-devel           \
+                     comedilib-devel             \
+                     libpeas-devel               \
+                     libsoup-devel               \
+                     gtksourceview-devel         \
+                     librsvg2-devel              \
+                     webkit2gtk3-devel
 
-Install Ubuntu 14.04 dependencies
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Notice: These commands have only been tested as part of a Travis-CI build.
-
-.. code-block:: none
-   :linenos:
-
-   sudo add-apt-repository ppa:vala-team/ppa -y
-   sudo apt-get update -qq
-   sudo apt-get install -qq gnome-common libglib2.0-dev libjson-glib-dev \
-    libgee-0.8-dev libvala-0.22-dev libgsl0-dev libsqlite0-dev libxml2-dev \
-    libmatheval-dev libmodbus-dev libcomedi-dev valac-0.22 librsvg2-dev \
-    libgirepository1.0-dev libgtk-3-dev libclutter-1.0-dev libclutter-gtk-1.0-dev \
-    python3-dev python-gobject-dev
-
-Compiled Dependencies
----------------------
-
-Install Vala dependencies
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-   :linenos:
-
-   git clone https://github.com/geoffjay/modbus-vapi.git
-   git clone https://github.com/geoffjay/comedi-vapi.git
-   sudo mkdir -p /usr/local/lib/pkgconfig
-   sudo cp comedi-vapi/comedi.pc /usr/local/lib/pkgconfig/
-   ver=`vala --version | sed -e 's/.*\([0-9]\.[0-9][0-9]\).*/\1/'`
-   sudo cp comedi-vapi/comedi.vapi /usr/share/vala-$ver/vapi/
-   sudo cp modbus-vapi/libmodbus.vapi /usr/share/vala-$ver/vapi/
-
-Install libcld
-^^^^^^^^^^^^^^
-
-.. code-block:: none
-   :linenos:
-
-   git clone https://github.com/geoffjay/libcld.git
-   cd libcld
-   git checkout ca85cde6f53632bcf6b298cd10f336e31f071f2c
-   export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
-   ./autogen.sh
-   make && sudo make install
-   cd ..
-   echo "/usr/local/lib" | sudo tee --append /etc/ld.so.conf
+   export PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig/
+   sudo ninja -C _build install
+   echo "/usr/local/lib64" | sudo tee --append /etc/ld.so.conf
    sudo ldconfig
 
-Compile and Install dactl
--------------------------
+Install Debian 10
+------------------------------
+
+.. code-block:: none
+   :linenos:
+
+   sudo apt install  -y git                        \
+                        meson                      \
+                        gcc                        \
+                        valac                      \
+                        libpeas-dev                \
+                        libsoup2.4-dev             \
+                        libgtksourceview-3.0-dev   \
+                        librsvg2-dev               \
+                        libwebkit2gtk-4.0-dev      \
+                        gettext
+
+   export PKG_CONFIG_PATH=/usr/local/lib/x86_64-linux-gnu/pkgconfig/
+   git clone git@github.com:coanda/dactl.git
+   cd dactl
+   meson _build
+   sudo ninja -C _build install
+   echo "/usr/local/lib/x86_64-linux-gnu" | sudo tee --append /etc/ld.so.conf
+   sudo ldconfig
 
 .. warning::
    Installation overwrites the configuration file at `$(sysconfdir)/dactl/`, if an
    alternate value wasn't provided for `--prefix` than this is probably
    `/usr/local/etc/dactl`. It's recommended that the existing configuration is copied
    over `data/config/dactl.xml` or backed up and dealt with separately.
-
-.. code-block:: none
-   :linenos:
-
-   git clone https://github.com/coanda/dactl.git
-   cd dactl
-   git checkout v0.3.x-hotfix
-   export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
-   ./autogen.sh
-   sudo cp vapi/glib-extra.vapi /usr/share/vala-0.32/vapi/
-   make && sudo make install
 
 Post-installation Configuration
 -------------------------------

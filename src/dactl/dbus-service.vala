@@ -15,39 +15,39 @@ internal class Dactl.DBusService : GLib.Object, Dactl.DBusInterface {
         this.main.exit (0);
     }
 
-    public int log_get_verbosity () {
-        return log.verbosity;
+    public int log_get_verbosity () throws GLib.DBusError, GLib.IOError {
+        return SysLog.verbosity;
     }
 
-    public void log_set_verbosity (int level) {
-        log.verbosity = level;
+    public void log_set_verbosity (int level) throws GLib.DBusError, GLib.IOError {
+        SysLog.verbosity = level;
     }
 
-    public void log_add (string filename) {
-        log.add (filename);
+    public void log_add (string filename) throws GLib.DBusError, GLib.IOError {
+        SysLog.add (filename);
     }
 
-    public void log_remove (string filename) {
-        log.remove (filename);
+    public void log_remove (string filename) throws GLib.DBusError, GLib.IOError {
+        SysLog.remove (filename);
     }
 
-    public void log_test_message () {
+    public void log_test_message () throws GLib.DBusError, GLib.IOError {
         message ("test message");
     }
 
-    public void log_test_debug () {
+    public void log_test_debug () throws GLib.DBusError, GLib.IOError {
         debug ("test message");
     }
 
-    public void log_test_warning () {
+    public void log_test_warning () throws GLib.DBusError, GLib.IOError {
         warning ("test message");
-    }
+     }
 
-    public void log_test_critical () {
+    public void log_test_critical () throws GLib.DBusError, GLib.IOError {
         critical ("test message");
     }
 
-    public void log_test_error () {
+    public void log_test_error () throws GLib.DBusError, GLib.IOError {
         error ("test message");
     }
 
@@ -101,7 +101,7 @@ internal class Dactl.DBusService : GLib.Object, Dactl.DBusInterface {
 
     /*** Test Methods ***/
 
-    public void ping (GLib.BusName sender) {
+    public void ping (GLib.BusName sender) throws GLib.DBusError, GLib.IOError {
         message (("Received ping from: %s"), sender);
         pong ();
     }

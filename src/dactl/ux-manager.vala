@@ -34,7 +34,7 @@ public class Dactl.UI.UxManager : GLib.Object {
         // XXX not sure of whether to use a generic or variant???
     }
 
-    public void @get (string property) {
+    public void @get (string property) throws GLib.DBusError, GLib.IOError {
     }
 
     /**
@@ -42,7 +42,7 @@ public class Dactl.UI.UxManager : GLib.Object {
      *
      * @return Array of strings with the page ID values
      */
-    public string[] list_pages () {
+    public string[] list_pages () throws GLib.DBusError, GLib.IOError {
         var page_map = view.model.get_object_map (typeof (Dactl.Page));
         string[] pages = {};
 
@@ -133,7 +133,7 @@ public class Dactl.UI.UxManager : GLib.Object {
      * @param parent ID value to remove the child from
      * @param child ID value of the child to remove
      */
-    public void remove_widget (string parent, string child) {
+    public void remove_widget (string parent, string child) throws GLib.DBusError, GLib.IOError {
         var parent_obj = view.model.get_object (parent);
         if (parent_obj is Dactl.Container) {
             var child_obj = (parent_obj as Dactl.Container).get_object (child);
@@ -146,7 +146,7 @@ public class Dactl.UI.UxManager : GLib.Object {
      *
      * @param id ID value for the window to toggle the fullscreen state of
      */
-    public void fullscreen (string id) {
+    public void fullscreen (string id) throws GLib.DBusError, GLib.IOError {
         var window = view.model.get_object (id);
         if (window is Dactl.UI.Window) {
             (window as GLib.ActionGroup).activate_action ("fullscreen", null);

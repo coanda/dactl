@@ -17,9 +17,6 @@ public class Dactl.SettingsDialog : Gtk.Window {
     private Dactl.LogSettings log;
 
     [GtkChild]
-    private Dactl.PluginSettings plugin;
-
-    [GtkChild]
     private Dactl.WidgetSettings widget;
 
     private Cld.Context cld_ctx;

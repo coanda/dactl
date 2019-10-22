@@ -2,9 +2,6 @@
 private class Dactl.LoaderToolbar : Gtk.HeaderBar {
 
     [GtkChild]
-    private Gtk.Button back_button;
-
-    [GtkChild]
     private Gtk.Image back_image;
 
     construct {

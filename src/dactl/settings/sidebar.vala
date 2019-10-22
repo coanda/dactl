@@ -2,13 +2,7 @@
 private class Dactl.SettingsSidebar : Gtk.Box {
 
     [GtkChild]
-    private Gtk.ListStore listmodel;
-
-    [GtkChild]
     private Gtk.TreeModelFilter model_filter;
-
-    [GtkChild]
-    private Gtk.TreeSelection selection;
 
     [GtkChild]
     private Gtk.TreeView tree_view;
@@ -26,14 +20,6 @@ private class Dactl.SettingsSidebar : Gtk.Box {
 
         var path = new Gtk.TreePath.from_string ("0");
         tree_view.set_cursor (path, null, false);
-    }
-
-    private void list_append (string label, bool visible) {
-        Gtk.TreeIter iter;
-
-        listmodel.append (out iter);
-        listmodel.set (iter, 0, label);
-        listmodel.set (iter, 1, visible);
     }
 
     private void populate () {

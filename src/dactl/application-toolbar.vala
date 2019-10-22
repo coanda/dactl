@@ -4,18 +4,6 @@ private class Dactl.ApplicationToolbar : Gtk.HeaderBar {
     [GtkChild]
     private Gtk.MenuButton btn_settings;
 
-    [GtkChild]
-    private Gtk.Button btn_previous;
-
-    [GtkChild]
-    private Gtk.Button btn_next;
-
-    [GtkChild]
-    private Gtk.Image img_previous;
-
-    [GtkChild]
-    private Gtk.Image img_next;
-
     construct {
         var app = Dactl.UI.Application.get_default ();
         var model = app.model;
