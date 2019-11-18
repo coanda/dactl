@@ -17,7 +17,7 @@ This software is still in early stages of development
 Sample Layout
 -------------
 
-Using `this <https://github.com/coanda/dactl/blob/master/docs/source/assets/sample-config.xml>`_
+Using `this <https://raw.githubusercontent.com/coanda/dactl/master/doc/manual/source/assets/sample-config.xml>`_
 configuration file dactl will generate the view seen here.
 
 .. figure:: assets/sample-layout.png
